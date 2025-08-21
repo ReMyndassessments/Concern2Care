@@ -39,6 +39,7 @@ export interface IStorage {
   
   // Report operations
   createReport(report: InsertReport): Promise<Report>;
+  getReportById(id: string): Promise<Report | undefined>;
   getReportByConcernId(concernId: string): Promise<Report | undefined>;
 }
 
@@ -125,6 +126,14 @@ export class DatabaseStorage implements IStorage {
     };
     const [newReport] = await db.insert(reports).values(dataWithProcessedSharedWith).returning();
     return newReport;
+  }
+
+  async getReportById(id: string): Promise<Report | undefined> {
+    const [report] = await db
+      .select()
+      .from(reports)
+      .where(eq(reports.id, id));
+    return report;
   }
 
   async getReportByConcernId(concernId: string): Promise<Report | undefined> {

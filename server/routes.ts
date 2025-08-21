@@ -337,7 +337,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/reports/:id/download", requireAuth, async (req: any, res) => {
     try {
       const reportId = req.params.id;
-      const report = await storage.getReportByConcernId(reportId);
+      const report = await storage.getReportById(reportId);
       
       if (!report || !report.pdfPath) {
         return res.status(404).json({ message: "Report not found" });

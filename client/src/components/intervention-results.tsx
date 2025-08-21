@@ -19,7 +19,7 @@ interface InterventionResultsProps {
 }
 
 // Professional formatting component for AI recommendations
-const FormattedRecommendations = ({ content }: { content: string }) => {
+const FormattedRecommendations = ({ content }: { content: string }): React.ReactElement => {
   const formatContent = (text: string) => {
     const lines = text.split('\n');
     const elements: React.ReactElement[] = [];
