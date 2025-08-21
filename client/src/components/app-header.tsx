@@ -54,7 +54,7 @@ export default function AppHeader() {
               
               <div className="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
-                  {getInitials(user?.firstName, user?.lastName)}
+                  {getInitials(user?.firstName || undefined, user?.lastName || undefined)}
                 </span>
               </div>
               

@@ -283,7 +283,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         subject: `Student Concern Report - ${concern.studentFirstName} ${concern.studentLastInitial}.`,
         message,
         attachmentPath: report.pdfPath,
-        reportLink,
+        reportLink: reportLink || undefined,
       });
 
       if (emailSuccess) {

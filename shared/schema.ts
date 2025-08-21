@@ -55,7 +55,7 @@ export const interventions = pgTable("interventions", {
   concernId: varchar("concern_id").references(() => concerns.id).notNull(),
   title: varchar("title").notNull(),
   description: text("description").notNull(),
-  steps: jsonb("steps").$type<string[]>().notNull(),
+  steps: jsonb("steps").notNull().$type<string[]>(),
   timeline: varchar("timeline"),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -72,7 +72,7 @@ export const reports = pgTable("reports", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   concernId: varchar("concern_id").references(() => concerns.id).notNull(),
   pdfPath: varchar("pdf_path"),
-  sharedWith: jsonb("shared_with").$type<string[]>(),
+  sharedWith: jsonb("shared_with").$type<string[]>().default('[]'),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
