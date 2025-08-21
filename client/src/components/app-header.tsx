@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Sparkles, LogOut, BarChart3, Home, ChevronDown } from "lucide-react";
+import { Sparkles, LogOut, BarChart3, Home, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "@shared/schema";
 import { Link } from "wouter";
@@ -57,6 +57,16 @@ export default function AppHeader() {
                 >
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Dashboard
+                </Button>
+              </Link>
+              <Link href="/my-support-requests">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-2"
+                >
+                  <History className="h-4 w-4 mr-2" />
+                  My Requests
                 </Button>
               </Link>
             </nav>

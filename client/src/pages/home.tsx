@@ -84,20 +84,20 @@ export default function Home() {
             </Card>
           </Link>
 
-          <Link href="/dashboard">
+          <Link href="/my-support-requests">
             <Card className="group hover:scale-105 transition-all duration-300 cursor-pointer bg-white/90 backdrop-blur-sm shadow-xl border border-white/20">
               <CardHeader className="pb-4">
                 <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-emerald-200 transition-colors">
                   <History className="h-7 w-7 text-emerald-600" />
                 </div>
-                <CardTitle className="text-2xl text-gray-900">Recent Concerns</CardTitle>
+                <CardTitle className="text-2xl text-gray-900">My Support Requests</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  View, manage, and follow up on your previously documented student concerns and interventions.
+                  View all your documented concerns, AI recommendations, and continue conversations for implementation guidance.
                 </p>
                 <div className="flex items-center text-emerald-600 font-medium">
-                  View History <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  View All Requests <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>
               </CardContent>
             </Card>

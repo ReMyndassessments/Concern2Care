@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
+import MySupportRequests from "@/pages/my-support-requests";
 import ConcernDetail from "@/pages/concern-detail";
 import NotFound from "@/pages/not-found";
 
@@ -21,6 +22,7 @@ function Router() {
         <>
           <Route path="/" component={Home} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/my-support-requests" component={MySupportRequests} />
           <Route path="/concerns/:id" component={ConcernDetail} />
         </>
       )}
