@@ -108,46 +108,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Create a new concern and generate recommendations - PROTECTED
   app.post("/api/concerns", requireAuth, async (req: any, res) => {
-    console.log("🔍 POST /api/concerns - Request received");
-    console.log("🔍 User authenticated:", !!req.user);
-    console.log("🔍 User ID:", req.user?.claims?.sub);
-    console.log("🔍 Request body:", JSON.stringify(req.body, null, 2));
-    console.log("🔍 Description field:", req.body.description);
     try {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;
-
-      console.log("🔍 Processing concern data...");
-
-      // Directly construct the concern data with proper type handling
-      const concernData = {
-        teacherId: userId,
-        studentFirstName: req.body.studentFirstName,
-        studentLastInitial: req.body.studentLastInitial,
-        grade: req.body.grade,
-        teacherPosition: req.body.teacherPosition,
-        incidentDate: new Date(req.body.incidentDate),
-        location: req.body.location,
-        concernType: null, // legacy field
-        concernTypes: Array.isArray(req.body.concernTypes) ? req.body.concernTypes : [req.body.concernTypes].filter(Boolean),
-        otherConcernType: req.body.otherConcernType || null,
-        description: req.body.description,
-        severityLevel: req.body.severityLevel,
-        actionsTaken: Array.isArray(req.body.actionsTaken) ? req.body.actionsTaken : [req.body.actionsTaken].filter(Boolean),
-        otherActionTaken: req.body.otherActionTaken || null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-
-      console.log("🔍 Final concern data:", JSON.stringify(concernData, (key, value) => {
-        if (value instanceof Date) {
-          return `DATE: ${value.toISOString()}`;
-        }
-        return value;
-      }, 2));
-
-      console.log("🔍 About to create concern in database...");
-      console.log("🔍 Storage createConcern call with description:", req.body.description);
       
       // Create concern in database
       const newConcern = await storage.createConcern({
@@ -156,7 +119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         studentLastInitial: String(req.body.studentLastInitial),
         grade: String(req.body.grade),
         teacherPosition: String(req.body.teacherPosition),
-        incidentDate: new Date(req.body.incidentDate), // Convert string to Date object
+        incidentDate: new Date(), // Automatically set to current date/time
         location: String(req.body.location),
         concernTypes: req.body.concernTypes || [],
         otherConcernType: req.body.otherConcernType || null,
@@ -166,9 +129,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         otherActionTaken: req.body.otherActionTaken || null,
       });
       
-      console.log("🔍 Concern created successfully:", newConcern.id);
-      console.log("🔍 New concern description:", newConcern.description);
-
       // Generate AI recommendations using the enhanced format
       const recommendationRequest: GenerateRecommendationsRequest = {
         studentFirstName: newConcern.studentFirstName,
@@ -185,9 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         otherActionTaken: newConcern.otherActionTaken || undefined,
       };
 
-      console.log("🔍 Calling generateRecommendations with:", JSON.stringify(recommendationRequest, null, 2));
       const recommendationResponse = await generateRecommendations(recommendationRequest);
-      console.log("🔍 AI recommendation response received:", !!recommendationResponse);
 
       // Save the AI response as a single intervention record for now
       const savedInterventions = await storage.createInterventions([{

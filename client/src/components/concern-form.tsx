@@ -29,7 +29,6 @@ const enhancedConcernFormSchema = insertConcernSchema.omit({
   studentLastInitial: z.string().length(1, "Last initial must be exactly 1 character"),
   grade: z.string().min(1, "Grade is required"),
   teacherPosition: z.string().min(1, "Teacher position is required"),
-  incidentDate: z.string().min(1, "Incident date is required"),
   location: z.string().min(1, "Location is required"),
   concernTypes: z.array(z.string()).min(1, "At least one concern type is required"),
   otherConcernType: z.string().optional(),
@@ -84,7 +83,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       studentLastInitial: "",
       grade: "",
       teacherPosition: "",
-      incidentDate: new Date().toISOString().split('T')[0], // Auto-populate with today's date
       location: "",
       concernTypes: [],
       otherConcernType: "",
@@ -148,11 +146,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   });
 
   const onSubmit = (data: EnhancedConcernFormData) => {
-    console.log("🚀 Enhanced form submitted with data:", data);
-    console.log("🚀 Form validation errors:", form.formState.errors);
-    console.log("🚀 Is form valid:", form.formState.isValid);
-    console.log("🚀 Mutation is pending:", createConcernMutation.isPending);
-    
     // Show user-friendly validation message if there are errors
     if (Object.keys(form.formState.errors).length > 0) {
       toast({
@@ -257,7 +250,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 <h3 className="text-lg font-medium text-gray-900">Incident Details</h3>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="teacherPosition"
@@ -268,22 +261,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       </FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., 3rd Grade Teacher" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="incidentDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Incident Date <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -549,12 +526,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 disabled={createConcernMutation.isPending || isAtLimit}
                 className="bg-brand-blue hover:bg-brand-dark-blue px-8 py-3 text-lg"
                 size="lg"
-                onClick={() => {
-                  console.log("🔘 Submit button clicked");
-                  console.log("🔘 Form values:", form.getValues());
-                  console.log("🔘 Form errors:", form.formState.errors);
-                  console.log("🔘 Form is valid:", form.formState.isValid);
-                }}
               >
                 {createConcernMutation.isPending ? (
                   <>
