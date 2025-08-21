@@ -118,9 +118,19 @@ export default function ConcernDetail() {
                   Concern for {concern.studentFirstName} {concern.studentLastInitial}.
                 </CardTitle>
                 <div className="flex items-center space-x-4 mt-3">
-                  <Badge className={concernTypeColors[concern.concernType as keyof typeof concernTypeColors]}>
-                    {concern.concernType.charAt(0).toUpperCase() + concern.concernType.slice(1).replace('-', ' ')}
-                  </Badge>
+                  {(() => {
+                    // Safely get the first concern type with proper null checks
+                    const concernTypes = concern.concernTypes as string[] | undefined;
+                    const firstConcernType = concernTypes && Array.isArray(concernTypes) && concernTypes.length > 0 
+                      ? concernTypes[0] 
+                      : 'Academic';
+                    
+                    return (
+                      <Badge className={concernTypeColors[firstConcernType.toLowerCase() as keyof typeof concernTypeColors] || concernTypeColors.academic}>
+                        {firstConcernType.charAt(0).toUpperCase() + firstConcernType.slice(1).replace('-', ' ')}
+                      </Badge>
+                    );
+                  })()}
                   <div className="flex items-center text-sm text-gray-600">
                     <CalendarDays className="h-4 w-4 mr-1" />
                     {concern.createdAt ? new Date(concern.createdAt).toLocaleDateString() : 'Unknown date'}
