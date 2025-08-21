@@ -17,10 +17,10 @@ export default function Landing() {
       <header className="relative z-10 py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end">
           <Button 
-            onClick={() => window.location.href = '/api/login'}
-            className="bg-brand-blue hover:bg-brand-dark-blue"
+            onClick={() => window.location.href = '/login'}
+            className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold"
           >
-            Sign In
+            Teacher Sign In
           </Button>
         </div>
       </header>
@@ -61,10 +61,10 @@ export default function Landing() {
             
             <Button 
               size="lg"
-              onClick={() => window.location.href = '/api/login'}
-              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-lg px-12 py-4 rounded-xl font-medium"
+              onClick={() => window.location.href = '/login'}
+              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-lg px-12 py-4 rounded-xl font-medium shadow-lg"
             >
-              Get Started Free
+              🔐 Secure Teacher Login
             </Button>
             
             <p className="text-sm text-gray-500 mt-6">
