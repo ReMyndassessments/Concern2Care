@@ -112,6 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log("🔍 User authenticated:", !!req.user);
     console.log("🔍 User ID:", req.user?.claims?.sub);
     console.log("🔍 Request body:", JSON.stringify(req.body, null, 2));
+    console.log("🔍 Description field:", req.body.description);
     try {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;
@@ -146,6 +147,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }, 2));
 
       console.log("🔍 About to create concern in database...");
+      console.log("🔍 Storage createConcern call with description:", req.body.description);
       
       // Create concern in database
       const newConcern = await storage.createConcern({
@@ -165,6 +167,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       console.log("🔍 Concern created successfully:", newConcern.id);
+      console.log("🔍 New concern description:", newConcern.description);
 
       // Generate AI recommendations using the enhanced format
       const recommendationRequest: GenerateRecommendationsRequest = {
@@ -182,7 +185,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         otherActionTaken: newConcern.otherActionTaken || undefined,
       };
 
+      console.log("🔍 Calling generateRecommendations with:", JSON.stringify(recommendationRequest, null, 2));
       const recommendationResponse = await generateRecommendations(recommendationRequest);
+      console.log("🔍 AI recommendation response received:", !!recommendationResponse);
 
       // Save the AI response as a single intervention record for now
       const savedInterventions = await storage.createInterventions([{
