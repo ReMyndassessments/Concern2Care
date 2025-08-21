@@ -27,6 +27,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Create a new concern and generate interventions
   app.post("/api/concerns", isAuthenticated, async (req: any, res) => {
+    console.log("🔍 POST /api/concerns - Request received");
+    console.log("🔍 User authenticated:", !!req.user);
+    console.log("🔍 User ID:", req.user?.claims?.sub);
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);

@@ -27,7 +27,7 @@ export function getSession() {
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
     conString: process.env.DATABASE_URL,
-    createTableIfMissing: false,
+    createTableIfMissing: true, // Allow table creation
     ttl: sessionTtl,
     tableName: "sessions",
   });
@@ -129,9 +129,15 @@ export async function setupAuth(app: Express) {
 }
 
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
+  console.log("🔐 Checking authentication...");
+  console.log("🔐 req.isAuthenticated():", req.isAuthenticated());
+  console.log("🔐 Session ID:", req.sessionID);
+  console.log("🔐 User object:", !!req.user);
+  
   const user = req.user as any;
 
-  if (!req.isAuthenticated() || !user.expires_at) {
+  if (!req.isAuthenticated() || !user?.expires_at) {
+    console.log("❌ Authentication failed - no user or expired");
     return res.status(401).json({ message: "Unauthorized" });
   }
 
