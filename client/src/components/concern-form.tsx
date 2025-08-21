@@ -79,7 +79,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       studentLastInitial: "",
       grade: "",
       teacherPosition: "",
-      incidentDate: "",
+      incidentDate: new Date().toISOString().split('T')[0], // Auto-populate with today's date
       location: "",
       concernTypes: [],
       otherConcernType: "",
