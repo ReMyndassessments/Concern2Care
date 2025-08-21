@@ -291,6 +291,11 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 type="submit" 
                 disabled={createConcernMutation.isPending || isAtLimit}
                 className="bg-brand-blue hover:bg-brand-dark-blue px-6 py-3"
+                onClick={(e) => {
+                  console.log("🔘 Button clicked!");
+                  console.log("🔘 Form state:", form.formState);
+                  console.log("🔘 Form values:", form.getValues());
+                }}
               >
                 {createConcernMutation.isPending ? (
                   <>
