@@ -3,11 +3,10 @@ import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import AppHeader from "@/components/app-header";
 import ConcernForm from "@/components/concern-form";
-import RecentConcerns from "@/components/recent-concerns";
 import InterventionResults from "@/components/intervention-results";
 import { useState } from "react";
 import { Concern, Intervention } from "@shared/schema";
-import { Sparkles, FileText, History } from "lucide-react";
+import { Sparkles, FileText } from "lucide-react";
 
 export default function Dashboard() {
   const { toast } = useToast();
@@ -81,32 +80,16 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Main Content Grid - Mobile Responsive */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {/* Left Column - Concern Form */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 p-4 sm:p-6">
-              <div className="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                  <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
-                </div>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Document New Concern</h2>
+        {/* Main Content - Concern Form */}
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 p-4 sm:p-6">
+            <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
               </div>
-              <ConcernForm onConcernSubmitted={handleConcernSubmitted} />
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Document New Concern</h2>
             </div>
-          </div>
-          
-          {/* Right Column - Recent Concerns */}
-          <div className="lg:col-span-1 order-first lg:order-last">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 p-4 sm:p-6">
-              <div className="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-100 to-green-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                  <History className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
-                </div>
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Recent Activity</h2>
-              </div>
-              <RecentConcerns />
-            </div>
+            <ConcernForm onConcernSubmitted={handleConcernSubmitted} />
           </div>
         </div>
         
