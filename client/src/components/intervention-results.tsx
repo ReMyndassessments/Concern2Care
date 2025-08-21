@@ -272,11 +272,11 @@ export default function InterventionResults({
                         <FormattedRecommendations content={intervention.description} />
                       </div>
                       
-                      {intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0 && (
+                      {intervention.steps && Array.isArray(intervention.steps) && (intervention.steps as string[]).length > 0 && (
                         <div className="bg-gray-50 rounded-lg p-4 mb-4">
                           <h4 className="text-sm font-medium text-gray-900 mb-2">Implementation Steps:</h4>
                           <ul className="text-sm text-gray-700 space-y-1">
-                            {intervention.steps.map((step, stepIndex) => (
+                            {(intervention.steps as string[]).map((step, stepIndex) => (
                               <li key={stepIndex} className="flex items-start space-x-2">
                                 <ChevronRight className="h-4 w-4 text-brand-blue mt-0.5 flex-shrink-0" />
                                 <span>{step}</span>
@@ -285,6 +285,19 @@ export default function InterventionResults({
                           </ul>
                         </div>
                       )}
+                      
+                      {/* Important Disclaimer */}
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                        <div className="flex items-start space-x-2">
+                          <span className="text-yellow-600 font-semibold">⚠️</span>
+                          <div>
+                            <p className="text-sm font-semibold text-yellow-800 mb-1">IMPORTANT DISCLAIMER:</p>
+                            <p className="text-sm text-yellow-700">
+                              These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                       
                       <div className="flex items-center space-x-4">
                         <Badge className="bg-green-100 text-green-800">
