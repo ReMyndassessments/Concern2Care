@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { generateInterventions, answerFollowUpQuestion } from "./services/openai";
+import { generateInterventions, answerFollowUpQuestion, generateRecommendations, followUpAssistance, GenerateRecommendationsRequest, FollowUpAssistanceRequest } from "./services/openai";
 import { generateConcernReport, ensureReportsDirectory } from "./services/pdf";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
 import { insertConcernSchema, insertFollowUpQuestionSchema } from "@shared/schema";
@@ -25,7 +25,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  // Create a new concern and generate interventions
+  // Create a new concern and generate recommendations
   app.post("/api/concerns", async (req: any, res) => {
     console.log("🔍 POST /api/concerns - Request received");
     console.log("🔍 User authenticated:", !!req.user);
@@ -34,7 +34,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Skip user checks for demo - use a demo teacher ID
       const userId = "demo-teacher-123";
 
-      // Validate request body
+      // Validate request body with enhanced schema
       const validatedData = insertConcernSchema.parse({
         ...req.body,
         teacherId: userId,
@@ -43,34 +43,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create concern
       const concern = await storage.createConcern(validatedData);
 
-      // Generate AI interventions
-      const studentInfo = `${concern.studentFirstName} ${concern.studentLastInitial}.`;
-      const interventions = await generateInterventions(
-        concern.concernType,
-        concern.description,
-        studentInfo
-      );
+      // Generate AI recommendations using the enhanced format
+      const recommendationRequest: GenerateRecommendationsRequest = {
+        studentFirstName: concern.studentFirstName,
+        studentLastInitial: concern.studentLastInitial,
+        grade: concern.grade || "Elementary",
+        teacherPosition: concern.teacherPosition || "Teacher",
+        incidentDate: concern.incidentDate?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
+        location: concern.location || "Classroom",
+        concernTypes: Array.isArray(concern.concernTypes) ? concern.concernTypes : [concern.concernType || "Academic"],
+        otherConcernType: concern.otherConcernType,
+        concernDescription: concern.description,
+        severityLevel: concern.severityLevel || "moderate",
+        actionsTaken: Array.isArray(concern.actionsTaken) ? concern.actionsTaken : [],
+        otherActionTaken: concern.otherActionTaken,
+      };
 
-      // Save interventions to database
-      const savedInterventions = await storage.createInterventions(
-        interventions.map(intervention => ({
-          concernId: concern.id,
-          title: intervention.title,
-          description: intervention.description,
-          steps: intervention.steps,
-          timeline: intervention.timeline,
-        }))
-      );
+      const recommendationResponse = await generateRecommendations(recommendationRequest);
+
+      // Save the AI response as a single intervention record for now
+      const savedInterventions = await storage.createInterventions([{
+        concernId: concern.id,
+        title: "AI-Generated Tier 2 Recommendations",
+        description: recommendationResponse.recommendations,
+        steps: ["Review Assessment Summary", "Implement Immediate Interventions", "Apply Short-term Strategies", "Monitor Progress"],
+        timeline: "2-6 weeks",
+      }]);
 
       // Skip user count update for demo
 
       res.json({
         concern,
         interventions: savedInterventions,
+        recommendations: recommendationResponse.recommendations,
+        disclaimer: recommendationResponse.disclaimer,
       });
     } catch (error) {
       console.error("Error creating concern:", error);
-      res.status(500).json({ message: "Failed to create concern and generate interventions" });
+      res.status(500).json({ message: "Failed to create concern and generate recommendations" });
     }
   });
 
@@ -108,10 +118,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Ask a follow-up question
+  // Ask a follow-up question using enhanced AI assistance
   app.post("/api/concerns/:id/questions", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = "demo-teacher-123"; // Use demo user for now
       const concernId = req.params.id;
       const { question } = req.body;
 
@@ -126,33 +136,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Concern not found" });
       }
 
-      if (concern.teacherId !== userId) {
-        return res.status(403).json({ message: "Access denied" });
-      }
+      // Create follow-up assistance request using enhanced format
+      const followUpRequest: FollowUpAssistanceRequest = {
+        originalRecommendations: concern.interventions.map(i => i.description).join('\n\n'),
+        specificQuestion: question,
+        studentFirstName: concern.studentFirstName,
+        studentLastInitial: concern.studentLastInitial,
+        grade: concern.grade || "Elementary",
+        concernTypes: Array.isArray(concern.concernTypes) ? concern.concernTypes : [concern.concernType || "Academic"],
+        severityLevel: concern.severityLevel || "moderate",
+      };
 
-      // Generate AI response
-      const concernContext = `${concern.concernType}: ${concern.description}`;
-      const interventionStrategies = concern.interventions.map(i => ({
-        title: i.title,
-        description: i.description,
-        steps: Array.isArray(i.steps) ? i.steps : [],
-        timeline: i.timeline || '',
-      }));
-
-      const response = await answerFollowUpQuestion(
-        question,
-        concernContext,
-        interventionStrategies
-      );
+      const assistanceResponse = await followUpAssistance(followUpRequest);
 
       // Save the question and response
       const savedQuestion = await storage.createFollowUpQuestion({
         concernId,
         question,
-        response,
+        response: assistanceResponse.assistance,
       });
 
-      res.json(savedQuestion);
+      res.json({
+        ...savedQuestion,
+        disclaimer: assistanceResponse.disclaimer,
+      });
     } catch (error) {
       console.error("Error processing follow-up question:", error);
       res.status(500).json({ message: "Failed to process follow-up question" });
@@ -285,6 +292,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error sharing report:", error);
       res.status(500).json({ message: "Failed to share report" });
+    }
+  });
+
+  // Dedicated follow-up assistance API endpoint
+  app.post("/api/ai/follow-up-assistance", async (req: any, res) => {
+    try {
+      // Validate request body
+      const {
+        originalRecommendations,
+        specificQuestion,
+        studentFirstName,
+        studentLastInitial,
+        grade,
+        concernTypes,
+        severityLevel
+      } = req.body;
+
+      if (!specificQuestion || !originalRecommendations) {
+        return res.status(400).json({ message: "Original recommendations and specific question are required" });
+      }
+
+      const assistanceRequest: FollowUpAssistanceRequest = {
+        originalRecommendations,
+        specificQuestion,
+        studentFirstName: studentFirstName || "Student",
+        studentLastInitial: studentLastInitial || "S",
+        grade: grade || "Elementary",
+        concernTypes: concernTypes || ["General"],
+        severityLevel: severityLevel || "moderate"
+      };
+
+      const response = await followUpAssistance(assistanceRequest);
+      res.json(response);
+    } catch (error) {
+      console.error("Error in follow-up assistance:", error);
+      res.status(500).json({ message: "Failed to generate follow-up assistance" });
     }
   });
 

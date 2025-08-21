@@ -44,8 +44,17 @@ export const concerns = pgTable("concerns", {
   teacherId: varchar("teacher_id").references(() => users.id).notNull(),
   studentFirstName: varchar("student_first_name").notNull(),
   studentLastInitial: varchar("student_last_initial", { length: 1 }).notNull(),
-  concernType: varchar("concern_type").notNull(), // academic, behavior, social-emotional, attendance
+  grade: varchar("grade").notNull(),
+  teacherPosition: varchar("teacher_position").notNull(),
+  incidentDate: timestamp("incident_date").notNull(),
+  location: varchar("location").notNull(),
+  concernType: varchar("concern_type"), // Keep for backward compatibility
+  concernTypes: jsonb("concern_types").notNull().default('[]'), // New array format
+  otherConcernType: varchar("other_concern_type"),
   description: text("description").notNull(),
+  severityLevel: varchar("severity_level").notNull(),
+  actionsTaken: jsonb("actions_taken").notNull().default('[]'),
+  otherActionTaken: varchar("other_action_taken"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -117,6 +126,10 @@ export const insertConcernSchema = createInsertSchema(concerns).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  concernTypes: z.array(z.string()).min(1, "At least one concern type is required"),
+  actionsTaken: z.array(z.string()).default([]),
+  incidentDate: z.string().min(1, "Incident date is required"),
 });
 
 export const insertInterventionSchema = createInsertSchema(interventions).omit({
