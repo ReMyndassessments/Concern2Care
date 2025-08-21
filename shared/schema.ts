@@ -126,10 +126,10 @@ export const insertConcernSchema = createInsertSchema(concerns).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+  incidentDate: true, // Auto-generated server-side
 }).extend({
   concernTypes: z.array(z.string()).min(1, "At least one concern type is required"),
   actionsTaken: z.array(z.string()).default([]),
-  incidentDate: z.string().min(1, "Incident date is required"),
 });
 
 export const insertInterventionSchema = createInsertSchema(interventions).omit({
