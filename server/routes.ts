@@ -62,6 +62,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
+      // Ensure user exists in database
+      try {
+        await storage.upsertUser({
+          id: teacher.id,
+          email: teacher.email,
+          firstName: teacher.firstName,
+          lastName: teacher.lastName,
+          profileImageUrl: null,
+        });
+        console.log("🔍 User created/updated in database:", teacher.id);
+      } catch (dbError) {
+        console.error("Error creating user in database:", dbError);
+      }
+
       // Create session (simplified)
       req.session.user = teacher;
       req.session.isAuthenticated = true;
