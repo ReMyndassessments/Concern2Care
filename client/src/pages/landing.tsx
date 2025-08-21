@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, FileText, Users, Clock, Shield, CheckCircle, Star, Mail } from "lucide-react";
+import { Sparkles, FileText, Users, Clock, Shield, CheckCircle, Star, Mail, TrendingUp, DollarSign, BarChart3 } from "lucide-react";
+import { useState } from "react";
 
 export default function Landing() {
+  const [showComparison, setShowComparison] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
       {/* Floating Geometric Elements */}
@@ -342,6 +345,155 @@ export default function Landing() {
                 </ul>
               </CardContent>
             </Card>
+          </div>
+
+          {/* ROI Comparison Section */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Why Schools Choose Concern2Care</h3>
+              <p className="text-gray-600 mb-4">
+                Better outcomes, better value than other education technology solutions
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => setShowComparison(!showComparison)}
+                className="bg-gradient-to-r from-purple-500 to-blue-600 text-white border-0 hover:from-purple-600 hover:to-blue-700"
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                {showComparison ? 'Hide' : 'View'} ROI Comparison
+              </Button>
+            </div>
+
+            {showComparison && (
+              <div className="mt-8 space-y-6 animate-in slide-in-from-top duration-300">
+                {/* Comparison Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse bg-gray-50 rounded-lg">
+                    <thead>
+                      <tr className="bg-gradient-to-r from-purple-500 to-blue-600 text-white">
+                        <th className="px-4 py-3 text-left font-semibold rounded-tl-lg">Metric</th>
+                        <th className="px-4 py-3 text-center font-semibold">Concern2Care</th>
+                        <th className="px-4 py-3 text-center font-semibold rounded-tr-lg">Magic School</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-sm">
+                      <tr className="border-b border-gray-200">
+                        <td className="px-4 py-3 font-medium">Per Teacher Cost (Annual)</td>
+                        <td className="px-4 py-3 text-center text-green-600 font-semibold">$120</td>
+                        <td className="px-4 py-3 text-center text-gray-600">Per-student pricing</td>
+                      </tr>
+                      <tr className="border-b border-gray-200 bg-white">
+                        <td className="px-4 py-3 font-medium">Per Student Cost (Annual)</td>
+                        <td className="px-4 py-3 text-center text-green-600 font-semibold">$4.80</td>
+                        <td className="px-4 py-3 text-center text-gray-600">$12.00</td>
+                      </tr>
+                      <tr className="border-b border-gray-200">
+                        <td className="px-4 py-3 font-medium">Cost Savings</td>
+                        <td className="px-4 py-3 text-center text-green-600 font-semibold">60% lower</td>
+                        <td className="px-4 py-3 text-center text-gray-600">Baseline</td>
+                      </tr>
+                      <tr className="border-b border-gray-200 bg-white">
+                        <td className="px-4 py-3 font-medium">Pricing Model</td>
+                        <td className="px-4 py-3 text-center text-green-600">Staff-based, predictable</td>
+                        <td className="px-4 py-3 text-center text-gray-600">Enrollment-based, variable</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 font-medium">Primary Focus</td>
+                        <td className="px-4 py-3 text-center text-green-600">Student support & outcomes</td>
+                        <td className="px-4 py-3 text-center text-gray-600">Teacher productivity tools</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* ROI Example */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Card className="border-green-200 bg-green-50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center text-green-700">
+                        <DollarSign className="w-5 h-5 mr-2" />
+                        Cost Comparison (480 students)
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span>Concern2Care Annual Cost:</span>
+                          <span className="font-semibold text-green-600">$5,760</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Magic School Annual Cost:</span>
+                          <span className="font-semibold text-gray-600">$14,400</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2">
+                          <span className="font-semibold">Direct Savings:</span>
+                          <span className="font-bold text-green-600">$8,640</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-purple-200 bg-purple-50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center text-purple-700">
+                        <TrendingUp className="w-5 h-5 mr-2" />
+                        Return on Investment
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span>If 5 students retained:</span>
+                          <span className="font-semibold">$50,000</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Total Benefits:</span>
+                          <span className="font-semibold">$58,640</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2">
+                          <span className="font-semibold">Net ROI:</span>
+                          <span className="font-bold text-purple-600">≈ 10× Return</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Value Beyond Cost */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+                  <h4 className="font-semibold text-gray-900 mb-4">Value Beyond Cost Savings</h4>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h5 className="font-medium text-green-700 mb-3">✅ Concern2Care Impact</h5>
+                      <ul className="space-y-2 text-sm text-gray-700">
+                        <li>• Research-based Tier 2 intervention strategies</li>
+                        <li>• Reduces counselor caseloads & prevents burnout</li>
+                        <li>• Improves student retention & graduation rates</li>
+                        <li>• Comprehensive: academic, behavioral, social-emotional</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 className="font-medium text-gray-600 mb-3">📝 Magic School Scope</h5>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        <li>• Teacher productivity tools</li>
+                        <li>• Lesson planning & grading assistance</li>
+                        <li>• Limited student support capabilities</li>
+                        <li>• Does not address Tier 2/3 intervention needs</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key Takeaway */}
+                <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg p-6 text-center">
+                  <h4 className="font-semibold mb-2">💡 Key Takeaway for School Leadership</h4>
+                  <p className="text-purple-100">
+                    At $10/teacher/month, Concern2Care delivers <strong>2.5× price advantage</strong> over competitors, 
+                    plus whole-student, whole-school impact that goes far beyond productivity tools.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* CTA Section */}
