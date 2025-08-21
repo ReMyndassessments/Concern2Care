@@ -1,7 +1,8 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Heart, LogOut, BarChart3 } from "lucide-react";
+import { Heart, LogOut, BarChart3, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "@shared/schema";
+import { Link } from "wouter";
 
 export default function AppHeader() {
   const { user } = useAuth() as { user: User | undefined };
@@ -21,12 +22,25 @@ export default function AppHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-brand-blue rounded-lg flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
+            <Link href="/">
+              <div className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity">
+                <div className="w-10 h-10 bg-brand-blue rounded-lg flex items-center justify-center">
+                  <Heart className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-xl font-semibold text-gray-900">Concern2Care</h1>
               </div>
-              <h1 className="text-xl font-semibold text-gray-900">Concern2Care</h1>
-            </div>
+            </Link>
+            
+            <Link href="/">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-500 hover:text-gray-700 ml-4"
+              >
+                <Home className="h-4 w-4 mr-2" />
+                Home
+              </Button>
+            </Link>
           </div>
           
           <div className="flex items-center space-x-4">
