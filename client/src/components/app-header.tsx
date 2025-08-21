@@ -31,15 +31,15 @@ export default function AppHeader() {
     <header className="bg-white/95 backdrop-blur-md shadow-lg border-b border-purple-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <div className="flex justify-between items-center h-16 sm:h-18">
-          {/* Logo - Responsive sizing */}
-          <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+          {/* Logo - Mobile Responsive */}
+          <div className="flex items-center space-x-2 flex-shrink-0 min-w-0">
             <Link href="/">
-              <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer hover:scale-105 transition-transform">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
-                  <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+              <div className="flex items-center space-x-2 cursor-pointer hover:scale-105 transition-transform">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                  <Sparkles className="h-5 w-5 text-white" />
                 </div>
-                <div className="hidden xs:block">
-                  <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-base sm:text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent truncate">
                     Concern2Care
                   </h1>
                   <p className="text-xs text-gray-500 -mt-1 hidden sm:block">Smart Support Tools</p>

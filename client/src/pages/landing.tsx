@@ -8,116 +8,116 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
-      {/* Floating Geometric Elements */}
+      {/* Floating Geometric Elements - Mobile Responsive */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-1/4 w-24 h-24 bg-purple-300 rounded-full opacity-60"></div>
-        <div className="absolute top-32 right-1/3 w-16 h-16 bg-emerald-200 rounded-full opacity-70"></div>
-        <div className="absolute top-48 right-1/4 w-20 h-20 bg-pink-200 rounded-full opacity-60"></div>
-        <div className="absolute bottom-1/3 left-1/5 w-18 h-18 bg-blue-200 rounded-full opacity-50"></div>
-        <div className="absolute bottom-1/4 right-1/5 w-14 h-14 bg-purple-200 rounded-full opacity-60"></div>
+        <div className="absolute top-20 left-1/4 w-16 h-16 md:w-24 md:h-24 bg-purple-300 rounded-full opacity-60"></div>
+        <div className="absolute top-32 right-1/3 w-12 h-12 md:w-16 md:h-16 bg-emerald-200 rounded-full opacity-70"></div>
+        <div className="absolute top-48 right-1/4 w-14 h-14 md:w-20 md:h-20 bg-pink-200 rounded-full opacity-60"></div>
+        <div className="absolute bottom-1/3 left-1/5 w-12 h-12 md:w-18 md:h-18 bg-blue-200 rounded-full opacity-50"></div>
+        <div className="absolute bottom-1/4 right-1/5 w-10 h-10 md:w-14 md:h-14 bg-purple-200 rounded-full opacity-60"></div>
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 py-6">
+      {/* Header - Mobile Responsive */}
+      <header className="relative z-10 py-4 md:py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end">
           <Button 
             onClick={() => window.location.href = '/login'}
-            className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold"
+            size="sm"
+            className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold text-sm md:text-base px-4 py-2 md:px-6 md:py-3"
           >
             Teacher Sign In
           </Button>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative z-10 py-16">
+      {/* Hero Section - Mobile Responsive */}
+      <section className="relative z-10 py-8 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Logo */}
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-8">
-            <Sparkles className="h-10 w-10 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-6 md:mb-8">
+            <Sparkles className="h-8 w-8 md:h-10 md:w-10 text-white" />
           </div>
           
-          {/* Main Heading */}
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          {/* Main Heading - Mobile Responsive */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 md:mb-6 leading-tight">
             Concern2Care
           </h1>
           
-          {/* Tagline */}
-          <p className="text-2xl text-gray-700 mb-2 font-medium">
-            Stronger Tools for Teachers. Smarter Support for Students.
+          {/* Tagline - Mobile Responsive */}
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-2 font-medium px-2">
+            Stronger Tools for Teachers.<br className="sm:hidden" /> Smarter Support for Students.
           </p>
           
           {/* Attribution */}
-          <p className="text-sm text-gray-500 mb-16">
+          <p className="text-sm text-gray-500 mb-8 md:mb-16">
             from Remynd
           </p>
         </div>
       </section>
 
-      {/* Main Content Card */}
-      <section className="relative z-10 pb-20">
+      {/* Main Content Card - Mobile Responsive */}
+      <section className="relative z-10 pb-12 md:pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl shadow-lg p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 leading-tight">
-              Get instant AI-powered strategies for academic,<br />
-              behavioral, and social-emotional needs
+          <div className="bg-white rounded-2xl md:rounded-3xl shadow-lg p-6 md:p-12 text-center">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 leading-tight px-2">
+              Get instant AI-powered strategies for academic, behavioral, and social-emotional needs
             </h2>
             
             <Button 
               size="lg"
               onClick={() => window.location.href = '/login'}
-              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-lg px-12 py-4 rounded-xl font-medium shadow-lg"
+              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-base md:text-lg px-8 md:px-12 py-3 md:py-4 rounded-xl font-medium shadow-lg w-full sm:w-auto"
             >
               🔐 Secure Teacher Login
             </Button>
             
-            <p className="text-sm text-gray-500 mt-6">
+            <p className="text-xs md:text-sm text-gray-500 mt-4 md:mt-6 px-2">
               FERPA compliant • Evidence-based strategies • Trusted by educators
             </p>
           </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="relative z-10 py-20 bg-white">
+      {/* Benefits Section - Mobile Responsive */}
+      <section className="relative z-10 py-12 md:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Sparkles className="w-8 h-8 text-purple-600" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 text-center">
+            <div className="px-2">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
+                <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-purple-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Instant AI Recommendations</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Instant AI Recommendations</h3>
+              <p className="text-sm md:text-base text-gray-600">
                 Get research-based intervention strategies in seconds
               </p>
             </div>
 
-            <div>
-              <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <FileText className="w-8 h-8 text-blue-600" />
+            <div className="px-2">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
+                <FileText className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Professional Documentation</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Professional Documentation</h3>
+              <p className="text-sm md:text-base text-gray-600">
                 Generate comprehensive PDF reports for meetings
               </p>
             </div>
 
-            <div>
-              <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Users className="w-8 h-8 text-emerald-600" />
+            <div className="px-2">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
+                <Users className="w-6 h-6 md:w-8 md:h-8 text-emerald-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Seamless Collaboration</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Seamless Collaboration</h3>
+              <p className="text-sm md:text-base text-gray-600">
                 Share support requests with your team effortlessly
               </p>
             </div>
 
-            <div>
-              <div className="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Clock className="w-8 h-8 text-pink-600" />
+            <div className="px-2">
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
+                <Clock className="w-6 h-6 md:w-8 md:h-8 text-pink-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Save Time Daily</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Save Time Daily</h3>
+              <p className="text-sm md:text-base text-gray-600">
                 Reduce documentation time by up to 75%
               </p>
             </div>
@@ -125,23 +125,23 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section className="relative z-10 py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Pricing Section - Mobile Responsive */}
+      <section className="relative z-10 py-12 md:py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 px-2">
               Simple, Transparent Pricing
             </h2>
-            <p className="text-2xl text-purple-600 font-semibold mb-4">
+            <p className="text-xl md:text-2xl text-purple-600 font-semibold mb-4">
               Just $10 per teacher per month
             </p>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto px-4">
               Empower your entire teaching staff with AI-powered student support tools. No hidden fees, no complicated tiers.
             </p>
           </div>
 
-          {/* Pricing Tiers */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {/* Pricing Tiers - Mobile Responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 md:mb-16">
             {/* Small School */}
             <Card className="relative border-2 border-gray-200 hover:border-purple-300 transition-all">
               <CardHeader className="text-center pb-4">
