@@ -152,16 +152,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
 
   return (
     <Card className="w-full">
-      <CardHeader className="pb-4 sm:pb-6">
-        <CardTitle className="flex items-center space-x-2 sm:space-x-3">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-brand-blue/10 rounded-lg flex items-center justify-center flex-shrink-0">
-            <Edit3 className="h-3 w-3 sm:h-4 sm:w-4 text-brand-blue" />
-          </div>
-          <span className="text-base sm:text-lg">Student Support Request Form</span>
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="px-4 sm:px-6">
+      <CardContent className="px-4 sm:px-6 pt-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
             
