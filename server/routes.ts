@@ -152,7 +152,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         studentLastInitial: newConcern.studentLastInitial,
         grade: newConcern.grade || "Elementary",
         teacherPosition: newConcern.teacherPosition || "Teacher",
-        incidentDate: newConcern.incidentDate?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
+        incidentDate: newConcern.incidentDate ? newConcern.incidentDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
         location: newConcern.location || "Classroom",
         concernTypes: Array.isArray(newConcern.concernTypes) ? newConcern.concernTypes : [],
         otherConcernType: newConcern.otherConcernType || undefined,
