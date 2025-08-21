@@ -68,42 +68,42 @@ export default function Dashboard() {
       </div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-4 shadow-lg">
-            <Sparkles className="h-8 w-8 text-white" />
+        {/* Header Section - Mobile Responsive */}
+        <div className="text-center mb-6 sm:mb-8 lg:mb-12 px-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-3 sm:mb-4 shadow-lg">
+            <Sparkles className="h-7 w-7 sm:h-8 sm:w-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
             Student Support Dashboard
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-base sm:text-lg text-gray-600">
             Create concerns and get AI-powered intervention strategies
           </p>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* Main Content Grid - Mobile Responsive */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Left Column - Concern Form */}
-          <div className="xl:col-span-2 space-y-6">
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-6">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl flex items-center justify-center">
-                  <FileText className="h-5 w-5 text-purple-600" />
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 p-4 sm:p-6">
+              <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Document New Concern</h2>
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Document New Concern</h2>
               </div>
               <ConcernForm onConcernSubmitted={handleConcernSubmitted} />
             </div>
           </div>
           
           {/* Right Column - Recent Concerns */}
-          <div className="xl:col-span-1">
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-6">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-green-100 rounded-xl flex items-center justify-center">
-                  <History className="h-5 w-5 text-emerald-600" />
+          <div className="lg:col-span-1 order-first lg:order-last">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 p-4 sm:p-6">
+              <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-100 to-green-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                  <History className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Recent Activity</h2>
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Recent Activity</h2>
               </div>
               <RecentConcerns />
             </div>

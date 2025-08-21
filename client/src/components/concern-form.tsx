@@ -151,28 +151,28 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const isAtLimit = user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20);
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-brand-blue/10 rounded-lg flex items-center justify-center">
-            <Edit3 className="h-4 w-4 text-brand-blue" />
+    <Card className="w-full">
+      <CardHeader className="pb-4 sm:pb-6">
+        <CardTitle className="flex items-center space-x-2 sm:space-x-3">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-brand-blue/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Edit3 className="h-3 w-3 sm:h-4 sm:w-4 text-brand-blue" />
           </div>
-          <span>Student Support Request Form</span>
+          <span className="text-base sm:text-lg">Student Support Request Form</span>
         </CardTitle>
       </CardHeader>
       
-      <CardContent>
+      <CardContent className="px-4 sm:px-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
             
-            {/* Student Information Section */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <div className="flex items-center space-x-2 mb-4">
-                <User className="h-5 w-5 text-brand-blue" />
-                <h3 className="text-lg font-medium text-gray-900">Student Information</h3>
+            {/* Student Information Section - Mobile Responsive */}
+            <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+              <div className="flex items-center space-x-2 mb-3 sm:mb-4">
+                <User className="h-4 w-4 sm:h-5 sm:w-5 text-brand-blue flex-shrink-0" />
+                <h3 className="text-base sm:text-lg font-medium text-gray-900">Student Information</h3>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 <FormField
                   control={form.control}
                   name="studentFirstName"
