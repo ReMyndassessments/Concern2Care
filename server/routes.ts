@@ -130,7 +130,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         concernType: null, // legacy field
         concernTypes: Array.isArray(req.body.concernTypes) ? req.body.concernTypes : [req.body.concernTypes].filter(Boolean),
         otherConcernType: req.body.otherConcernType || null,
-        description: req.body.concernDescription,
+        description: req.body.description,
         severityLevel: req.body.severityLevel,
         actionsTaken: Array.isArray(req.body.actionsTaken) ? req.body.actionsTaken : [req.body.actionsTaken].filter(Boolean),
         otherActionTaken: req.body.otherActionTaken || null,
@@ -158,7 +158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         location: String(req.body.location),
         concernTypes: req.body.concernTypes || [],
         otherConcernType: req.body.otherConcernType || null,
-        description: String(req.body.concernDescription),
+        description: String(req.body.description),
         severityLevel: String(req.body.severityLevel),
         actionsTaken: req.body.actionsTaken || [],
         otherActionTaken: req.body.otherActionTaken || null,
