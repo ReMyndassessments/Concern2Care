@@ -20,6 +20,11 @@ export async function generateInterventions(
   description: string,
   studentInfo: string
 ): Promise<InterventionStrategy[]> {
+  console.log("🚀 Starting intervention generation...");
+  console.log("🔑 DeepSeek client exists:", !!deepseekClient);
+  console.log("📝 Concern type:", concernType);
+  console.log("📝 Description:", description);
+  
   if (!deepseekClient) {
     throw new Error("DeepSeek API key not configured. Please provide DEEPSEEK_API_KEY environment variable.");
   }
@@ -85,13 +90,22 @@ Respond with a JSON object containing an array of interventions with the followi
 
     const data = await response.json();
 
+    const content = data.choices[0].message.content || '{"interventions": []}';
+    console.log("📝 Raw DeepSeek response:", content.substring(0, 200) + "...");
+    
     let result;
     try {
-      result = JSON.parse(data.choices[0].message.content || '{"interventions": []}');
+      // Try to find JSON in the response
+      const jsonMatch = content.match(/\{[\s\S]*"interventions"[\s\S]*\}/);
+      const jsonText = jsonMatch ? jsonMatch[0] : content;
+      result = JSON.parse(jsonText);
     } catch (parseError) {
-      console.error("Failed to parse DeepSeek response as JSON:", data.choices[0].message.content);
+      console.error("Failed to parse DeepSeek response as JSON:", content);
+      console.error("Parse error:", parseError);
       throw new Error("Invalid response format from DeepSeek API");
     }
+    
+    console.log("✅ Parsed interventions count:", result.interventions?.length || 0);
     return result.interventions || [];
   } catch (error) {
     console.error("Error generating interventions:", error);

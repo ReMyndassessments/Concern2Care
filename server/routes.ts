@@ -10,40 +10,29 @@ import path from "path";
 import fs from "fs";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
+  // Auth middleware disabled for demo
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
+  // Auth routes - simplified for demo
+  app.get('/api/auth/user', async (req: any, res) => {
+    // Return demo user for simplified testing
+    res.json({
+      id: "demo-teacher-123",
+      email: "demo@example.com",
+      firstName: "Demo",
+      lastName: "Teacher",
+      supportRequestsUsed: 0,
+      supportRequestsLimit: 20
+    });
   });
 
   // Create a new concern and generate interventions
-  app.post("/api/concerns", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns", async (req: any, res) => {
     console.log("🔍 POST /api/concerns - Request received");
     console.log("🔍 User authenticated:", !!req.user);
     console.log("🔍 User ID:", req.user?.claims?.sub);
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      // Check usage limits
-      if ((user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20)) {
-        return res.status(429).json({ 
-          message: "Monthly support request limit reached" 
-        });
-      }
+      // Skip user checks for demo - use a demo teacher ID
+      const userId = "demo-teacher-123";
 
       // Validate request body
       const validatedData = insertConcernSchema.parse({
@@ -73,8 +62,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }))
       );
 
-      // Update user's request count
-      await storage.updateUserRequestCount(userId, (user.supportRequestsUsed || 0) + 1);
+      // Skip user count update for demo
 
       res.json({
         concern,
@@ -87,9 +75,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get concerns for the current teacher
-  app.get("/api/concerns", isAuthenticated, async (req: any, res) => {
+  app.get("/api/concerns", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = "demo-teacher-123";
       const concerns = await storage.getConcernsByTeacher(userId);
       res.json(concerns);
     } catch (error) {
@@ -98,8 +86,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get a specific concern with all details
-  app.get("/api/concerns/:id", isAuthenticated, async (req: any, res) => {
+  // Get a specific concern with all details  
+  app.get("/api/concerns/:id", async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const concern = await storage.getConcernWithDetails(req.params.id);
@@ -121,7 +109,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Ask a follow-up question
-  app.post("/api/concerns/:id/questions", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns/:id/questions", async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const concernId = req.params.id;
@@ -172,7 +160,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Generate PDF report
-  app.post("/api/concerns/:id/report", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns/:id/report", async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const concernId = req.params.id;
@@ -213,7 +201,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Download PDF report
-  app.get("/api/reports/:id/download", isAuthenticated, async (req: any, res) => {
+  app.get("/api/reports/:id/download", async (req: any, res) => {
     try {
       const reportId = req.params.id;
       const report = await storage.getReportByConcernId(reportId);
@@ -238,7 +226,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Share report via email
-  app.post("/api/concerns/:id/share", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns/:id/share", async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const concernId = req.params.id;
