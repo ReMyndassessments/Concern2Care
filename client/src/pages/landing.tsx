@@ -371,88 +371,131 @@ export default function Landing() {
                   <table className="w-full border-collapse bg-gray-50 rounded-lg">
                     <thead>
                       <tr className="bg-gradient-to-r from-purple-500 to-blue-600 text-white">
-                        <th className="px-4 py-3 text-left font-semibold rounded-tl-lg">Metric</th>
-                        <th className="px-4 py-3 text-center font-semibold">Concern2Care</th>
-                        <th className="px-4 py-3 text-center font-semibold rounded-tr-lg">Magic School</th>
+                        <th className="px-3 py-3 text-left font-semibold rounded-tl-lg">Metric</th>
+                        <th className="px-3 py-3 text-center font-semibold">Magic School</th>
+                        <th className="px-3 py-3 text-center font-semibold">Concern2Care</th>
+                        <th className="px-3 py-3 text-center font-semibold rounded-tr-lg">Better Together</th>
                       </tr>
                     </thead>
                     <tbody className="text-sm">
                       <tr className="border-b border-gray-200">
-                        <td className="px-4 py-3 font-medium">Per Teacher Cost (Annual)</td>
-                        <td className="px-4 py-3 text-center text-green-600 font-semibold">$120</td>
-                        <td className="px-4 py-3 text-center text-gray-600">Per-student pricing</td>
+                        <td className="px-3 py-3 font-medium">Per Student Cost (Annual)</td>
+                        <td className="px-3 py-3 text-center text-gray-600">$12.00</td>
+                        <td className="px-3 py-3 text-center text-green-600 font-semibold">$4.80</td>
+                        <td className="px-3 py-3 text-center text-blue-600 font-semibold">$16.80</td>
                       </tr>
                       <tr className="border-b border-gray-200 bg-white">
-                        <td className="px-4 py-3 font-medium">Per Student Cost (Annual)</td>
-                        <td className="px-4 py-3 text-center text-green-600 font-semibold">$4.80</td>
-                        <td className="px-4 py-3 text-center text-gray-600">$12.00</td>
+                        <td className="px-3 py-3 font-medium">Per Teacher Cost (Annual)</td>
+                        <td className="px-3 py-3 text-center text-gray-600">$300</td>
+                        <td className="px-3 py-3 text-center text-green-600 font-semibold">$120</td>
+                        <td className="px-3 py-3 text-center text-blue-600 font-semibold">$420</td>
                       </tr>
                       <tr className="border-b border-gray-200">
-                        <td className="px-4 py-3 font-medium">Cost Savings</td>
-                        <td className="px-4 py-3 text-center text-green-600 font-semibold">60% lower</td>
-                        <td className="px-4 py-3 text-center text-gray-600">Baseline</td>
+                        <td className="px-3 py-3 font-medium">Pricing Model</td>
+                        <td className="px-3 py-3 text-center text-gray-600">Enrollment-based</td>
+                        <td className="px-3 py-3 text-center text-green-600">Staff-based</td>
+                        <td className="px-3 py-3 text-center text-blue-600">Balanced</td>
                       </tr>
                       <tr className="border-b border-gray-200 bg-white">
-                        <td className="px-4 py-3 font-medium">Pricing Model</td>
-                        <td className="px-4 py-3 text-center text-green-600">Staff-based, predictable</td>
-                        <td className="px-4 py-3 text-center text-gray-600">Enrollment-based, variable</td>
+                        <td className="px-3 py-3 font-medium">Predictability</td>
+                        <td className="px-3 py-3 text-center text-gray-600">Medium</td>
+                        <td className="px-3 py-3 text-center text-green-600">High</td>
+                        <td className="px-3 py-3 text-center text-blue-600">Medium-High</td>
                       </tr>
                       <tr>
-                        <td className="px-4 py-3 font-medium">Primary Focus</td>
-                        <td className="px-4 py-3 text-center text-green-600">Student support & outcomes</td>
-                        <td className="px-4 py-3 text-center text-gray-600">Teacher productivity tools</td>
+                        <td className="px-3 py-3 font-medium">Primary Benefit</td>
+                        <td className="px-3 py-3 text-center text-gray-600">Teacher efficiency</td>
+                        <td className="px-3 py-3 text-center text-green-600">Student wellbeing & retention</td>
+                        <td className="px-3 py-3 text-center text-blue-600">Complete staff + student impact</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
-                {/* ROI Example */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <Card className="border-green-200 bg-green-50">
+                {/* ROI Example - Three Scenarios */}
+                <div className="grid md:grid-cols-3 gap-4">
+                  <Card className="border-gray-200 bg-gray-50">
                     <CardHeader>
-                      <CardTitle className="flex items-center text-green-700">
-                        <DollarSign className="w-5 h-5 mr-2" />
-                        Cost Comparison (480 students)
+                      <CardTitle className="flex items-center text-gray-700 text-base">
+                        <DollarSign className="w-4 h-4 mr-2" />
+                        Magic School Only
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-3">
+                      <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span>Concern2Care Annual Cost:</span>
-                          <span className="font-semibold text-green-600">$5,760</span>
+                          <span>Annual Cost (1,200 students):</span>
+                          <span className="font-semibold">$14,400</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Magic School Annual Cost:</span>
-                          <span className="font-semibold text-gray-600">$14,400</span>
+                          <span>Student Retention Impact:</span>
+                          <span className="text-gray-500">Not impacted</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Teacher Efficiency:</span>
+                          <span className="font-semibold text-gray-600">Strong</span>
                         </div>
                         <div className="flex justify-between border-t pt-2">
-                          <span className="font-semibold">Direct Savings:</span>
-                          <span className="font-bold text-green-600">$8,640</span>
+                          <span className="font-semibold">Net ROI:</span>
+                          <span className="font-bold text-gray-600">Low</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="border-purple-200 bg-purple-50">
+                  <Card className="border-green-200 bg-green-50">
                     <CardHeader>
-                      <CardTitle className="flex items-center text-purple-700">
-                        <TrendingUp className="w-5 h-5 mr-2" />
-                        Return on Investment
+                      <CardTitle className="flex items-center text-green-700 text-base">
+                        <TrendingUp className="w-4 h-4 mr-2" />
+                        Concern2Care Only
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-3">
+                      <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span>If 5 students retained:</span>
-                          <span className="font-semibold">$50,000</span>
+                          <span>Annual Cost (50 teachers):</span>
+                          <span className="font-semibold text-green-600">$6,000</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Total Benefits:</span>
-                          <span className="font-semibold">$58,640</span>
+                          <span>If 5 students retained:</span>
+                          <span className="font-semibold text-green-600">$50,000</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Counselor Caseload:</span>
+                          <span className="font-semibold text-green-600">10-15% reduction</span>
                         </div>
                         <div className="flex justify-between border-t pt-2">
                           <span className="font-semibold">Net ROI:</span>
-                          <span className="font-bold text-purple-600">≈ 10× Return</span>
+                          <span className="font-bold text-green-600">≈ 10× Return</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-blue-200 bg-blue-50 ring-2 ring-blue-300">
+                    <CardHeader>
+                      <CardTitle className="flex items-center text-blue-700 text-base">
+                        <Star className="w-4 h-4 mr-2" />
+                        Better Together
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span>Combined Annual Cost:</span>
+                          <span className="font-semibold text-blue-600">$20,160</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Student Retention Value:</span>
+                          <span className="font-semibold text-blue-600">$50,000</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Complete Coverage:</span>
+                          <span className="font-semibold text-blue-600">Staff + Students</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2">
+                          <span className="font-semibold">Net ROI:</span>
+                          <span className="font-bold text-blue-600">≈ 7-8× Return</span>
                         </div>
                       </div>
                     </CardContent>
@@ -484,13 +527,30 @@ export default function Landing() {
                   </div>
                 </div>
 
-                {/* Key Takeaway */}
-                <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg p-6 text-center">
-                  <h4 className="font-semibold mb-2">💡 Key Takeaway for School Leadership</h4>
-                  <p className="text-purple-100">
-                    At $10/teacher/month, Concern2Care delivers <strong>2.5× price advantage</strong> over competitors, 
-                    plus whole-student, whole-school impact that goes far beyond productivity tools.
-                  </p>
+                {/* Better Together Highlight */}
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-6">
+                  <h4 className="font-semibold mb-4 text-center">🤝 Better Together: Complete AI Ecosystem</h4>
+                  <div className="grid md:grid-cols-3 gap-4 mb-4">
+                    <div className="text-center">
+                      <div className="font-semibold">Magic School Alone</div>
+                      <div className="text-sm text-blue-100">Great for teacher productivity, but doesn't impact student outcomes or retention</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-semibold">Concern2Care Alone</div>
+                      <div className="text-sm text-blue-100">Lower cost, high systemic ROI via retention, SEL, and reduced counselor burnout</div>
+                    </div>
+                    <div className="text-center bg-white/10 rounded-lg p-3">
+                      <div className="font-semibold text-yellow-200">Both Together</div>
+                      <div className="text-sm text-blue-100">Complete coverage: teacher efficiency + student wellbeing for under $17/student/year</div>
+                    </div>
+                  </div>
+                  <div className="text-center border-t border-white/20 pt-4">
+                    <h5 className="font-semibold mb-2">Leadership Pitch</h5>
+                    <p className="text-blue-100">
+                      For under <strong>$17 per student per year</strong>, you can cover both teacher efficiency AND student wellbeing. 
+                      That's a complete AI ecosystem supporting staff and students — without breaking your budget.
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
