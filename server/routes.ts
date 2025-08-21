@@ -52,11 +52,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         incidentDate: concern.incidentDate?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
         location: concern.location || "Classroom",
         concernTypes: Array.isArray(concern.concernTypes) ? concern.concernTypes : [concern.concernType || "Academic"],
-        otherConcernType: concern.otherConcernType,
+        otherConcernType: concern.otherConcernType || undefined,
         concernDescription: concern.description,
         severityLevel: concern.severityLevel || "moderate",
         actionsTaken: Array.isArray(concern.actionsTaken) ? concern.actionsTaken : [],
-        otherActionTaken: concern.otherActionTaken,
+        otherActionTaken: concern.otherActionTaken || undefined,
       };
 
       const recommendationResponse = await generateRecommendations(recommendationRequest);
@@ -96,10 +96,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Generate AI recommendations directly (for testing)
+  app.post("/api/concerns/generate-recommendations", async (req: any, res) => {
+    console.log("🤖 AI generation endpoint called");
+    try {
+      // Validate the request data matches GenerateRecommendationsRequest interface
+      const recommendationRequest: GenerateRecommendationsRequest = req.body;
+      
+      console.log("📋 Generating recommendations for:", recommendationRequest.studentFirstName, recommendationRequest.studentLastInitial);
+      
+      const recommendationResponse = await generateRecommendations(recommendationRequest);
+      
+      res.json({
+        success: true,
+        recommendations: recommendationResponse.recommendations,
+        disclaimer: recommendationResponse.disclaimer
+      });
+    } catch (error) {
+      console.error("❌ Error in AI generation endpoint:", error);
+      res.status(500).json({ 
+        success: false,
+        message: "Failed to generate recommendations",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Get a specific concern with all details  
   app.get("/api/concerns/:id", async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = "demo-teacher-123"; // Use demo user
       const concern = await storage.getConcernWithDetails(req.params.id);
       
       if (!concern) {
