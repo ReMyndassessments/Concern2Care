@@ -141,9 +141,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   });
 
   const onSubmit = (data: EnhancedConcernFormData) => {
-    console.log("🚀 Form submitted with data:", data);
-    console.log("🚀 Form errors:", form.formState.errors);
-    
     // Show user-friendly validation message if there are errors
     if (Object.keys(form.formState.errors).length > 0) {
       toast({

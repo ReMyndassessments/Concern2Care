@@ -18,6 +18,89 @@ interface InterventionResultsProps {
   showFollowUpQuestions?: boolean;
 }
 
+// Professional formatting component for AI recommendations
+const FormattedRecommendations = ({ content }: { content: string }) => {
+  const formatContent = (text: string) => {
+    const lines = text.split('\n');
+    const elements: React.ReactElement[] = [];
+    let key = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+
+      // Main headings (### **1. Assessment Summary**)
+      if (line.match(/^###\s*\*\*(.*?)\*\*/)) {
+        const title = line.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
+        elements.push(
+          <h3 key={key++} className="text-lg font-bold text-gray-900 mt-6 mb-3 border-b border-gray-200 pb-2">
+            {title}
+          </h3>
+        );
+        continue;
+      }
+
+      // Sub-headings (* **Strategy: Safe Arrival**)
+      if (line.match(/^\*\s*\*\*(.*?)\*\*/)) {
+        const title = line.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
+        elements.push(
+          <h4 key={key++} className="text-md font-semibold text-blue-800 mt-4 mb-2">
+            {title}
+          </h4>
+        );
+        continue;
+      }
+
+      // Bold emphasis (** text **)
+      if (line.match(/^\*\s*\*\*(.*?)\*\*:/)) {
+        const title = line.replace(/^\*\s*\*\*(.*?)\*\*:/, '$1');
+        elements.push(
+          <p key={key++} className="font-medium text-gray-800 mt-3 mb-1">
+            <strong>{title}:</strong>
+          </p>
+        );
+        continue;
+      }
+
+      // Bullet points (* Implementation: text)
+      if (line.startsWith('* ')) {
+        const content = line.replace(/^\*\s*/, '');
+        elements.push(
+          <li key={key++} className="ml-4 mb-2 text-gray-700 list-disc">
+            {content}
+          </li>
+        );
+        continue;
+      }
+
+      // Separators (---)
+      if (line === '---') {
+        elements.push(
+          <hr key={key++} className="my-6 border-gray-300" />
+        );
+        continue;
+      }
+
+      // Regular paragraphs
+      if (line.length > 0) {
+        elements.push(
+          <p key={key++} className="text-gray-700 mb-3 leading-relaxed">
+            {line}
+          </p>
+        );
+      }
+    }
+
+    return elements;
+  };
+
+  return (
+    <div className="space-y-2">
+      {formatContent(content)}
+    </div>
+  );
+};
+
 export default function InterventionResults({ 
   concern, 
   interventions, 
@@ -185,9 +268,9 @@ export default function InterventionResults({
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         {intervention.title}
                       </h3>
-                      <p className="text-gray-700 mb-4">
-                        {intervention.description}
-                      </p>
+                      <div className="prose prose-sm max-w-none mb-4">
+                        <FormattedRecommendations content={intervention.description} />
+                      </div>
                       
                       {intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0 && (
                         <div className="bg-gray-50 rounded-lg p-4 mb-4">

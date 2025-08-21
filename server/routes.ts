@@ -122,12 +122,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Create a new concern and generate recommendations - PROTECTED
   app.post("/api/concerns", requireAuth, async (req: any, res) => {
-    console.log("🔍 POST /api/concerns - Request received");
-    console.log("🔍 Request body:", req.body);
     try {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;
-      console.log("🔍 User ID:", userId);
       
       // Create concern in database
       const newConcern = await storage.createConcern({
@@ -162,9 +159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         otherActionTaken: newConcern.otherActionTaken || undefined,
       };
 
-      console.log("🔍 About to call generateRecommendations...");
       const recommendationResponse = await generateRecommendations(recommendationRequest);
-      console.log("🔍 AI response received:", !!recommendationResponse);
 
       // Save the AI response as a single intervention record for now
       const savedInterventions = await storage.createInterventions([{
