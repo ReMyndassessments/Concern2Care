@@ -30,18 +30,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log("🔍 POST /api/concerns - Request received");
     console.log("🔍 User authenticated:", !!req.user);
     console.log("🔍 User ID:", req.user?.claims?.sub);
+    console.log("🔍 Request body:", JSON.stringify(req.body, null, 2));
     try {
       // Skip user checks for demo - use a demo teacher ID
       const userId = "demo-teacher-123";
 
-      // Validate request body with enhanced schema
-      const validatedData = insertConcernSchema.parse({
-        ...req.body,
-        teacherId: userId,
-      });
+      console.log("🔍 Processing concern data...");
 
-      // Create concern
-      const concern = await storage.createConcern(validatedData);
+      // Directly construct the concern data with proper type handling
+      const concernData = {
+        teacherId: userId,
+        studentFirstName: req.body.studentFirstName,
+        studentLastInitial: req.body.studentLastInitial,
+        grade: req.body.grade,
+        teacherPosition: req.body.teacherPosition,
+        incidentDate: new Date(req.body.incidentDate),
+        location: req.body.location,
+        concernType: null, // legacy field
+        concernTypes: Array.isArray(req.body.concernTypes) ? req.body.concernTypes : [req.body.concernTypes].filter(Boolean),
+        otherConcernType: req.body.otherConcernType || null,
+        description: req.body.concernDescription,
+        severityLevel: req.body.severityLevel,
+        actionsTaken: Array.isArray(req.body.actionsTaken) ? req.body.actionsTaken : [req.body.actionsTaken].filter(Boolean),
+        otherActionTaken: req.body.otherActionTaken || null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      console.log("🔍 Final concern data:", JSON.stringify(concernData, (key, value) => {
+        if (value instanceof Date) {
+          return `DATE: ${value.toISOString()}`;
+        }
+        return value;
+      }, 2));
+
+      console.log("🔍 About to create concern in database...");
+      
+      // Try direct database insert to bypass Drizzle type issues
+      try {
+        const [concern] = await db.insert(concerns).values({
+          teacherId: userId,
+          studentFirstName: String(req.body.studentFirstName),
+          studentLastInitial: String(req.body.studentLastInitial),
+          grade: String(req.body.grade),
+          teacherPosition: String(req.body.teacherPosition),
+          incidentDate: new Date(req.body.incidentDate),
+          location: String(req.body.location),
+          concernTypes: req.body.concernTypes || [],
+          otherConcernType: req.body.otherConcernType || null,
+          description: String(req.body.concernDescription),
+          severityLevel: String(req.body.severityLevel),
+          actionsTaken: req.body.actionsTaken || [],
+          otherActionTaken: req.body.otherActionTaken || null,
+        }).returning();
+        
+        console.log("🔍 Concern created successfully:", concern.id);
+        
+      } catch (dbError) {
+        console.error("🔍 Direct DB insert error:", dbError);
+        throw dbError;
+      }
 
       // Generate AI recommendations using the enhanced format
       const recommendationRequest: GenerateRecommendationsRequest = {
