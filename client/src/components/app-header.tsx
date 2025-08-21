@@ -59,7 +59,7 @@ export default function AppHeader() {
             <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
                 <BarChart3 className="h-4 w-4 mr-2" />
-                Dashboard
+                New Request
               </Button>
             </Link>
             <Link href="/my-support-requests">
@@ -141,7 +141,7 @@ export default function AppHeader() {
               <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
                   <BarChart3 className="h-4 w-4 mr-3" />
-                  Dashboard
+                  New Request
                 </Button>
               </Link>
               <Link href="/my-support-requests" onClick={() => setIsMobileMenuOpen(false)}>

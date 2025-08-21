@@ -18,7 +18,8 @@ import {
   Calendar,
   MapPin,
   AlertCircle,
-  FileText
+  FileText,
+  Clock
 } from "lucide-react";
 import { Concern } from "@shared/schema";
 import { Link } from "wouter";
@@ -128,7 +129,7 @@ export default function MySupportRequests() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back to Home Link */}
         <div className="mb-6">
-          <Link href="/dashboard">
+          <Link href="/">
             <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Home
@@ -144,6 +145,46 @@ export default function MySupportRequests() {
           <p className="text-lg text-gray-600">
             View and manage submitted student support requests
           </p>
+        </div>
+
+        {/* Recent Activity Section */}
+        <div className="bg-green-50 rounded-2xl border border-green-200 p-6 mb-6">
+          <div className="flex items-center mb-4">
+            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mr-3">
+              <History className="h-5 w-5 text-green-600" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
+          </div>
+          
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
+                  <Clock className="h-4 w-4 text-gray-500" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Recent Concerns</h3>
+              </div>
+              <Badge variant="secondary" className="text-gray-600">
+                {concerns?.length || 0}
+              </Badge>
+            </div>
+            
+            {concerns && concerns.length > 0 ? (
+              <p className="text-gray-600 text-sm">
+                You have {concerns.length} concern{concerns.length !== 1 ? 's' : ''} documented. View details below.
+              </p>
+            ) : (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Clock className="h-8 w-8 text-gray-400" />
+                </div>
+                <h4 className="text-lg font-medium text-gray-900 mb-2">No concerns documented yet</h4>
+                <p className="text-gray-500 text-sm">
+                  Your recent concerns will appear here after you submit your first concern.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Filter Section */}
