@@ -73,7 +73,11 @@ export class DatabaseStorage implements IStorage {
 
   // Concern operations
   async createConcern(concern: InsertConcern): Promise<Concern> {
-    const [newConcern] = await db.insert(concerns).values(concern).returning();
+    const concernWithDate = {
+      ...concern,
+      incidentDate: new Date(), // Auto-generate the incident date
+    };
+    const [newConcern] = await db.insert(concerns).values(concernWithDate).returning();
     return newConcern;
   }
 
