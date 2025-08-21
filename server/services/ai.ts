@@ -90,6 +90,12 @@ For each strategy, include:
 Use professional educational terminology and ensure recommendations are practical and classroom-friendly. Structure your response with clear headings and bullet points for easy reading.`;
 
   try {
+    console.log(`🌐 Making DeepSeek API call to: ${deepseekClient.baseURL}/chat/completions`);
+    console.log(`🔑 Using API key: ${deepseekClient.apiKey.substring(0, 10)}...`);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     const response = await fetch(`${deepseekClient.baseURL}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -110,8 +116,12 @@ Use professional educational terminology and ensure recommendations are practica
         ],
         max_tokens: 2000,
         temperature: 0.7
-      })
+      }),
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
+    console.log(`✅ DeepSeek API response status: ${response.status}`);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -129,13 +139,26 @@ Use professional educational terminology and ensure recommendations are practica
       disclaimer
     };
   } catch (error) {
-    console.error('Error calling DeepSeek API:', error);
+    console.error('❌ Error calling DeepSeek API:', error);
+    console.error('❌ Error details:', error instanceof Error ? error.message : 'Unknown error');
     
-    if (error instanceof Error && error.message.includes('401')) {
-      throw new Error("Invalid DeepSeek API key. Please contact your administrator.");
+    if (error instanceof Error) {
+      if (error.message.includes('401')) {
+        console.log('🚫 Authentication error - Invalid API key');
+        // Fall back to mock data instead of throwing error
+        const mockRecommendations = generateMockRecommendations(req);
+        const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (DeepSeek API authentication failed, returning mock data)";
+        return { recommendations: mockRecommendations, disclaimer };
+      }
+      if (error.name === 'AbortError') {
+        console.log('⏰ API request timed out after 30 seconds');
+      }
     }
     
-    throw new Error('Unable to generate recommendations at this time due to a technical error. Please try again later or contact your student support department directly.');
+    console.log('🔄 API call failed, falling back to mock data');
+    const mockRecommendations = generateMockRecommendations(req);
+    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (DeepSeek API unavailable, returning mock data)";
+    return { recommendations: mockRecommendations, disclaimer };
   }
 }
 
@@ -196,6 +219,11 @@ Please provide detailed, practical guidance to help the teacher implement the in
 Focus on actionable advice that a classroom teacher can realistically implement. Use professional educational terminology while keeping explanations clear and practical. Structure your response with clear headings and bullet points for easy reading.`;
 
   try {
+    console.log('🤝 Making DeepSeek API call for follow-up assistance');
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     const response = await fetch(`${deepseekClient.baseURL}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -216,8 +244,11 @@ Focus on actionable advice that a classroom teacher can realistically implement.
         ],
         max_tokens: 2000,
         temperature: 0.7
-      })
+      }),
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -235,13 +266,12 @@ Focus on actionable advice that a classroom teacher can realistically implement.
       disclaimer
     };
   } catch (error) {
-    console.error('Error calling DeepSeek API for follow-up assistance:', error);
+    console.error('❌ Error calling DeepSeek API for follow-up assistance:', error);
     
-    if (error instanceof Error && error.message.includes('401')) {
-      throw new Error("Invalid DeepSeek API key. Please contact your administrator.");
-    }
-    
-    throw new Error('Unable to generate follow-up assistance at this time due to a technical error. Please try again later or contact your student support department directly for implementation guidance.');
+    console.log('🔄 Follow-up assistance API failed, falling back to mock data');
+    const mockAssistance = generateMockFollowUpAssistance(req);
+    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: This AI-generated assistance is for informational purposes only and should not replace professional educational consultation. Please work with your school's student support department, special education team, or educational specialists for comprehensive guidance. All suggestions should be reviewed and approved by qualified educational professionals before implementation. (DeepSeek API unavailable, returning mock data)";
+    return { assistance: mockAssistance, disclaimer };
   }
 }
 
