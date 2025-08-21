@@ -35,12 +35,12 @@ export function getSession() {
     secret: process.env.SESSION_SECRET!,
     store: sessionStore,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true, // Save uninitialized sessions
     cookie: {
       httpOnly: true,
       secure: false, // Set to false for development
       maxAge: sessionTtl,
-      sameSite: 'lax',
+      sameSite: 'none', // Allow cross-origin requests
     },
   });
 }

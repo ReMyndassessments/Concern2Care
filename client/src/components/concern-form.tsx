@@ -122,6 +122,9 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   });
 
   const onSubmit = (data: ConcernFormData) => {
+    console.log("🚀 Form submitted with data:", data);
+    console.log("🚀 Form errors:", form.formState.errors);
+    console.log("🚀 Form is valid:", form.formState.isValid);
     createConcernMutation.mutate(data);
   };
 
