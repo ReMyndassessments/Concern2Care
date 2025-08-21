@@ -44,7 +44,9 @@ export async function generateConcernReport(
       // Concern Details
       doc.fontSize(14).fillColor('#000000').text('Concern Details', 50, yPosition);
       yPosition += 25;
-      doc.fontSize(12).text(`Type: ${concern.concernType.charAt(0).toUpperCase() + concern.concernType.slice(1)}`, 50, yPosition);
+      const concernTypes = Array.isArray(concern.concernTypes) ? concern.concernTypes : [];
+      const concernTypeText = concernTypes.length > 0 ? concernTypes.join(', ') : 'Not specified';
+      doc.fontSize(12).text(`Type: ${concernTypeText}`, 50, yPosition);
       yPosition += 20;
       doc.text(`Date Documented: ${concern.createdAt?.toLocaleDateString('en-US') || 'Unknown'}`, 50, yPosition);
       yPosition += 25;
