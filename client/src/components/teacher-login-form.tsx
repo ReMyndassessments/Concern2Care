@@ -33,8 +33,8 @@ export default function TeacherLoginForm() {
           title: "Welcome back!",
           description: "You've been successfully signed in.",
         });
-        // Reload to trigger auth state update
-        window.location.reload();
+        // Navigate to home instead of reloading
+        window.location.href = '/';
       } else {
         toast({
           title: "Sign In Failed",
