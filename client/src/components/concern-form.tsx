@@ -546,11 +546,9 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 size="lg"
                 onClick={() => {
                   console.log("🔘 Submit button clicked");
-                  console.log("🔘 Form state:", form.formState);
-                  const errors = form.formState.errors;
-                  if (Object.keys(errors).length > 0) {
-                    console.log("❌ Form validation errors:", errors);
-                  }
+                  console.log("🔘 Form values:", form.getValues());
+                  console.log("🔘 Form errors:", form.formState.errors);
+                  console.log("🔘 Form is valid:", form.formState.isValid);
                 }}
               >
                 {createConcernMutation.isPending ? (
