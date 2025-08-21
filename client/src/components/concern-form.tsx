@@ -144,6 +144,20 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
 
   const onSubmit = (data: EnhancedConcernFormData) => {
     console.log("🚀 Enhanced form submitted with data:", data);
+    console.log("🚀 Form validation errors:", form.formState.errors);
+    console.log("🚀 Is form valid:", form.formState.isValid);
+    console.log("🚀 Mutation is pending:", createConcernMutation.isPending);
+    
+    if (!form.formState.isValid) {
+      console.log("❌ Form has validation errors, not submitting");
+      toast({
+        title: "Form Validation Error",
+        description: "Please check all required fields and fix any errors before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     createConcernMutation.mutate(data);
   };
 
@@ -530,6 +544,14 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 disabled={createConcernMutation.isPending || isAtLimit}
                 className="bg-brand-blue hover:bg-brand-dark-blue px-8 py-3 text-lg"
                 size="lg"
+                onClick={() => {
+                  console.log("🔘 Submit button clicked");
+                  console.log("🔘 Form state:", form.formState);
+                  const errors = form.formState.errors;
+                  if (Object.keys(errors).length > 0) {
+                    console.log("❌ Form validation errors:", errors);
+                  }
+                }}
               >
                 {createConcernMutation.isPending ? (
                   <>
