@@ -108,13 +108,13 @@ export default function AppHeader() {
               </div>
               
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={handleLogout}
-                className="text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl p-2"
+                className="text-gray-600 hover:text-red-600 hover:border-red-300 border-gray-300 ml-3"
               >
-                <LogOut className="h-4 w-4" />
-                <span className="sr-only">Logout</span>
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
               </Button>
             </div>
           </div>
