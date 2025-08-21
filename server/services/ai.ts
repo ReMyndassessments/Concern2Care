@@ -72,22 +72,43 @@ Student Information:
 
 Based on the concern type(s) identified (${concernTypesText}) and severity level (${req.severityLevel}), please provide specific, actionable Tier 2 intervention recommendations that a teacher could implement in the classroom. Focus on evidence-based strategies that address the described concerns.
 
-Format your response as follows:
-1. **Assessment Summary** - Brief analysis of the student's needs based on the concern type and severity
-2. **Immediate Interventions** (1-2 weeks) - Quick strategies to implement right away
-3. **Short-term Strategies** (2-6 weeks) - More comprehensive interventions
-4. **Long-term Support** (6+ weeks) - Sustained support strategies
-5. **Progress Monitoring** - How to track effectiveness
-6. **When to Escalate** - Clear indicators for referring to student support team
+Format your response using this EXACT markdown structure for proper display:
 
-For each strategy, include:
-- Strategy name/title
-- Clear implementation steps
-- Expected outcomes
-- Timeline for implementation
-- Materials/resources needed
+### **1. Assessment Summary**
+Brief analysis of the student's needs based on the concern type and severity
 
-Use professional educational terminology and ensure recommendations are practical and classroom-friendly. Structure your response with clear headings and bullet points for easy reading.`;
+### **2. Immediate Interventions (1-2 weeks)**
+* **Strategy: [Strategy Name]**
+* **Implementation:**
+  * Step 1
+  * Step 2
+  * Step 3
+
+### **3. Short-term Strategies (2-6 weeks)**
+* **Strategy: [Strategy Name]**
+* **Implementation:**
+  * Step 1
+  * Step 2
+  * Step 3
+
+### **4. Long-term Support (6+ weeks)**
+* **Strategy: [Strategy Name]**
+* **Implementation:**
+  * Step 1
+  * Step 2
+
+### **5. Progress Monitoring**
+* **Data Collection:**
+  * Method 1
+  * Method 2
+* **Review Timeline:** Weekly/Bi-weekly
+
+### **6. When to Escalate**
+* **Indicators:**
+  * Clear sign 1
+  * Clear sign 2
+
+Use this EXACT formatting with ### for main headings, * ** for strategy names, and bullet points for implementation steps.`;
 
   try {
     console.log(`🌐 Making DeepSeek API call to: ${deepseekClient.baseURL}/chat/completions`);

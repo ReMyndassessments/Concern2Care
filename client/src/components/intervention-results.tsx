@@ -40,9 +40,9 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
         continue;
       }
 
-      // Sub-headings (* **Strategy: Safe Arrival**)
-      if (line.match(/^\*\s*\*\*(.*?)\*\*/)) {
-        const title = line.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
+      // Sub-headings (* **Strategy: Safe Arrival** OR **Strategy: Safe Arrival**)
+      if (line.match(/^\*?\s*\*\*(.*?)\*\*/)) {
+        const title = line.replace(/^\*?\s*\*\*(.*?)\*\*/, '$1');
         elements.push(
           <h4 key={key++} className="text-md font-semibold text-blue-800 mt-4 mb-2">
             {title}
@@ -51,9 +51,9 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
         continue;
       }
 
-      // Bold emphasis (** text **)
-      if (line.match(/^\*\s*\*\*(.*?)\*\*:/)) {
-        const title = line.replace(/^\*\s*\*\*(.*?)\*\*:/, '$1');
+      // Bold emphasis (** text **:)
+      if (line.match(/^\*?\s*\*\*(.*?)\*\*:/)) {
+        const title = line.replace(/^\*?\s*\*\*(.*?)\*\*:/, '$1');
         elements.push(
           <p key={key++} className="font-medium text-gray-800 mt-3 mb-1">
             <strong>{title}:</strong>

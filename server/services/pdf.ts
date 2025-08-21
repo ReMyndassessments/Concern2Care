@@ -77,9 +77,9 @@ export async function generateConcernReport(
         doc.fontSize(12).fillColor('#2563eb').text(`${index + 1}. ${intervention.title}`, 50, yPosition);
         yPosition += 20;
         
-        const descHeight = doc.heightOfString(intervention.description, { width: 495 });
-        doc.fontSize(10).fillColor('#000000').text(intervention.description, 50, yPosition, { width: 495, align: 'justify' });
-        yPosition += descHeight + 15;
+        // Parse and format the description markdown
+        yPosition = parseMarkdownToPDF(doc, intervention.description, yPosition);
+        yPosition += 15;
 
         if (intervention.steps && Array.isArray(intervention.steps)) {
           doc.fontSize(10).fillColor('#666666').text('Implementation Steps:', 50, yPosition);
@@ -146,6 +146,57 @@ export async function generateConcernReport(
       reject(error);
     }
   });
+}
+
+// Helper function to parse markdown and format it in PDF
+function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
+  const lines = text.split('\n');
+  let yPosition = startY;
+  
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+    if (!trimmedLine) continue;
+    
+    // Check if we need a new page
+    if (yPosition > 700) {
+      doc.addPage();
+      yPosition = 50;
+    }
+    
+    // Main headings (### **text**)
+    if (trimmedLine.match(/^###\s*\*\*(.*?)\*\*/)) {
+      const title = trimmedLine.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
+      doc.fontSize(11).fillColor('#2563eb').text(title, 50, yPosition);
+      yPosition += 20;
+      continue;
+    }
+    
+    // Sub-headings (* **text**)
+    if (trimmedLine.match(/^\*\s*\*\*(.*?)\*\*/)) {
+      const title = trimmedLine.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
+      doc.fontSize(10).fillColor('#1e40af').text(title, 60, yPosition);
+      yPosition += 16;
+      continue;
+    }
+    
+    // Bullet points (* text or numbered)
+    if (trimmedLine.startsWith('* ') || trimmedLine.match(/^\d+\.\s/)) {
+      const content = trimmedLine.replace(/^\*\s*/, '').replace(/^\d+\.\s*/, '');
+      doc.fontSize(9).fillColor('#374151').text(`• ${content}`, 70, yPosition, { width: 475 });
+      const lineHeight = doc.heightOfString(`• ${content}`, { width: 475 });
+      yPosition += lineHeight + 3;
+      continue;
+    }
+    
+    // Regular text
+    if (trimmedLine.length > 0) {
+      doc.fontSize(9).fillColor('#374151').text(trimmedLine, 60, yPosition, { width: 485 });
+      const lineHeight = doc.heightOfString(trimmedLine, { width: 485 });
+      yPosition += lineHeight + 5;
+    }
+  }
+  
+  return yPosition;
 }
 
 export function ensureReportsDirectory(): string {
