@@ -1,7 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
 import { generateInterventions, answerFollowUpQuestion, generateRecommendations, followUpAssistance, GenerateRecommendationsRequest, FollowUpAssistanceRequest } from "./services/ai";
 import { generateConcernReport, ensureReportsDirectory } from "./services/pdf";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
@@ -10,25 +9,105 @@ import { db } from "./db";
 import { concerns } from "@shared/schema";
 import path from "path";
 import fs from "fs";
+import session from "express-session";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // CRITICAL SECURITY: Enable proper authentication
-  await setupAuth(app);
+  // Enable sessions for professional authentication
+  app.use(session({
+    secret: 'concern2care-session-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // Set to true in production with HTTPS
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  }));
 
-  // Auth routes - SECURE IMPLEMENTATION
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Professional teacher authentication - no development modals
+  
+  // Teacher login endpoint
+  app.post('/api/auth/login', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+      }
+
+      // For demo purposes - in production this would validate against school's user database
+      // Simulate teacher login validation
+      const demoTeachers = [
+        { 
+          id: "teacher-001", 
+          email: "noel.roberts@school.edu",
+          firstName: "Noel", 
+          lastName: "Roberts",
+          school: "Demo Elementary School"
+        },
+        { 
+          id: "teacher-002", 
+          email: "demo@teacher.com",
+          firstName: "Demo", 
+          lastName: "Teacher",
+          school: "Sample Middle School"
+        }
+      ];
+
+      const teacher = demoTeachers.find(t => 
+        t.email.toLowerCase() === email.toLowerCase() && 
+        (password === "teacher123" || password === "demo")
+      );
+
+      if (!teacher) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Create session (simplified)
+      req.session.user = teacher;
+      req.session.isAuthenticated = true;
+
+      res.json({ 
+        success: true, 
+        user: teacher,
+        message: "Login successful"
+      });
     } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Login failed" });
     }
   });
 
+  // Teacher logout endpoint
+  app.post('/api/auth/logout', (req: any, res) => {
+    req.session.destroy((err: any) => {
+      if (err) {
+        return res.status(500).json({ message: "Logout failed" });
+      }
+      res.json({ success: true, message: "Logged out successfully" });
+    });
+  });
+
+  // Get current teacher
+  app.get('/api/auth/user', (req: any, res) => {
+    if (req.session.isAuthenticated && req.session.user) {
+      res.json(req.session.user);
+    } else {
+      res.status(401).json({ message: "Not authenticated" });
+    }
+  });
+
+  // Simple auth middleware
+  const requireAuth = (req: any, res: any, next: any) => {
+    if (req.session.isAuthenticated && req.session.user) {
+      req.user = { claims: { sub: req.session.user.id } }; // Compatibility with existing code
+      next();
+    } else {
+      res.status(401).json({ message: "Authentication required" });
+    }
+  };
+
   // Create a new concern and generate recommendations - PROTECTED
-  app.post("/api/concerns", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns", requireAuth, async (req: any, res) => {
     console.log("🔍 POST /api/concerns - Request received");
     console.log("🔍 User authenticated:", !!req.user);
     console.log("🔍 User ID:", req.user?.claims?.sub);
@@ -127,7 +206,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get concerns for the current teacher - PROTECTED
-  app.get("/api/concerns", isAuthenticated, async (req: any, res) => {
+  app.get("/api/concerns", requireAuth, async (req: any, res) => {
     try {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;
@@ -166,7 +245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get a specific concern with all details - PROTECTED
-  app.get("/api/concerns/:id", isAuthenticated, async (req: any, res) => {
+  app.get("/api/concerns/:id", requireAuth, async (req: any, res) => {
     try {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;
@@ -189,7 +268,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Ask a follow-up question using enhanced AI assistance - PROTECTED
-  app.post("/api/concerns/:id/questions", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns/:id/questions", requireAuth, async (req: any, res) => {
     try {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;
@@ -238,7 +317,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Generate PDF report - PROTECTED
-  app.post("/api/concerns/:id/report", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns/:id/report", requireAuth, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const concernId = req.params.id;
@@ -279,7 +358,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Download PDF report - PROTECTED
-  app.get("/api/reports/:id/download", isAuthenticated, async (req: any, res) => {
+  app.get("/api/reports/:id/download", requireAuth, async (req: any, res) => {
     try {
       const reportId = req.params.id;
       const report = await storage.getReportByConcernId(reportId);
@@ -304,7 +383,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Share report via email - PROTECTED
-  app.post("/api/concerns/:id/share", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns/:id/share", requireAuth, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const concernId = req.params.id;
@@ -367,7 +446,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Bulk share multiple concerns - PROTECTED
-  app.post("/api/concerns/bulk-share", isAuthenticated, async (req: any, res) => {
+  app.post("/api/concerns/bulk-share", requireAuth, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const { concernIds, recipientEmail, recipientName, message, senderName } = req.body;

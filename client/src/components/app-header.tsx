@@ -7,8 +7,14 @@ import { Link } from "wouter";
 export default function AppHeader() {
   const { user } = useAuth() as { user: User | undefined };
 
-  const handleLogout = () => {
-    window.location.href = "/api/logout";
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout failed:', error);
+      window.location.href = "/";
+    }
   };
 
   const getInitials = (firstName?: string, lastName?: string) => {
