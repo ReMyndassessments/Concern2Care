@@ -100,7 +100,11 @@ export class DatabaseStorage implements IStorage {
   // Intervention operations
   async createInterventions(interventionData: InsertIntervention[]): Promise<Intervention[]> {
     if (interventionData.length === 0) return [];
-    return await db.insert(interventions).values(interventionData).returning();
+    const dataWithProcessedSteps = interventionData.map(intervention => ({
+      ...intervention,
+      steps: intervention.steps as any // Cast to any for jsonb storage
+    }));
+    return await db.insert(interventions).values(dataWithProcessedSteps).returning();
   }
 
   // Follow-up question operations
@@ -111,7 +115,11 @@ export class DatabaseStorage implements IStorage {
 
   // Report operations
   async createReport(report: InsertReport): Promise<Report> {
-    const [newReport] = await db.insert(reports).values(report).returning();
+    const dataWithProcessedSharedWith = {
+      ...report,
+      sharedWith: report.sharedWith as any // Cast to any for jsonb storage
+    };
+    const [newReport] = await db.insert(reports).values(dataWithProcessedSharedWith).returning();
     return newReport;
   }
 

@@ -144,7 +144,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const interventionStrategies = concern.interventions.map(i => ({
         title: i.title,
         description: i.description,
-        steps: i.steps || [],
+        steps: Array.isArray(i.steps) ? i.steps : [],
         timeline: i.timeline || '',
       }));
 
@@ -282,8 +282,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         recipients,
         subject: `Student Concern Report - ${concern.studentFirstName} ${concern.studentLastInitial}.`,
         message,
-        attachmentPath: report.pdfPath,
-        reportLink: reportLink || undefined,
+        attachmentPath: report.pdfPath || undefined,
+        reportLink,
       });
 
       if (emailSuccess) {
