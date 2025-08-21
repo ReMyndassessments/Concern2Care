@@ -19,7 +19,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Edit3, Wand2, GraduationCap, AlertTriangle, Users, CalendarX, User, Calendar, MapPin, AlertCircle } from "lucide-react";
 
-const enhancedConcernFormSchema = insertConcernSchema.extend({
+const enhancedConcernFormSchema = insertConcernSchema.omit({
+  teacherId: true, // This will be set on the server from authentication
+  createdAt: true, // This will be set on the server
+  updatedAt: true, // This will be set on the server
+  id: true, // This will be set on the server
+}).extend({
   studentFirstName: z.string().min(1, "First name is required"),
   studentLastInitial: z.string().length(1, "Last initial must be exactly 1 character"),
   grade: z.string().min(1, "Grade is required"),
