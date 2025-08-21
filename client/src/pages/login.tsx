@@ -79,19 +79,17 @@ export default function Login() {
           </CardHeader>
           
           <CardContent>
-            {/* Demo Credentials Notice */}
+            {/* Security Notice */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
               <div className="flex items-start space-x-3">
                 <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-blue-800 mb-2">
-                    Demo Credentials
+                  <p className="text-sm font-medium text-blue-800 mb-1">
+                    🔐 Secure Access
                   </p>
-                  <div className="text-xs text-blue-700 space-y-1">
-                    <p><strong>Email:</strong> noel.roberts@school.edu</p>
-                    <p><strong>Password:</strong> teacher123</p>
-                    <p className="italic mt-2">Or use: demo@teacher.com / demo</p>
-                  </div>
+                  <p className="text-xs text-blue-700">
+                    Sign in with your school-provided credentials. All student data is encrypted and FERPA compliant.
+                  </p>
                 </div>
               </div>
             </div>
