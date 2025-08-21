@@ -156,7 +156,13 @@ export default function InterventionResults({
               <Info className="h-5 w-5 text-blue-600 mt-0.5" />
               <div>
                 <p className="text-sm text-blue-800 font-medium">
-                  Intervention strategies for {concern.studentFirstName} {concern.studentLastInitial}. - {concern.concernType.charAt(0).toUpperCase() + concern.concernType.slice(1).replace('-', ' ')} Concern
+                  Intervention strategies for {concern.studentFirstName} {concern.studentLastInitial}. - {(() => {
+                    const concernTypes = concern.concernTypes as string[] | undefined;
+                    const firstConcernType = concernTypes && Array.isArray(concernTypes) && concernTypes.length > 0 
+                      ? concernTypes[0] 
+                      : 'Academic';
+                    return firstConcernType.charAt(0).toUpperCase() + firstConcernType.slice(1).replace('-', ' ');
+                  })()} Concern
                 </p>
                 <p className="text-xs text-blue-700 mt-1">
                   Generated instantly | Research-based recommendations
