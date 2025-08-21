@@ -148,14 +148,21 @@ export async function generateConcernReport(
   });
 }
 
-// Helper function to parse markdown and format it in PDF
+// Helper function to parse markdown and format it in PDF with beautiful styling
 function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
   const lines = text.split('\n');
   let yPosition = startY;
+  let inBulletList = false;
   
-  for (const line of lines) {
-    const trimmedLine = line.trim();
-    if (!trimmedLine) continue;
+  for (let i = 0; i < lines.length; i++) {
+    const trimmedLine = lines[i].trim();
+    if (!trimmedLine) {
+      // Add spacing for empty lines
+      if (!inBulletList) {
+        yPosition += 5;
+      }
+      continue;
+    }
     
     // Check if we need a new page
     if (yPosition > 700) {
@@ -163,40 +170,110 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
       yPosition = 50;
     }
     
-    // Main headings (### **text**)
+    // Main headings (### **1. Assessment Summary**)
     if (trimmedLine.match(/^###\s*\*\*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
-      doc.fontSize(11).fillColor('#2563eb').text(title, 50, yPosition);
-      yPosition += 20;
+      // Add extra spacing before main headings
+      if (yPosition > startY + 20) yPosition += 15;
+      
+      // Draw a subtle line above the heading
+      doc.moveTo(50, yPosition - 5).lineTo(545, yPosition - 5).stroke('#e2e8f0');
+      
+      doc.fontSize(12).fillColor('#2563eb').text(title, 50, yPosition);
+      yPosition += 25;
+      inBulletList = false;
       continue;
     }
     
-    // Sub-headings (* **text**)
-    if (trimmedLine.match(/^\*\s*\*\*(.*?)\*\*/)) {
+    // Strategy headings (* **Strategy: Name**)
+    if (trimmedLine.match(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/)) {
+      const title = trimmedLine.replace(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/, '$1');
+      yPosition += 8;
+      doc.fontSize(10).fillColor('#1e40af').text(`🎯 Strategy: ${title}`, 60, yPosition);
+      yPosition += 18;
+      inBulletList = false;
+      continue;
+    }
+    
+    // Implementation headings (* **Implementation:**)
+    if (trimmedLine.match(/^\*\s*\*\*Implementation:\*\*/)) {
+      yPosition += 5;
+      doc.fontSize(9).fillColor('#059669').text('📋 Implementation:', 70, yPosition);
+      yPosition += 15;
+      inBulletList = true;
+      continue;
+    }
+    
+    // Data Collection, Expected Outcome, etc.
+    if (trimmedLine.match(/^\*\s*\*\*(.*?):\*\*/)) {
+      const title = trimmedLine.replace(/^\*\s*\*\*(.*?):\*\*/, '$1');
+      yPosition += 5;
+      doc.fontSize(9).fillColor('#7c3aed').text(`📊 ${title}:`, 60, yPosition);
+      yPosition += 15;
+      inBulletList = true;
+      continue;
+    }
+    
+    // Sub-headings without colons (* **Expected Outcome**)
+    if (trimmedLine.match(/^\*\s*\*\*(.*?)\*\*/) && !trimmedLine.includes(':')) {
       const title = trimmedLine.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
-      doc.fontSize(10).fillColor('#1e40af').text(title, 60, yPosition);
-      yPosition += 16;
+      yPosition += 5;
+      doc.fontSize(9).fillColor('#dc2626').text(`📌 ${title}`, 60, yPosition);
+      yPosition += 15;
+      inBulletList = false;
       continue;
     }
     
-    // Bullet points (* text or numbered)
-    if (trimmedLine.startsWith('* ') || trimmedLine.match(/^\d+\.\s/)) {
-      const content = trimmedLine.replace(/^\*\s*/, '').replace(/^\d+\.\s*/, '');
+    // Nested bullet points (  * text)
+    if (trimmedLine.match(/^\s{2,}\*\s/)) {
+      const content = trimmedLine.replace(/^\s*\*\s*/, '');
+      doc.fontSize(8).fillColor('#6b7280').text(`  • ${content}`, 85, yPosition, { width: 460 });
+      const lineHeight = doc.heightOfString(`  • ${content}`, { width: 460 });
+      yPosition += Math.max(lineHeight, 12) + 2;
+      inBulletList = true;
+      continue;
+    }
+    
+    // Regular bullet points (* text)
+    if (trimmedLine.startsWith('* ')) {
+      const content = trimmedLine.replace(/^\*\s*/, '');
       doc.fontSize(9).fillColor('#374151').text(`• ${content}`, 70, yPosition, { width: 475 });
       const lineHeight = doc.heightOfString(`• ${content}`, { width: 475 });
-      yPosition += lineHeight + 3;
+      yPosition += Math.max(lineHeight, 14) + 3;
+      inBulletList = true;
       continue;
     }
     
-    // Regular text
+    // Timeline, Resources information
+    if (trimmedLine.match(/^\*\*Timeline:\*\*|^\*\*Resources.*:\*\*/)) {
+      const content = trimmedLine.replace(/\*\*/g, '');
+      yPosition += 3;
+      doc.fontSize(8).fillColor('#059669').text(`⏰ ${content}`, 80, yPosition, { width: 465 });
+      const lineHeight = doc.heightOfString(`⏰ ${content}`, { width: 465 });
+      yPosition += lineHeight + 8;
+      continue;
+    }
+    
+    // Separators (---)
+    if (trimmedLine === '---') {
+      yPosition += 10;
+      doc.moveTo(50, yPosition).lineTo(545, yPosition).stroke('#d1d5db');
+      yPosition += 15;
+      inBulletList = false;
+      continue;
+    }
+    
+    // Regular paragraphs
     if (trimmedLine.length > 0) {
-      doc.fontSize(9).fillColor('#374151').text(trimmedLine, 60, yPosition, { width: 485 });
-      const lineHeight = doc.heightOfString(trimmedLine, { width: 485 });
-      yPosition += lineHeight + 5;
+      const indent = inBulletList ? 80 : 60;
+      const width = inBulletList ? 465 : 485;
+      doc.fontSize(9).fillColor('#374151').text(trimmedLine, indent, yPosition, { width: width, align: 'justify' });
+      const lineHeight = doc.heightOfString(trimmedLine, { width: width });
+      yPosition += lineHeight + 6;
     }
   }
   
-  return yPosition;
+  return yPosition + 10;
 }
 
 export function ensureReportsDirectory(): string {
