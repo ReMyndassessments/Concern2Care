@@ -136,7 +136,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         studentLastInitial: String(req.body.studentLastInitial),
         grade: String(req.body.grade),
         teacherPosition: String(req.body.teacherPosition),
-        incidentDate: new Date(), // Automatically set to current date/time
+        incidentDate: new Date().toISOString(), // Automatically set to current date/time
         location: String(req.body.location),
         concernTypes: req.body.concernTypes || [],
         otherConcernType: req.body.otherConcernType || null,
