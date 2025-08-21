@@ -148,11 +148,11 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
     console.log("🚀 Is form valid:", form.formState.isValid);
     console.log("🚀 Mutation is pending:", createConcernMutation.isPending);
     
-    if (!form.formState.isValid) {
-      console.log("❌ Form has validation errors, not submitting");
+    // Show user-friendly validation message if there are errors
+    if (Object.keys(form.formState.errors).length > 0) {
       toast({
-        title: "Form Validation Error",
-        description: "Please check all required fields and fix any errors before submitting.",
+        title: "Please fill in all required fields",
+        description: "Check that all fields marked with * are completed.",
         variant: "destructive",
       });
       return;
