@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info } from "lucide-react";
+import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info, BookmarkPlus, Bookmark } from "lucide-react";
 import { Concern, Intervention, FollowUpQuestion } from "@shared/schema";
 import EmailSharingModal from "./email-sharing-modal";
 
@@ -108,6 +108,10 @@ export default function InterventionResults({
 }: InterventionResultsProps) {
   const [followUpQuestion, setFollowUpQuestion] = useState("");
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [savedInterventions, setSavedInterventions] = useState<Set<string>>(() => {
+    const savedIds = interventions.filter(i => i.saved).map(i => i.id);
+    return new Set(savedIds);
+  });
   const { toast } = useToast();
 
   // Fetch existing follow-up questions if showing them
@@ -219,6 +223,46 @@ export default function InterventionResults({
     setShowEmailModal(true);
   };
 
+  const saveInterventionMutation = useMutation({
+    mutationFn: async (interventionId: string) => {
+      return apiRequest("POST", `/api/interventions/${interventionId}/save`, {});
+    },
+    onSuccess: (_, interventionId) => {
+      setSavedInterventions(prev => {
+        const newSet = new Set(Array.from(prev));
+        newSet.add(interventionId);
+        return newSet;
+      });
+      toast({
+        title: "Intervention Saved!",
+        description: "This intervention has been saved and will be included in your reports.",
+      });
+    },
+    onError: (error: Error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      
+      toast({
+        title: "Error",
+        description: error.message || "Failed to save intervention",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSaveIntervention = (interventionId: string) => {
+    saveInterventionMutation.mutate(interventionId);
+  };
+
   return (
     <>
       <Card>
@@ -269,7 +313,7 @@ export default function InterventionResults({
                         {intervention.title}
                       </h3>
                       <div className="prose prose-sm max-w-none mb-4">
-                        <FormattedRecommendations content={intervention.description} />
+                        <div><FormattedRecommendations content={intervention.description} /></div>
                       </div>
                       
                       {intervention.steps && Array.isArray(intervention.steps) && (intervention.steps as string[]).length > 0 && (
@@ -299,16 +343,48 @@ export default function InterventionResults({
                         </div>
                       </div>
                       
-                      <div className="flex items-center space-x-4">
-                        <Badge className="bg-green-100 text-green-800">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Research-Based
-                        </Badge>
-                        {intervention.timeline && (
-                          <span className="text-xs text-gray-600">
-                            Expected timeline: {intervention.timeline}
-                          </span>
-                        )}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <Badge className="bg-green-100 text-green-800">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Research-Based
+                          </Badge>
+                          {intervention.timeline && (
+                            <span className="text-xs text-gray-600">
+                              Expected timeline: {intervention.timeline}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Save Intervention Button */}
+                        <div className="flex items-center space-x-2">
+                          {savedInterventions.has(intervention.id) || intervention.saved ? (
+                            <div className="flex items-center space-x-2 text-green-600">
+                              <Bookmark className="h-4 w-4" />
+                              <span className="text-sm font-medium">Saved</span>
+                            </div>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleSaveIntervention(intervention.id)}
+                              disabled={saveInterventionMutation.isPending}
+                              className="border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300"
+                            >
+                              {saveInterventionMutation.isPending ? (
+                                <>
+                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600 mr-2"></div>
+                                  Saving...
+                                </>
+                              ) : (
+                                <>
+                                  <BookmarkPlus className="h-3 w-3 mr-1" />
+                                  Save Intervention
+                                </>
+                              )}
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -33,6 +33,9 @@ export interface IStorage {
   
   // Intervention operations
   createInterventions(interventions: InsertIntervention[]): Promise<Intervention[]>;
+  getInterventionById(id: string): Promise<Intervention | undefined>;
+  getConcernById(id: string): Promise<Concern | undefined>;
+  saveIntervention(interventionId: string): Promise<Intervention>;
   
   // Follow-up question operations
   createFollowUpQuestion(question: InsertFollowUpQuestion): Promise<FollowUpQuestion>;
@@ -116,6 +119,28 @@ export class DatabaseStorage implements IStorage {
   async createFollowUpQuestion(question: InsertFollowUpQuestion): Promise<FollowUpQuestion> {
     const [newQuestion] = await db.insert(followUpQuestions).values(question).returning();
     return newQuestion;
+  }
+
+  async getInterventionById(id: string): Promise<Intervention | undefined> {
+    const [intervention] = await db.select().from(interventions).where(eq(interventions.id, id));
+    return intervention;
+  }
+
+  async getConcernById(id: string): Promise<Concern | undefined> {
+    const [concern] = await db.select().from(concerns).where(eq(concerns.id, id));
+    return concern;
+  }
+
+  async saveIntervention(interventionId: string): Promise<Intervention> {
+    const [savedIntervention] = await db
+      .update(interventions)
+      .set({ 
+        saved: true, 
+        savedAt: new Date() 
+      })
+      .where(eq(interventions.id, interventionId))
+      .returning();
+    return savedIntervention;
   }
 
   // Report operations

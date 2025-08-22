@@ -194,6 +194,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Save an intervention - PROTECTED
+  app.post("/api/interventions/:id/save", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const interventionId = req.params.id;
+
+      // Get the intervention and verify ownership through the concern
+      const intervention = await storage.getInterventionById(interventionId);
+      
+      if (!intervention) {
+        return res.status(404).json({ message: "Intervention not found" });
+      }
+
+      // Get the concern to verify ownership
+      const concern = await storage.getConcernById(intervention.concernId);
+      
+      if (!concern || concern.teacherId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Save the intervention
+      const savedIntervention = await storage.saveIntervention(interventionId);
+      
+      res.json({
+        success: true,
+        intervention: savedIntervention,
+        message: "Intervention saved successfully"
+      });
+    } catch (error) {
+      console.error("Error saving intervention:", error);
+      res.status(500).json({ message: "Failed to save intervention" });
+    }
+  });
+
   // Generate AI recommendations directly (for testing)
   app.post("/api/concerns/generate-recommendations", async (req: any, res) => {
     console.log("🤖 AI generation endpoint called");

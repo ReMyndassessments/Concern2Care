@@ -66,6 +66,8 @@ export const interventions = pgTable("interventions", {
   description: text("description").notNull(),
   steps: jsonb("steps").notNull(),
   timeline: varchar("timeline"),
+  saved: boolean("saved").default(false),
+  savedAt: timestamp("saved_at"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
