@@ -97,6 +97,7 @@ export interface IStorage {
   createConcern(concern: InsertConcern): Promise<Concern>;
   getConcernsByTeacher(teacherId: string): Promise<Concern[]>;
   getConcernWithDetails(id: string): Promise<ConcernWithDetails | undefined>;
+  deleteConcern(id: string): Promise<boolean>;
   
   // Intervention operations
   createInterventions(interventions: InsertIntervention[]): Promise<Intervention[]>;
@@ -521,6 +522,13 @@ export class DatabaseStorage implements IStorage {
       },
     });
     return concernData;
+  }
+
+  async deleteConcern(id: string): Promise<boolean> {
+    // Note: Due to foreign key constraints, related data (interventions, follow-up questions, etc.) 
+    // will be automatically deleted if cascade is set up, or we need to delete them manually
+    const result = await db.delete(concerns).where(eq(concerns.id, id));
+    return (result.rowCount || 0) > 0;
   }
 
   // Intervention operations

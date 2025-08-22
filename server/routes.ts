@@ -363,6 +363,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete a concern - PROTECTED
+  app.delete("/api/concerns/:id", requireAuth, async (req: any, res) => {
+    try {
+      // SECURE: Get real user ID from authenticated session
+      const userId = req.user.claims.sub;
+      const concernId = req.params.id;
+
+      // First, verify the concern exists and belongs to the current user
+      const concern = await storage.getConcernById(concernId);
+      
+      if (!concern) {
+        return res.status(404).json({ message: "Concern not found" });
+      }
+
+      // Verify the concern belongs to the current user
+      if (concern.teacherId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Delete the concern (related data should cascade delete)
+      const deleted = await storage.deleteConcern(concernId);
+      
+      if (deleted) {
+        res.json({ message: "Concern deleted successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to delete concern" });
+      }
+    } catch (error) {
+      console.error("Error deleting concern:", error);
+      res.status(500).json({ message: "Failed to delete concern" });
+    }
+  });
+
   // Get follow-up questions for a concern - PROTECTED
   app.get("/api/concerns/:id/questions", requireAuth, async (req: any, res) => {
     try {

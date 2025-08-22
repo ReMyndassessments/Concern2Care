@@ -1,18 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { History, Eye } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { History, Eye, Trash2 } from "lucide-react";
 import { Concern } from "@shared/schema";
 import { Link } from "wouter";
 
 export default function RecentConcerns() {
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
 
   const { data: concerns, isLoading, error } = useQuery<Concern[]>({
     queryKey: ["/api/concerns"],
@@ -24,6 +28,35 @@ export default function RecentConcerns() {
       return failureCount < 3;
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (concernId: string) => {
+      const response = await apiRequest(`/api/concerns/${concernId}`, {
+        method: "DELETE",
+      });
+      return response;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Concern deleted successfully",
+      });
+      // Invalidate and refresh the concerns list
+      queryClient.invalidateQueries({ queryKey: ["/api/concerns"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete concern",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDelete = (concernId: string) => {
+    deleteMutation.mutate(concernId);
+    setDeleteDialogOpen(null);
+  };
 
   useEffect(() => {
     if (error && isUnauthorizedError(error as Error)) {
@@ -162,16 +195,51 @@ export default function RecentConcerns() {
                   <span className="text-xs text-gray-500">
                     View details for strategies
                   </span>
-                  <Link href={`/concerns/${concern.id}`}>
-                    <Button 
-                      variant="ghost"
-                      size="sm"
-                      className="text-xs text-brand-blue hover:text-brand-dark-blue h-8"
-                    >
-                      <Eye className="h-3 w-3 mr-1" />
-                      View Details
-                    </Button>
-                  </Link>
+                  <div className="flex items-center space-x-2">
+                    <Link href={`/concerns/${concern.id}`}>
+                      <Button 
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs text-brand-blue hover:text-brand-dark-blue h-8"
+                      >
+                        <Eye className="h-3 w-3 mr-1" />
+                        View Details
+                      </Button>
+                    </Link>
+                    <AlertDialog open={deleteDialogOpen === concern.id} onOpenChange={(open) => setDeleteDialogOpen(open ? concern.id : null)}>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50 h-8"
+                          data-testid={`button-delete-concern-${concern.id}`}
+                        >
+                          <Trash2 className="h-3 w-3 mr-1" />
+                          Delete
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Concern</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete this concern for {concern.studentFirstName} {concern.studentLastInitial}.? 
+                            This action cannot be undone and will permanently delete all related interventions and follow-up questions.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel data-testid="button-cancel-delete">Cancel</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={() => handleDelete(concern.id)}
+                            disabled={deleteMutation.isPending}
+                            className="bg-red-600 hover:bg-red-700"
+                            data-testid="button-confirm-delete"
+                          >
+                            {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
                 </div>
               </div>
             ))}

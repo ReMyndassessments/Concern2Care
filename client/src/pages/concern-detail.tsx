@@ -1,20 +1,26 @@
-import { useParams } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useParams, useLocation } from "wouter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { apiRequest } from "@/lib/queryClient";
 import AppHeader from "@/components/app-header";
 import InterventionResults from "@/components/intervention-results";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, User, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { CalendarDays, User, BookOpen, Trash2 } from "lucide-react";
 import { ConcernWithDetails } from "@shared/schema";
 
 export default function ConcernDetail() {
   const { id } = useParams<{ id: string }>();
+  const [location, navigate] = useLocation();
   const { toast } = useToast();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const queryClient = useQueryClient();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -41,6 +47,39 @@ export default function ConcernDetail() {
       return failureCount < 3;
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (concernId: string) => {
+      const response = await apiRequest(`/api/concerns/${concernId}`, {
+        method: "DELETE",
+      });
+      return response;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Concern deleted successfully",
+      });
+      // Invalidate and refresh the concerns list
+      queryClient.invalidateQueries({ queryKey: ["/api/concerns"] });
+      // Navigate back to dashboard or concerns list
+      navigate("/dashboard");
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete concern",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDelete = () => {
+    if (id) {
+      deleteMutation.mutate(id);
+    }
+    setDeleteDialogOpen(false);
+  };
 
   useEffect(() => {
     if (error && isUnauthorizedError(error as Error)) {
@@ -136,6 +175,41 @@ export default function ConcernDetail() {
                     {concern.createdAt ? new Date(concern.createdAt).toLocaleDateString() : 'Unknown date'}
                   </div>
                 </div>
+              </div>
+              <div>
+                <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      data-testid="button-delete-concern"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Concern</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete this concern for {concern.studentFirstName} {concern.studentLastInitial}.? 
+                        This action cannot be undone and will permanently delete all related interventions and follow-up questions.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel data-testid="button-cancel-delete">Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleDelete}
+                        disabled={deleteMutation.isPending}
+                        className="bg-red-600 hover:bg-red-700"
+                        data-testid="button-confirm-delete"
+                      >
+                        {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </div>
           </CardHeader>
