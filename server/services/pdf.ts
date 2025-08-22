@@ -119,9 +119,12 @@ export async function generateConcernReport(
           doc.fontSize(11).fillColor('#2563eb').text(`Q${index + 1}: ${qa.question}`, 50, yPosition);
           yPosition += 20;
           
-          const responseHeight = doc.heightOfString(qa.response, { width: 495 });
-          doc.fontSize(10).fillColor('#000000').text(`A: ${qa.response}`, 50, yPosition, { width: 495, align: 'justify' });
-          yPosition += responseHeight + 20;
+          doc.fontSize(10).fillColor('#000000').text('A: ', 50, yPosition);
+          yPosition += 15;
+          
+          // Apply markdown parsing to the response
+          yPosition = parseMarkdownToPDF(doc, qa.response, yPosition);
+          yPosition += 15;
         });
       }
 
