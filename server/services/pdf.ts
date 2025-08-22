@@ -68,36 +68,62 @@ export async function generateConcernReport(
       yPosition += 25;
 
       interventions.forEach((intervention, index) => {
-        // Check if we need a new page for this intervention
-        if (yPosition > 650) {
+        // Ensure space for intervention header
+        if (yPosition > 680) {
           doc.addPage();
           yPosition = 50;
         }
 
-        doc.fontSize(12).fillColor('#2563eb').text(`${index + 1}. ${intervention.title}`, 50, yPosition);
-        yPosition += 20;
+        // Intervention title with proper spacing
+        doc.fontSize(13).fillColor('#2563eb');
+        const titleText = `${index + 1}. ${intervention.title}`;
+        const titleHeight = doc.heightOfString(titleText, { width: 495 });
+        doc.text(titleText, 50, yPosition, { width: 495 });
+        yPosition += titleHeight + 12;
         
-        // Parse and format the description markdown
+        // Parse and format the description markdown with improved spacing
         yPosition = parseMarkdownToPDF(doc, intervention.description, yPosition);
-        yPosition += 15;
+        yPosition += 10;
 
+        // Implementation steps with proper formatting
         if (intervention.steps && Array.isArray(intervention.steps)) {
-          doc.fontSize(10).fillColor('#666666').text('Implementation Steps:', 50, yPosition);
+          if (yPosition > 700) {
+            doc.addPage();
+            yPosition = 50;
+          }
+          
+          doc.fontSize(11).fillColor('#059669').text('Implementation Steps:', 50, yPosition);
           yPosition += 15;
           
           intervention.steps.forEach((step, stepIndex) => {
-            doc.text(`• ${step}`, 70, yPosition, { width: 475 });
-            yPosition += 15;
+            if (yPosition > 720) {
+              doc.addPage();
+              yPosition = 50;
+            }
+            
+            const stepText = `${stepIndex + 1}. ${step}`;
+            const stepHeight = doc.heightOfString(stepText, { width: 475 });
+            doc.fontSize(9).fillColor('#374151').text(stepText, 70, yPosition, { width: 475 });
+            yPosition += stepHeight + 6;
           });
+          yPosition += 8;
         }
 
+        // Timeline with proper spacing
         if (intervention.timeline) {
-          doc.fontSize(10).fillColor('#666666').text(`Timeline: ${intervention.timeline}`, 50, yPosition);
-          yPosition += 20;
+          if (yPosition > 730) {
+            doc.addPage();
+            yPosition = 50;
+          }
+          
+          const timelineText = `Timeline: ${intervention.timeline}`;
+          const timelineHeight = doc.heightOfString(timelineText, { width: 495 });
+          doc.fontSize(10).fillColor('#666666').text(timelineText, 50, yPosition, { width: 495 });
+          yPosition += timelineHeight + 10;
         }
 
-        // Add some space between interventions
-        yPosition += 15;
+        // Add proper spacing between interventions
+        yPosition += 20;
       });
 
       // Follow-up questions if any
@@ -151,200 +177,177 @@ export async function generateConcernReport(
   });
 }
 
-// Helper function to parse markdown and format it in PDF with beautiful styling
+// Improved PDF formatting with proper text height calculation
 function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
   const lines = text.split('\n');
   let yPosition = startY;
   let inBulletList = false;
+  const pageWidth = 545;
+  const leftMargin = 50;
+  const pageHeight = 750; // More conservative page height
+  
+  // Helper function to ensure proper spacing and page breaks
+  const ensureSpace = (requiredHeight: number): void => {
+    if (yPosition + requiredHeight > pageHeight) {
+      doc.addPage();
+      yPosition = 50;
+      inBulletList = false; // Reset bullet list state on new page
+    }
+  };
+  
+  // Helper function to add text with proper height calculation
+  const addText = (content: string, x: number, fontSize: number, color: string, options: any = {}): number => {
+    const width = options.width || (pageWidth - x);
+    ensureSpace(Math.max(fontSize * 2, 25)); // Ensure minimum space
+    
+    doc.fontSize(fontSize).fillColor(color);
+    const height = doc.heightOfString(content, { width, ...options });
+    doc.text(content, x, yPosition, { width, ...options });
+    
+    return Math.max(height, fontSize * 1.2); // Minimum line height
+  };
   
   for (let i = 0; i < lines.length; i++) {
     const trimmedLine = lines[i].trim();
     if (!trimmedLine) {
-      // Add spacing for empty lines
-      if (!inBulletList) {
-        yPosition += 5;
-      }
+      // Add minimal spacing for empty lines
+      yPosition += 8;
       continue;
     }
     
-    // Check if we need a new page
-    if (yPosition > 700) {
-      doc.addPage();
-      yPosition = 50;
-    }
-    
-    // Main headings (### **1. Assessment Summary** OR ### **Direct Answer: Title**)
+    // Main headings (### **Title**) - Large, prominent headings
     if (trimmedLine.match(/^###\s*\*\*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
-      // Add extra spacing before main headings
-      if (yPosition > startY + 20) yPosition += 15;
+      yPosition += 15; // Space before heading
       
-      // Draw a subtle line above the heading
-      doc.moveTo(50, yPosition - 5).lineTo(545, yPosition - 5).stroke('#e2e8f0');
+      // Draw separator line
+      ensureSpace(30);
+      doc.moveTo(leftMargin, yPosition).lineTo(pageWidth, yPosition).stroke('#e2e8f0');
+      yPosition += 8;
       
-      doc.fontSize(12).fillColor('#2563eb').text(title, 50, yPosition);
-      yPosition += 25;
+      const height = addText(title, leftMargin, 14, '#2563eb', { align: 'left' });
+      yPosition += height + 12;
       inBulletList = false;
       continue;
     }
     
-    // Strategy headings (* **Strategy: Name**)
+    // Strategy headings with proper spacing
     if (trimmedLine.match(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/, '$1');
-      yPosition += 8;
-      doc.fontSize(10).fillColor('#1e40af').text(`> Strategy: ${title}`, 60, yPosition);
-      yPosition += 18;
+      yPosition += 10;
+      const height = addText(`▶ Strategy: ${title}`, leftMargin + 10, 11, '#1e40af', { align: 'left' });
+      yPosition += height + 8;
       inBulletList = false;
       continue;
     }
     
-    // Implementation headings (* **Implementation:**)
+    // Implementation headings
     if (trimmedLine.match(/^\*\s*\*\*Implementation:\*\*/)) {
-      yPosition += 5;
-      doc.fontSize(9).fillColor('#059669').text('Implementation:', 70, yPosition);
-      yPosition += 15;
+      yPosition += 8;
+      const height = addText('Implementation Steps:', leftMargin + 20, 10, '#059669', { align: 'left' });
+      yPosition += height + 6;
       inBulletList = true;
       continue;
     }
     
-    // Step headings (Step 1: Description)
-    if (trimmedLine.match(/^Step\s*\d+:\s*.+/)) {
-      yPosition += 5;
-      const cleanText = trimmedLine.replace(/\*\*/g, '');
-      doc.fontSize(9).fillColor('#059669').text(`${cleanText}`, 70, yPosition);
-      yPosition += 15;
+    // Step headings with proper numbering
+    if (trimmedLine.match(/^Step\s*\d+:|^-\s*\*\*Step\s*\d+:\*\*/)) {
+      let cleanText = trimmedLine.replace(/\*\*/g, '').replace(/^-\s*/, '');
+      yPosition += 6;
+      const height = addText(cleanText, leftMargin + 20, 10, '#059669', { align: 'left' });
+      yPosition += height + 5;
       inBulletList = true;
       continue;
     }
 
-    // Data Collection, Expected Outcome, etc.
+    // Numbered headings (1. **Title** or 1. Title:)
+    if (trimmedLine.match(/^\d+\./)) {
+      const cleanText = trimmedLine.replace(/\*\*/g, '');
+      yPosition += 10;
+      const height = addText(cleanText, leftMargin + 10, 11, '#1e40af', { align: 'left' });
+      yPosition += height + 8;
+      inBulletList = false;
+      continue;
+    }
+
+    // Other bold headings (* **Title:**)
     if (trimmedLine.match(/^\*\s*\*\*(.*?):\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*(.*?):\*\*/, '$1');
-      yPosition += 5;
-      doc.fontSize(9).fillColor('#7c3aed').text(`${title}:`, 60, yPosition);
-      yPosition += 15;
+      yPosition += 6;
+      const height = addText(`${title}:`, leftMargin + 10, 10, '#7c3aed', { align: 'left' });
+      yPosition += height + 5;
       inBulletList = true;
       continue;
     }
     
-    // Numbered section headings with colons (1. Direct Answer: Title)
-    if (trimmedLine.match(/^\d+\.\s*([^:]+):\s*(.+)/)) {
-      const number = trimmedLine.match(/^(\d+)\./)?.[1] || '';
-      const title = trimmedLine.replace(/^\d+\.\s*/, '');
-      yPosition += 8;
-      doc.fontSize(10).fillColor('#1e40af').text(`${number}. ${title}`, 60, yPosition);
-      yPosition += 18;
-      inBulletList = false;
-      continue;
-    }
-
-    // Numbered section headings (1. **Initial Contact and Relationship Building**)
-    if (trimmedLine.match(/^\d+\.\s*\*\*(.*?)\*\*/)) {
-      const title = trimmedLine.replace(/^\d+\.\s*\*\*(.*?)\*\*/, '$1');
-      const number = trimmedLine.match(/^(\d+)\./)?.[1] || '';
-      yPosition += 8;
-      doc.fontSize(10).fillColor('#1e40af').text(`${number}. ${title}`, 60, yPosition);
-      yPosition += 18;
-      inBulletList = false;
-      continue;
-    }
-
-    // Sub-headings without colons (* **Expected Outcome**)
+    // Bold headings without colons
     if (trimmedLine.match(/^\*\s*\*\*(.*?)\*\*/) && !trimmedLine.includes(':')) {
       const title = trimmedLine.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
-      yPosition += 5;
-      doc.fontSize(9).fillColor('#dc2626').text(`${title}`, 60, yPosition);
-      yPosition += 15;
+      yPosition += 6;
+      const height = addText(title, leftMargin + 10, 10, '#374151', { align: 'left' });
+      yPosition += height + 5;
       inBulletList = false;
       continue;
     }
 
-    // Standalone section titles without markdown (e.g., "Core Strategy: Description")
-    if (trimmedLine.match(/^[A-Z][^:]*:\s*.+/) && !trimmedLine.includes('**') && !trimmedLine.includes('Step')) {
-      yPosition += 5;
-      doc.fontSize(9).fillColor('#6b7280').text(trimmedLine, 60, yPosition, { width: 485 });
-      const lineHeight = doc.heightOfString(trimmedLine, { width: 485 });
-      yPosition += lineHeight + 8;
-      inBulletList = false;
-      continue;
-    }
-
-    // Bold standalone headings (**Title**) 
-    if (trimmedLine.match(/^\*\*(.*?)\*\*\s*$/) && !trimmedLine.includes(':')) {
-      const title = trimmedLine.replace(/^\*\*(.*?)\*\*\s*$/, '$1');
-      yPosition += 5;
-      doc.fontSize(9).fillColor('#374151').text(title, 60, yPosition);
-      yPosition += 15;
+    // Generic bold headings (**Title**) 
+    if (trimmedLine.match(/^\*\*(.*?)\*\*/) && !trimmedLine.includes(':')) {
+      const title = trimmedLine.replace(/^\*\*(.*?)\*\*/, '$1');
+      yPosition += 8;
+      const height = addText(title, leftMargin + 5, 11, '#374151', { align: 'left' });
+      yPosition += height + 6;
       inBulletList = false;
       continue;
     }
     
-    // Nested bullet points (  * text)
-    if (trimmedLine.match(/^\s{2,}\*\s/)) {
-      const content = trimmedLine.replace(/^\s*\*\s*/, '');
-      doc.fontSize(8).fillColor('#6b7280').text(`    - ${content}`, 85, yPosition, { width: 460 });
-      const lineHeight = doc.heightOfString(`    - ${content}`, { width: 460 });
-      yPosition += Math.max(lineHeight, 12) + 2;
+    // Nested bullet points with proper indentation
+    if (trimmedLine.match(/^\s{2,}\*\s/) || trimmedLine.match(/^\s{2,}-\s/)) {
+      const content = trimmedLine.replace(/^\s*[\*-]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1');
+      const height = addText(`• ${content}`, leftMargin + 40, 9, '#6b7280', { width: 455 });
+      yPosition += height + 3;
       inBulletList = true;
       continue;
     }
     
-    // Bullet points with dash (- text)
-    if (trimmedLine.startsWith('- ')) {
-      const content = trimmedLine.replace(/^-\s*/, '');
-      // Handle bold text within content
-      const cleanContent = content.replace(/\*\*(.*?)\*\*/g, '$1');
-      doc.fontSize(9).fillColor('#374151').text(`  - ${cleanContent}`, 70, yPosition, { width: 475 });
-      const lineHeight = doc.heightOfString(`  - ${cleanContent}`, { width: 475 });
-      yPosition += Math.max(lineHeight, 14) + 3;
-      inBulletList = true;
-      continue;
-    }
-
-    // Regular bullet points (* text)
-    if (trimmedLine.startsWith('* ')) {
-      const content = trimmedLine.replace(/^\*\s*/, '');
-      // Handle bold text within content
-      const cleanContent = content.replace(/\*\*(.*?)\*\*/g, '$1');
-      doc.fontSize(9).fillColor('#374151').text(`  - ${cleanContent}`, 70, yPosition, { width: 475 });
-      const lineHeight = doc.heightOfString(`  - ${cleanContent}`, { width: 475 });
-      yPosition += Math.max(lineHeight, 14) + 3;
+    // Regular bullet points
+    if (trimmedLine.match(/^[-\*]\s/)) {
+      const content = trimmedLine.replace(/^[-\*]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1');
+      const height = addText(`• ${content}`, leftMargin + 20, 9, '#374151', { width: 475 });
+      yPosition += height + 4;
       inBulletList = true;
       continue;
     }
     
-    // Timeline, Resources information
+    // Timeline and resource information
     if (trimmedLine.match(/^\*\*Timeline:\*\*|^\*\*Resources.*:\*\*/)) {
       const content = trimmedLine.replace(/\*\*/g, '');
-      yPosition += 3;
-      doc.fontSize(8).fillColor('#059669').text(`${content}`, 80, yPosition, { width: 465 });
-      const lineHeight = doc.heightOfString(`${content}`, { width: 465 });
-      yPosition += lineHeight + 8;
+      const height = addText(content, leftMargin + 25, 9, '#059669', { width: 460 });
+      yPosition += height + 5;
       continue;
     }
     
-    // Separators (---)
+    // Separators
     if (trimmedLine === '---') {
-      yPosition += 10;
-      doc.moveTo(50, yPosition).lineTo(545, yPosition).stroke('#d1d5db');
-      yPosition += 15;
+      yPosition += 12;
+      ensureSpace(20);
+      doc.moveTo(leftMargin, yPosition).lineTo(pageWidth, yPosition).stroke('#d1d5db');
+      yPosition += 12;
       inBulletList = false;
       continue;
     }
     
-    // Regular paragraphs
+    // Regular paragraphs with proper wrapping
     if (trimmedLine.length > 0) {
-      const indent = inBulletList ? 80 : 60;
-      const width = inBulletList ? 465 : 485;
-      // Clean bold text from regular paragraphs
+      const indent = inBulletList ? leftMargin + 25 : leftMargin + 10;
+      const width = inBulletList ? 460 : 485;
       const cleanText = trimmedLine.replace(/\*\*(.*?)\*\*/g, '$1');
-      doc.fontSize(9).fillColor('#374151').text(cleanText, indent, yPosition, { width: width, align: 'justify' });
-      const lineHeight = doc.heightOfString(cleanText, { width: width });
-      yPosition += lineHeight + 6;
+      
+      const height = addText(cleanText, indent, 9, '#374151', { width, align: 'justify' });
+      yPosition += height + 5;
     }
   }
   
-  return yPosition + 10;
+  return yPosition + 15;
 }
 
 export function ensureReportsDirectory(): string {
