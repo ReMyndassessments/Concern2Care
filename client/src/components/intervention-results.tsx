@@ -1,7 +1,10 @@
 import { useState, useMemo, memo } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { isUnauthorizedError } from "@/lib/authUtils";
+// Helper function for checking unauthorized errors
+const isUnauthorizedError = (error: Error): boolean => {
+  return /^401: .*Unauthorized/.test(error.message);
+};
 import { apiRequest } from "@/lib/queryClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info, BookmarkPlus, Bookmark } from "lucide-react";
 import { Concern, Intervention, FollowUpQuestion } from "@shared/schema";
-import EmailSharingModal from "./email-sharing-modal";
+// Email sharing temporarily removed
 
 interface InterventionResultsProps {
   concern: Concern;
@@ -636,12 +639,7 @@ export default function InterventionResults({
       </Card>
 
       {/* Email Sharing Modal */}
-      <EmailSharingModal 
-        open={showEmailModal}
-        onOpenChange={setShowEmailModal}
-        concernId={concern.id}
-        studentName={`${concern.studentFirstName} ${concern.studentLastInitial}.`}
-      />
+      {/* Email sharing temporarily disabled */}
     </>
   );
 }

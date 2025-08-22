@@ -1,6 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
-import { isUnauthorizedError } from "@/lib/authUtils";
+// Helper function for checking unauthorized errors
+const isUnauthorizedError = (error: Error): boolean => {
+  return /^401: .*Unauthorized/.test(error.message);
+};
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
@@ -173,29 +176,29 @@ export default function MySupportRequests() {
         </div>
 
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
             Student Support Requests
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600">
             View and manage submitted student support requests
           </p>
         </div>
 
         {/* Recent Activity Section */}
-        <div className="bg-green-50 rounded-2xl border border-green-200 p-6 mb-6">
+        <div className="bg-green-50 rounded-xl sm:rounded-2xl border border-green-200 p-4 sm:p-6 mb-4 sm:mb-6">
           <div className="flex items-center mb-4">
-            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mr-3">
-              <History className="h-5 w-5 text-green-600" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center mr-2 sm:mr-3">
+              <History className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Recent Activity</h2>
           </div>
           
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
-                  <Clock className="h-4 w-4 text-gray-500" />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-100 rounded-md sm:rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                  <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">Recent Concerns</h3>
               </div>
@@ -223,11 +226,11 @@ export default function MySupportRequests() {
         </div>
 
         {/* Filter Section */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Filter Support Requests</h2>
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Filter Support Requests</h2>
           
-          <div className="max-w-md">
-            <label htmlFor="student-filter" className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="max-w-full sm:max-w-md">
+            <label htmlFor="student-filter" className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
               Filter by Student Name
             </label>
             <Input
@@ -235,7 +238,7 @@ export default function MySupportRequests() {
               placeholder="Enter student name to filter..."
               value={studentFilter}
               onChange={(e) => setStudentFilter(e.target.value)}
-              className="w-full"
+              className="w-full text-sm sm:text-base"
             />
           </div>
         </div>

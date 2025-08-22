@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, CheckCircle } from "lucide-react";
-import ProgressNotesSection from "@/components/ProgressNotesSection";
-import FormattedInterventionContent from "@/components/FormattedInterventionContent";
+// ProgressNotesSection temporarily removed
+// FormattedInterventionContent temporarily removed
 
 interface InterventionsDisplayProps {
   concernId: string;

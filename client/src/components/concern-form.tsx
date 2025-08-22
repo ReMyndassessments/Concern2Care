@@ -4,7 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { isUnauthorizedError } from "@/lib/authUtils";
+// Helper function for checking unauthorized errors
+const isUnauthorizedError = (error: Error): boolean => {
+  return /^401: .*Unauthorized/.test(error.message);
+};
 import { apiRequest } from "@/lib/queryClient";
 import { insertConcernSchema, type Concern, type Intervention, type User as UserType } from "@shared/schema";
 import { z } from "zod";

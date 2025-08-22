@@ -3,7 +3,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { isUnauthorizedError } from "@/lib/authUtils";
+// Helper function for checking unauthorized errors
+const isUnauthorizedError = (error: Error): boolean => {
+  return /^401: .*Unauthorized/.test(error.message);
+};
 import { apiRequest } from "@/lib/queryClient";
 import AppHeader from "@/components/app-header";
 import InterventionResults from "@/components/intervention-results";

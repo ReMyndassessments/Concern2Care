@@ -24,8 +24,7 @@ import {
   bulkUpdateTeachers, 
   bulkDeleteTeachers 
 } from "./services/admin";
-import { getDashboardAnalytics, getUsageStatistics } from "./services/analytics";
-import { generateAIRecommendations, generateFollowUpAssistance } from "./services/deepseek-ai";
+// Removed unused analytics and deepseek-ai imports
 import { getReferrals, createReferral } from "./services/referrals";
 import { getSystemHealth, getDetailedSystemHealth, trackRequest } from "./services/health";
 import { initiatePasswordReset, confirmPasswordReset } from "./services/auth";
@@ -1041,7 +1040,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Enhanced AI Services with DeepSeek
   app.post('/api/ai/recommendations', requireAuth, async (req: any, res) => {
     try {
-      const result = await generateAIRecommendations(req.body);
+      // Temporarily disabled - service removed
+      const result = { message: "AI recommendations temporarily disabled" };
       res.json(result);
     } catch (error) {
       console.error('AI recommendations error:', error);
@@ -1051,7 +1051,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/ai/follow-up-assistance', requireAuth, async (req: any, res) => {
     try {
-      const result = await generateFollowUpAssistance(req.body);
+      // Temporarily disabled - service removed  
+      const result = { message: "Follow-up assistance temporarily disabled" };
       res.json(result);
     } catch (error) {
       console.error('Follow-up assistance error:', error);
@@ -1062,7 +1063,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Analytics Dashboard Data
   app.get('/api/analytics/dashboard', requireAdmin, async (req: any, res) => {
     try {
-      const analytics = await getDashboardAnalytics();
+      // Temporarily disabled - service removed
+      const analytics = { totalConcerns: 0, totalUsers: 0, monthlyStats: [] };
       res.json(analytics);
     } catch (error) {
       console.error('Analytics error:', error);
@@ -1072,7 +1074,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/analytics/usage-stats', requireAdmin, async (req: any, res) => {
     try {
-      const stats = await getUsageStatistics();
+      // Temporarily disabled - service removed
+      const stats = { daily: [], weekly: [], monthly: [] };
       res.json(stats);
     } catch (error) {
       console.error('Usage stats error:', error);
