@@ -159,23 +159,6 @@ export default function Login() {
               </Button>
             </form>
             
-            {/* Demo Credentials */}
-            <div className="mt-6 space-y-3">
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm font-medium text-red-800 mb-2">Admin Login:</p>
-                <div className="text-xs text-red-700 space-y-1">
-                  <div><strong>Email:</strong> admin@school.edu</div>
-                  <div><strong>Password:</strong> teacher123</div>
-                </div>
-              </div>
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm font-medium text-blue-800 mb-2">Teacher Demo:</p>
-                <div className="text-xs text-blue-700 space-y-1">
-                  <div><strong>Email:</strong> noel.roberts@school.edu</div>
-                  <div><strong>Password:</strong> teacher123</div>
-                </div>
-              </div>
-            </div>
             
             {/* Footer */}
             <div className="text-center mt-6 space-y-2">

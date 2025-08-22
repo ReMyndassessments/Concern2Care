@@ -65,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const teacher = demoTeachers.find(t => 
         t.email.toLowerCase() === email.toLowerCase() && 
-        (password === "teacher123" || password === "demo")
+        password === "teacher123"
       );
 
       if (!teacher) {
