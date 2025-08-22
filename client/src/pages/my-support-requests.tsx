@@ -1,12 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import AppHeader from "@/components/app-header";
 import { 
   History, 
@@ -19,7 +21,8 @@ import {
   MapPin,
   AlertCircle,
   FileText,
-  Clock
+  Clock,
+  Trash2
 } from "lucide-react";
 import { Concern } from "@shared/schema";
 import { Link } from "wouter";
@@ -28,8 +31,10 @@ import InterventionsDisplay from "@/components/InterventionsDisplay";
 export default function MySupportRequests() {
   const { isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [studentFilter, setStudentFilter] = useState("");
   const [expandedRequest, setExpandedRequest] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -56,6 +61,35 @@ export default function MySupportRequests() {
       return failureCount < 3;
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (concernId: string) => {
+      const response = await apiRequest(`/api/concerns/${concernId}`, {
+        method: "DELETE",
+      });
+      return response;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Concern deleted successfully",
+      });
+      // Invalidate and refresh the concerns list
+      queryClient.invalidateQueries({ queryKey: ["/api/concerns"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete concern",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDelete = (concernId: string) => {
+    deleteMutation.mutate(concernId);
+    setDeleteDialogOpen(null);
+  };
 
   useEffect(() => {
     if (error && isUnauthorizedError(error as Error)) {
@@ -294,24 +328,59 @@ export default function MySupportRequests() {
                       <span className="text-xs text-gray-500">
                         {formatTimeAgo(concern.createdAt)}
                       </span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => toggleExpanded(concern.id)}
-                        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
-                      >
-                        {expandedRequest === concern.id ? (
-                          <>
-                            <ChevronUp className="h-4 w-4 mr-1" />
-                            Hide Details
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDown className="h-4 w-4 mr-1" />
-                            View Details
-                          </>
-                        )}
-                      </Button>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleExpanded(concern.id)}
+                          className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                        >
+                          {expandedRequest === concern.id ? (
+                            <>
+                              <ChevronUp className="h-4 w-4 mr-1" />
+                              Hide Details
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDown className="h-4 w-4 mr-1" />
+                              View Details
+                            </>
+                          )}
+                        </Button>
+                        <AlertDialog open={deleteDialogOpen === concern.id} onOpenChange={(open) => setDeleteDialogOpen(open ? concern.id : null)}>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              data-testid={`button-delete-concern-${concern.id}`}
+                            >
+                              <Trash2 className="h-4 w-4 mr-1" />
+                              Delete
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Concern</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete this concern for {concern.studentFirstName} {concern.studentLastInitial}.? 
+                                This action cannot be undone and will permanently delete all related interventions and follow-up questions.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel data-testid="button-cancel-delete">Cancel</AlertDialogCancel>
+                              <AlertDialogAction 
+                                onClick={() => handleDelete(concern.id)}
+                                disabled={deleteMutation.isPending}
+                                className="bg-red-600 hover:bg-red-700"
+                                data-testid="button-confirm-delete"
+                              >
+                                {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </div>
                   </div>
                 </CardHeader>
