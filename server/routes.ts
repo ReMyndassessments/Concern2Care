@@ -4,9 +4,10 @@ import { storage } from "./storage";
 import { generateInterventions, answerFollowUpQuestion, generateRecommendations, followUpAssistance, GenerateRecommendationsRequest, FollowUpAssistanceRequest } from "./services/ai";
 import { generateConcernReport, ensureReportsDirectory } from "./services/pdf";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
-import { insertConcernSchema, insertFollowUpQuestionSchema } from "@shared/schema";
+import { insertConcernSchema, insertFollowUpQuestionSchema, users } from "@shared/schema";
 import { db } from "./db";
 import { concerns } from "@shared/schema";
+import { eq, and } from "drizzle-orm";
 import path from "path";
 import fs from "fs";
 import session from "express-session";
@@ -1218,6 +1219,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error deleting teacher:', error);
       res.status(500).json({ message: 'Failed to delete teacher' });
+    }
+  });
+
+  // Admin: Bulk grant requests by school
+  app.post('/api/admin/teachers/bulk-grant-by-school', requireAdmin, async (req: any, res) => {
+    try {
+      const { school, additionalRequests } = req.body;
+      
+      if (!school || !additionalRequests || additionalRequests <= 0) {
+        return res.status(400).json({ message: 'School and positive additional requests amount are required' });
+      }
+
+      // Get all active teachers from the specified school
+      const teachersInSchool = await db
+        .select()
+        .from(users)
+        .where(and(eq(users.school, school), eq(users.isActive, true), eq(users.role, 'teacher')));
+
+      if (teachersInSchool.length === 0) {
+        return res.status(404).json({ message: 'No active teachers found in the specified school' });
+      }
+
+      // Update additional requests for all teachers in the school
+      const updatedTeachers = [];
+      for (const teacher of teachersInSchool) {
+        const newAdditionalRequests = (teacher.additionalRequests || 0) + parseInt(additionalRequests);
+        await storage.updateUser(teacher.id, { 
+          additionalRequests: newAdditionalRequests,
+          updatedAt: new Date(),
+        });
+        updatedTeachers.push({
+          ...teacher,
+          additionalRequests: newAdditionalRequests
+        });
+      }
+      
+      res.json({ 
+        success: true, 
+        message: `Granted ${additionalRequests} additional requests to ${updatedTeachers.length} teachers at ${school}`,
+        updatedCount: updatedTeachers.length,
+        school: school
+      });
+    } catch (error) {
+      console.error('Error bulk granting requests by school:', error);
+      res.status(500).json({ message: 'Failed to grant additional requests to school teachers' });
+    }
+  });
+
+  // Admin: Bulk grant requests to selected teachers
+  app.post('/api/admin/teachers/bulk-grant-selected', requireAdmin, async (req: any, res) => {
+    try {
+      const { teacherIds, additionalRequests } = req.body;
+      
+      if (!teacherIds || !Array.isArray(teacherIds) || teacherIds.length === 0) {
+        return res.status(400).json({ message: 'Teacher IDs array is required' });
+      }
+      
+      if (!additionalRequests || additionalRequests <= 0) {
+        return res.status(400).json({ message: 'Additional requests must be a positive number' });
+      }
+
+      const updatedTeachers = [];
+      for (const teacherId of teacherIds) {
+        const teacher = await storage.getUser(teacherId);
+        if (teacher) {
+          const newAdditionalRequests = (teacher.additionalRequests || 0) + parseInt(additionalRequests);
+          await storage.updateUser(teacherId, { 
+            additionalRequests: newAdditionalRequests,
+            updatedAt: new Date(),
+          });
+          updatedTeachers.push({
+            ...teacher,
+            additionalRequests: newAdditionalRequests
+          });
+        }
+      }
+      
+      res.json({ 
+        success: true, 
+        message: `Granted ${additionalRequests} additional requests to ${updatedTeachers.length} selected teachers`,
+        updatedCount: updatedTeachers.length
+      });
+    } catch (error) {
+      console.error('Error bulk granting requests to selected teachers:', error);
+      res.status(500).json({ message: 'Failed to grant additional requests to selected teachers' });
     }
   });
 

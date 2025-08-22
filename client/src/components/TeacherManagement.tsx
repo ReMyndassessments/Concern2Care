@@ -44,8 +44,15 @@ export function TeacherManagement() {
   const [isEditTeacherDialogOpen, setIsEditTeacherDialogOpen] = useState(false);
   const [isGrantRequestsDialogOpen, setIsGrantRequestsDialogOpen] = useState(false);
   const [isDeleteSingleDialogOpen, setIsDeleteSingleDialogOpen] = useState(false);
+  const [isBulkGrantDialogOpen, setIsBulkGrantDialogOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
   const [grantRequestsAmount, setGrantRequestsAmount] = useState('');
+  const [bulkGrantData, setBulkGrantData] = useState({
+    grantType: 'school',
+    school: '',
+    selectedTeachers: [] as string[],
+    additionalRequests: ''
+  });
   const [bulkUpdateSettings, setBulkUpdateSettings] = useState({
     supportRequestsLimit: '',
     isActive: '',
@@ -334,6 +341,76 @@ export function TeacherManagement() {
     }
   };
 
+  const handleBulkGrantRequests = () => {
+    setBulkGrantData({
+      grantType: 'school',
+      school: '',
+      selectedTeachers: [],
+      additionalRequests: ''
+    });
+    setIsBulkGrantDialogOpen(true);
+  };
+
+  const handleBulkGrantSubmit = async () => {
+    try {
+      if (bulkGrantData.grantType === 'school') {
+        if (!bulkGrantData.school || !bulkGrantData.additionalRequests) {
+          toast({
+            title: "Error",
+            description: "Please select a school and enter the number of requests to grant.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        await apiRequest('/api/admin/teachers/bulk-grant-by-school', {
+          method: 'POST',
+          body: {
+            school: bulkGrantData.school,
+            additionalRequests: parseInt(bulkGrantData.additionalRequests)
+          }
+        });
+
+        toast({
+          title: "Success",
+          description: `Granted ${bulkGrantData.additionalRequests} additional requests to all teachers at ${bulkGrantData.school}.`,
+        });
+      } else {
+        if (bulkGrantData.selectedTeachers.length === 0 || !bulkGrantData.additionalRequests) {
+          toast({
+            title: "Error",
+            description: "Please select teachers and enter the number of requests to grant.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        await apiRequest('/api/admin/teachers/bulk-grant-selected', {
+          method: 'POST',
+          body: {
+            teacherIds: bulkGrantData.selectedTeachers,
+            additionalRequests: parseInt(bulkGrantData.additionalRequests)
+          }
+        });
+
+        toast({
+          title: "Success",
+          description: `Granted ${bulkGrantData.additionalRequests} additional requests to ${bulkGrantData.selectedTeachers.length} selected teachers.`,
+        });
+      }
+
+      setIsBulkGrantDialogOpen(false);
+      loadTeachers();
+    } catch (error: any) {
+      console.error('Bulk grant requests error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to grant additional requests.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleExportTeachers = () => {
     const filteredTeachers = getFilteredTeachers();
     const headers = ['Name', 'Email', 'School', 'Support Limit', 'Additional Requests', 'Status', 'Last Login', 'Created'];
@@ -454,6 +531,10 @@ export function TeacherManagement() {
                 <Button variant="outline" size="sm" onClick={() => setIsBulkUpdateDialogOpen(true)} data-testid="button-bulk-update">
                   <Settings className="mr-2 h-4 w-4" />
                   Bulk Update
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleBulkGrantRequests} data-testid="button-bulk-grant">
+                  <Settings className="mr-2 h-4 w-4" />
+                  Grant Requests by School
                 </Button>
                 <Button variant="destructive" size="sm" onClick={() => setIsDeleteDialogOpen(true)} data-testid="button-bulk-delete">
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -930,6 +1011,97 @@ export function TeacherManagement() {
               data-testid="button-confirm-single-delete"
             >
               Delete Teacher
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Bulk Grant Requests Dialog */}
+      <AlertDialog open={isBulkGrantDialogOpen} onOpenChange={setIsBulkGrantDialogOpen}>
+        <AlertDialogContent data-testid="bulk-grant-dialog">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Bulk Grant Additional Requests</AlertDialogTitle>
+            <AlertDialogDescription>
+              Grant additional support requests to multiple teachers at once.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-sm font-medium">Grant to</label>
+              <Select value={bulkGrantData.grantType} onValueChange={(value) => setBulkGrantData({...bulkGrantData, grantType: value as 'school' | 'selected'})}>
+                <SelectTrigger data-testid="select-grant-type">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="school">All teachers from a specific school</SelectItem>
+                  <SelectItem value="selected">Only selected teachers</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {bulkGrantData.grantType === 'school' && (
+              <div>
+                <label className="text-sm font-medium">School</label>
+                <Select value={bulkGrantData.school} onValueChange={(value) => setBulkGrantData({...bulkGrantData, school: value})}>
+                  <SelectTrigger data-testid="select-school-grant">
+                    <SelectValue placeholder="Select a school" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[...new Set(teachers.map(t => t.school).filter(Boolean))].map((school) => (
+                      <SelectItem key={school} value={school!}>{school}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-gray-500 mt-1">
+                  This will grant requests to all active teachers at the selected school.
+                </p>
+              </div>
+            )}
+
+            {bulkGrantData.grantType === 'selected' && (
+              <div>
+                <p className="text-sm text-gray-600">
+                  {selectedTeachers.size} teacher{selectedTeachers.size !== 1 ? 's' : ''} currently selected.
+                </p>
+                <p className="text-sm text-gray-500">
+                  Requests will be granted to the teachers you have selected in the table above.
+                </p>
+              </div>
+            )}
+            
+            <div>
+              <label className="text-sm font-medium">Additional Requests to Grant</label>
+              <Input
+                type="number"
+                placeholder="Enter number of requests to grant"
+                value={bulkGrantData.additionalRequests}
+                onChange={(e) => setBulkGrantData({...bulkGrantData, additionalRequests: e.target.value})}
+                data-testid="input-bulk-grant-amount"
+                min="1"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                These requests will be added to each teacher's current additional requests.
+              </p>
+            </div>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-bulk-grant">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleBulkGrantSubmit}
+              data-testid="button-confirm-bulk-grant"
+              disabled={
+                !bulkGrantData.additionalRequests || 
+                parseInt(bulkGrantData.additionalRequests) <= 0 ||
+                (bulkGrantData.grantType === 'school' && !bulkGrantData.school) ||
+                (bulkGrantData.grantType === 'selected' && selectedTeachers.size === 0)
+              }
+            >
+              {bulkGrantData.grantType === 'school' 
+                ? `Grant to All Teachers at ${bulkGrantData.school || 'School'}`
+                : `Grant to ${selectedTeachers.size} Selected Teacher${selectedTeachers.size !== 1 ? 's' : ''}`
+              }
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
