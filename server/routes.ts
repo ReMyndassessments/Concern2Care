@@ -38,18 +38,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Simulate teacher login validation
       const demoTeachers = [
         { 
+          id: "admin-001", 
+          email: "admin@school.edu",
+          firstName: "Admin", 
+          lastName: "User",
+          school: "School District Admin",
+          isAdmin: true
+        },
+        { 
           id: "teacher-001", 
           email: "noel.roberts@school.edu",
           firstName: "Noel", 
           lastName: "Roberts",
-          school: "Demo Elementary School"
+          school: "Demo Elementary School",
+          isAdmin: false
         },
         { 
           id: "teacher-002", 
           email: "demo@teacher.com",
           firstName: "Demo", 
           lastName: "Teacher",
-          school: "Sample Middle School"
+          school: "Sample Middle School",
+          isAdmin: false
         }
       ];
 
@@ -70,6 +80,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           firstName: teacher.firstName,
           lastName: teacher.lastName,
           profileImageUrl: null,
+          isAdmin: teacher.isAdmin || false,
         });
         console.log("🔍 User created/updated in database:", teacher.id);
       } catch (dbError) {
