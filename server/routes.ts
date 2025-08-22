@@ -277,6 +277,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get follow-up questions for a concern - PROTECTED
+  app.get("/api/concerns/:id/questions", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const concernId = req.params.id;
+
+      // Get concern to verify ownership
+      const concern = await storage.getConcernById(concernId);
+      
+      if (!concern) {
+        return res.status(404).json({ message: "Concern not found" });
+      }
+
+      if (concern.teacherId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Get questions for this concern
+      const questions = await storage.getFollowUpQuestionsByConcern(concernId);
+      res.json(questions);
+    } catch (error) {
+      console.error("Error fetching follow-up questions:", error);
+      res.status(500).json({ message: "Failed to fetch follow-up questions" });
+    }
+  });
+
   // Ask a follow-up question using enhanced AI assistance - PROTECTED
   app.post("/api/concerns/:id/questions", requireAuth, async (req: any, res) => {
     try {

@@ -39,6 +39,7 @@ export interface IStorage {
   
   // Follow-up question operations
   createFollowUpQuestion(question: InsertFollowUpQuestion): Promise<FollowUpQuestion>;
+  getFollowUpQuestionsByConcern(concernId: string): Promise<FollowUpQuestion[]>;
   
   // Report operations
   createReport(report: InsertReport): Promise<Report>;
@@ -119,6 +120,14 @@ export class DatabaseStorage implements IStorage {
   async createFollowUpQuestion(question: InsertFollowUpQuestion): Promise<FollowUpQuestion> {
     const [newQuestion] = await db.insert(followUpQuestions).values(question).returning();
     return newQuestion;
+  }
+
+  async getFollowUpQuestionsByConcern(concernId: string): Promise<FollowUpQuestion[]> {
+    return await db
+      .select()
+      .from(followUpQuestions)
+      .where(eq(followUpQuestions.concernId, concernId))
+      .orderBy(desc(followUpQuestions.createdAt));
   }
 
   async getInterventionById(id: string): Promise<Intervention | undefined> {

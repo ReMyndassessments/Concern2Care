@@ -114,10 +114,9 @@ export default function InterventionResults({
   });
   const { toast } = useToast();
 
-  // Fetch existing follow-up questions if showing them
-  const { data: existingQuestions } = useQuery<FollowUpQuestion[]>({
+  // Fetch existing follow-up questions
+  const { data: existingQuestions, refetch: refetchQuestions } = useQuery<FollowUpQuestion[]>({
     queryKey: ["/api/concerns", concern.id, "questions"],
-    enabled: showFollowUpQuestions,
     retry: (failureCount, error) => {
       if (isUnauthorizedError(error as Error)) {
         return false;
@@ -139,7 +138,8 @@ export default function InterventionResults({
         description: "AI has provided implementation guidance",
       });
       setFollowUpQuestion("");
-      // The query will automatically refetch due to the success
+      // Refetch the questions to show the new one
+      refetchQuestions();
     },
     onError: (error: Error) => {
       if (isUnauthorizedError(error)) {
