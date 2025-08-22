@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, FileText } from "lucide-react";
+import { Sparkles, FileText, Calendar } from "lucide-react";
 import { User, Concern, Intervention } from "@shared/schema";
 import AppHeader from "@/components/app-header";
 import ConcernForm from "@/components/concern-form";
 import InterventionResults from "@/components/intervention-results";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 
 export default function Home() {
   const { user } = useAuth() as { user: User | undefined };
@@ -125,6 +125,11 @@ export default function Home() {
                     >
                       📋 View My Requests
                     </Button>
+                    <Button asChild variant="outline" className="border-red-200 text-red-700 hover:bg-red-50" size="sm">
+                      <Link href="/meeting-prep">
+                        📅 Meeting Prep
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -135,16 +140,32 @@ export default function Home() {
         {/* Main Content - Concern Form */}
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-xl border border-white/20 p-4 md:p-6">
-            <div className="flex items-center space-x-3 mb-4 md:mb-6">
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0">
-                <FileText className="h-4 w-4 md:h-5 md:w-5 text-purple-600" />
-              </div>
-              <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">Document New Concern</h2>
-              {user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20) && (
-                <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium ml-auto">
-                  Form Disabled - Limit Reached
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FileText className="h-4 w-4 md:h-5 md:w-5 text-purple-600" />
                 </div>
-              )}
+                <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">Document New Concern</h2>
+                {user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20) && (
+                  <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+                    Form Disabled - Limit Reached
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <Button asChild variant="outline" size="sm" className="hidden md:flex border-purple-200 hover:bg-purple-50">
+                  <Link href="/my-support-requests">
+                    <FileText className="mr-2 h-4 w-4" />
+                    View My Requests
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="border-purple-200 hover:bg-purple-50">
+                  <Link href="/meeting-prep">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Meeting Prep
+                  </Link>
+                </Button>
+              </div>
             </div>
             <ConcernForm onConcernSubmitted={handleConcernSubmitted} />
           </div>

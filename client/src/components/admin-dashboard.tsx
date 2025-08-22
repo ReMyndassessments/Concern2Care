@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { TeacherManagement } from "./TeacherManagement";
 import { AnalyticsDashboard } from "./AnalyticsDashboard";
-import { MeetingPreparation } from "./MeetingPreparation";
 
 interface DashboardStats {
   totalUsers: number;
@@ -249,11 +248,10 @@ export default function AdminDashboard() {
 
       {/* Tabs Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="teachers">Teachers</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="meetings">Meeting Prep</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
@@ -264,10 +262,6 @@ export default function AdminDashboard() {
 
         <TabsContent value="analytics" className="space-y-6">
           <AnalyticsDashboard />
-        </TabsContent>
-
-        <TabsContent value="meetings" className="space-y-6">
-          <MeetingPreparation />
         </TabsContent>
 
         <TabsContent value="overview" className="space-y-6">

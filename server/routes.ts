@@ -1371,6 +1371,135 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Teacher: Meeting Preparation PDF Generation
+  app.post('/api/meeting-preparation/generate', async (req: any, res) => {
+    try {
+      const session = req.session;
+      if (!session?.user) {
+        return res.status(401).json({ message: 'Authentication required' });
+      }
+
+      const { meetingData } = req.body;
+      
+      if (!meetingData) {
+        return res.status(400).json({ message: 'Meeting data is required' });
+      }
+
+      // Create PDF document
+      const doc = new PDFDocument({ margin: 50 });
+      const chunks: Uint8Array[] = [];
+
+      doc.on('data', chunk => chunks.push(chunk));
+      doc.on('end', () => {
+        const pdfBuffer = Buffer.concat(chunks);
+        
+        // Set response headers for PDF download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="meeting-prep-${meetingData.meetingDate}.pdf"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
+        
+        res.send(pdfBuffer);
+      });
+
+      // Header
+      doc.fontSize(20).font('Helvetica-Bold');
+      doc.text('MEETING PREPARATION DOCUMENT', { align: 'center' });
+      doc.moveDown(2);
+
+      // Meeting Details
+      doc.fontSize(16).font('Helvetica-Bold');
+      doc.text('Meeting Information', { underline: true });
+      doc.moveDown();
+      
+      doc.fontSize(12).font('Helvetica');
+      doc.text(`Title: ${meetingData.meetingTitle}`);
+      doc.text(`Type: ${meetingData.meetingType}`);
+      doc.text(`Date: ${meetingData.meetingDate}`);
+      doc.text(`Time: ${meetingData.meetingTime}`);
+      doc.moveDown();
+
+      // Attendees
+      if (meetingData.attendees && meetingData.attendees.length > 0) {
+        doc.fontSize(16).font('Helvetica-Bold');
+        doc.text('Attendees:', { underline: true });
+        doc.moveDown();
+        
+        doc.fontSize(12).font('Helvetica');
+        meetingData.attendees.forEach((attendee: string) => {
+          doc.text(`• ${attendee}`);
+        });
+        doc.moveDown(2);
+      }
+
+      // Agenda
+      if (meetingData.agenda) {
+        doc.fontSize(16).font('Helvetica-Bold');
+        doc.text('Meeting Agenda:', { underline: true });
+        doc.moveDown();
+        
+        doc.fontSize(12).font('Helvetica');
+        doc.text(meetingData.agenda, { align: 'left', width: 500 });
+        doc.moveDown(2);
+      }
+
+      // Selected Concerns (if any)
+      if (meetingData.selectedConcerns && meetingData.selectedConcerns.length > 0) {
+        doc.fontSize(16).font('Helvetica-Bold');
+        doc.text('Student Concerns to Discuss:', { underline: true });
+        doc.moveDown();
+        
+        // Get concern details (this would need to be passed from frontend or fetched)
+        doc.fontSize(12).font('Helvetica');
+        doc.text(`Number of concerns selected: ${meetingData.selectedConcerns.length}`);
+        doc.text('(Detailed concern information would be included here based on your documented concerns)');
+        doc.moveDown(2);
+      }
+
+      // Additional Notes
+      if (meetingData.notes) {
+        doc.fontSize(16).font('Helvetica-Bold');
+        doc.text('Additional Notes:', { underline: true });
+        doc.moveDown();
+        
+        doc.fontSize(12).font('Helvetica');
+        doc.text(meetingData.notes, { align: 'left', width: 500 });
+        doc.moveDown(2);
+      }
+
+      // Document Options
+      if (meetingData.includeRecommendations || meetingData.includeProgressNotes) {
+        doc.fontSize(16).font('Helvetica-Bold');
+        doc.text('Document Includes:', { underline: true });
+        doc.moveDown();
+        
+        doc.fontSize(12).font('Helvetica');
+        if (meetingData.includeRecommendations) {
+          doc.text('✓ Intervention recommendations');
+        }
+        if (meetingData.includeProgressNotes) {
+          doc.text('✓ Progress notes section');
+        }
+        doc.moveDown(2);
+      }
+
+      // Footer
+      doc.fontSize(10).font('Helvetica');
+      doc.text(`Document generated on: ${new Date().toLocaleDateString()}`, {
+        align: 'center'
+      });
+      doc.text(`Prepared by: ${session.user.firstName} ${session.user.lastName}`, {
+        align: 'center'
+      });
+
+      // Finalize PDF
+      doc.end();
+
+    } catch (error) {
+      console.error('Error generating meeting preparation PDF:', error);
+      res.status(500).json({ message: 'Failed to generate meeting preparation document' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

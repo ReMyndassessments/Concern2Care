@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
 import MySupportRequests from "@/pages/my-support-requests";
 import ConcernDetail from "@/pages/concern-detail";
+import TeacherMeetingPrep from "@/pages/teacher-meeting-prep";
 import AdminPage from "@/pages/admin-page";
 import NotFound from "@/pages/not-found";
 
@@ -43,6 +44,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/new-request" component={Home} />
           <Route path="/my-support-requests" component={MySupportRequests} />
+          <Route path="/meeting-prep" component={TeacherMeetingPrep} />
           <Route path="/concerns/:id" component={ConcernDetail} />
         </>
       )}
