@@ -17,7 +17,8 @@ import {
   Database,
   Settings,
   Activity,
-  BarChart3
+  BarChart3,
+  LogOut
 } from "lucide-react";
 
 interface DashboardStats {
@@ -46,6 +47,16 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout failed:', error);
+      window.location.href = "/";
+    }
+  };
 
   useEffect(() => {
     loadDashboardStats();
@@ -152,9 +163,21 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
           <p className="text-gray-600">Manage your Concern2Care system</p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Shield className="h-5 w-5 text-brand-blue" />
-          <Badge variant="secondary">Administrator</Badge>
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
+            <Shield className="h-5 w-5 text-brand-blue" />
+            <Badge variant="secondary">Administrator</Badge>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLogout}
+            className="text-gray-600 hover:text-red-600 hover:border-red-300 border-gray-300"
+            data-testid="button-logout"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Sign Out
+          </Button>
         </div>
       </div>
 
