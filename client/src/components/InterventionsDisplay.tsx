@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Plus, Edit2, Trash2, MessageSquare } from "lucide-react";
+import { Sparkles, Plus, Edit2, Trash2, MessageSquare, CheckCircle } from "lucide-react";
 import { InterventionWithProgressNotes } from "@shared/schema";
 import ProgressNotesSection from "@/components/ProgressNotesSection";
 
@@ -75,9 +75,26 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                 
                 <h5 className="font-semibold text-gray-900 mb-2">{intervention.title}</h5>
                 
-                <div className="text-sm text-gray-700 mb-3">
-                  <div className="line-clamp-3">{intervention.description}</div>
+                <div className="text-sm text-gray-700 mb-4">
+                  <div className="whitespace-pre-wrap leading-relaxed">{intervention.description}</div>
                 </div>
+
+                {/* Display intervention steps if available */}
+                {intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0 && (
+                  <div className="mb-4">
+                    <h6 className="font-medium text-gray-900 mb-2 flex items-center">
+                      <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                      Implementation Steps:
+                    </h6>
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <ol className="list-decimal list-inside space-y-1">
+                        {intervention.steps.map((step: string, index: number) => (
+                          <li key={index} className="text-sm text-gray-700">{step}</li>
+                        ))}
+                      </ol>
+                    </div>
+                  </div>
+                )}
 
                 {intervention.timeline && (
                   <div className="mb-3">
