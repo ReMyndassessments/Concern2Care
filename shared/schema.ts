@@ -108,6 +108,18 @@ export const reports = pgTable("reports", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Progress notes for tracking intervention implementation and outcomes
+export const progressNotes = pgTable("progress_notes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  interventionId: varchar("intervention_id").references(() => interventions.id).notNull(),
+  teacherId: varchar("teacher_id").references(() => users.id).notNull(),
+  note: text("note").notNull(),
+  outcome: varchar("outcome"), // 'positive', 'mixed', 'needs_adjustment', 'no_change'
+  nextSteps: text("next_steps"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Admin activity logging for audit trails
 export const adminLogs = pgTable("admin_logs", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -174,10 +186,22 @@ export const concernRelations = relations(concerns, ({ one, many }) => ({
   reports: many(reports),
 }));
 
-export const interventionRelations = relations(interventions, ({ one }) => ({
+export const interventionRelations = relations(interventions, ({ one, many }) => ({
   concern: one(concerns, {
     fields: [interventions.concernId],
     references: [concerns.id],
+  }),
+  progressNotes: many(progressNotes),
+}));
+
+export const progressNoteRelations = relations(progressNotes, ({ one }) => ({
+  intervention: one(interventions, {
+    fields: [progressNotes.interventionId],
+    references: [interventions.id],
+  }),
+  teacher: one(users, {
+    fields: [progressNotes.teacherId],
+    references: [users.id],
   }),
 }));
 
@@ -266,6 +290,12 @@ export const insertFeatureFlagSchema = createInsertSchema(featureFlags).omit({
   updatedAt: true,
 });
 
+export const insertProgressNoteSchema = createInsertSchema(progressNotes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
@@ -285,12 +315,18 @@ export type InsertFollowUpQuestion = z.infer<typeof insertFollowUpQuestionSchema
 export type FollowUpQuestion = typeof followUpQuestions.$inferSelect;
 export type InsertReport = z.infer<typeof insertReportSchema>;
 export type Report = typeof reports.$inferSelect;
+export type InsertProgressNote = z.infer<typeof insertProgressNoteSchema>;
+export type ProgressNote = typeof progressNotes.$inferSelect;
 
 // Extended types with relations
 export type ConcernWithDetails = Concern & {
-  interventions: Intervention[];
+  interventions: InterventionWithProgressNotes[];
   followUpQuestions: FollowUpQuestion[];
   teacher: User;
+};
+
+export type InterventionWithProgressNotes = Intervention & {
+  progressNotes: ProgressNote[];
 };
 
 export type UserWithSchool = Omit<User, 'school'> & {

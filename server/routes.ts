@@ -1371,6 +1371,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Progress Notes - Create new progress note
+  app.post('/api/progress-notes', async (req: any, res) => {
+    try {
+      const session = req.session;
+      if (!session?.user) {
+        return res.status(401).json({ message: 'Authentication required' });
+      }
+
+      const { interventionId, note, outcome, nextSteps } = req.body;
+      
+      if (!interventionId || !note) {
+        return res.status(400).json({ message: 'Intervention ID and note are required' });
+      }
+
+      const progressNote = await storage.createProgressNote({
+        interventionId,
+        teacherId: session.user.id,
+        note,
+        outcome,
+        nextSteps,
+      });
+
+      res.status(201).json(progressNote);
+    } catch (error) {
+      console.error('Error creating progress note:', error);
+      res.status(500).json({ message: 'Failed to create progress note' });
+    }
+  });
+
+  // Progress Notes - Get all progress notes for an intervention
+  app.get('/api/progress-notes/:interventionId', async (req: any, res) => {
+    try {
+      const session = req.session;
+      if (!session?.user) {
+        return res.status(401).json({ message: 'Authentication required' });
+      }
+
+      const { interventionId } = req.params;
+      const progressNotes = await storage.getProgressNotesByInterventionId(interventionId);
+      
+      res.json(progressNotes);
+    } catch (error) {
+      console.error('Error fetching progress notes:', error);
+      res.status(500).json({ message: 'Failed to fetch progress notes' });
+    }
+  });
+
+  // Progress Notes - Update existing progress note
+  app.put('/api/progress-notes/:id', async (req: any, res) => {
+    try {
+      const session = req.session;
+      if (!session?.user) {
+        return res.status(401).json({ message: 'Authentication required' });
+      }
+
+      const { id } = req.params;
+      const { note, outcome, nextSteps } = req.body;
+      
+      if (!note) {
+        return res.status(400).json({ message: 'Note is required' });
+      }
+
+      const progressNote = await storage.updateProgressNote(id, {
+        note,
+        outcome,
+        nextSteps,
+      });
+
+      if (!progressNote) {
+        return res.status(404).json({ message: 'Progress note not found' });
+      }
+
+      res.json(progressNote);
+    } catch (error) {
+      console.error('Error updating progress note:', error);
+      res.status(500).json({ message: 'Failed to update progress note' });
+    }
+  });
+
+  // Progress Notes - Delete progress note
+  app.delete('/api/progress-notes/:id', async (req: any, res) => {
+    try {
+      const session = req.session;
+      if (!session?.user) {
+        return res.status(401).json({ message: 'Authentication required' });
+      }
+
+      const { id } = req.params;
+      const deleted = await storage.deleteProgressNote(id);
+      
+      if (!deleted) {
+        return res.status(404).json({ message: 'Progress note not found' });
+      }
+
+      res.status(204).send();
+    } catch (error) {
+      console.error('Error deleting progress note:', error);
+      res.status(500).json({ message: 'Failed to delete progress note' });
+    }
+  });
+
   // Teacher: Meeting Preparation PDF Generation
   app.post('/api/meeting-preparation/generate', async (req: any, res) => {
     try {

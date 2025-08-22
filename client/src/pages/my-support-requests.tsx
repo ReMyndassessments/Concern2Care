@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { Concern } from "@shared/schema";
 import { Link } from "wouter";
+import InterventionsDisplay from "@/components/InterventionsDisplay";
 
 export default function MySupportRequests() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -327,16 +328,8 @@ export default function MySupportRequests() {
                         <p className="text-gray-700 leading-relaxed">{concern.description}</p>
                       </div>
                       
-                      {/* AI Interventions Placeholder - This would show actual interventions when available */}
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h4 className="font-medium text-blue-900 mb-2 flex items-center">
-                          <Sparkles className="h-4 w-4 mr-2 text-blue-600" />
-                          AI-Generated Interventions
-                        </h4>
-                        <p className="text-blue-700 text-sm">
-                          Intervention strategies would be displayed here based on the concern details.
-                        </p>
-                      </div>
+                      {/* AI Interventions - Fetch and display actual interventions */}
+                      <InterventionsDisplay concernId={concern.id} />
                     </div>
                   </CardContent>
                 )}

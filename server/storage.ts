@@ -9,6 +9,7 @@ import {
   dailyStats,
   featureFlags,
   schoolFeatureOverrides,
+  progressNotes,
   type User,
   type UpsertUser,
   type InsertSchool,
@@ -17,6 +18,7 @@ import {
   type Concern,
   type InsertIntervention,
   type Intervention,
+  type InterventionWithProgressNotes,
   type InsertFollowUpQuestion,
   type FollowUpQuestion,
   type InsertReport,
@@ -30,6 +32,8 @@ import {
   type UserWithSchool,
   type SchoolWithUsers,
   type AdminLogWithDetails,
+  type InsertProgressNote,
+  type ProgressNote,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, inArray, sql } from "drizzle-orm";
@@ -108,6 +112,12 @@ export interface IStorage {
   createReport(report: InsertReport): Promise<Report>;
   getReportById(id: string): Promise<Report | undefined>;
   getReportByConcernId(concernId: string): Promise<Report | undefined>;
+  
+  // Progress Note operations
+  createProgressNote(progressNote: InsertProgressNote): Promise<ProgressNote>;
+  getProgressNotesByInterventionId(interventionId: string): Promise<ProgressNote[]>;
+  updateProgressNote(id: string, updates: Partial<Omit<InsertProgressNote, 'interventionId' | 'teacherId'>>): Promise<ProgressNote | undefined>;
+  deleteProgressNote(id: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -501,7 +511,11 @@ export class DatabaseStorage implements IStorage {
     const concernData = await db.query.concerns.findFirst({
       where: eq(concerns.id, id),
       with: {
-        interventions: true,
+        interventions: {
+          with: {
+            progressNotes: true,
+          }
+        },
         followUpQuestions: true,
         teacher: true,
       },
@@ -579,6 +593,43 @@ export class DatabaseStorage implements IStorage {
       .from(reports)
       .where(eq(reports.concernId, concernId));
     return report;
+  }
+
+  // Progress Note operations
+  async createProgressNote(progressNote: InsertProgressNote): Promise<ProgressNote> {
+    const [newProgressNote] = await db
+      .insert(progressNotes)
+      .values(progressNote)
+      .returning();
+    return newProgressNote;
+  }
+
+  async getProgressNotesByInterventionId(interventionId: string): Promise<ProgressNote[]> {
+    const notes = await db
+      .select()
+      .from(progressNotes)
+      .where(eq(progressNotes.interventionId, interventionId))
+      .orderBy(desc(progressNotes.createdAt));
+    return notes;
+  }
+
+  async updateProgressNote(id: string, updates: Partial<Omit<InsertProgressNote, 'interventionId' | 'teacherId'>>): Promise<ProgressNote | undefined> {
+    const [updatedNote] = await db
+      .update(progressNotes)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(progressNotes.id, id))
+      .returning();
+    return updatedNote;
+  }
+
+  async deleteProgressNote(id: string): Promise<boolean> {
+    const result = await db
+      .delete(progressNotes)
+      .where(eq(progressNotes.id, id));
+    return (result.rowCount || 0) > 0;
   }
 }
 
