@@ -604,30 +604,292 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin route to get all users and their usage - PROTECTED ADMIN ONLY  
+  // ===========================================
+  // ADMIN ROUTES - All admin-only endpoints
+  // ===========================================
+  
+  // Admin Dashboard Stats
+  app.get("/api/admin/dashboard-stats", requireAuth, async (req: any, res) => {
+    try {
+      const stats = await storage.getDashboardStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching dashboard stats:", error);
+      res.status(500).json({ message: "Failed to fetch dashboard statistics" });
+    }
+  });
+  
+  // Admin Recent Activity
+  app.get("/api/admin/recent-activity", requireAuth, async (req: any, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 20;
+      const activity = await storage.getRecentActivity(limit);
+      res.json(activity);
+    } catch (error) {
+      console.error("Error fetching recent activity:", error);
+      res.status(500).json({ message: "Failed to fetch recent activity" });
+    }
+  });
+  
+  // ===========================================
+  // SCHOOL MANAGEMENT
+  // ===========================================
+  
+  // Get all schools
+  app.get("/api/admin/schools", requireAuth, async (req: any, res) => {
+    try {
+      const schools = await storage.getSchools();
+      res.json(schools);
+    } catch (error) {
+      console.error("Error fetching schools:", error);
+      res.status(500).json({ message: "Failed to fetch schools" });
+    }
+  });
+  
+  // Create new school
+  app.post("/api/admin/schools", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const school = await storage.createSchool(req.body);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'create_school',
+        targetSchoolId: school.id,
+        details: { schoolName: school.name }
+      });
+      
+      res.json(school);
+    } catch (error) {
+      console.error("Error creating school:", error);
+      res.status(500).json({ message: "Failed to create school" });
+    }
+  });
+  
+  // Get school with users
+  app.get("/api/admin/schools/:id", requireAuth, async (req: any, res) => {
+    try {
+      const school = await storage.getSchoolWithUsers(req.params.id);
+      if (!school) {
+        return res.status(404).json({ message: "School not found" });
+      }
+      res.json(school);
+    } catch (error) {
+      console.error("Error fetching school:", error);
+      res.status(500).json({ message: "Failed to fetch school" });
+    }
+  });
+  
+  // Update school
+  app.put("/api/admin/schools/:id", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const school = await storage.updateSchool(req.params.id, req.body);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'update_school',
+        targetSchoolId: school.id,
+        details: { changes: req.body }
+      });
+      
+      res.json(school);
+    } catch (error) {
+      console.error("Error updating school:", error);
+      res.status(500).json({ message: "Failed to update school" });
+    }
+  });
+  
+  // Delete school
+  app.delete("/api/admin/schools/:id", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      
+      // Get school name before deletion for logging
+      const school = await storage.getSchoolById(req.params.id);
+      const schoolName = school?.name || 'Unknown';
+      
+      await storage.deleteSchool(req.params.id);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'delete_school',
+        details: { schoolName }
+      });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting school:", error);
+      res.status(500).json({ message: "Failed to delete school" });
+    }
+  });
+  
+  // ===========================================
+  // USER MANAGEMENT
+  // ===========================================
+  
+  // Get all users with school info
   app.get("/api/admin/users", requireAuth, async (req: any, res) => {
     try {
-      // This is a demo - in production you'd check if user is admin
-      // For demo purposes, anyone can access this, but in production add admin check
-      
-      const users = await db.select().from(users);
-      const usersWithStats = users.map(user => ({
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        school: user.school,
-        supportRequestsUsed: user.supportRequestsUsed || 0,
-        baseLimit: user.supportRequestsLimit || 20,
-        additionalRequests: user.additionalRequests || 0,
-        totalLimit: (user.supportRequestsLimit || 20) + (user.additionalRequests || 0),
-        createdAt: user.createdAt
-      }));
-      
-      res.json(usersWithStats);
+      const users = await storage.getAllUsers();
+      res.json(users);
     } catch (error) {
       console.error("Error fetching users:", error);
       res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+  
+  // Create new user
+  app.post("/api/admin/users", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const user = await storage.createUser(req.body);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'create_user',
+        targetUserId: user.id,
+        details: { email: user.email }
+      });
+      
+      res.json(user);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ message: "Failed to create user" });
+    }
+  });
+  
+  // Bulk create users
+  app.post("/api/admin/users/bulk", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const { users: userList } = req.body;
+      
+      if (!Array.isArray(userList) || userList.length === 0) {
+        return res.status(400).json({ message: "Invalid user list" });
+      }
+      
+      const newUsers = await storage.bulkCreateUsers(userList);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'bulk_create_users',
+        details: { count: newUsers.length }
+      });
+      
+      res.json(newUsers);
+    } catch (error) {
+      console.error("Error bulk creating users:", error);
+      res.status(500).json({ message: "Failed to bulk create users" });
+    }
+  });
+  
+  // Update user
+  app.put("/api/admin/users/:id", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const user = await storage.updateUser(req.params.id, req.body);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'update_user',
+        targetUserId: user.id,
+        details: { changes: req.body }
+      });
+      
+      res.json(user);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: "Failed to update user" });
+    }
+  });
+  
+  // Delete user
+  app.delete("/api/admin/users/:id", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      
+      // Get user email before deletion for logging
+      const user = await storage.getUser(req.params.id);
+      const userEmail = user?.email || 'Unknown';
+      
+      await storage.deleteUser(req.params.id);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'delete_user',
+        details: { userEmail }
+      });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      res.status(500).json({ message: "Failed to delete user" });
+    }
+  });
+  
+  // Bulk delete users
+  app.delete("/api/admin/users/bulk", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const { userIds } = req.body;
+      
+      if (!Array.isArray(userIds) || userIds.length === 0) {
+        return res.status(400).json({ message: "Invalid user ID list" });
+      }
+      
+      await storage.bulkDeleteUsers(userIds);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'bulk_delete_users',
+        details: { count: userIds.length }
+      });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error bulk deleting users:", error);
+      res.status(500).json({ message: "Failed to bulk delete users" });
+    }
+  });
+  
+  // Grant additional requests (enhanced)
+  app.post("/api/admin/users/:id/grant-requests", requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const { amount, reason } = req.body;
+      
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ message: "Valid positive amount required" });
+      }
+      
+      if (amount > 50) {
+        return res.status(400).json({ message: "Cannot grant more than 50 additional requests at once" });
+      }
+      
+      const user = await storage.grantAdditionalRequests(req.params.id, amount, adminId);
+      
+      res.json({
+        success: true,
+        message: `Granted ${amount} additional requests to user ${req.params.id}`,
+        user: {
+          id: user.id,
+          email: user.email,
+          totalLimit: (user.supportRequestsLimit || 20) + (user.additionalRequests || 0),
+          additionalRequests: user.additionalRequests
+        }
+      });
+    } catch (error) {
+      console.error("Error granting additional requests:", error);
+      res.status(500).json({ message: "Failed to grant additional requests" });
     }
   });
 

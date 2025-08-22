@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Sparkles, LogOut, BarChart3, Home, History, Menu, X } from "lucide-react";
+import { Sparkles, LogOut, BarChart3, Home, History, Menu, X, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "@shared/schema";
 import { Link } from "wouter";
@@ -62,6 +62,14 @@ export default function AppHeader() {
                 My Requests
               </Button>
             </Link>
+            {user?.isAdmin && (
+              <Link href="/admin">
+                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin
+                </Button>
+              </Link>
+            )}
           </nav>
           
           {/* Right Side - Mobile Responsive */}
@@ -146,6 +154,14 @@ export default function AppHeader() {
                   My Requests
                 </Button>
               </Link>
+              {user?.isAdmin && (
+                <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
+                    <Shield className="h-4 w-4 mr-3" />
+                    Admin Dashboard
+                  </Button>
+                </Link>
+              )}
               
               {/* Mobile Usage Stats */}
               {user && (

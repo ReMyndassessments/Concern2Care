@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
 import MySupportRequests from "@/pages/my-support-requests";
 import ConcernDetail from "@/pages/concern-detail";
+import AdminPage from "@/pages/admin-page";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -41,6 +42,8 @@ function Router() {
           <Route path="/new-request" component={Home} />
           <Route path="/my-support-requests" component={MySupportRequests} />
           <Route path="/concerns/:id" component={ConcernDetail} />
+          <Route path="/admin" component={AdminPage} />
+          <Route path="/admin/*" component={AdminPage} />
         </>
       )}
       <Route component={NotFound} />

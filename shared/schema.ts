@@ -24,6 +24,20 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
+// Schools table for managing educational institutions
+export const schools = pgTable("schools", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name").notNull(),
+  district: varchar("district"),
+  address: text("address"),
+  contactEmail: varchar("contact_email"),
+  maxTeachers: integer("max_teachers").default(50),
+  defaultRequestsPerTeacher: integer("default_requests_per_teacher").default(20),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // User storage table.
 // (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
 export const users = pgTable("users", {
@@ -32,11 +46,15 @@ export const users = pgTable("users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
-  school: varchar("school"),
+  school: varchar("school"), // Keep for backward compatibility
+  schoolId: varchar("school_id").references(() => schools.id), // New structured school reference
   supportRequestsUsed: integer("support_requests_used").default(0),
   supportRequestsLimit: integer("support_requests_limit").default(20),
   additionalRequests: integer("additional_requests").default(0), // Bonus requests granted by admin
   isAdmin: boolean("is_admin").default(false),
+  role: varchar("role").default('teacher'), // 'teacher' | 'admin' | 'super_admin'
+  isActive: boolean("is_active").default(true),
+  lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -89,9 +107,60 @@ export const reports = pgTable("reports", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Admin activity logging for audit trails
+export const adminLogs = pgTable("admin_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  adminId: varchar("admin_id").references(() => users.id).notNull(),
+  action: varchar("action").notNull(), // 'create_user' | 'update_user' | 'grant_requests' | 'create_school' etc.
+  targetUserId: varchar("target_user_id").references(() => users.id),
+  targetSchoolId: varchar("target_school_id").references(() => schools.id),
+  details: jsonb("details").notNull().default('{}'), // Action-specific details
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Performance analytics - daily aggregated stats
+export const dailyStats = pgTable("daily_stats", {
+  date: varchar("date").primaryKey(), // YYYY-MM-DD format
+  totalConcernsCreated: integer("total_concerns_created").default(0),
+  totalUsersActive: integer("total_users_active").default(0),
+  totalAiRequests: integer("total_ai_requests").default(0),
+  averageResponseTime: integer("average_response_time").default(0), // in milliseconds
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Feature flags for controlling system features
+export const featureFlags = pgTable("feature_flags", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  flagName: varchar("flag_name").unique().notNull(),
+  isGloballyEnabled: boolean("is_globally_enabled").default(false),
+  description: text("description"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// School-specific feature flag overrides
+export const schoolFeatureOverrides = pgTable("school_feature_overrides", {
+  schoolId: varchar("school_id").references(() => schools.id).notNull(),
+  flagName: varchar("flag_name").notNull(),
+  isEnabled: boolean("is_enabled").notNull(),
+  enabledBy: varchar("enabled_by").references(() => users.id),
+  enabledAt: timestamp("enabled_at").defaultNow(),
+}, (table) => [index("school_feature_idx").on(table.schoolId, table.flagName)]);
+
 // Relations
-export const userRelations = relations(users, ({ many }) => ({
+export const schoolRelations = relations(schools, ({ many }) => ({
+  users: many(users),
+  featureOverrides: many(schoolFeatureOverrides),
+}));
+
+export const userRelations = relations(users, ({ one, many }) => ({
+  school: one(schools, {
+    fields: [users.schoolId],
+    references: [schools.id],
+  }),
   concerns: many(concerns),
+  adminLogs: many(adminLogs, { relationName: "admin_actions" }),
+  targetLogs: many(adminLogs, { relationName: "admin_targets" }),
 }));
 
 export const concernRelations = relations(concerns, ({ one, many }) => ({
@@ -125,6 +194,34 @@ export const reportRelations = relations(reports, ({ one }) => ({
   }),
 }));
 
+export const adminLogRelations = relations(adminLogs, ({ one }) => ({
+  admin: one(users, {
+    fields: [adminLogs.adminId],
+    references: [users.id],
+    relationName: "admin_actions",
+  }),
+  targetUser: one(users, {
+    fields: [adminLogs.targetUserId],
+    references: [users.id],
+    relationName: "admin_targets",
+  }),
+  targetSchool: one(schools, {
+    fields: [adminLogs.targetSchoolId],
+    references: [schools.id],
+  }),
+}));
+
+export const schoolFeatureOverrideRelations = relations(schoolFeatureOverrides, ({ one }) => ({
+  school: one(schools, {
+    fields: [schoolFeatureOverrides.schoolId],
+    references: [schools.id],
+  }),
+  enabledByUser: one(users, {
+    fields: [schoolFeatureOverrides.enabledBy],
+    references: [users.id],
+  }),
+}));
+
 // Insert schemas
 export const insertConcernSchema = createInsertSchema(concerns).omit({
   id: true,
@@ -151,9 +248,34 @@ export const insertReportSchema = createInsertSchema(reports).omit({
   createdAt: true,
 });
 
+export const insertSchoolSchema = createInsertSchema(schools).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertAdminLogSchema = createInsertSchema(adminLogs).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertFeatureFlagSchema = createInsertSchema(featureFlags).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
+export type InsertSchool = z.infer<typeof insertSchoolSchema>;
+export type School = typeof schools.$inferSelect;
+export type InsertAdminLog = z.infer<typeof insertAdminLogSchema>;
+export type AdminLog = typeof adminLogs.$inferSelect;
+export type InsertFeatureFlag = z.infer<typeof insertFeatureFlagSchema>;
+export type FeatureFlag = typeof featureFlags.$inferSelect;
+export type SchoolFeatureOverride = typeof schoolFeatureOverrides.$inferSelect;
+export type DailyStat = typeof dailyStats.$inferSelect;
 export type InsertConcern = z.infer<typeof insertConcernSchema>;
 export type Concern = typeof concerns.$inferSelect;
 export type InsertIntervention = z.infer<typeof insertInterventionSchema>;
@@ -168,4 +290,18 @@ export type ConcernWithDetails = Concern & {
   interventions: Intervention[];
   followUpQuestions: FollowUpQuestion[];
   teacher: User;
+};
+
+export type UserWithSchool = Omit<User, 'school'> & {
+  school: School | null;
+};
+
+export type SchoolWithUsers = School & {
+  users: User[];
+};
+
+export type AdminLogWithDetails = AdminLog & {
+  admin: User;
+  targetUser: User | null;
+  targetSchool: School | null;
 };
