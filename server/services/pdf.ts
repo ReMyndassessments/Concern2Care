@@ -235,7 +235,7 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     if (trimmedLine.match(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/, '$1');
       yPosition += 10;
-      const height = addText(`▶ Strategy: ${title}`, leftMargin + 10, 11, '#1e40af', { align: 'left' });
+      const height = addText(`Strategy: ${title}`, leftMargin + 10, 11, '#1e40af', { align: 'left' });
       yPosition += height + 8;
       inBulletList = false;
       continue;
@@ -303,7 +303,7 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     // Nested bullet points with proper indentation
     if (trimmedLine.match(/^\s{2,}\*\s/) || trimmedLine.match(/^\s{2,}-\s/)) {
       const content = trimmedLine.replace(/^\s*[\*-]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1');
-      const height = addText(`• ${content}`, leftMargin + 40, 9, '#6b7280', { width: 455 });
+      const height = addText(`- ${content}`, leftMargin + 40, 9, '#6b7280', { width: 455 });
       yPosition += height + 3;
       inBulletList = true;
       continue;
@@ -312,7 +312,7 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     // Regular bullet points
     if (trimmedLine.match(/^[-\*]\s/)) {
       const content = trimmedLine.replace(/^[-\*]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1');
-      const height = addText(`• ${content}`, leftMargin + 20, 9, '#374151', { width: 475 });
+      const height = addText(`- ${content}`, leftMargin + 20, 9, '#374151', { width: 475 });
       yPosition += height + 4;
       inBulletList = true;
       continue;
