@@ -20,6 +20,7 @@ import {
   BarChart3,
   LogOut
 } from "lucide-react";
+import TeacherManagement from "./teacher-management";
 
 interface DashboardStats {
   totalUsers: number;
@@ -246,11 +247,16 @@ export default function AdminDashboard() {
 
       {/* Tabs Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="teachers">Teacher Management</TabsTrigger>
           <TabsTrigger value="activity">Recent Activity</TabsTrigger>
           <TabsTrigger value="settings">System Settings</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="teachers" className="space-y-6">
+          <TeacherManagement />
+        </TabsContent>
 
         <TabsContent value="overview" className="space-y-6">
           {/* Usage Chart Card */}

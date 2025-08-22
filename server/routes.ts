@@ -112,6 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+
   // Get current teacher with usage data
   app.get('/api/auth/user', async (req: any, res) => {
     if (req.session.isAuthenticated && req.session.user) {
@@ -155,6 +156,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       next();
     } else {
       res.status(401).json({ message: "Authentication required" });
+    }
+  };
+
+  // Admin middleware - requires both authentication and admin privileges
+  const requireAdmin = (req: any, res: any, next: any) => {
+    if (req.session.isAuthenticated && req.session.user && req.session.user.isAdmin) {
+      req.user = { claims: { sub: req.session.user.id } }; // Compatibility with existing code
+      next();
+    } else {
+      res.status(403).json({ message: "Admin access required" });
     }
   };
 
@@ -647,7 +658,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ===========================================
   
   // Get all schools
-  app.get("/api/admin/schools", requireAuth, async (req: any, res) => {
+  app.get("/api/admin/schools", requireAdmin, async (req: any, res) => {
     try {
       const schools = await storage.getSchools();
       res.json(schools);
@@ -743,7 +754,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ===========================================
   
   // Get all users with school info
-  app.get("/api/admin/users", requireAuth, async (req: any, res) => {
+  app.get("/api/admin/users", requireAdmin, async (req: any, res) => {
     try {
       const users = await storage.getAllUsers();
       res.json(users);
@@ -754,7 +765,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Create new user
-  app.post("/api/admin/users", requireAuth, async (req: any, res) => {
+  app.post("/api/admin/users", requireAdmin, async (req: any, res) => {
     try {
       const adminId = req.user.claims.sub;
       const user = await storage.createUser(req.body);
@@ -775,7 +786,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Bulk create users
-  app.post("/api/admin/users/bulk", requireAuth, async (req: any, res) => {
+  app.post("/api/admin/users/bulk", requireAdmin, async (req: any, res) => {
     try {
       const adminId = req.user.claims.sub;
       const { users: userList } = req.body;
@@ -801,7 +812,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Update user
-  app.put("/api/admin/users/:id", requireAuth, async (req: any, res) => {
+  app.put("/api/admin/users/:id", requireAdmin, async (req: any, res) => {
     try {
       const adminId = req.user.claims.sub;
       const user = await storage.updateUser(req.params.id, req.body);
@@ -822,7 +833,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Delete user
-  app.delete("/api/admin/users/:id", requireAuth, async (req: any, res) => {
+  app.delete("/api/admin/users/:id", requireAdmin, async (req: any, res) => {
     try {
       const adminId = req.user.claims.sub;
       
@@ -847,7 +858,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Bulk delete users
-  app.delete("/api/admin/users/bulk", requireAuth, async (req: any, res) => {
+  app.delete("/api/admin/users/bulk", requireAdmin, async (req: any, res) => {
     try {
       const adminId = req.user.claims.sub;
       const { userIds } = req.body;
