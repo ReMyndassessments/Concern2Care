@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Shield, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
+import { queryClient } from "@/lib/queryClient";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,6 +14,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,12 +32,16 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
+        // Invalidate auth queries to refetch user data
+        await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+        
         toast({
           title: "Welcome back!",
           description: "You've been successfully signed in.",
         });
-        // Navigate to home
-        window.location.href = '/';
+        
+        // Use wouter navigation instead of window.location
+        setLocation('/');
       } else {
         toast({
           title: "Sign In Failed",
@@ -176,7 +183,7 @@ export default function Login() {
         <div className="text-center mt-6">
           <Button
             variant="ghost"
-            onClick={() => window.location.href = '/'}
+            onClick={() => setLocation('/')}
             className="text-gray-600 hover:text-purple-600 text-sm bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2"
           >
             ← Back to Home
