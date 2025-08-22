@@ -1,15 +1,56 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, Shield } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Sparkles, Shield, Eye, EyeOff } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleReplitLogin = () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
-    // Redirect to Replit authentication
-    window.location.href = '/api/login';
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Welcome back!",
+          description: "You've been successfully signed in.",
+        });
+        // Navigate to home
+        window.location.href = '/';
+      } else {
+        toast({
+          title: "Sign In Failed",
+          description: data.message || "Invalid email or password",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Connection Error",
+        description: "Unable to connect to the server. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -61,9 +102,10 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="teacher@school.edu"
+                  placeholder="noel.roberts@school.edu"
                   required
                   disabled={isLoading}
+                  data-testid="input-email"
                 />
               </div>
 
@@ -75,9 +117,10 @@ export default function Login() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder="teacher123"
                     required
                     disabled={isLoading}
+                    data-testid="input-password"
                   />
                   <Button
                     type="button"
@@ -100,6 +143,7 @@ export default function Login() {
                 type="submit"
                 disabled={isLoading}
                 className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold py-3 text-lg shadow-lg"
+                data-testid="button-login"
               >
                 {isLoading ? (
                   <>
@@ -115,13 +159,22 @@ export default function Login() {
               </Button>
             </form>
             
+            {/* Demo Credentials */}
+            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm font-medium text-blue-800 mb-2">Demo Login Credentials:</p>
+              <div className="text-xs text-blue-700 space-y-1">
+                <div><strong>Email:</strong> noel.roberts@school.edu</div>
+                <div><strong>Password:</strong> teacher123</div>
+              </div>
+            </div>
+            
             {/* Footer */}
             <div className="text-center mt-6 space-y-2">
               <p className="text-xs text-gray-500">
                 🔒 All student data is kept confidential and secure
               </p>
               <p className="text-xs text-gray-500">
-                FERPA compliant • Administered by your school
+                FERPA compliant • Simple and secure login
               </p>
             </div>
           </CardContent>
