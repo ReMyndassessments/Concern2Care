@@ -199,8 +199,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Increment usage count after successful concern creation
       try {
-        await storage.incrementUserRequestCount(userId);
-        console.log(`✅ Incremented usage count for user ${userId}`);
+        const updatedUser = await storage.incrementUserRequestCount(userId);
+        console.log(`✅ Incremented usage count for user ${userId} - new count: ${updatedUser.supportRequestsUsed}`);
       } catch (usageError) {
         console.error("Failed to increment usage count:", usageError);
         // Don't fail the concern creation if usage tracking fails
