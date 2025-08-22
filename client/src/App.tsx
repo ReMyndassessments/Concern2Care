@@ -7,7 +7,6 @@ import { useAuth } from "@/hooks/useAuth";
 import Landing from "@/pages/landing";
 import Login from "@/pages/login";
 import Home from "@/pages/home";
-import Dashboard from "@/pages/dashboard";
 import MySupportRequests from "@/pages/my-support-requests";
 import ConcernDetail from "@/pages/concern-detail";
 import TeacherMeetingPrep from "@/pages/teacher-meeting-prep";
