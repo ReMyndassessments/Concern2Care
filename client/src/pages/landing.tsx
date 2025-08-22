@@ -348,33 +348,134 @@ export default function Landing() {
           </div>
 
           {/* ROI Comparison Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Why Schools Choose Concern2Care</h3>
-              <p className="text-gray-600 mb-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-gray-200">
+            <div className="text-center mb-4 sm:mb-6">
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 px-2">Why Schools Choose Concern2Care</h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 px-2">
                 Better outcomes, better value than other education technology solutions
               </p>
               <Button
                 variant="outline"
                 onClick={() => setShowComparison(!showComparison)}
-                className="bg-gradient-to-r from-purple-500 to-blue-600 text-white border-0 hover:from-purple-600 hover:to-blue-700"
+                className="bg-gradient-to-r from-purple-500 to-blue-600 text-white border-0 hover:from-purple-600 hover:to-blue-700 text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3"
               >
-                <BarChart3 className="w-4 h-4 mr-2" />
+                <BarChart3 className="w-3 w-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 {showComparison ? 'Hide' : 'View'} ROI Comparison
               </Button>
             </div>
 
             {showComparison && (
-              <div className="mt-8 space-y-6 animate-in slide-in-from-top duration-300">
-                {/* Comparison Table */}
-                <div className="overflow-x-auto">
+              <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 animate-in slide-in-from-top duration-300">
+                {/* Mobile-First Responsive Comparison */}
+                <div className="block sm:hidden space-y-4">
+                  {/* Mobile Card Layout */}
+                  <div className="grid gap-4">
+                    {/* Per Student Cost */}
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Per Student Cost (Annual)</h4>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="text-center p-2 bg-gray-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
+                          <div className="font-medium text-gray-600">$12.00</div>
+                        </div>
+                        <div className="text-center p-2 bg-green-50 rounded border border-green-200">
+                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
+                          <div className="font-semibold text-green-600">$4.80</div>
+                        </div>
+                        <div className="text-center p-2 bg-blue-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
+                          <div className="font-semibold text-blue-600">$16.80</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Per Teacher Cost */}
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Per Teacher Cost (Annual)</h4>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="text-center p-2 bg-gray-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
+                          <div className="font-medium text-gray-600">$300</div>
+                        </div>
+                        <div className="text-center p-2 bg-green-50 rounded border border-green-200">
+                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
+                          <div className="font-semibold text-green-600">$120</div>
+                        </div>
+                        <div className="text-center p-2 bg-blue-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
+                          <div className="font-semibold text-blue-600">$420</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Pricing Model */}
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Pricing Model</h4>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="text-center p-2 bg-gray-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
+                          <div className="font-medium text-gray-600">Enrollment-based</div>
+                        </div>
+                        <div className="text-center p-2 bg-green-50 rounded border border-green-200">
+                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
+                          <div className="font-semibold text-green-600">Staff-based</div>
+                        </div>
+                        <div className="text-center p-2 bg-blue-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
+                          <div className="font-semibold text-blue-600">Balanced</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Predictability */}
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Predictability</h4>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="text-center p-2 bg-gray-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
+                          <div className="font-medium text-gray-600">Medium</div>
+                        </div>
+                        <div className="text-center p-2 bg-green-50 rounded border border-green-200">
+                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
+                          <div className="font-semibold text-green-600">High</div>
+                        </div>
+                        <div className="text-center p-2 bg-blue-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
+                          <div className="font-semibold text-blue-600">Medium-High</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Primary Benefit */}
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Primary Benefit</h4>
+                      <div className="space-y-2 text-xs">
+                        <div className="p-2 bg-gray-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
+                          <div className="font-medium text-gray-600">Teacher efficiency</div>
+                        </div>
+                        <div className="p-2 bg-green-50 rounded border border-green-200">
+                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
+                          <div className="font-semibold text-green-600">Student wellbeing & retention</div>
+                        </div>
+                        <div className="p-2 bg-blue-50 rounded">
+                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
+                          <div className="font-semibold text-blue-600">Complete staff + student impact</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Desktop Table Layout */}
+                <div className="hidden sm:block overflow-x-auto">
                   <table className="w-full border-collapse bg-gray-50 rounded-lg">
                     <thead>
                       <tr className="bg-gradient-to-r from-purple-500 to-blue-600 text-white">
-                        <th className="px-3 py-3 text-left font-semibold rounded-tl-lg">Metric</th>
-                        <th className="px-3 py-3 text-center font-semibold">Magic School</th>
-                        <th className="px-3 py-3 text-center font-semibold">Concern2Care</th>
-                        <th className="px-3 py-3 text-center font-semibold rounded-tr-lg">Better Together</th>
+                        <th className="px-3 py-3 text-left font-semibold rounded-tl-lg text-sm">Metric</th>
+                        <th className="px-3 py-3 text-center font-semibold text-sm">Magic School</th>
+                        <th className="px-3 py-3 text-center font-semibold text-sm">Concern2Care</th>
+                        <th className="px-3 py-3 text-center font-semibold rounded-tr-lg text-sm">Better Together</th>
                       </tr>
                     </thead>
                     <tbody className="text-sm">
