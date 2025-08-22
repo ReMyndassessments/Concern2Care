@@ -442,7 +442,9 @@ export default function InterventionResults({
                     </div>
                     <div>
                       <span className="text-sm font-medium text-gray-700">A: </span>
-                      <p className="text-sm text-gray-700 mt-1">{qa.response}</p>
+                      <div className="prose prose-sm max-w-none mt-2">
+                        <FormattedRecommendations content={qa.response} />
+                      </div>
                     </div>
                   </div>
                 ))}
