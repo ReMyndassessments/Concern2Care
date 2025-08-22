@@ -50,23 +50,27 @@ export default function AppHeader() {
           
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
-            <Link href="/">
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
-                <BarChart3 className="h-4 w-4 mr-2" />
-                New Request
-              </Button>
-            </Link>
-            <Link href="/my-support-requests">
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
-                <History className="h-4 w-4 mr-2" />
-                My Requests
-              </Button>
-            </Link>
+            {!user?.isAdmin && (
+              <>
+                <Link href="/">
+                  <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    New Request
+                  </Button>
+                </Link>
+                <Link href="/my-support-requests">
+                  <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
+                    <History className="h-4 w-4 mr-2" />
+                    My Requests
+                  </Button>
+                </Link>
+              </>
+            )}
             {user?.isAdmin && (
               <Link href="/admin">
                 <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
                   <Shield className="h-4 w-4 mr-2" />
-                  Admin
+                  Admin Dashboard
                 </Button>
               </Link>
             )}
@@ -142,18 +146,22 @@ export default function AppHeader() {
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4 bg-white/95 backdrop-blur-md">
             <nav className="flex flex-col space-y-2">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
-                  <BarChart3 className="h-4 w-4 mr-3" />
-                  New Request
-                </Button>
-              </Link>
-              <Link href="/my-support-requests" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
-                  <History className="h-4 w-4 mr-3" />
-                  My Requests
-                </Button>
-              </Link>
+              {!user?.isAdmin && (
+                <>
+                  <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
+                      <BarChart3 className="h-4 w-4 mr-3" />
+                      New Request
+                    </Button>
+                  </Link>
+                  <Link href="/my-support-requests" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
+                      <History className="h-4 w-4 mr-3" />
+                      My Requests
+                    </Button>
+                  </Link>
+                </>
+              )}
               {user?.isAdmin && (
                 <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
