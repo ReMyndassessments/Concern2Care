@@ -78,8 +78,8 @@ export default function AppHeader() {
           
           {/* Right Side - Mobile Responsive */}
           <div className="flex items-center space-x-2">
-            {/* Usage indicator - Hidden on mobile */}
-            {user && (
+            {/* Usage indicator - Hidden on mobile and for admins */}
+            {user && !user.isAdmin && (
               <div className="hidden xl:flex items-center space-x-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full px-3 py-2 border border-purple-100">
                 <div className="w-6 h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div 
@@ -171,8 +171,8 @@ export default function AppHeader() {
                 </Link>
               )}
               
-              {/* Mobile Usage Stats */}
-              {user && (
+              {/* Mobile Usage Stats - Hidden for admins */}
+              {user && !user.isAdmin && (
                 <div className="px-4 py-2 mt-4 border-t border-gray-200">
                   <div className="text-sm font-medium text-gray-700 mb-2">Usage This Month</div>
                   <div className="flex items-center space-x-3">

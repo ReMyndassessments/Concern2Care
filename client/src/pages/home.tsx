@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,9 +7,18 @@ import { User, Concern, Intervention } from "@shared/schema";
 import AppHeader from "@/components/app-header";
 import ConcernForm from "@/components/concern-form";
 import InterventionResults from "@/components/intervention-results";
+import { useLocation } from "wouter";
 
 export default function Home() {
   const { user } = useAuth() as { user: User | undefined };
+  const [, navigate] = useLocation();
+
+  // Redirect admins to admin dashboard
+  useEffect(() => {
+    if (user?.isAdmin) {
+      navigate("/admin");
+    }
+  }, [user, navigate]);
   const usagePercentage = ((user?.supportRequestsUsed || 0) / (user?.supportRequestsLimit || 20)) * 100;
   const [currentConcern, setCurrentConcern] = useState<Concern | null>(null);
   const [currentInterventions, setCurrentInterventions] = useState<Intervention[]>([]);

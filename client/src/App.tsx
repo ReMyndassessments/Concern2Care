@@ -38,12 +38,12 @@ function Router() {
         </>
       ) : (
         <>
+          <Route path="/admin" component={AdminPage} />
+          <Route path="/admin/*" component={AdminPage} />
           <Route path="/" component={Home} />
           <Route path="/new-request" component={Home} />
           <Route path="/my-support-requests" component={MySupportRequests} />
           <Route path="/concerns/:id" component={ConcernDetail} />
-          <Route path="/admin" component={AdminPage} />
-          <Route path="/admin/*" component={AdminPage} />
         </>
       )}
       <Route component={NotFound} />
