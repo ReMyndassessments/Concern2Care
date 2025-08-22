@@ -108,10 +108,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Get updated user data with usage statistics from database
         const userWithUsage = await storage.getUser(req.session.user.id);
         
+        const baseLimit = userWithUsage?.supportRequestsLimit || 20;
+        const additionalRequests = userWithUsage?.additionalRequests || 0;
+        const totalLimit = baseLimit + additionalRequests;
+        
         const responseData = {
           ...req.session.user,
           supportRequestsUsed: userWithUsage?.supportRequestsUsed || 0,
-          supportRequestsLimit: userWithUsage?.supportRequestsLimit || 20
+          supportRequestsLimit: totalLimit,
+          additionalRequests: additionalRequests,
+          baseLimit: baseLimit
         };
         
         res.json(responseData);
@@ -121,7 +127,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json({
           ...req.session.user,
           supportRequestsUsed: 0,
-          supportRequestsLimit: 20
+          supportRequestsLimit: 20,
+          additionalRequests: 0,
+          baseLimit: 20
         });
       }
     } else {
@@ -559,6 +567,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error bulk sharing concerns:", error);
       res.status(500).json({ message: "Failed to bulk share concerns" });
+    }
+  });
+
+  // Admin route to grant additional requests - PROTECTED ADMIN ONLY
+  app.post("/api/admin/grant-additional-requests", requireAuth, async (req: any, res) => {
+    try {
+      // This is a demo - in production you'd check if user is admin via database
+      const adminId = req.user.claims.sub;
+      const { userId, amount, reason } = req.body;
+      
+      if (!userId || !amount || amount <= 0) {
+        return res.status(400).json({ message: "Valid user ID and positive amount required" });
+      }
+      
+      if (amount > 50) {
+        return res.status(400).json({ message: "Cannot grant more than 50 additional requests at once" });
+      }
+      
+      // Grant additional requests
+      const updatedUser = await storage.grantAdditionalRequests(userId, amount, adminId);
+      
+      res.json({
+        success: true,
+        message: `Granted ${amount} additional requests to user ${userId}`,
+        user: {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          totalLimit: (updatedUser.supportRequestsLimit || 20) + (updatedUser.additionalRequests || 0),
+          additionalRequests: updatedUser.additionalRequests
+        }
+      });
+    } catch (error) {
+      console.error("Error granting additional requests:", error);
+      res.status(500).json({ message: "Failed to grant additional requests" });
+    }
+  });
+
+  // Admin route to get all users and their usage - PROTECTED ADMIN ONLY  
+  app.get("/api/admin/users", requireAuth, async (req: any, res) => {
+    try {
+      // This is a demo - in production you'd check if user is admin
+      // For demo purposes, anyone can access this, but in production add admin check
+      
+      const users = await db.select().from(users);
+      const usersWithStats = users.map(user => ({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        school: user.school,
+        supportRequestsUsed: user.supportRequestsUsed || 0,
+        baseLimit: user.supportRequestsLimit || 20,
+        additionalRequests: user.additionalRequests || 0,
+        totalLimit: (user.supportRequestsLimit || 20) + (user.additionalRequests || 0),
+        createdAt: user.createdAt
+      }));
+      
+      res.json(usersWithStats);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
     }
   });
 

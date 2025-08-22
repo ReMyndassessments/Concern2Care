@@ -27,6 +27,7 @@ export interface IStorage {
   updateUserRequestCount(id: string, count: number): Promise<void>;
   incrementUserRequestCount(id: string): Promise<User>;
   checkUserUsageLimit(id: string): Promise<{ canCreate: boolean; used: number; limit: number; }>;
+  grantAdditionalRequests(id: string, amount: number, adminId: string): Promise<User>;
   
   // Concern operations
   createConcern(concern: InsertConcern): Promise<Concern>;
@@ -111,13 +112,41 @@ export class DatabaseStorage implements IStorage {
     }
     
     const used = user.supportRequestsUsed || 0;
-    const limit = user.supportRequestsLimit || 20;
+    const baseLimit = user.supportRequestsLimit || 20;
+    const additionalRequests = user.additionalRequests || 0;
+    const totalLimit = baseLimit + additionalRequests;
     
     return {
-      canCreate: used < limit,
+      canCreate: used < totalLimit,
       used,
-      limit
+      limit: totalLimit
     };
+  }
+
+  async grantAdditionalRequests(id: string, amount: number, adminId: string): Promise<User> {
+    const currentUser = await this.getUser(id);
+    if (!currentUser) {
+      throw new Error(`User ${id} not found`);
+    }
+    
+    const newAdditionalRequests = (currentUser.additionalRequests || 0) + amount;
+    
+    const [user] = await db
+      .update(users)
+      .set({ 
+        additionalRequests: newAdditionalRequests,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!user) {
+      throw new Error(`User ${id} not found during update`);
+    }
+    
+    console.log(`✅ Granted ${amount} additional requests to user ${id} by admin ${adminId}. Total additional: ${newAdditionalRequests}`);
+    
+    return user;
   }
 
   // Concern operations

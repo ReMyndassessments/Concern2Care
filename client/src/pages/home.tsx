@@ -79,10 +79,43 @@ export default function Home() {
                     You've used all {user.supportRequestsLimit || 20} of your monthly support requests. 
                     The form below has been temporarily disabled.
                   </p>
-                  <div className="text-sm text-red-600">
-                    <p>• Your requests will reset at the beginning of next month</p>
-                    <p>• You can still view and manage your existing support requests</p>
-                    <p>• Contact your administrator if you need additional requests</p>
+                  <div className="bg-white/70 rounded-lg p-4 mb-4">
+                    <h4 className="font-semibold text-red-800 mb-2">Need More Requests? Here Are Your Options:</h4>
+                    <div className="text-sm text-red-700 space-y-2">
+                      <div className="flex items-start space-x-2">
+                        <span className="font-semibold">📧 Email:</span>
+                        <span>Contact your school administrator or IT support for additional requests</span>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <span className="font-semibold">🚨 Urgent:</span>
+                        <span>For immediate student safety concerns, contact your principal directly</span>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <span className="font-semibold">📅 Wait:</span>
+                        <span>Your requests automatically reset at the beginning of next month</span>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <span className="font-semibold">💾 Review:</span>
+                        <span>You can still view and manage all your existing support requests</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button 
+                      onClick={() => window.location.href = 'mailto:admin@yourschool.edu?subject=Request for Additional Student Support Requests&body=Hello,%0A%0AI have reached my monthly limit of support requests and need additional requests for urgent student needs.%0A%0ATeacher: ' + encodeURIComponent((user.firstName || '') + ' ' + (user.lastName || '')) + '%0AEmail: ' + encodeURIComponent(user.email || '') + '%0ACurrent Usage: ' + (user.supportRequestsUsed || 0) + '/' + (user.supportRequestsLimit || 20) + '%0A%0APlease approve additional requests for this month.%0A%0AThank you!'}
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                      size="sm"
+                    >
+                      📧 Email Administrator
+                    </Button>
+                    <Button 
+                      onClick={() => window.location.href = '/my-support-requests'}
+                      variant="outline"
+                      className="border-red-200 text-red-700 hover:bg-red-50"
+                      size="sm"
+                    >
+                      📋 View My Requests
+                    </Button>
                   </div>
                 </div>
               </div>

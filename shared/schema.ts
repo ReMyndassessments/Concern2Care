@@ -35,6 +35,8 @@ export const users = pgTable("users", {
   school: varchar("school"),
   supportRequestsUsed: integer("support_requests_used").default(0),
   supportRequestsLimit: integer("support_requests_limit").default(20),
+  additionalRequests: integer("additional_requests").default(0), // Bonus requests granted by admin
+  isAdmin: boolean("is_admin").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
