@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, memo } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
@@ -18,44 +18,68 @@ interface InterventionResultsProps {
   showFollowUpQuestions?: boolean;
 }
 
-// Professional formatting component for AI recommendations
-const FormattedRecommendations = ({ content }: { content: string }): React.ReactElement => {
-  const formatContent = (text: string) => {
-    const lines = text.split('\n');
+// Optimized formatting component with memoization for better performance
+const FormattedRecommendations = memo(({ content }: { content: string }): React.ReactElement => {
+  // Memoize the expensive formatting operation
+  const formattedElements = useMemo(() => {
+    const lines = content.split('\n');
     const elements: React.ReactElement[] = [];
     let key = 0;
+
+    // Pre-compile regex patterns for better performance
+    const patterns = {
+      level4: /^####\s*\*\*(.*?)\*\*/,
+      level3: /^###\s*\*\*(.*?)\*\*/,
+      level2: /^##\s*\*\*(.*?)\*\*/,
+      strategy: /^\*\s*\*\*Strategy:\s*(.*?)\*\*/,
+      implementation: /^\*\s*\*\*Implementation:\*\*/,
+      step: /^-\s*\*\*Step\s*\d+:\*\*/,
+      boldColon: /^\*\s*\*\*(.*?):\*\*/,
+      boldNoColon: /^\*\s*\*\*(.*?)\*\*/,
+      genericBold: /^\*\*(.*?)\*\*/,
+      nestedBullet: /^\s{2,}\*\s/,
+      bullet: /^[-*]\s/,
+      separator: /^---$/
+    };
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue;
 
       // Level 4 headings (#### **Title**)
-      if (line.match(/^####\s*\*\*(.*?)\*\*/)) {
-        const title = line.replace(/^####\s*\*\*(.*?)\*\*/, '$1');
+      if (patterns.level4.test(line)) {
+        const title = line.replace(patterns.level4, '$1');
         elements.push(
-          <h2 key={key++} className="text-xl font-bold text-blue-600 mt-6 mb-4 border-b-2 border-blue-200 pb-2">
-            {title}
-          </h2>
+          <div key={key++} className="mt-8 mb-6">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
+              {title}
+            </h2>
+            <div className="h-0.5 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full" />
+          </div>
         );
         continue;
       }
 
       // Level 3 headings (### **Title**)
-      if (line.match(/^###\s*\*\*(.*?)\*\*/)) {
-        const title = line.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
+      if (patterns.level3.test(line)) {
+        const title = line.replace(patterns.level3, '$1');
         elements.push(
-          <h3 key={key++} className="text-lg font-bold text-blue-600 mt-5 mb-3 border-b border-blue-200 pb-2">
-            {title}
-          </h3>
+          <div key={key++} className="mt-6 mb-4">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center">
+              <div className="w-1.5 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full mr-3" />
+              {title}
+            </h3>
+          </div>
         );
         continue;
       }
 
       // Level 2 headings (## **Title**)
-      if (line.match(/^##\s*\*\*(.*?)\*\*/)) {
-        const title = line.replace(/^##\s*\*\*(.*?)\*\*/, '$1');
+      if (patterns.level2.test(line)) {
+        const title = line.replace(patterns.level2, '$1');
         elements.push(
-          <h4 key={key++} className="text-base font-bold text-blue-700 mt-4 mb-3">
+          <h4 key={key++} className="text-lg font-semibold text-gray-700 mt-5 mb-3 flex items-center">
+            <div className="w-2 h-2 bg-blue-400 rounded-full mr-2" />
             {title}
           </h4>
         );
@@ -63,47 +87,58 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
       }
 
       // Strategy headings (* **Strategy: Name**)
-      if (line.match(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/)) {
-        const title = line.replace(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/, '$1');
+      if (patterns.strategy.test(line)) {
+        const title = line.replace(patterns.strategy, '$1');
         elements.push(
-          <h4 key={key++} className="text-base font-semibold text-blue-700 mt-4 mb-2 flex items-center">
-            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm mr-2">Strategy</span>
-            {title}
-          </h4>
+          <div key={key++} className="mt-6 mb-4">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-400 rounded-r-lg p-4">
+              <h4 className="text-base font-semibold text-blue-800 flex items-center">
+                <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium mr-3">Strategy</span>
+                {title}
+              </h4>
+            </div>
+          </div>
         );
         continue;
       }
 
       // Implementation headings (* **Implementation:**)
-      if (line.match(/^\*\s*\*\*Implementation:\*\*/)) {
+      if (patterns.implementation.test(line)) {
         elements.push(
-          <h5 key={key++} className="text-sm font-semibold text-green-600 mt-3 mb-2 flex items-center">
-            <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs mr-2">Implementation</span>
-          </h5>
+          <div key={key++} className="mt-4 mb-3">
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-400 rounded-r-lg p-3">
+              <h5 className="text-sm font-semibold text-green-700 flex items-center">
+                <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium mr-2">Implementation</span>
+              </h5>
+            </div>
+          </div>
         );
         continue;
       }
 
       // Step headings (- **Step N:** text)
-      if (line.match(/^-\s*\*\*Step\s*\d+:\*\*/)) {
+      if (patterns.step.test(line)) {
         const stepText = line.replace(/^-\s*\*\*Step\s*\d+:\*\*\s*/, '');
         const stepNumber = line.match(/Step\s*(\d+)/)?.[1] || '';
         elements.push(
-          <div key={key++} className="ml-4 mt-3 mb-2">
-            <span className="inline-flex items-center bg-blue-50 text-blue-700 px-2 py-1 rounded text-sm font-medium mr-2">
-              Step {stepNumber}
-            </span>
-            <span className="text-gray-800 font-medium">{stepText}</span>
+          <div key={key++} className="ml-6 mt-3 mb-3">
+            <div className="flex items-start space-x-3">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                {stepNumber}
+              </div>
+              <span className="text-gray-800 font-medium leading-relaxed">{stepText}</span>
+            </div>
           </div>
         );
         continue;
       }
 
       // Other bold headings (* **Title:**)
-      if (line.match(/^\*\s*\*\*(.*?):\*\*/)) {
-        const title = line.replace(/^\*\s*\*\*(.*?):\*\*/, '$1');
+      if (patterns.boldColon.test(line)) {
+        const title = line.replace(patterns.boldColon, '$1');
         elements.push(
-          <h5 key={key++} className="text-sm font-semibold text-purple-600 mt-3 mb-2">
+          <h5 key={key++} className="text-sm font-semibold text-purple-700 mt-4 mb-2 flex items-center">
+            <div className="w-1 h-1 bg-purple-400 rounded-full mr-2" />
             {title}:
           </h5>
         );
@@ -111,10 +146,10 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
       }
 
       // Bold headings without colons (* **Title**)
-      if (line.match(/^\*\s*\*\*(.*?)\*\*/) && !line.includes(':')) {
-        const title = line.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
+      if (patterns.boldNoColon.test(line) && !line.includes(':')) {
+        const title = line.replace(patterns.boldNoColon, '$1');
         elements.push(
-          <h5 key={key++} className="text-sm font-semibold text-gray-700 mt-3 mb-2">
+          <h5 key={key++} className="text-sm font-semibold text-gray-600 mt-3 mb-2">
             {title}
           </h5>
         );
@@ -122,10 +157,10 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
       }
 
       // Generic bold headings (**Title**)
-      if (line.match(/^\*\*(.*?)\*\*/)) {
-        const title = line.replace(/^\*\*(.*?)\*\*/, '$1');
+      if (patterns.genericBold.test(line)) {
+        const title = line.replace(patterns.genericBold, '$1');
         elements.push(
-          <h4 key={key++} className="text-md font-semibold text-blue-800 mt-4 mb-2">
+          <h4 key={key++} className="text-base font-semibold text-gray-800 mt-4 mb-3">
             {title}
           </h4>
         );
@@ -133,33 +168,41 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
       }
 
       // Nested bullet points (  * text)
-      if (line.match(/^\s{2,}\*\s/)) {
+      if (patterns.nestedBullet.test(line)) {
         const content = line.replace(/^\s*\*\s*/, '');
         const formattedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         elements.push(
-          <div key={key++} className="ml-8 mb-1">
-            <span className="text-gray-600 text-sm" dangerouslySetInnerHTML={{ __html: `• ${formattedContent}` }} />
+          <div key={key++} className="ml-10 mb-2">
+            <div className="flex items-start space-x-2">
+              <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 flex-shrink-0" />
+              <span className="text-gray-600 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedContent }} />
+            </div>
           </div>
         );
         continue;
       }
 
       // Regular bullet points (* text or - text)
-      if (line.match(/^[-*]\s/)) {
+      if (patterns.bullet.test(line)) {
         const content = line.replace(/^[-*]\s*/, '');
         const formattedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         elements.push(
-          <div key={key++} className="ml-4 mb-2">
-            <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: `• ${formattedContent}` }} />
+          <div key={key++} className="ml-6 mb-3">
+            <div className="flex items-start space-x-3">
+              <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+              <span className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedContent }} />
+            </div>
           </div>
         );
         continue;
       }
 
       // Separators (---)
-      if (line === '---') {
+      if (patterns.separator.test(line)) {
         elements.push(
-          <hr key={key++} className="my-4 border-gray-300" />
+          <div key={key++} className="my-6">
+            <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+          </div>
         );
         continue;
       }
@@ -168,20 +211,22 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
       if (line.length > 0) {
         const formattedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         elements.push(
-          <p key={key++} className="text-gray-700 mb-3 leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedLine }} />
+          <p key={key++} className="text-gray-700 mb-4 leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedLine }} />
         );
       }
     }
 
     return elements;
-  };
+  }, [content]); // Only recompute when content changes
 
   return (
-    <div className="space-y-2">
-      {formatContent(content)}
+    <div className="space-y-1">
+      {formattedElements}
     </div>
   );
-};
+});
+
+FormattedRecommendations.displayName = 'FormattedRecommendations';
 
 export default function InterventionResults({ 
   concern, 
@@ -382,30 +427,36 @@ export default function InterventionResults({
         </CardHeader>
         
         <CardContent>
-          <div className="grid gap-6">
+          <div className="space-y-8">
             {interventions.map((intervention, index) => (
-              <Card key={intervention.id} className="border border-gray-200 hover:border-brand-blue/30 transition-colors">
-                <CardContent className="p-5">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-brand-blue text-white rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-semibold">{index + 1}</span>
+              <Card key={intervention.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-gray-50/50">
+                <CardContent className="p-8">
+                  <div className="flex items-start space-x-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <span className="text-lg font-bold">{index + 1}</span>
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                        <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full mr-4" />
                         {intervention.title}
                       </h3>
-                      <div className="prose prose-sm max-w-none mb-4">
-                        <div><FormattedRecommendations content={intervention.description} /></div>
+                      <div className="prose prose-lg max-w-none mb-6 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                        <FormattedRecommendations content={intervention.description} />
                       </div>
                       
                       {intervention.steps && Array.isArray(intervention.steps) && (intervention.steps as string[]).length > 0 && (
-                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                          <h4 className="text-sm font-medium text-gray-900 mb-2">Implementation Steps:</h4>
-                          <ul className="text-sm text-gray-700 space-y-1">
+                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6 border border-blue-100">
+                          <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+                            <div className="w-5 h-5 bg-blue-500 rounded-full mr-3" />
+                            Implementation Steps
+                          </h4>
+                          <ul className="space-y-3">
                             {(intervention.steps as string[]).map((step, stepIndex) => (
-                              <li key={stepIndex} className="flex items-start space-x-2">
-                                <ChevronRight className="h-4 w-4 text-brand-blue mt-0.5 flex-shrink-0" />
-                                <span>{step}</span>
+                              <li key={stepIndex} className="flex items-start space-x-4">
+                                <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                                  {stepIndex + 1}
+                                </div>
+                                <span className="text-gray-800 leading-relaxed">{step}</span>
                               </li>
                             ))}
                           </ul>
@@ -413,37 +464,42 @@ export default function InterventionResults({
                       )}
                       
                       {/* Important Disclaimer */}
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                        <div className="flex items-start space-x-2">
-                          <span className="text-yellow-600 font-semibold">⚠️</span>
+                      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-l-4 border-amber-400 rounded-r-xl p-6 mb-6 shadow-sm">
+                        <div className="flex items-start space-x-4">
+                          <div className="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-lg">⚠️</span>
+                          </div>
                           <div>
-                            <p className="text-sm font-semibold text-yellow-800 mb-1">IMPORTANT DISCLAIMER:</p>
-                            <p className="text-sm text-yellow-700">
+                            <p className="text-base font-bold text-amber-900 mb-3">IMPORTANT DISCLAIMER</p>
+                            <p className="text-sm text-amber-800 leading-relaxed">
                               These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation.
                             </p>
                           </div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                         <div className="flex items-center space-x-4">
-                          <Badge className="bg-green-100 text-green-800">
+                          <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-sm">
                             <CheckCircle className="h-3 w-3 mr-1" />
                             Research-Based
                           </Badge>
                           {intervention.timeline && (
-                            <span className="text-xs text-gray-600">
-                              Expected timeline: {intervention.timeline}
-                            </span>
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-blue-400 rounded-full" />
+                              <span className="text-sm text-gray-600 font-medium">
+                                Timeline: {intervention.timeline}
+                              </span>
+                            </div>
                           )}
                         </div>
                         
                         {/* Save Intervention Button */}
                         <div className="flex items-center space-x-2">
                           {savedInterventions.has(intervention.id) || intervention.saved ? (
-                            <div className="flex items-center space-x-2 text-green-600">
-                              <Bookmark className="h-4 w-4" />
-                              <span className="text-sm font-medium">Saved</span>
+                            <div className="flex items-center space-x-3 bg-green-50 px-4 py-2 rounded-full border border-green-200">
+                              <Bookmark className="h-4 w-4 text-green-600" />
+                              <span className="text-sm font-semibold text-green-700">Saved</span>
                             </div>
                           ) : (
                             <Button
@@ -451,7 +507,7 @@ export default function InterventionResults({
                               size="sm"
                               onClick={() => handleSaveIntervention(intervention.id)}
                               disabled={saveInterventionMutation.isPending}
-                              className="border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300"
+                              className="bg-white border-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 shadow-sm transition-all duration-200 hover:shadow-md"
                             >
                               {saveInterventionMutation.isPending ? (
                                 <>
@@ -460,7 +516,7 @@ export default function InterventionResults({
                                 </>
                               ) : (
                                 <>
-                                  <BookmarkPlus className="h-3 w-3 mr-1" />
+                                  <BookmarkPlus className="h-3 w-3 mr-2" />
                                   Save Intervention
                                 </>
                               )}
@@ -476,8 +532,13 @@ export default function InterventionResults({
           </div>
           
           {/* Follow-up Questions Section */}
-          <div className="mt-8 border-t border-gray-200 pt-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Have Follow-Up Questions?</h3>
+          <div className="mt-12 bg-gradient-to-r from-gray-50 to-gray-100/50 rounded-2xl p-8 border border-gray-200">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <Send className="h-5 w-5 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">Have Follow-Up Questions?</h3>
+            </div>
             <div className="flex space-x-4 mb-6">
               <div className="flex-1">
                 <Input 
@@ -490,12 +551,13 @@ export default function InterventionResults({
                       handleFollowUpSubmit();
                     }
                   }}
+                  className="h-12 text-base border-2 border-gray-200 focus:border-blue-400 rounded-xl shadow-sm"
                 />
               </div>
               <Button 
                 onClick={handleFollowUpSubmit}
                 disabled={followUpMutation.isPending || !followUpQuestion.trim()}
-                className="bg-brand-blue hover:bg-brand-dark-blue"
+                className="h-12 px-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 {followUpMutation.isPending ? (
                   <>
@@ -513,19 +575,27 @@ export default function InterventionResults({
 
             {/* Display existing follow-up questions and answers */}
             {existingQuestions && existingQuestions.length > 0 && (
-              <div className="space-y-4">
-                <Separator />
-                <h4 className="text-md font-medium text-gray-900">Previous Questions & Answers</h4>
+              <div className="space-y-6">
+                <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+                <h4 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <div className="w-5 h-5 bg-gray-400 rounded-full mr-3" />
+                  Previous Questions & Answers
+                </h4>
                 {existingQuestions.map((qa, index) => (
-                  <div key={qa.id} className="bg-gray-50 rounded-lg p-4">
-                    <div className="mb-3">
-                      <span className="text-sm font-medium text-brand-blue">Q{index + 1}: </span>
-                      <span className="text-sm text-gray-900">{qa.question}</span>
+                  <div key={qa.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                    <div className="mb-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                          Q{index + 1}
+                        </div>
+                        <span className="text-base text-gray-900 font-medium">{qa.question}</span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-sm font-medium text-gray-700">A: </span>
-                      <div className="prose prose-sm max-w-none mt-2">
-                        <FormattedRecommendations content={qa.response} />
+                    <div className="ml-9">
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="prose prose-sm max-w-none">
+                          <FormattedRecommendations content={qa.response} />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -535,20 +605,20 @@ export default function InterventionResults({
           </div>
           
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row gap-4 mt-12 pt-8">
             <Button 
               onClick={handleGenerateReport}
               disabled={reportMutation.isPending}
-              className="flex-1 bg-brand-blue hover:bg-brand-dark-blue"
+              className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold"
             >
               {reportMutation.isPending ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Generating...
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                  Generating Report...
                 </>
               ) : (
                 <>
-                  <FileText className="h-4 w-4 mr-2" />
+                  <FileText className="h-5 w-5 mr-3" />
                   Generate PDF Report
                 </>
               )}
@@ -556,9 +626,9 @@ export default function InterventionResults({
             <Button 
               variant="outline"
               onClick={handleShareReport}
-              className="flex-1"
+              className="flex-1 h-12 border-2 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition-all duration-200 text-base font-semibold"
             >
-              <Share className="h-4 w-4 mr-2" />
+              <Share className="h-5 w-5 mr-3" />
               Share with Staff
             </Button>
           </div>
