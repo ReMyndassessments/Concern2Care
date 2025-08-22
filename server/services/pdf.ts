@@ -189,7 +189,7 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     if (trimmedLine.match(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/, '$1');
       yPosition += 8;
-      doc.fontSize(10).fillColor('#1e40af').text(`🎯 Strategy: ${title}`, 60, yPosition);
+      doc.fontSize(10).fillColor('#1e40af').text(`> Strategy: ${title}`, 60, yPosition);
       yPosition += 18;
       inBulletList = false;
       continue;
@@ -198,7 +198,7 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     // Implementation headings (* **Implementation:**)
     if (trimmedLine.match(/^\*\s*\*\*Implementation:\*\*/)) {
       yPosition += 5;
-      doc.fontSize(9).fillColor('#059669').text('📋 Implementation:', 70, yPosition);
+      doc.fontSize(9).fillColor('#059669').text('Implementation:', 70, yPosition);
       yPosition += 15;
       inBulletList = true;
       continue;
@@ -208,7 +208,7 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     if (trimmedLine.match(/^\*\s*\*\*(.*?):\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*(.*?):\*\*/, '$1');
       yPosition += 5;
-      doc.fontSize(9).fillColor('#7c3aed').text(`📊 ${title}:`, 60, yPosition);
+      doc.fontSize(9).fillColor('#7c3aed').text(`${title}:`, 60, yPosition);
       yPosition += 15;
       inBulletList = true;
       continue;
@@ -218,7 +218,7 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     if (trimmedLine.match(/^\*\s*\*\*(.*?)\*\*/) && !trimmedLine.includes(':')) {
       const title = trimmedLine.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
       yPosition += 5;
-      doc.fontSize(9).fillColor('#dc2626').text(`📌 ${title}`, 60, yPosition);
+      doc.fontSize(9).fillColor('#dc2626').text(`${title}`, 60, yPosition);
       yPosition += 15;
       inBulletList = false;
       continue;
@@ -227,8 +227,8 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     // Nested bullet points (  * text)
     if (trimmedLine.match(/^\s{2,}\*\s/)) {
       const content = trimmedLine.replace(/^\s*\*\s*/, '');
-      doc.fontSize(8).fillColor('#6b7280').text(`  • ${content}`, 85, yPosition, { width: 460 });
-      const lineHeight = doc.heightOfString(`  • ${content}`, { width: 460 });
+      doc.fontSize(8).fillColor('#6b7280').text(`    - ${content}`, 85, yPosition, { width: 460 });
+      const lineHeight = doc.heightOfString(`    - ${content}`, { width: 460 });
       yPosition += Math.max(lineHeight, 12) + 2;
       inBulletList = true;
       continue;
@@ -237,8 +237,8 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     // Regular bullet points (* text)
     if (trimmedLine.startsWith('* ')) {
       const content = trimmedLine.replace(/^\*\s*/, '');
-      doc.fontSize(9).fillColor('#374151').text(`• ${content}`, 70, yPosition, { width: 475 });
-      const lineHeight = doc.heightOfString(`• ${content}`, { width: 475 });
+      doc.fontSize(9).fillColor('#374151').text(`  - ${content}`, 70, yPosition, { width: 475 });
+      const lineHeight = doc.heightOfString(`  - ${content}`, { width: 475 });
       yPosition += Math.max(lineHeight, 14) + 3;
       inBulletList = true;
       continue;
@@ -248,8 +248,8 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     if (trimmedLine.match(/^\*\*Timeline:\*\*|^\*\*Resources.*:\*\*/)) {
       const content = trimmedLine.replace(/\*\*/g, '');
       yPosition += 3;
-      doc.fontSize(8).fillColor('#059669').text(`⏰ ${content}`, 80, yPosition, { width: 465 });
-      const lineHeight = doc.heightOfString(`⏰ ${content}`, { width: 465 });
+      doc.fontSize(8).fillColor('#059669').text(`${content}`, 80, yPosition, { width: 465 });
+      const lineHeight = doc.heightOfString(`${content}`, { width: 465 });
       yPosition += lineHeight + 8;
       continue;
     }
