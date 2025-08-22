@@ -40,10 +40,19 @@ export function TeacherManagement() {
   const [isCSVUploadOpen, setIsCSVUploadOpen] = useState(false);
   const [isBulkUpdateDialogOpen, setIsBulkUpdateDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddTeacherDialogOpen, setIsAddTeacherDialogOpen] = useState(false);
   const [bulkUpdateSettings, setBulkUpdateSettings] = useState({
     supportRequestsLimit: '',
     isActive: '',
     school: ''
+  });
+  const [newTeacherData, setNewTeacherData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    school: '',
+    supportRequestsLimit: '50',
+    isActive: true
   });
   const { toast } = useToast();
 
@@ -173,6 +182,38 @@ export function TeacherManagement() {
     }
   };
 
+  const handleAddTeacher = async () => {
+    try {
+      const response = await apiRequest('/api/admin/teachers', {
+        method: 'POST',
+        body: newTeacherData
+      });
+
+      toast({
+        title: "Success",
+        description: `Teacher ${newTeacherData.firstName} ${newTeacherData.lastName} has been created successfully.`,
+      });
+
+      setIsAddTeacherDialogOpen(false);
+      setNewTeacherData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        school: '',
+        supportRequestsLimit: '50',
+        isActive: true
+      });
+      loadTeachers();
+    } catch (error: any) {
+      console.error('Add teacher error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create teacher.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleExportTeachers = () => {
     const filteredTeachers = getFilteredTeachers();
     const headers = ['Name', 'Email', 'School', 'Support Limit', 'Additional Requests', 'Status', 'Last Login', 'Created'];
@@ -247,6 +288,10 @@ export function TeacherManagement() {
           <Button variant="outline" onClick={handleExportTeachers} data-testid="button-export">
             <Download className="mr-2 h-4 w-4" />
             Export
+          </Button>
+          <Button onClick={() => setIsAddTeacherDialogOpen(true)} data-testid="button-add-teacher">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Teacher
           </Button>
         </div>
       </div>
@@ -515,6 +560,92 @@ export function TeacherManagement() {
               data-testid="button-confirm-delete"
             >
               Delete {selectedTeachers.size} Teachers
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={isAddTeacherDialogOpen} onOpenChange={setIsAddTeacherDialogOpen}>
+        <AlertDialogContent data-testid="add-teacher-dialog">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Add New Teacher</AlertDialogTitle>
+            <AlertDialogDescription>
+              Create a new teacher account with the details below.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">First Name *</label>
+                <Input
+                  placeholder="Enter first name"
+                  value={newTeacherData.firstName}
+                  onChange={(e) => setNewTeacherData({...newTeacherData, firstName: e.target.value})}
+                  data-testid="input-first-name"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Last Name *</label>
+                <Input
+                  placeholder="Enter last name"
+                  value={newTeacherData.lastName}
+                  onChange={(e) => setNewTeacherData({...newTeacherData, lastName: e.target.value})}
+                  data-testid="input-last-name"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">Email Address *</label>
+              <Input
+                type="email"
+                placeholder="Enter email address"
+                value={newTeacherData.email}
+                onChange={(e) => setNewTeacherData({...newTeacherData, email: e.target.value})}
+                data-testid="input-email"
+              />
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">School</label>
+              <Input
+                placeholder="Enter school name"
+                value={newTeacherData.school}
+                onChange={(e) => setNewTeacherData({...newTeacherData, school: e.target.value})}
+                data-testid="input-school"
+              />
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">Support Requests Limit</label>
+              <Input
+                type="number"
+                placeholder="50"
+                value={newTeacherData.supportRequestsLimit}
+                onChange={(e) => setNewTeacherData({...newTeacherData, supportRequestsLimit: e.target.value})}
+                data-testid="input-support-limit"
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                checked={newTeacherData.isActive}
+                onCheckedChange={(checked) => setNewTeacherData({...newTeacherData, isActive: Boolean(checked)})}
+                data-testid="checkbox-active"
+              />
+              <label className="text-sm font-medium">Active account</label>
+            </div>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-add">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleAddTeacher}
+              data-testid="button-confirm-add"
+              disabled={!newTeacherData.firstName || !newTeacherData.lastName || !newTeacherData.email}
+            >
+              Create Teacher
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

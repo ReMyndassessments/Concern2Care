@@ -1080,6 +1080,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Create a new teacher
+  app.post('/api/admin/teachers', requireAdmin, async (req: any, res) => {
+    try {
+      const { firstName, lastName, email, school, supportRequestsLimit, isActive } = req.body;
+      
+      if (!firstName || !lastName || !email) {
+        return res.status(400).json({ message: 'First name, last name, and email are required' });
+      }
+
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail?.(email);
+      if (existingUser) {
+        return res.status(409).json({ message: 'A teacher with this email already exists' });
+      }
+
+      // Create the teacher
+      const teacherData = {
+        id: `teacher-${Date.now()}`,
+        firstName,
+        lastName,
+        email,
+        school: school || '',
+        supportRequestsLimit: parseInt(supportRequestsLimit) || 50,
+        isActive: isActive !== false, // Default to true
+        isAdmin: false,
+        profileImageUrl: null,
+      };
+
+      await storage.upsertUser(teacherData);
+      
+      res.json({ 
+        success: true, 
+        teacher: {
+          ...teacherData,
+          name: `${firstName} ${lastName}`,
+          supportRequestsUsed: 0,
+          additionalRequests: 0,
+          totalLimit: teacherData.supportRequestsLimit,
+          role: 'teacher',
+          lastLoginAt: null,
+          createdAt: new Date()
+        }
+      });
+    } catch (error) {
+      console.error('Error creating teacher:', error);
+      res.status(500).json({ message: 'Failed to create teacher' });
+    }
+  });
+
   app.post('/api/admin/teachers/bulk-update', requireAdmin, async (req: any, res) => {
     try {
       const { teacherIds, updates } = req.body;
