@@ -1138,6 +1138,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Update individual teacher
+  app.put('/api/admin/teachers/:id', requireAdmin, async (req: any, res) => {
+    try {
+      const teacherId = req.params.id;
+      const { firstName, lastName, email, school, supportRequestsLimit, isActive } = req.body;
+      
+      if (!firstName || !lastName || !email) {
+        return res.status(400).json({ message: 'First name, last name, and email are required' });
+      }
+
+      const updates = {
+        firstName,
+        lastName,
+        email,
+        school: school || '',
+        supportRequestsLimit: parseInt(supportRequestsLimit) || 50,
+        isActive: isActive !== false,
+        updatedAt: new Date(),
+      };
+
+      await storage.updateUser(teacherId, updates);
+      
+      res.json({ success: true, message: 'Teacher updated successfully' });
+    } catch (error) {
+      console.error('Error updating teacher:', error);
+      res.status(500).json({ message: 'Failed to update teacher' });
+    }
+  });
+
+  // Admin: Grant additional requests to teacher
+  app.post('/api/admin/teachers/:id/grant-requests', requireAdmin, async (req: any, res) => {
+    try {
+      const teacherId = req.params.id;
+      const { additionalRequests } = req.body;
+      
+      if (!additionalRequests || additionalRequests <= 0) {
+        return res.status(400).json({ message: 'Additional requests must be a positive number' });
+      }
+
+      const teacher = await storage.getUser(teacherId);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      const newAdditionalRequests = (teacher.additionalRequests || 0) + parseInt(additionalRequests);
+      await storage.updateUser(teacherId, { 
+        additionalRequests: newAdditionalRequests,
+        updatedAt: new Date(),
+      });
+      
+      res.json({ 
+        success: true, 
+        message: `Granted ${additionalRequests} additional requests to ${teacher.firstName} ${teacher.lastName}`,
+        newTotal: newAdditionalRequests
+      });
+    } catch (error) {
+      console.error('Error granting requests:', error);
+      res.status(500).json({ message: 'Failed to grant additional requests' });
+    }
+  });
+
+  // Admin: Delete individual teacher
+  app.delete('/api/admin/teachers/:id', requireAdmin, async (req: any, res) => {
+    try {
+      const teacherId = req.params.id;
+      
+      const teacher = await storage.getUser(teacherId);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      await storage.deleteUser(teacherId);
+      
+      res.json({ 
+        success: true, 
+        message: `Teacher ${teacher.firstName} ${teacher.lastName} has been deleted successfully`
+      });
+    } catch (error) {
+      console.error('Error deleting teacher:', error);
+      res.status(500).json({ message: 'Failed to delete teacher' });
+    }
+  });
+
   app.post('/api/admin/teachers/bulk-update', requireAdmin, async (req: any, res) => {
     try {
       const { teacherIds, updates } = req.body;

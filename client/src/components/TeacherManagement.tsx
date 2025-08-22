@@ -41,6 +41,11 @@ export function TeacherManagement() {
   const [isBulkUpdateDialogOpen, setIsBulkUpdateDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAddTeacherDialogOpen, setIsAddTeacherDialogOpen] = useState(false);
+  const [isEditTeacherDialogOpen, setIsEditTeacherDialogOpen] = useState(false);
+  const [isGrantRequestsDialogOpen, setIsGrantRequestsDialogOpen] = useState(false);
+  const [isDeleteSingleDialogOpen, setIsDeleteSingleDialogOpen] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [grantRequestsAmount, setGrantRequestsAmount] = useState('');
   const [bulkUpdateSettings, setBulkUpdateSettings] = useState({
     supportRequestsLimit: '',
     isActive: '',
@@ -53,6 +58,14 @@ export function TeacherManagement() {
     password: '',
     school: '',
     supportRequestsLimit: '50',
+    isActive: true
+  });
+  const [editTeacherData, setEditTeacherData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    school: '',
+    supportRequestsLimit: '',
     isActive: true
   });
   const { toast } = useToast();
@@ -211,6 +224,111 @@ export function TeacherManagement() {
       toast({
         title: "Error",
         description: error.message || "Failed to create teacher.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditTeacher = (teacher: Teacher) => {
+    setSelectedTeacher(teacher);
+    setEditTeacherData({
+      firstName: teacher.firstName || '',
+      lastName: teacher.lastName || '',
+      email: teacher.email,
+      school: teacher.school || '',
+      supportRequestsLimit: teacher.supportRequestsLimit?.toString() || '50',
+      isActive: teacher.isActive
+    });
+    setIsEditTeacherDialogOpen(true);
+  };
+
+  const handleUpdateTeacher = async () => {
+    if (!selectedTeacher) return;
+    
+    try {
+      await apiRequest(`/api/admin/teachers/${selectedTeacher.id}`, {
+        method: 'PUT',
+        body: editTeacherData
+      });
+
+      toast({
+        title: "Success",
+        description: `Teacher ${editTeacherData.firstName} ${editTeacherData.lastName} has been updated successfully.`,
+      });
+
+      setIsEditTeacherDialogOpen(false);
+      setSelectedTeacher(null);
+      loadTeachers();
+    } catch (error: any) {
+      console.error('Update teacher error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update teacher.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleGrantRequests = (teacher: Teacher) => {
+    setSelectedTeacher(teacher);
+    setGrantRequestsAmount('');
+    setIsGrantRequestsDialogOpen(true);
+  };
+
+  const handleGrantRequestsSubmit = async () => {
+    if (!selectedTeacher || !grantRequestsAmount) return;
+    
+    try {
+      await apiRequest(`/api/admin/teachers/${selectedTeacher.id}/grant-requests`, {
+        method: 'POST',
+        body: { additionalRequests: parseInt(grantRequestsAmount) }
+      });
+
+      toast({
+        title: "Success",
+        description: `Granted ${grantRequestsAmount} additional requests to ${selectedTeacher.name}.`,
+      });
+
+      setIsGrantRequestsDialogOpen(false);
+      setSelectedTeacher(null);
+      setGrantRequestsAmount('');
+      loadTeachers();
+    } catch (error: any) {
+      console.error('Grant requests error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to grant additional requests.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteSingleTeacher = (teacher: Teacher) => {
+    setSelectedTeacher(teacher);
+    setIsDeleteSingleDialogOpen(true);
+  };
+
+  const handleDeleteSingleTeacherConfirm = async () => {
+    if (!selectedTeacher) return;
+    
+    try {
+      await apiRequest(`/api/admin/teachers/${selectedTeacher.id}`, {
+        method: 'DELETE'
+      });
+
+      toast({
+        title: "Success",
+        description: `Teacher ${selectedTeacher.name} has been deleted successfully.`,
+      });
+
+      setIsDeleteSingleDialogOpen(false);
+      setSelectedTeacher(null);
+      loadTeachers();
+    } catch (error: any) {
+      console.error('Delete teacher error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete teacher.",
         variant: "destructive",
       });
     }
@@ -450,15 +568,15 @@ export function TeacherManagement() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleEditTeacher(teacher)}>
                           <Edit className="mr-2 h-4 w-4" />
                           Edit Teacher
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleGrantRequests(teacher)}>
                           <Settings className="mr-2 h-4 w-4" />
                           Grant Requests
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
+                        <DropdownMenuItem className="text-red-600" onClick={() => handleDeleteSingleTeacher(teacher)}>
                           <Trash2 className="mr-2 h-4 w-4" />
                           Delete Teacher
                         </DropdownMenuItem>
@@ -659,6 +777,159 @@ export function TeacherManagement() {
               disabled={!newTeacherData.firstName || !newTeacherData.lastName || !newTeacherData.email || !newTeacherData.password || newTeacherData.password.length < 6}
             >
               Create Teacher
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Edit Teacher Dialog */}
+      <AlertDialog open={isEditTeacherDialogOpen} onOpenChange={setIsEditTeacherDialogOpen}>
+        <AlertDialogContent data-testid="edit-teacher-dialog">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Edit Teacher</AlertDialogTitle>
+            <AlertDialogDescription>
+              Update the information for {selectedTeacher?.name}.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">First Name *</label>
+                <Input
+                  placeholder="Enter first name"
+                  value={editTeacherData.firstName}
+                  onChange={(e) => setEditTeacherData({...editTeacherData, firstName: e.target.value})}
+                  data-testid="input-edit-first-name"
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Last Name *</label>
+                <Input
+                  placeholder="Enter last name"
+                  value={editTeacherData.lastName}
+                  onChange={(e) => setEditTeacherData({...editTeacherData, lastName: e.target.value})}
+                  data-testid="input-edit-last-name"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">Email Address *</label>
+              <Input
+                type="email"
+                placeholder="Enter email address"
+                value={editTeacherData.email}
+                onChange={(e) => setEditTeacherData({...editTeacherData, email: e.target.value})}
+                data-testid="input-edit-email"
+              />
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">School</label>
+              <Input
+                placeholder="Enter school name"
+                value={editTeacherData.school}
+                onChange={(e) => setEditTeacherData({...editTeacherData, school: e.target.value})}
+                data-testid="input-edit-school"
+              />
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">Support Requests Limit</label>
+              <Input
+                type="number"
+                placeholder="50"
+                value={editTeacherData.supportRequestsLimit}
+                onChange={(e) => setEditTeacherData({...editTeacherData, supportRequestsLimit: e.target.value})}
+                data-testid="input-edit-support-limit"
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                checked={editTeacherData.isActive}
+                onCheckedChange={(checked) => setEditTeacherData({...editTeacherData, isActive: Boolean(checked)})}
+                data-testid="checkbox-edit-active"
+              />
+              <label className="text-sm font-medium">Active account</label>
+            </div>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-edit">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleUpdateTeacher}
+              data-testid="button-confirm-edit"
+              disabled={!editTeacherData.firstName || !editTeacherData.lastName || !editTeacherData.email}
+            >
+              Update Teacher
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Grant Requests Dialog */}
+      <AlertDialog open={isGrantRequestsDialogOpen} onOpenChange={setIsGrantRequestsDialogOpen}>
+        <AlertDialogContent data-testid="grant-requests-dialog">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Grant Additional Requests</AlertDialogTitle>
+            <AlertDialogDescription>
+              Grant additional support requests to {selectedTeacher?.name}.
+              <br />
+              Current additional requests: {selectedTeacher?.additionalRequests || 0}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-sm font-medium">Additional Requests to Grant</label>
+              <Input
+                type="number"
+                placeholder="Enter number of requests to grant"
+                value={grantRequestsAmount}
+                onChange={(e) => setGrantRequestsAmount(e.target.value)}
+                data-testid="input-grant-amount"
+                min="1"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                These requests will be added to their current additional requests.
+              </p>
+            </div>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-grant">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleGrantRequestsSubmit}
+              data-testid="button-confirm-grant"
+              disabled={!grantRequestsAmount || parseInt(grantRequestsAmount) <= 0}
+            >
+              Grant {grantRequestsAmount} Requests
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Single Teacher Dialog */}
+      <AlertDialog open={isDeleteSingleDialogOpen} onOpenChange={setIsDeleteSingleDialogOpen}>
+        <AlertDialogContent data-testid="delete-single-teacher-dialog">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Teacher</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to permanently delete {selectedTeacher?.name}?
+              <br />
+              This action cannot be undone and will also delete all their concerns and reports.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-single-delete">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteSingleTeacherConfirm}
+              className="bg-red-600 hover:bg-red-700"
+              data-testid="button-confirm-single-delete"
+            >
+              Delete Teacher
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
