@@ -71,11 +71,19 @@ export default function AppHeader() {
               <div className="hidden xl:flex items-center space-x-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full px-3 py-2 border border-purple-100">
                 <div className="w-6 h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300" 
+                    className={`h-full rounded-full transition-all duration-300 ${
+                      usagePercentage >= 90 ? 'bg-gradient-to-r from-red-500 to-red-600' :
+                      usagePercentage >= 75 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                      'bg-gradient-to-r from-blue-500 to-purple-500'
+                    }`}
                     style={{ width: `${Math.min(usagePercentage, 100)}%` }}
                   ></div>
                 </div>
-                <span className="text-xs font-medium text-gray-700">
+                <span className={`text-xs font-medium ${
+                  usagePercentage >= 90 ? 'text-red-600' :
+                  usagePercentage >= 75 ? 'text-orange-600' :
+                  'text-gray-700'
+                }`}>
                   {user.supportRequestsUsed || 0}/{user.supportRequestsLimit || 20}
                 </span>
               </div>

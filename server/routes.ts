@@ -101,10 +101,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  // Get current teacher
-  app.get('/api/auth/user', (req: any, res) => {
+  // Get current teacher with usage data
+  app.get('/api/auth/user', async (req: any, res) => {
     if (req.session.isAuthenticated && req.session.user) {
-      res.json(req.session.user);
+      try {
+        // Get updated user data with usage statistics from database
+        const userWithUsage = await storage.getUser(req.session.user.id);
+        
+        const responseData = {
+          ...req.session.user,
+          supportRequestsUsed: userWithUsage?.supportRequestsUsed || 0,
+          supportRequestsLimit: userWithUsage?.supportRequestsLimit || 20
+        };
+        
+        res.json(responseData);
+      } catch (error) {
+        console.error("Error fetching user usage data:", error);
+        // Return basic user data if database lookup fails
+        res.json({
+          ...req.session.user,
+          supportRequestsUsed: 0,
+          supportRequestsLimit: 20
+        });
+      }
     } else {
       res.status(401).json({ message: "Not authenticated" });
     }
@@ -125,6 +144,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;
+      
+      // Check usage limit BEFORE creating concern
+      const usageCheck = await storage.checkUserUsageLimit(userId);
+      if (!usageCheck.canCreate) {
+        return res.status(429).json({ 
+          message: `Monthly usage limit reached. You have used ${usageCheck.used} of ${usageCheck.limit} requests this month.`,
+          usageData: usageCheck
+        });
+      }
       
       // Create concern in database
       const newConcern = await storage.createConcern({
@@ -168,6 +196,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         steps: ["Review Assessment Summary", "Implement Immediate Interventions", "Apply Short-term Strategies", "Monitor Progress"],
         timeline: "2-6 weeks",
       }]);
+
+      // Increment usage count after successful concern creation
+      try {
+        await storage.incrementUserRequestCount(userId);
+        console.log(`✅ Incremented usage count for user ${userId}`);
+      } catch (usageError) {
+        console.error("Failed to increment usage count:", usageError);
+        // Don't fail the concern creation if usage tracking fails
+      }
 
       res.json({
         concern: newConcern,

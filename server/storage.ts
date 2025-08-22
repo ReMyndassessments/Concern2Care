@@ -25,6 +25,8 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserRequestCount(id: string, count: number): Promise<void>;
+  incrementUserRequestCount(id: string): Promise<User>;
+  checkUserUsageLimit(id: string): Promise<{ canCreate: boolean; used: number; limit: number; }>;
   
   // Concern operations
   createConcern(concern: InsertConcern): Promise<Concern>;
@@ -74,6 +76,48 @@ export class DatabaseStorage implements IStorage {
       .update(users)
       .set({ supportRequestsUsed: count })
       .where(eq(users.id, id));
+  }
+
+  async incrementUserRequestCount(id: string): Promise<User> {
+    // First get current user to get the current count
+    const currentUser = await this.getUser(id);
+    if (!currentUser) {
+      throw new Error(`User ${id} not found`);
+    }
+    
+    const newCount = (currentUser.supportRequestsUsed || 0) + 1;
+    
+    const [user] = await db
+      .update(users)
+      .set({ 
+        supportRequestsUsed: newCount,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!user) {
+      throw new Error(`User ${id} not found during update`);
+    }
+    
+    return user;
+  }
+
+  async checkUserUsageLimit(id: string): Promise<{ canCreate: boolean; used: number; limit: number; }> {
+    const user = await this.getUser(id);
+    
+    if (!user) {
+      throw new Error(`User ${id} not found`);
+    }
+    
+    const used = user.supportRequestsUsed || 0;
+    const limit = user.supportRequestsLimit || 20;
+    
+    return {
+      canCreate: used < limit,
+      used,
+      limit
+    };
   }
 
   // Concern operations
