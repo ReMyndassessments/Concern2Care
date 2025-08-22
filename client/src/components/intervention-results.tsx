@@ -29,20 +29,101 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
       const line = lines[i].trim();
       if (!line) continue;
 
-      // Main headings (### **1. Assessment Summary**)
+      // Level 4 headings (#### **Title**)
+      if (line.match(/^####\s*\*\*(.*?)\*\*/)) {
+        const title = line.replace(/^####\s*\*\*(.*?)\*\*/, '$1');
+        elements.push(
+          <h2 key={key++} className="text-xl font-bold text-blue-600 mt-6 mb-4 border-b-2 border-blue-200 pb-2">
+            {title}
+          </h2>
+        );
+        continue;
+      }
+
+      // Level 3 headings (### **Title**)
       if (line.match(/^###\s*\*\*(.*?)\*\*/)) {
         const title = line.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
         elements.push(
-          <h3 key={key++} className="text-lg font-bold text-gray-900 mt-6 mb-3 border-b border-gray-200 pb-2">
+          <h3 key={key++} className="text-lg font-bold text-blue-600 mt-5 mb-3 border-b border-blue-200 pb-2">
             {title}
           </h3>
         );
         continue;
       }
 
-      // Sub-headings (* **Strategy: Safe Arrival** OR **Strategy: Safe Arrival**)
-      if (line.match(/^\*?\s*\*\*(.*?)\*\*/)) {
-        const title = line.replace(/^\*?\s*\*\*(.*?)\*\*/, '$1');
+      // Level 2 headings (## **Title**)
+      if (line.match(/^##\s*\*\*(.*?)\*\*/)) {
+        const title = line.replace(/^##\s*\*\*(.*?)\*\*/, '$1');
+        elements.push(
+          <h4 key={key++} className="text-base font-bold text-blue-700 mt-4 mb-3">
+            {title}
+          </h4>
+        );
+        continue;
+      }
+
+      // Strategy headings (* **Strategy: Name**)
+      if (line.match(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/)) {
+        const title = line.replace(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/, '$1');
+        elements.push(
+          <h4 key={key++} className="text-base font-semibold text-blue-700 mt-4 mb-2 flex items-center">
+            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm mr-2">Strategy</span>
+            {title}
+          </h4>
+        );
+        continue;
+      }
+
+      // Implementation headings (* **Implementation:**)
+      if (line.match(/^\*\s*\*\*Implementation:\*\*/)) {
+        elements.push(
+          <h5 key={key++} className="text-sm font-semibold text-green-600 mt-3 mb-2 flex items-center">
+            <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs mr-2">Implementation</span>
+          </h5>
+        );
+        continue;
+      }
+
+      // Step headings (- **Step N:** text)
+      if (line.match(/^-\s*\*\*Step\s*\d+:\*\*/)) {
+        const stepText = line.replace(/^-\s*\*\*Step\s*\d+:\*\*\s*/, '');
+        const stepNumber = line.match(/Step\s*(\d+)/)?.[1] || '';
+        elements.push(
+          <div key={key++} className="ml-4 mt-3 mb-2">
+            <span className="inline-flex items-center bg-blue-50 text-blue-700 px-2 py-1 rounded text-sm font-medium mr-2">
+              Step {stepNumber}
+            </span>
+            <span className="text-gray-800 font-medium">{stepText}</span>
+          </div>
+        );
+        continue;
+      }
+
+      // Other bold headings (* **Title:**)
+      if (line.match(/^\*\s*\*\*(.*?):\*\*/)) {
+        const title = line.replace(/^\*\s*\*\*(.*?):\*\*/, '$1');
+        elements.push(
+          <h5 key={key++} className="text-sm font-semibold text-purple-600 mt-3 mb-2">
+            {title}:
+          </h5>
+        );
+        continue;
+      }
+
+      // Bold headings without colons (* **Title**)
+      if (line.match(/^\*\s*\*\*(.*?)\*\*/) && !line.includes(':')) {
+        const title = line.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
+        elements.push(
+          <h5 key={key++} className="text-sm font-semibold text-gray-700 mt-3 mb-2">
+            {title}
+          </h5>
+        );
+        continue;
+      }
+
+      // Generic bold headings (**Title**)
+      if (line.match(/^\*\*(.*?)\*\*/)) {
+        const title = line.replace(/^\*\*(.*?)\*\*/, '$1');
         elements.push(
           <h4 key={key++} className="text-md font-semibold text-blue-800 mt-4 mb-2">
             {title}
@@ -51,24 +132,26 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
         continue;
       }
 
-      // Bold emphasis (** text **:)
-      if (line.match(/^\*?\s*\*\*(.*?)\*\*:/)) {
-        const title = line.replace(/^\*?\s*\*\*(.*?)\*\*:/, '$1');
+      // Nested bullet points (  * text)
+      if (line.match(/^\s{2,}\*\s/)) {
+        const content = line.replace(/^\s*\*\s*/, '');
+        const formattedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         elements.push(
-          <p key={key++} className="font-medium text-gray-800 mt-3 mb-1">
-            <strong>{title}:</strong>
-          </p>
+          <div key={key++} className="ml-8 mb-1">
+            <span className="text-gray-600 text-sm" dangerouslySetInnerHTML={{ __html: `• ${formattedContent}` }} />
+          </div>
         );
         continue;
       }
 
-      // Bullet points (* Implementation: text)
-      if (line.startsWith('* ')) {
-        const content = line.replace(/^\*\s*/, '');
+      // Regular bullet points (* text or - text)
+      if (line.match(/^[-*]\s/)) {
+        const content = line.replace(/^[-*]\s*/, '');
+        const formattedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         elements.push(
-          <li key={key++} className="ml-4 mb-2 text-gray-700 list-disc">
-            {content}
-          </li>
+          <div key={key++} className="ml-4 mb-2">
+            <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: `• ${formattedContent}` }} />
+          </div>
         );
         continue;
       }
@@ -76,17 +159,16 @@ const FormattedRecommendations = ({ content }: { content: string }): React.React
       // Separators (---)
       if (line === '---') {
         elements.push(
-          <hr key={key++} className="my-6 border-gray-300" />
+          <hr key={key++} className="my-4 border-gray-300" />
         );
         continue;
       }
 
-      // Regular paragraphs
+      // Regular paragraphs with bold text support
       if (line.length > 0) {
+        const formattedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         elements.push(
-          <p key={key++} className="text-gray-700 mb-3 leading-relaxed">
-            {line}
-          </p>
+          <p key={key++} className="text-gray-700 mb-3 leading-relaxed" dangerouslySetInnerHTML={{ __html: formattedLine }} />
         );
       }
     }
