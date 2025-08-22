@@ -35,13 +35,25 @@ export default function Login() {
         // Invalidate auth queries to refetch user data
         await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
         
-        toast({
-          title: "Welcome back!",
-          description: "You've been successfully signed in.",
-        });
-        
-        // Use wouter navigation instead of window.location
-        setLocation('/');
+        // Wait a moment for the auth state to update, then verify authentication
+        setTimeout(async () => {
+          try {
+            const authCheck = await fetch('/api/auth/user');
+            if (authCheck.ok) {
+              toast({
+                title: "Welcome back!",
+                description: "You've been successfully signed in.",
+              });
+              setLocation('/');
+            } else {
+              // If auth check fails, force a page reload to reset state
+              window.location.href = '/';
+            }
+          } catch {
+            // Fallback to page reload if there's an error
+            window.location.href = '/';
+          }
+        }, 100);
       } else {
         toast({
           title: "Sign In Failed",
