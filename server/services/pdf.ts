@@ -173,7 +173,7 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
       yPosition = 50;
     }
     
-    // Main headings (### **1. Assessment Summary**)
+    // Main headings (### **1. Assessment Summary** OR ### **Direct Answer: Title**)
     if (trimmedLine.match(/^###\s*\*\*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
       // Add extra spacing before main headings
@@ -217,11 +217,32 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
       continue;
     }
     
+    // Numbered section headings (1. **Initial Contact and Relationship Building**)
+    if (trimmedLine.match(/^\d+\.\s*\*\*(.*?)\*\*/)) {
+      const title = trimmedLine.replace(/^\d+\.\s*\*\*(.*?)\*\*/, '$1');
+      const number = trimmedLine.match(/^(\d+)\./)?.[1] || '';
+      yPosition += 8;
+      doc.fontSize(10).fillColor('#1e40af').text(`${number}. ${title}`, 60, yPosition);
+      yPosition += 18;
+      inBulletList = false;
+      continue;
+    }
+
     // Sub-headings without colons (* **Expected Outcome**)
     if (trimmedLine.match(/^\*\s*\*\*(.*?)\*\*/) && !trimmedLine.includes(':')) {
       const title = trimmedLine.replace(/^\*\s*\*\*(.*?)\*\*/, '$1');
       yPosition += 5;
       doc.fontSize(9).fillColor('#dc2626').text(`${title}`, 60, yPosition);
+      yPosition += 15;
+      inBulletList = false;
+      continue;
+    }
+
+    // Bold standalone headings (**Title**) 
+    if (trimmedLine.match(/^\*\*(.*?)\*\*\s*$/) && !trimmedLine.includes(':')) {
+      const title = trimmedLine.replace(/^\*\*(.*?)\*\*\s*$/, '$1');
+      yPosition += 5;
+      doc.fontSize(9).fillColor('#374151').text(title, 60, yPosition);
       yPosition += 15;
       inBulletList = false;
       continue;
@@ -237,11 +258,25 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
       continue;
     }
     
+    // Bullet points with dash (- text)
+    if (trimmedLine.startsWith('- ')) {
+      const content = trimmedLine.replace(/^-\s*/, '');
+      // Handle bold text within content
+      const cleanContent = content.replace(/\*\*(.*?)\*\*/g, '$1');
+      doc.fontSize(9).fillColor('#374151').text(`  - ${cleanContent}`, 70, yPosition, { width: 475 });
+      const lineHeight = doc.heightOfString(`  - ${cleanContent}`, { width: 475 });
+      yPosition += Math.max(lineHeight, 14) + 3;
+      inBulletList = true;
+      continue;
+    }
+
     // Regular bullet points (* text)
     if (trimmedLine.startsWith('* ')) {
       const content = trimmedLine.replace(/^\*\s*/, '');
-      doc.fontSize(9).fillColor('#374151').text(`  - ${content}`, 70, yPosition, { width: 475 });
-      const lineHeight = doc.heightOfString(`  - ${content}`, { width: 475 });
+      // Handle bold text within content
+      const cleanContent = content.replace(/\*\*(.*?)\*\*/g, '$1');
+      doc.fontSize(9).fillColor('#374151').text(`  - ${cleanContent}`, 70, yPosition, { width: 475 });
+      const lineHeight = doc.heightOfString(`  - ${cleanContent}`, { width: 475 });
       yPosition += Math.max(lineHeight, 14) + 3;
       inBulletList = true;
       continue;
@@ -270,8 +305,10 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
     if (trimmedLine.length > 0) {
       const indent = inBulletList ? 80 : 60;
       const width = inBulletList ? 465 : 485;
-      doc.fontSize(9).fillColor('#374151').text(trimmedLine, indent, yPosition, { width: width, align: 'justify' });
-      const lineHeight = doc.heightOfString(trimmedLine, { width: width });
+      // Clean bold text from regular paragraphs
+      const cleanText = trimmedLine.replace(/\*\*(.*?)\*\*/g, '$1');
+      doc.fontSize(9).fillColor('#374151').text(cleanText, indent, yPosition, { width: width, align: 'justify' });
+      const lineHeight = doc.heightOfString(cleanText, { width: width });
       yPosition += lineHeight + 6;
     }
   }
