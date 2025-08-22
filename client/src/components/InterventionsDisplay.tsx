@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Sparkles, Plus, Edit2, Trash2, MessageSquare, CheckCircle } from "lucide-react";
-import { InterventionWithProgressNotes } from "@shared/schema";
+import { Sparkles, CheckCircle } from "lucide-react";
 import ProgressNotesSection from "@/components/ProgressNotesSection";
 
 interface InterventionsDisplayProps {
@@ -11,7 +9,7 @@ interface InterventionsDisplayProps {
 }
 
 export default function InterventionsDisplay({ concernId }: InterventionsDisplayProps) {
-  const { data: concern, isLoading } = useQuery<any>({
+  const { data: concern, isLoading, error } = useQuery<any>({
     queryKey: ['/api/concerns', concernId],
   });
 
@@ -27,7 +25,21 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
     );
   }
 
-  if (!concern?.interventions || concern.interventions.length === 0) {
+  if (error || !concern) {
+    return (
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h4 className="font-medium text-blue-900 mb-2 flex items-center">
+          <Sparkles className="h-4 w-4 mr-2 text-blue-600" />
+          AI-Generated Interventions
+        </h4>
+        <p className="text-blue-700 text-sm">
+          Unable to load interventions. Please try again.
+        </p>
+      </div>
+    );
+  }
+
+  if (!concern.interventions || concern.interventions.length === 0) {
     return (
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-medium text-blue-900 mb-2 flex items-center">
@@ -50,7 +62,7 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
         </h4>
         
         <div className="space-y-4">
-          {concern.interventions.map((intervention: InterventionWithProgressNotes, index: number) => (
+          {concern.interventions.map((intervention: any, index: number) => (
             <Card key={intervention.id} className="border-l-4 border-l-blue-500 bg-white">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
@@ -73,10 +85,13 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                   </div>
                 </div>
                 
-                <h5 className="font-semibold text-gray-900 mb-2">{intervention.title}</h5>
+                <h5 className="font-semibold text-gray-900 mb-2">{intervention.title || 'Intervention Strategy'}</h5>
                 
+                {/* Full intervention description */}
                 <div className="text-sm text-gray-700 mb-4">
-                  <div className="whitespace-pre-wrap leading-relaxed">{intervention.description}</div>
+                  <div className="whitespace-pre-wrap leading-relaxed">
+                    {intervention.description || 'No description available'}
+                  </div>
                 </div>
 
                 {/* Display intervention steps if available */}
@@ -88,14 +103,17 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                     </h6>
                     <div className="bg-gray-50 rounded-lg p-3">
                       <ol className="list-decimal list-inside space-y-1">
-                        {intervention.steps.map((step: string, index: number) => (
-                          <li key={index} className="text-sm text-gray-700">{step}</li>
+                        {intervention.steps.map((step: any, stepIndex: number) => (
+                          <li key={stepIndex} className="text-sm text-gray-700">
+                            {typeof step === 'string' ? step : JSON.stringify(step)}
+                          </li>
                         ))}
                       </ol>
                     </div>
                   </div>
                 )}
 
+                {/* Timeline display */}
                 {intervention.timeline && (
                   <div className="mb-3">
                     <Badge variant="outline" className="text-xs">
