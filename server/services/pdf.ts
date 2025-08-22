@@ -207,6 +207,16 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
       continue;
     }
     
+    // Step headings (Step 1: Description)
+    if (trimmedLine.match(/^Step\s*\d+:\s*.+/)) {
+      yPosition += 5;
+      const cleanText = trimmedLine.replace(/\*\*/g, '');
+      doc.fontSize(9).fillColor('#059669').text(`${cleanText}`, 70, yPosition);
+      yPosition += 15;
+      inBulletList = true;
+      continue;
+    }
+
     // Data Collection, Expected Outcome, etc.
     if (trimmedLine.match(/^\*\s*\*\*(.*?):\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*(.*?):\*\*/, '$1');
@@ -217,6 +227,17 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
       continue;
     }
     
+    // Numbered section headings with colons (1. Direct Answer: Title)
+    if (trimmedLine.match(/^\d+\.\s*([^:]+):\s*(.+)/)) {
+      const number = trimmedLine.match(/^(\d+)\./)?.[1] || '';
+      const title = trimmedLine.replace(/^\d+\.\s*/, '');
+      yPosition += 8;
+      doc.fontSize(10).fillColor('#1e40af').text(`${number}. ${title}`, 60, yPosition);
+      yPosition += 18;
+      inBulletList = false;
+      continue;
+    }
+
     // Numbered section headings (1. **Initial Contact and Relationship Building**)
     if (trimmedLine.match(/^\d+\.\s*\*\*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^\d+\.\s*\*\*(.*?)\*\*/, '$1');
@@ -234,6 +255,16 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
       yPosition += 5;
       doc.fontSize(9).fillColor('#dc2626').text(`${title}`, 60, yPosition);
       yPosition += 15;
+      inBulletList = false;
+      continue;
+    }
+
+    // Standalone section titles without markdown (e.g., "Core Strategy: Description")
+    if (trimmedLine.match(/^[A-Z][^:]*:\s*.+/) && !trimmedLine.includes('**') && !trimmedLine.includes('Step')) {
+      yPosition += 5;
+      doc.fontSize(9).fillColor('#6b7280').text(trimmedLine, 60, yPosition, { width: 485 });
+      const lineHeight = doc.heightOfString(trimmedLine, { width: 485 });
+      yPosition += lineHeight + 8;
       inBulletList = false;
       continue;
     }
