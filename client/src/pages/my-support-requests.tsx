@@ -282,23 +282,23 @@ export default function MySupportRequests() {
 
             {/* Support Request Cards */}
             {filteredConcerns.map((concern) => (
-              <Card key={concern.id} className="hover:shadow-lg transition-shadow duration-200">
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl flex items-center justify-center">
-                        <User className="h-6 w-6 text-purple-600" />
+              <Card key={concern.id} className="hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+                <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6 pt-4 sm:pt-6">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+                    <div className="flex items-start space-x-3 sm:space-x-4 min-w-0 flex-1">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                        <User className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="text-lg font-bold text-gray-900">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3 mb-2">
+                          <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
                             {concern.studentFirstName} {concern.studentLastInitial}.
                           </h3>
-                          <span className="text-sm text-gray-500">Grade {concern.grade}</span>
+                          <span className="text-xs sm:text-sm text-gray-500">Grade {concern.grade}</span>
                         </div>
                         
                         {/* Concern Types */}
-                        <div className="flex flex-wrap gap-2 mb-3">
+                        <div className="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
                           {(concern.concernTypes as string[] || []).map((type) => (
                             <Badge 
                               key={type}
@@ -310,43 +310,45 @@ export default function MySupportRequests() {
                         </div>
                         
                         {/* Meta Information */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600">
-                          <div className="flex items-center space-x-2">
-                            <Calendar className="h-4 w-4 text-purple-500" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600">
+                          <div className="flex items-center space-x-1 sm:space-x-2">
+                            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" />
                             <span>{new Date(concern.incidentDate).toLocaleDateString()}</span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <MapPin className="h-4 w-4 text-purple-500" />
+                          <div className="flex items-center space-x-1 sm:space-x-2">
+                            <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" />
                             <span>{concern.location}</span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <AlertCircle className="h-4 w-4 text-purple-500" />
+                          <div className="flex items-center space-x-1 sm:space-x-2">
+                            <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" />
                             <span className="capitalize">{concern.severityLevel}</span>
                           </div>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="text-right flex flex-col items-end space-y-2">
-                      <span className="text-xs text-gray-500">
+                    <div className="flex flex-row sm:flex-col justify-between sm:justify-start sm:items-end sm:space-y-2 sm:text-right pt-2 sm:pt-0 order-2 sm:order-none">
+                      <span className="text-xs text-gray-500 order-1 sm:order-none">
                         {formatTimeAgo(concern.createdAt)}
                       </span>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 order-2 sm:order-none">
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => toggleExpanded(concern.id)}
-                          className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                          className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 text-xs sm:text-sm"
                         >
                           {expandedRequest === concern.id ? (
                             <>
-                              <ChevronUp className="h-4 w-4 mr-1" />
-                              Hide Details
+                              <ChevronUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                              <span className="hidden sm:inline">Hide Details</span>
+                              <span className="sm:hidden">Hide</span>
                             </>
                           ) : (
                             <>
-                              <ChevronDown className="h-4 w-4 mr-1" />
-                              View Details
+                              <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                              <span className="hidden sm:inline">View Details</span>
+                              <span className="sm:hidden">View</span>
                             </>
                           )}
                         </Button>
@@ -355,11 +357,12 @@ export default function MySupportRequests() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs sm:text-sm"
                               data-testid={`button-delete-concern-${concern.id}`}
                             >
-                              <Trash2 className="h-4 w-4 mr-1" />
-                              Delete
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                              <span className="hidden sm:inline">Delete</span>
+                              <span className="sm:hidden">Del</span>
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
