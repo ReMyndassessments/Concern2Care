@@ -10,6 +10,24 @@ import { concerns } from "@shared/schema";
 import path from "path";
 import fs from "fs";
 import session from "express-session";
+import multer from "multer";
+import * as bcrypt from "bcrypt";
+import PDFDocument from "pdfkit";
+import nodemailer from "nodemailer";
+
+// Import all advanced services
+import { 
+  processBulkCSVUpload, 
+  generateDemoData, 
+  getTeachersWithDetails, 
+  bulkUpdateTeachers, 
+  bulkDeleteTeachers 
+} from "./services/admin";
+import { getDashboardAnalytics, getUsageStatistics } from "./services/analytics";
+import { generateAIRecommendations, generateFollowUpAssistance } from "./services/deepseek-ai";
+import { getReferrals, createReferral } from "./services/referrals";
+import { getSystemHealth, getDetailedSystemHealth, trackRequest } from "./services/health";
+import { initiatePasswordReset, confirmPasswordReset } from "./services/auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Enable sessions for professional authentication
@@ -948,6 +966,181 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error in follow-up assistance:", error);
       res.status(500).json({ message: "Failed to generate follow-up assistance" });
+    }
+  });
+
+  // Advanced Admin Services - Bulk CSV Upload
+  app.post('/api/admin/teachers/bulk-csv-upload', requireAdmin, async (req: any, res) => {
+    try {
+      const { csvData, filename } = req.body;
+      
+      if (!csvData || !filename) {
+        return res.status(400).json({ message: 'CSV data and filename are required' });
+      }
+
+      let csvContent: string;
+      try {
+        csvContent = Buffer.from(csvData, 'base64').toString('utf-8');
+      } catch (error) {
+        return res.status(400).json({ message: 'Invalid base64 CSV data' });
+      }
+
+      const result = await processBulkCSVUpload(csvContent);
+      res.json(result);
+    } catch (error) {
+      console.error('Bulk CSV upload error:', error);
+      res.status(500).json({ message: 'Failed to process CSV upload' });
+    }
+  });
+
+  // Demo Data Generation
+  app.post('/api/admin/generate-demo-data', requireAdmin, async (req: any, res) => {
+    try {
+      const result = await generateDemoData();
+      res.json(result);
+    } catch (error) {
+      console.error('Demo data generation error:', error);
+      res.status(500).json({ message: 'Failed to generate demo data' });
+    }
+  });
+
+  // Enhanced AI Services with DeepSeek
+  app.post('/api/ai/recommendations', requireAuth, async (req: any, res) => {
+    try {
+      const result = await generateAIRecommendations(req.body);
+      res.json(result);
+    } catch (error) {
+      console.error('AI recommendations error:', error);
+      res.status(500).json({ message: 'Failed to generate recommendations' });
+    }
+  });
+
+  app.post('/api/ai/follow-up-assistance', requireAuth, async (req: any, res) => {
+    try {
+      const result = await generateFollowUpAssistance(req.body);
+      res.json(result);
+    } catch (error) {
+      console.error('Follow-up assistance error:', error);
+      res.status(500).json({ message: 'Failed to generate follow-up assistance' });
+    }
+  });
+
+  // Analytics Dashboard Data
+  app.get('/api/analytics/dashboard', requireAdmin, async (req: any, res) => {
+    try {
+      const analytics = await getDashboardAnalytics();
+      res.json(analytics);
+    } catch (error) {
+      console.error('Analytics error:', error);
+      res.status(500).json({ message: 'Failed to load analytics' });
+    }
+  });
+
+  app.get('/api/analytics/usage-stats', requireAdmin, async (req: any, res) => {
+    try {
+      const stats = await getUsageStatistics();
+      res.json(stats);
+    } catch (error) {
+      console.error('Usage stats error:', error);
+      res.status(500).json({ message: 'Failed to load usage statistics' });
+    }
+  });
+
+  // Referral Management System
+  app.get('/api/referrals', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const referrals = await getReferrals(userId);
+      res.json(referrals);
+    } catch (error) {
+      console.error('Referrals error:', error);
+      res.status(500).json({ message: 'Failed to load referrals' });
+    }
+  });
+
+  app.post('/api/referrals/create', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const referral = await createReferral({ ...req.body, userId });
+      res.json(referral);
+    } catch (error) {
+      console.error('Create referral error:', error);
+      res.status(500).json({ message: 'Failed to create referral' });
+    }
+  });
+
+  // Enhanced Teacher Management
+  app.get('/api/admin/teachers', requireAdmin, async (req: any, res) => {
+    try {
+      const teachers = await getTeachersWithDetails();
+      res.json({ teachers });
+    } catch (error) {
+      console.error('Teachers fetch error:', error);
+      res.status(500).json({ message: 'Failed to fetch teachers' });
+    }
+  });
+
+  app.post('/api/admin/teachers/bulk-update', requireAdmin, async (req: any, res) => {
+    try {
+      const { teacherIds, updates } = req.body;
+      const result = await bulkUpdateTeachers(teacherIds, updates);
+      res.json(result);
+    } catch (error) {
+      console.error('Bulk update error:', error);
+      res.status(500).json({ message: 'Failed to update teachers' });
+    }
+  });
+
+  app.delete('/api/admin/teachers/bulk-delete', requireAdmin, async (req: any, res) => {
+    try {
+      const { teacherIds } = req.body;
+      const result = await bulkDeleteTeachers(teacherIds);
+      res.json(result);
+    } catch (error) {
+      console.error('Bulk delete error:', error);
+      res.status(500).json({ message: 'Failed to delete teachers' });
+    }
+  });
+
+  // Health Check and System Monitoring
+  app.get('/api/health', async (req, res) => {
+    try {
+      const health = await getSystemHealth();
+      res.json(health);
+    } catch (error) {
+      res.status(500).json({ message: 'System health check failed' });
+    }
+  });
+
+  app.get('/api/health/detailed', requireAdmin, async (req, res) => {
+    try {
+      const health = await getDetailedSystemHealth();
+      res.json(health);
+    } catch (error) {
+      res.status(500).json({ message: 'Detailed health check failed' });
+    }
+  });
+
+  // Password Reset
+  app.post('/api/auth/reset-password', async (req, res) => {
+    try {
+      const { email } = req.body;
+      const result = await initiatePasswordReset(email);
+      res.json(result);
+    } catch (error) {
+      console.error('Password reset error:', error);
+      res.status(500).json({ message: 'Failed to initiate password reset' });
+    }
+  });
+
+  app.post('/api/auth/confirm-password-reset', async (req, res) => {
+    try {
+      const { token, newPassword } = req.body;
+      const result = await confirmPasswordReset(token, newPassword);
+      res.json(result);
+    } catch (error) {
+      console.error('Password reset confirmation error:', error);
+      res.status(500).json({ message: 'Failed to reset password' });
     }
   });
 
