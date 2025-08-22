@@ -12,7 +12,8 @@ export default function AppHeader() {
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.reload();
+      // Redirect to home page instead of reloading to avoid 404
+      window.location.href = "/";
     } catch (error) {
       console.error('Logout failed:', error);
       window.location.href = "/";
