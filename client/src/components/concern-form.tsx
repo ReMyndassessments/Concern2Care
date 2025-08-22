@@ -161,7 +161,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
     <Card className="w-full">
       <CardContent className="px-4 sm:px-6 pt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-6 sm:space-y-8 ${isAtLimit ? 'opacity-60' : ''}`}>
             
             {/* Student Information Section - Mobile Responsive */}
             <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
@@ -180,7 +180,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         First Name <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter first name" {...field} />
+                        <Input placeholder="Enter first name" {...field} disabled={isAtLimit} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -202,6 +202,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           className="uppercase"
                           onChange={(e) => field.onChange(e.target.value.toUpperCase())}
                           value={field.value}
+                          disabled={isAtLimit}
                         />
                       </FormControl>
                       <FormMessage />
@@ -217,7 +218,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       <FormLabel>
                         Grade <span className="text-red-500">*</span>
                       </FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isAtLimit}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select grade" />
@@ -255,7 +256,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         Your Position/Title <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., 3rd Grade Teacher" {...field} />
+                        <Input placeholder="e.g., 3rd Grade Teacher" {...field} disabled={isAtLimit} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -271,7 +272,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         Location <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Classroom, Playground" {...field} />
+                        <Input placeholder="e.g., Classroom, Playground" {...field} disabled={isAtLimit} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -308,6 +309,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               <FormControl>
                                 <Checkbox
                                   checked={field.value?.includes(item)}
+                                  disabled={isAtLimit}
                                   onCheckedChange={(checked) => {
                                     return checked
                                       ? field.onChange([...field.value, item])
@@ -333,9 +335,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     <div className="flex items-center space-x-3">
                       <Checkbox
                         checked={showOtherConcern}
+                        disabled={isAtLimit}
                         onCheckedChange={(checked) => setShowOtherConcern(checked === true)}
                       />
-                      <label className="text-sm font-normal">Other (please specify)</label>
+                      <label className={`text-sm font-normal ${isAtLimit ? 'text-gray-400' : ''}`}>Other (please specify)</label>
                     </div>
                     
                     {showOtherConcern && (
@@ -345,7 +348,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         render={({ field }) => (
                           <FormItem className="mt-2">
                             <FormControl>
-                              <Input placeholder="Specify other concern type" {...field} />
+                              <Input placeholder="Specify other concern type" {...field} disabled={isAtLimit} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -373,10 +376,11 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       className="flex flex-col space-y-2"
+                      disabled={isAtLimit}
                     >
                       {SEVERITY_LEVELS.map((level) => (
                         <div key={level.value} className="flex items-center space-x-2">
-                          <RadioGroupItem value={level.value} id={level.value} />
+                          <RadioGroupItem value={level.value} id={level.value} disabled={isAtLimit} />
                           <label
                             htmlFor={level.value}
                             className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -407,6 +411,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       placeholder="Please provide specific details about the observed behavior or concern. Include frequency, duration, context, and any patterns you've noticed..."
                       className="resize-none"
                       {...field}
+                      disabled={isAtLimit}
                     />
                   </FormControl>
                   <p className="text-xs text-gray-600">
@@ -445,6 +450,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               <FormControl>
                                 <Checkbox
                                   checked={field.value?.includes(item)}
+                                  disabled={isAtLimit}
                                   onCheckedChange={(checked) => {
                                     return checked
                                       ? field.onChange([...field.value, item])
@@ -470,9 +476,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     <div className="flex items-center space-x-3">
                       <Checkbox
                         checked={showOtherAction}
+                        disabled={isAtLimit}
                         onCheckedChange={(checked) => setShowOtherAction(checked === true)}
                       />
-                      <label className="text-sm font-normal">Other action taken (please specify)</label>
+                      <label className={`text-sm font-normal ${isAtLimit ? 'text-gray-400' : ''}`}>Other action taken (please specify)</label>
                     </div>
                     
                     {showOtherAction && (
@@ -482,7 +489,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         render={({ field }) => (
                           <FormItem className="mt-2">
                             <FormControl>
-                              <Input placeholder="Describe other action taken" {...field} />
+                              <Input placeholder="Describe other action taken" {...field} disabled={isAtLimit} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -526,6 +533,11 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                     Generating AI Recommendations...
+                  </>
+                ) : isAtLimit ? (
+                  <>
+                    <AlertTriangle className="h-5 w-5 mr-2" />
+                    Request Limit Reached
                   </>
                 ) : (
                   <>

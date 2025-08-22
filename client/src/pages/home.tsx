@@ -65,6 +65,31 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Usage Limit Warning - Show when at limit */}
+        {user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20) && (
+          <div className="max-w-4xl mx-auto mb-6">
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-2xl p-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="h-5 w-5 text-red-600" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">Monthly Request Limit Reached</h3>
+                  <p className="text-red-700 mb-3">
+                    You've used all {user.supportRequestsLimit || 20} of your monthly support requests. 
+                    The form below has been temporarily disabled.
+                  </p>
+                  <div className="text-sm text-red-600">
+                    <p>• Your requests will reset at the beginning of next month</p>
+                    <p>• You can still view and manage your existing support requests</p>
+                    <p>• Contact your administrator if you need additional requests</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Main Content - Concern Form */}
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-xl border border-white/20 p-4 md:p-6">
@@ -73,6 +98,11 @@ export default function Home() {
                 <FileText className="h-4 w-4 md:h-5 md:w-5 text-purple-600" />
               </div>
               <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">Document New Concern</h2>
+              {user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20) && (
+                <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium ml-auto">
+                  Form Disabled - Limit Reached
+                </div>
+              )}
             </div>
             <ConcernForm onConcernSubmitted={handleConcernSubmitted} />
           </div>
