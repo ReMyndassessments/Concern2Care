@@ -243,13 +243,13 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
             </div>
 
             {/* Teacher and Incident Information */}
-            <div className="bg-blue-50 rounded-lg p-6">
-              <div className="flex items-center space-x-2 mb-4">
-                <Calendar className="h-5 w-5 text-brand-blue" />
-                <h3 className="text-lg font-medium text-gray-900">Incident Details</h3>
+            <div className="bg-blue-50 rounded-lg p-4 sm:p-6">
+              <div className="flex items-center space-x-2 mb-3 sm:mb-4">
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-brand-blue flex-shrink-0" />
+                <h3 className="text-base sm:text-lg font-medium text-gray-900">Incident Details</h3>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <FormField
                   control={form.control}
                   name="teacherPosition"
@@ -297,7 +297,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     <p className="text-sm text-gray-600">Select all that apply</p>
                   </div>
                   
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {CONCERN_TYPES.map((item) => (
                       <FormField
                         key={item}
@@ -307,7 +307,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           return (
                             <FormItem
                               key={item}
-                              className="flex flex-row items-start space-x-3 space-y-0"
+                              className="flex flex-row items-start space-x-3 space-y-0 py-2 min-h-[44px]"
                             >
                               <FormControl>
                                 <Checkbox
@@ -324,7 +324,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="text-sm font-normal">
+                              <FormLabel className="text-sm font-normal leading-normal cursor-pointer flex-1">
                                 {item}
                               </FormLabel>
                             </FormItem>
@@ -378,15 +378,15 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="flex flex-col space-y-2"
+                      className="flex flex-col space-y-3"
                       disabled={isAtLimit}
                     >
                       {SEVERITY_LEVELS.map((level) => (
-                        <div key={level.value} className="flex items-center space-x-2">
+                        <div key={level.value} className="flex items-center space-x-3 py-2 min-h-[44px]">
                           <RadioGroupItem value={level.value} id={level.value} disabled={isAtLimit} />
                           <label
                             htmlFor={level.value}
-                            className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="text-sm font-normal leading-relaxed cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex-1"
                           >
                             {level.label}
                           </label>
@@ -412,7 +412,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     <Textarea 
                       rows={6}
                       placeholder="Please provide specific details about the observed behavior or concern. Include frequency, duration, context, and any patterns you've noticed..."
-                      className="resize-none"
+                      className="resize-none min-h-[120px] text-base"
                       {...field}
                       disabled={isAtLimit}
                     />
@@ -438,7 +438,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     <p className="text-sm text-gray-600">Select all that apply</p>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                     {ACTIONS_TAKEN.map((item) => (
                       <FormField
                         key={item}
@@ -448,7 +448,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           return (
                             <FormItem
                               key={item}
-                              className="flex flex-row items-start space-x-3 space-y-0"
+                              className="flex flex-row items-start space-x-3 space-y-0 py-2 min-h-[44px]"
                             >
                               <FormControl>
                                 <Checkbox
@@ -465,7 +465,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="text-sm font-normal">
+                              <FormLabel className="text-sm font-normal leading-normal cursor-pointer flex-1">
                                 {item}
                               </FormLabel>
                             </FormItem>
@@ -525,11 +525,11 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
             )}
             
             {/* Submit Button */}
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-center sm:justify-end pt-4 sm:pt-6">
               <Button 
                 type="submit" 
                 disabled={createConcernMutation.isPending || isAtLimit}
-                className="bg-brand-blue hover:bg-brand-dark-blue px-8 py-3 text-lg"
+                className="w-full sm:w-auto bg-brand-blue hover:bg-brand-dark-blue px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg min-h-[48px] sm:min-h-[52px] font-semibold"
                 size="lg"
               >
                 {createConcernMutation.isPending ? (

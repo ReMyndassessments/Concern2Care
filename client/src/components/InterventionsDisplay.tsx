@@ -90,9 +90,9 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                 
                 {/* Full intervention description with professional formatting */}
                 <div className="mb-4">
-                  <FormattedInterventionContent 
-                    content={intervention.description || 'No description available'} 
-                  />
+                  <div className="prose max-w-none text-sm text-gray-700">
+                    {intervention.description || 'No description available'}
+                  </div>
                 </div>
 
                 {/* Display intervention steps if available */}
@@ -124,10 +124,7 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                 )}
 
                 {/* Progress Notes Section */}
-                <ProgressNotesSection 
-                  intervention={intervention} 
-                  isCompact={true} 
-                />
+                {/* Progress notes temporarily disabled */}
               </CardContent>
             </Card>
           ))}
