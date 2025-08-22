@@ -52,12 +52,6 @@ export default function AppHeader() {
           <nav className="hidden lg:flex items-center space-x-1">
             <Link href="/">
               <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
-                <Home className="h-4 w-4 mr-2" />
-                Home
-              </Button>
-            </Link>
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
                 <BarChart3 className="h-4 w-4 mr-2" />
                 New Request
               </Button>
@@ -133,12 +127,6 @@ export default function AppHeader() {
           <div className="lg:hidden border-t border-gray-200 py-4 bg-white/95 backdrop-blur-md">
             <nav className="flex flex-col space-y-2">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
-                  <Home className="h-4 w-4 mr-3" />
-                  Home
-                </Button>
-              </Link>
-              <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
                   <BarChart3 className="h-4 w-4 mr-3" />
                   New Request
