@@ -176,17 +176,17 @@ export default function ConcernDetail() {
                   </div>
                 </div>
               </div>
-              <div>
+              <div className="flex items-center space-x-2">
                 <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                   <AlertDialogTrigger asChild>
                     <Button 
-                      variant="outline" 
+                      variant="destructive" 
                       size="sm"
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="bg-red-600 hover:bg-red-700 text-white"
                       data-testid="button-delete-concern"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
-                      Delete
+                      Delete Concern
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
