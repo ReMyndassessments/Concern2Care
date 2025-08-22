@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, CheckCircle } from "lucide-react";
 import ProgressNotesSection from "@/components/ProgressNotesSection";
+import FormattedInterventionContent from "@/components/FormattedInterventionContent";
 
 interface InterventionsDisplayProps {
   concernId: string;
@@ -87,11 +88,11 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                 
                 <h5 className="font-semibold text-gray-900 mb-2">{intervention.title || 'Intervention Strategy'}</h5>
                 
-                {/* Full intervention description */}
-                <div className="text-sm text-gray-700 mb-4">
-                  <div className="whitespace-pre-wrap leading-relaxed">
-                    {intervention.description || 'No description available'}
-                  </div>
+                {/* Full intervention description with professional formatting */}
+                <div className="mb-4">
+                  <FormattedInterventionContent 
+                    content={intervention.description || 'No description available'} 
+                  />
                 </div>
 
                 {/* Display intervention steps if available */}
