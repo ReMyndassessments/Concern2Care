@@ -50,6 +50,7 @@ export function TeacherManagement() {
     firstName: '',
     lastName: '',
     email: '',
+    password: '',
     school: '',
     supportRequestsLimit: '50',
     isActive: true
@@ -199,6 +200,7 @@ export function TeacherManagement() {
         firstName: '',
         lastName: '',
         email: '',
+        password: '',
         school: '',
         supportRequestsLimit: '50',
         isActive: true
@@ -608,6 +610,17 @@ export function TeacherManagement() {
             </div>
             
             <div>
+              <label className="text-sm font-medium">Password *</label>
+              <Input
+                type="password"
+                placeholder="Enter password (minimum 6 characters)"
+                value={newTeacherData.password}
+                onChange={(e) => setNewTeacherData({...newTeacherData, password: e.target.value})}
+                data-testid="input-password"
+              />
+            </div>
+            
+            <div>
               <label className="text-sm font-medium">School</label>
               <Input
                 placeholder="Enter school name"
@@ -643,7 +656,7 @@ export function TeacherManagement() {
             <AlertDialogAction 
               onClick={handleAddTeacher}
               data-testid="button-confirm-add"
-              disabled={!newTeacherData.firstName || !newTeacherData.lastName || !newTeacherData.email}
+              disabled={!newTeacherData.firstName || !newTeacherData.lastName || !newTeacherData.email || !newTeacherData.password || newTeacherData.password.length < 6}
             >
               Create Teacher
             </AlertDialogAction>

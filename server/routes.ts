@@ -1083,10 +1083,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin: Create a new teacher
   app.post('/api/admin/teachers', requireAdmin, async (req: any, res) => {
     try {
-      const { firstName, lastName, email, school, supportRequestsLimit, isActive } = req.body;
+      const { firstName, lastName, email, password, school, supportRequestsLimit, isActive } = req.body;
       
-      if (!firstName || !lastName || !email) {
-        return res.status(400).json({ message: 'First name, last name, and email are required' });
+      if (!firstName || !lastName || !email || !password) {
+        return res.status(400).json({ message: 'First name, last name, email, and password are required' });
+      }
+
+      if (password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters long' });
       }
 
       // Check if user already exists
@@ -1095,12 +1099,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(409).json({ message: 'A teacher with this email already exists' });
       }
 
+      // Hash the password
+      const bcrypt = require('bcrypt');
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       // Create the teacher
       const teacherData = {
         id: `teacher-${Date.now()}`,
         firstName,
         lastName,
         email,
+        password: hashedPassword,
         school: school || '',
         supportRequestsLimit: parseInt(supportRequestsLimit) || 50,
         isActive: isActive !== false, // Default to true
