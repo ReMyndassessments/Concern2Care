@@ -1,56 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Sparkles, Shield, Eye, EyeOff } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Sparkles, Shield } from "lucide-react";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleReplitLogin = () => {
     setIsLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: "Welcome back!",
-          description: "You've been successfully signed in.",
-        });
-        // Navigate to home
-        window.location.href = '/';
-      } else {
-        toast({
-          title: "Sign In Failed",
-          description: data.message || "Invalid email or password",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Connection Error",
-        description: "Unable to connect to the server. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    // Redirect to Replit authentication
+    window.location.href = '/api/login';
   };
 
   return (
