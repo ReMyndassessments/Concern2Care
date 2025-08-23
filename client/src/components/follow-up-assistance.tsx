@@ -40,7 +40,7 @@ export default function FollowUpAssistance({
     setIsLoading(true);
     
     try {
-      const response = await apiRequest("POST", "/api/ai/follow-up-assistance", {
+      const data = await apiRequest("POST", "/api/ai/follow-up-assistance", {
         originalRecommendations: recommendations || interventions.map(i => i.description).join('\n\n'),
         specificQuestion: question,
         studentFirstName: concern.studentFirstName,
@@ -50,9 +50,7 @@ export default function FollowUpAssistance({
         severityLevel: concern.severityLevel || "moderate"
       });
 
-      const data = await response.json();
-      
-      if (response.ok) {
+      if (data) {
         setAssistance(data.assistance);
         setDisclaimer(data.disclaimer);
         setHasAsked(true);
@@ -62,8 +60,6 @@ export default function FollowUpAssistance({
           title: "Follow-up Assistance Generated!",
           description: "Your question has been answered with practical guidance.",
         });
-      } else {
-        throw new Error(data.message || "Failed to get follow-up assistance");
       }
     } catch (error: any) {
       console.error("Error getting follow-up assistance:", error);

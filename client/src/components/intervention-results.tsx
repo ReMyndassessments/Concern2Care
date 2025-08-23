@@ -260,7 +260,7 @@ export default function InterventionResults({
       const response = await apiRequest("POST", `/api/concerns/${concern.id}/questions`, {
         question,
       });
-      return await response.json();
+      return response;
     },
     onSuccess: () => {
       toast({
@@ -295,7 +295,7 @@ export default function InterventionResults({
   const reportMutation = useMutation({
     mutationFn: async () => {
       const response = await apiRequest("POST", `/api/concerns/${concern.id}/report`);
-      return await response.json();
+      return response;
     },
     onSuccess: (data: { downloadUrl: string }) => {
       toast({
