@@ -15,6 +15,12 @@ export interface BulkCSVUploadResult {
   }>;
   duplicateEmails: string[];
   summary: string;
+  createdCredentials: Array<{
+    name: string;
+    email: string;
+    password: string;
+    school: string;
+  }>;
 }
 
 interface TeacherCSVRow {
@@ -34,6 +40,7 @@ interface TeacherCSVRow {
 export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVUploadResult> {
   const errors: Array<{ row: number; email?: string; name?: string; error: string }> = [];
   const duplicateEmails: string[] = [];
+  const createdCredentials: Array<{ name: string; email: string; password: string; school: string }> = [];
   let successfulImports = 0;
   let totalRows = 0;
 
@@ -192,6 +199,7 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
         // Insert teacher into database
         await db.insert(users).values({
           email: teacher.email,
+          password: passwordHash, // Add the hashed password
           firstName: firstName,
           lastName: lastName,
           school: teacher.schoolName || null,
@@ -199,6 +207,14 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
           isAdmin: false,
           role: 'teacher',
           isActive: true,
+        });
+
+        // Store the credential for PDF generation
+        createdCredentials.push({
+          name: teacher.name,
+          email: teacher.email,
+          password: password, // Store the plain password for the PDF
+          school: teacher.schoolName || 'Not specified'
         });
 
         successfulImports++;
@@ -222,7 +238,8 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
       successfulImports,
       errors,
       duplicateEmails,
-      summary
+      summary,
+      createdCredentials
     };
 
   } catch (error) {

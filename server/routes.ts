@@ -1479,7 +1479,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Advanced Admin Services - Bulk CSV Upload
   app.post('/api/admin/teachers/bulk-csv-upload', requireAdmin, async (req: any, res) => {
     try {
-      const { csvData, filename } = req.body;
+      const { csvData, filename, schoolName, schoolDistrict, contactEmail, sendCredentials = false } = req.body;
       
       if (!csvData || !filename) {
         return res.status(400).json({ message: 'CSV data and filename are required' });
@@ -1493,6 +1493,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const result = await processBulkCSVUpload(csvContent);
+      
+      // If credentials should be sent and we have successful imports
+      if (sendCredentials && result.successfulImports > 0 && result.createdCredentials.length > 0) {
+        try {
+          if (!schoolName || !contactEmail) {
+            console.warn('School name or contact email missing for credential PDF');
+          } else {
+            const { sendCredentialPDF } = await import('./services/emailCredentials');
+            
+            const emailSent = await sendCredentialPDF({
+              schoolName,
+              schoolDistrict,
+              contactEmail,
+              credentials: result.createdCredentials,
+              adminEmail: req.session?.user?.email,
+              adminName: req.session?.user?.firstName && req.session?.user?.lastName 
+                ? `${req.session.user.firstName} ${req.session.user.lastName}`
+                : 'Administrator'
+            });
+
+            if (emailSent) {
+              result.summary += ` Credential PDF sent to ${contactEmail}.`;
+            } else {
+              result.summary += ` Warning: Failed to send credential PDF to ${contactEmail}.`;
+            }
+          }
+        } catch (emailError) {
+          console.error('Error sending credential PDF:', emailError);
+          result.summary += ' Warning: Could not send credential PDF due to email configuration.';
+        }
+      }
+
       res.json(result);
     } catch (error) {
       console.error('Bulk CSV upload error:', error);
