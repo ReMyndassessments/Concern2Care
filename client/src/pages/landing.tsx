@@ -59,9 +59,15 @@ export default function Landing() {
       <section className="relative z-10 pb-12 md:pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-2xl md:rounded-3xl shadow-lg p-6 md:p-12 text-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 leading-tight px-2">
-              Get instant AI-powered strategies for academic, behavioral, and social-emotional needs
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight px-2">
+              Adapt Any Lesson. Support Every Learner.
             </h2>
+            
+            <p className="text-base sm:text-lg text-gray-700 mb-6 md:mb-8 leading-relaxed px-2 max-w-3xl mx-auto">
+              Trusted, AI-powered, strategies for academic, behavioral, and social-emotional needs. 
+              Teachers get practical tools to adapt instruction in the moment. Administrators get stronger 
+              capacity, consistent support, and better outcomes for every student.
+            </p>
             
             <Button 
               size="lg"
