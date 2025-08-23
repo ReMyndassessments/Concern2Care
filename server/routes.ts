@@ -198,6 +198,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+
   // Simple auth middleware
   const requireAuth = (req: any, res: any, next: any) => {
     if (req.session.isAuthenticated && req.session.user) {
@@ -217,6 +218,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(403).json({ message: "Admin access required" });
     }
   };
+
+  // Update user profile - PROTECTED
+  app.put('/api/user/profile', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { firstName, lastName, email } = req.body;
+
+      if (!firstName || !lastName || !email) {
+        return res.status(400).json({ message: "First name, last name, and email are required" });
+      }
+
+      if (!email.includes('@')) {
+        return res.status(400).json({ message: "Invalid email format" });
+      }
+
+      // Check if email is already taken by another user
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser && existingUser.id !== userId) {
+        return res.status(400).json({ message: "Email address is already in use" });
+      }
+
+      const updatedUser = await storage.updateUser(userId, {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim()
+      });
+
+      // Update session data to reflect changes
+      if (req.session.user) {
+        req.session.user.firstName = firstName.trim();
+        req.session.user.lastName = lastName.trim();
+        req.session.user.email = email.trim();
+      }
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
 
   // Create a new concern and generate recommendations - PROTECTED
   app.post("/api/concerns", requireAuth, async (req: any, res) => {

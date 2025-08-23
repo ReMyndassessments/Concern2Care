@@ -1,11 +1,187 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import AppHeader from "@/components/app-header";
 import EmailSettings from "@/components/email-settings";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { User } from "@shared/schema";
-import { Settings as SettingsIcon, Mail, User as UserIcon, Bell } from "lucide-react";
+import { Settings as SettingsIcon, Mail, User as UserIcon, Bell, Edit, Save, X, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+
+// Profile Editor Component
+function ProfileEditor({ user }: { user: User | undefined }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    email: user?.email || ''
+  });
+
+  // Update profile mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: async (data: { firstName: string; lastName: string; email: string }) => {
+      return apiRequest("PUT", "/api/user/profile", data);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Profile Updated",
+        description: "Your profile information has been updated successfully.",
+      });
+      setIsEditing(false);
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Update Failed",
+        description: error.message || "Failed to update profile information",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSave = () => {
+    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.email.includes('@')) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    updateProfileMutation.mutate(formData);
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || ''
+    });
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-medium text-gray-900">Personal Information</h3>
+        {!isEditing ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEditing(true)}
+            data-testid="button-edit-profile"
+          >
+            <Edit className="h-4 w-4 mr-2" />
+            Edit
+          </Button>
+        ) : (
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCancel}
+              disabled={updateProfileMutation.isPending}
+              data-testid="button-cancel-profile"
+            >
+              <X className="h-4 w-4 mr-2" />
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSave}
+              disabled={updateProfileMutation.isPending}
+              data-testid="button-save-profile"
+            >
+              <Save className="h-4 w-4 mr-2" />
+              {updateProfileMutation.isPending ? "Saving..." : "Save"}
+            </Button>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="firstName">First Name</Label>
+          {isEditing ? (
+            <Input
+              id="firstName"
+              value={formData.firstName}
+              onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+              placeholder="Enter your first name"
+              data-testid="input-first-name"
+            />
+          ) : (
+            <div className="mt-1 p-3 bg-gray-50 rounded-lg">
+              {user?.firstName || 'Not Set'}
+            </div>
+          )}
+        </div>
+        <div>
+          <Label htmlFor="lastName">Last Name</Label>
+          {isEditing ? (
+            <Input
+              id="lastName"
+              value={formData.lastName}
+              onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+              placeholder="Enter your last name"
+              data-testid="input-last-name"
+            />
+          ) : (
+            <div className="mt-1 p-3 bg-gray-50 rounded-lg">
+              {user?.lastName || 'Not Set'}
+            </div>
+          )}
+        </div>
+        <div className="md:col-span-2">
+          <Label htmlFor="email">Email Address</Label>
+          {isEditing ? (
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              placeholder="Enter your email address"
+              data-testid="input-email"
+            />
+          ) : (
+            <div className="mt-1 p-3 bg-gray-50 rounded-lg">
+              {user?.email || 'Not Set'}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {isEditing && (
+        <Alert>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            <strong>Note:</strong> Changing your email address may affect your login credentials. 
+            Please ensure you have access to the new email address.
+          </AlertDescription>
+        </Alert>
+      )}
+    </div>
+  );
+}
 
 export default function Settings() {
   const { user } = useAuth() as { user: User | undefined };
@@ -65,25 +241,8 @@ export default function Settings() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">First Name</label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-lg">
-                      {user?.firstName || 'Not Set'}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Last Name</label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-lg">
-                      {user?.lastName || 'Not Set'}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Email</label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-lg">
-                      {user?.email || 'Not Set'}
-                    </div>
-                  </div>
+                <ProfileEditor user={user} />
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                   <div>
                     <label className="text-sm font-medium text-gray-700">Account Type</label>
                     <div className="mt-1 p-3 bg-gray-50 rounded-lg flex items-center space-x-2">
