@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import AppHeader from "@/components/app-header";
 import EmailSettings from "@/components/email-settings";
+import HelpGuide from "@/components/help-guide";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { User } from "@shared/schema";
-import { Settings as SettingsIcon, Mail, User as UserIcon, Bell, Edit, Save, X, AlertTriangle } from "lucide-react";
+import { Settings as SettingsIcon, Mail, User as UserIcon, Bell, Edit, Save, X, AlertTriangle, HelpCircle } from "lucide-react";
 import { useState } from "react";
 
 // Profile Editor Component
@@ -217,7 +218,7 @@ export default function Settings() {
 
         {/* Settings Content */}
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 gap-1">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <UserIcon className="h-4 w-4" />
               Profile
@@ -229,6 +230,10 @@ export default function Settings() {
             <TabsTrigger value="notifications" className="flex items-center gap-2">
               <Bell className="h-4 w-4" />
               Notifications
+            </TabsTrigger>
+            <TabsTrigger value="help" className="flex items-center gap-2">
+              <HelpCircle className="h-4 w-4" />
+              Help Guide
             </TabsTrigger>
           </TabsList>
 
@@ -336,6 +341,20 @@ export default function Settings() {
                     />
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="help" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <HelpCircle className="w-5 h-5" />
+                  <span>Comprehensive Help Guide</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <HelpGuide />
               </CardContent>
             </Card>
           </TabsContent>
