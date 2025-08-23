@@ -233,19 +233,19 @@ export default function ApiKeyManagement() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+        <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-2">
             <Key className="h-5 w-5" />
-            API Keys Management
+            <span className="text-lg md:text-xl">API Keys Management</span>
           </div>
           <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
             <DialogTrigger asChild>
-              <Button data-testid="button-add-api-key">
+              <Button data-testid="button-add-api-key" className="w-full sm:w-auto">
                 <Plus className="h-4 w-4 mr-2" />
                 Add API Key
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-md mx-4 sm:mx-0">
               <DialogHeader>
                 <DialogTitle>Add New API Key</DialogTitle>
               </DialogHeader>
@@ -391,78 +391,147 @@ export default function ApiKeyManagement() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <Table>
+            {/* Mobile Card View */}
+            <div className="block md:hidden space-y-4">
+              {apiKeys.map((apiKey) => (
+                <Card key={apiKey.id} data-testid={`card-api-key-${apiKey.id}`} className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-medium" data-testid={`text-name-${apiKey.id}`}>{apiKey.name}</h3>
+                        <Badge variant="secondary" className="text-xs mt-1" data-testid={`text-provider-${apiKey.id}`}>
+                          {apiKey.provider}
+                        </Badge>
+                      </div>
+                      {getStatusBadge(apiKey)}
+                    </div>
+                    
+                    {apiKey.description && (
+                      <p className="text-sm text-muted-foreground">{apiKey.description}</p>
+                    )}
+                    
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full ${getUsageColor(apiKey.usagePercentage)}`}
+                          style={{ width: `${Math.min(apiKey.usagePercentage, 100)}%` }}
+                        />
+                      </div>
+                      <span className="text-xs" data-testid={`text-usage-${apiKey.id}`}>
+                        {apiKey.usageCount}/{apiKey.maxUsage}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span data-testid={`text-last-used-${apiKey.id}`}>
+                        Last used: {apiKey.lastUsedAt ? format(new Date(apiKey.lastUsedAt), 'MMM d') : 'Never'}
+                      </span>
+                      <span data-testid={`text-created-${apiKey.id}`}>
+                        Created: {format(new Date(apiKey.createdAt), 'MMM d, yyyy')}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-end gap-2 pt-2 border-t">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEdit(apiKey)}
+                        data-testid={`button-edit-${apiKey.id}`}
+                        className="text-xs"
+                      >
+                        <Edit className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(apiKey)}
+                        className="text-red-600 hover:text-red-800 text-xs"
+                        data-testid={`button-delete-${apiKey.id}`}
+                      >
+                        <Trash2 className="h-3 w-3 mr-1" />
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <Table className="hidden md:table">
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Provider</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Usage</TableHead>
-                  <TableHead>API Key</TableHead>
-                  <TableHead>Last Used</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-xs lg:text-sm">Name</TableHead>
+                  <TableHead className="text-xs lg:text-sm">Provider</TableHead>
+                  <TableHead className="text-xs lg:text-sm">Status</TableHead>
+                  <TableHead className="text-xs lg:text-sm">Usage</TableHead>
+                  <TableHead className="text-xs lg:text-sm">API Key</TableHead>
+                  <TableHead className="text-xs lg:text-sm">Last Used</TableHead>
+                  <TableHead className="text-xs lg:text-sm">Created</TableHead>
+                  <TableHead className="text-right text-xs lg:text-sm">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {apiKeys.map((apiKey) => (
                   <TableRow key={apiKey.id} data-testid={`row-api-key-${apiKey.id}`}>
-                    <TableCell className="font-medium" data-testid={`text-name-${apiKey.id}`}>
+                    <TableCell className="font-medium text-xs lg:text-sm" data-testid={`text-name-${apiKey.id}`}>
                       {apiKey.name}
                       {apiKey.description && (
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs text-muted-foreground mt-1">
                           {apiKey.description}
                         </div>
                       )}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="secondary" data-testid={`text-provider-${apiKey.id}`}>
+                      <Badge variant="secondary" className="text-xs" data-testid={`text-provider-${apiKey.id}`}>
                         {apiKey.provider}
                       </Badge>
                     </TableCell>
                     <TableCell>{getStatusBadge(apiKey)}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 min-w-[100px]">
                         <div className="flex-1 bg-gray-200 rounded-full h-2">
                           <div
                             className={`h-2 rounded-full ${getUsageColor(apiKey.usagePercentage)}`}
                             style={{ width: `${Math.min(apiKey.usagePercentage, 100)}%` }}
                           />
                         </div>
-                        <span className="text-sm" data-testid={`text-usage-${apiKey.id}`}>
+                        <span className="text-xs whitespace-nowrap" data-testid={`text-usage-${apiKey.id}`}>
                           {apiKey.usageCount}/{apiKey.maxUsage}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <code className="text-sm bg-muted px-2 py-1 rounded">
-                          {showApiKey[apiKey.id] ? apiKey.maskedKey : apiKey.maskedKey}
+                      <div className="flex items-center gap-1">
+                        <code className="text-xs bg-muted px-2 py-1 rounded max-w-[120px] truncate">
+                          {apiKey.maskedKey}
                         </code>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => toggleKeyVisibility(apiKey.id)}
                           data-testid={`button-toggle-key-${apiKey.id}`}
+                          className="p-1"
                         >
-                          {showApiKey[apiKey.id] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          {showApiKey[apiKey.id] ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                         </Button>
                       </div>
                     </TableCell>
                     <TableCell data-testid={`text-last-used-${apiKey.id}`}>
                       {apiKey.lastUsedAt ? (
-                        <div className="flex items-center gap-1 text-sm">
+                        <div className="flex items-center gap-1 text-xs">
                           <Activity className="h-3 w-3" />
-                          {format(new Date(apiKey.lastUsedAt), 'MMM d, yyyy')}
+                          {format(new Date(apiKey.lastUsedAt), 'MMM d')}
                         </div>
                       ) : (
-                        <span className="text-muted-foreground text-sm">Never</span>
+                        <span className="text-muted-foreground text-xs">Never</span>
                       )}
                     </TableCell>
                     <TableCell data-testid={`text-created-${apiKey.id}`}>
-                      <div className="flex items-center gap-1 text-sm">
+                      <div className="flex items-center gap-1 text-xs">
                         <Calendar className="h-3 w-3" />
-                        {format(new Date(apiKey.createdAt), 'MMM d, yyyy')}
+                        {format(new Date(apiKey.createdAt), 'MMM d')}
                       </div>
                       {apiKey.createdByUser && (
                         <div className="text-xs text-muted-foreground">
@@ -471,23 +540,24 @@ export default function ApiKeyManagement() {
                       )}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                      <div className="flex justify-end gap-1">
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleEdit(apiKey)}
                           data-testid={`button-edit-${apiKey.id}`}
+                          className="p-2"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-3 w-3" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleDelete(apiKey)}
-                          className="text-red-600 hover:text-red-800"
+                          className="text-red-600 hover:text-red-800 p-2"
                           data-testid={`button-delete-${apiKey.id}`}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
                     </TableCell>
@@ -501,7 +571,7 @@ export default function ApiKeyManagement() {
 
       {/* Edit Dialog */}
       <Dialog open={editingKey !== null} onOpenChange={() => setEditingKey(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md mx-4 sm:mx-0">
           <DialogHeader>
             <DialogTitle>Edit API Key</DialogTitle>
           </DialogHeader>

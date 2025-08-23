@@ -221,28 +221,28 @@ export default function TeacherManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
+        <CardHeader className="p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle className="flex items-center space-x-2">
+              <CardTitle className="flex items-center space-x-2 text-lg md:text-xl">
                 <Users className="h-5 w-5" />
                 <span>Teacher Management</span>
               </CardTitle>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-xs md:text-sm text-gray-600 mt-1">
                 Manage teacher accounts and permissions
               </p>
             </div>
             <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
               <DialogTrigger asChild>
-                <Button className="bg-brand-blue hover:bg-brand-blue/90" data-testid="button-add-teacher">
+                <Button className="bg-brand-blue hover:bg-brand-blue/90 w-full sm:w-auto" data-testid="button-add-teacher">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Teacher
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
+              <DialogContent className="sm:max-w-[500px] mx-4 sm:mx-0">
                 <DialogHeader>
                   <DialogTitle>Add New Teacher</DialogTitle>
                 </DialogHeader>
@@ -336,41 +336,42 @@ export default function TeacherManagement() {
       </Card>
 
       {/* Search and Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="md:col-span-2">
-          <CardContent className="p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <Card className="sm:col-span-2">
+          <CardContent className="p-3 md:p-4">
             <div className="space-y-2">
-              <Label htmlFor="search">Search Teachers</Label>
+              <Label htmlFor="search" className="text-sm">Search Teachers</Label>
               <Input
                 id="search"
                 placeholder="Search by name, email, or school..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 data-testid="input-search"
+                className="text-sm"
               />
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4 text-blue-600" />
               <div>
-                <p className="text-sm text-gray-600">Total Teachers</p>
-                <p className="text-2xl font-bold">{teachers.length}</p>
+                <p className="text-xs md:text-sm text-gray-600">Total Teachers</p>
+                <p className="text-lg md:text-2xl font-bold">{teachers.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center space-x-2">
               <CheckCircle className="h-4 w-4 text-green-600" />
               <div>
-                <p className="text-sm text-gray-600">Active</p>
-                <p className="text-2xl font-bold">{teachers.filter(t => t.isActive).length}</p>
+                <p className="text-xs md:text-sm text-gray-600">Active</p>
+                <p className="text-lg md:text-2xl font-bold">{teachers.filter(t => t.isActive).length}</p>
               </div>
             </div>
           </CardContent>
@@ -380,17 +381,74 @@ export default function TeacherManagement() {
       {/* Teachers Table */}
       <Card>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          {/* Mobile Card View */}
+          <div className="block md:hidden p-4 space-y-4">
+            {filteredTeachers.map((teacher) => (
+              <Card key={teacher.id} className="p-4">
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
+                      <p className="text-xs text-muted-foreground mt-1">{teacher.email}</p>
+                      <Badge variant="outline" className="text-xs mt-1">
+                        {teacher.school}
+                      </Badge>
+                    </div>
+                    <Badge variant={teacher.isActive ? "default" : "secondary"} className="text-xs">
+                      {teacher.isActive ? "Active" : "Inactive"}
+                    </Badge>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    <div>
+                      <span className="text-muted-foreground">Requests Used:</span>
+                      <div className="font-medium">{teacher.supportRequestsUsed}/{teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}</div>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Joined:</span>
+                      <div className="font-medium">{formatDate(teacher.createdAt)}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-2 border-t">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleEditTeacher(teacher)}
+                      className="text-xs"
+                      data-testid={`button-edit-${teacher.id}`}
+                    >
+                      <Edit2 className="h-3 w-3 mr-1" />
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleDeleteTeacher(teacher)}
+                      className="text-red-600 hover:text-red-800 text-xs"
+                      data-testid={`button-delete-${teacher.id}`}
+                    >
+                      <Trash2 className="h-3 w-3 mr-1" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="min-w-[120px]">Name</TableHead>
-                  <TableHead className="min-w-[200px]">Email</TableHead>
-                  <TableHead className="min-w-[120px]">School</TableHead>
-                  <TableHead className="min-w-[100px]">Requests</TableHead>
-                  <TableHead className="min-w-[80px]">Status</TableHead>
-                  <TableHead className="min-w-[100px]">Joined</TableHead>
-                  <TableHead className="min-w-[100px] sticky right-0 bg-white">Actions</TableHead>
+                  <TableHead className="min-w-[120px] text-xs lg:text-sm">Name</TableHead>
+                  <TableHead className="min-w-[180px] text-xs lg:text-sm">Email</TableHead>
+                  <TableHead className="min-w-[100px] text-xs lg:text-sm">School</TableHead>
+                  <TableHead className="min-w-[80px] text-xs lg:text-sm">Requests</TableHead>
+                  <TableHead className="min-w-[60px] text-xs lg:text-sm">Status</TableHead>
+                  <TableHead className="min-w-[80px] text-xs lg:text-sm">Joined</TableHead>
+                  <TableHead className="min-w-[80px] sticky right-0 bg-white text-xs lg:text-sm">Actions</TableHead>
                 </TableRow>
               </TableHeader>
             <TableBody>
@@ -407,24 +465,24 @@ export default function TeacherManagement() {
                 filteredTeachers.map((teacher) => (
                   <TableRow key={teacher.id}>
                     <TableCell>
-                      <div className="font-medium">
+                      <div className="font-medium text-xs lg:text-sm">
                         {teacher.firstName} {teacher.lastName}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Mail className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">{teacher.email}</span>
+                      <div className="flex items-center space-x-1">
+                        <Mail className="h-3 w-3 text-gray-400" />
+                        <span className="text-xs lg:text-sm truncate max-w-[150px]">{teacher.email}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <School className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">{teacher.school || "Not specified"}</span>
+                      <div className="flex items-center space-x-1">
+                        <School className="h-3 w-3 text-gray-400" />
+                        <span className="text-xs lg:text-sm truncate">{teacher.school || "Not specified"}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm">
+                      <div className="text-xs lg:text-sm">
                         <span className="font-medium">{teacher.supportRequestsUsed || 0}</span>
                         <span className="text-gray-500"> / {teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}</span>
                       </div>
@@ -432,15 +490,15 @@ export default function TeacherManagement() {
                     <TableCell>
                       <Badge 
                         variant={teacher.isActive ? "default" : "secondary"}
-                        className={teacher.isActive ? "bg-green-100 text-green-800" : ""}
+                        className={`text-xs ${teacher.isActive ? "bg-green-100 text-green-800" : ""}`}
                       >
                         {teacher.isActive ? "Active" : "Inactive"}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm">{formatDate(teacher.createdAt)}</span>
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="h-3 w-3 text-gray-400" />
+                        <span className="text-xs lg:text-sm">{formatDate(teacher.createdAt)}</span>
                       </div>
                     </TableCell>
                     <TableCell className="sticky right-0 bg-white">
@@ -452,21 +510,21 @@ export default function TeacherManagement() {
                             setSelectedTeacher(teacher);
                             setShowEditDialog(true);
                           }}
-                          className="h-8 w-8 p-0"
+                          className="h-6 w-6 p-0"
                           data-testid={`button-edit-${teacher.id}`}
                           title="Edit teacher"
                         >
-                          <Edit2 className="h-4 w-4" />
+                          <Edit2 className="h-3 w-3" />
                         </Button>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleDeleteTeacher(teacher)}
-                          className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:border-red-300"
+                          className="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:border-red-300"
                           data-testid={`button-delete-${teacher.id}`}
                           title="Delete teacher"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
                     </TableCell>
@@ -482,7 +540,7 @@ export default function TeacherManagement() {
       {/* Edit Dialog */}
       {selectedTeacher && (
         <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="sm:max-w-[500px] mx-4 sm:mx-0">
             <DialogHeader>
               <DialogTitle>Edit Teacher</DialogTitle>
             </DialogHeader>

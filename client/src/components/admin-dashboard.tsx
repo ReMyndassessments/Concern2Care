@@ -158,23 +158,23 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-3 md:p-6 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600">Manage your Concern2Care system</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="text-sm md:text-base text-gray-600">Manage your Concern2Care system</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <div className="flex items-center space-x-2">
-            <Shield className="h-5 w-5 text-brand-blue" />
-            <Badge variant="secondary">Administrator</Badge>
+            <Shield className="h-4 w-4 md:h-5 md:w-5 text-brand-blue" />
+            <Badge variant="secondary" className="text-xs md:text-sm">Administrator</Badge>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={handleLogout}
-            className="text-gray-600 hover:text-red-600 hover:border-red-300 border-gray-300"
+            className="text-gray-600 hover:text-red-600 hover:border-red-300 border-gray-300 text-xs md:text-sm w-full sm:w-auto"
             data-testid="button-logout"
           >
             <LogOut className="h-4 w-4 mr-2" />
@@ -184,62 +184,62 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Total Teachers</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
+                <p className="text-xs md:text-sm text-gray-600">Total Teachers</p>
+                <p className="text-xl md:text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
               </div>
-              <Users className="h-8 w-8 text-blue-600" />
+              <Users className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
             </div>
-            <p className="text-sm text-green-600 mt-2">
+            <p className="text-xs md:text-sm text-green-600 mt-2">
               +{stats.activeUsers} active this month
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Student Concerns</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalConcerns}</p>
+                <p className="text-xs md:text-sm text-gray-600">Student Concerns</p>
+                <p className="text-xl md:text-3xl font-bold text-gray-900">{stats.totalConcerns}</p>
               </div>
-              <FileText className="h-8 w-8 text-orange-600" />
+              <FileText className="h-6 w-6 md:h-8 md:w-8 text-orange-600" />
             </div>
-            <p className="text-sm text-green-600 mt-2">
+            <p className="text-xs md:text-sm text-green-600 mt-2">
               +{stats.usageStats.percentChange.toFixed(1)}% from last month
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">AI Interventions</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalInterventions}</p>
+                <p className="text-xs md:text-sm text-gray-600">AI Interventions</p>
+                <p className="text-xl md:text-3xl font-bold text-gray-900">{stats.totalInterventions}</p>
               </div>
-              <Sparkles className="h-8 w-8 text-green-600" />
+              <Sparkles className="h-6 w-6 md:h-8 md:w-8 text-green-600" />
             </div>
-            <p className="text-sm text-gray-600 mt-2">
+            <p className="text-xs md:text-sm text-gray-600 mt-2">
               Generated this month
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">System Usage</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.usageStats.thisMonth}</p>
+                <p className="text-xs md:text-sm text-gray-600">System Usage</p>
+                <p className="text-xl md:text-3xl font-bold text-gray-900">{stats.usageStats.thisMonth}</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-600" />
+              <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-purple-600" />
             </div>
-            <p className="text-sm text-green-600 mt-2">
+            <p className="text-xs md:text-sm text-green-600 mt-2">
               Requests this month
             </p>
           </CardContent>
@@ -248,13 +248,13 @@ export default function AdminDashboard() {
 
       {/* Tabs Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="teachers">Teachers</TabsTrigger>
-          <TabsTrigger value="api-keys">API Keys</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="activity">Activity</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 gap-1">
+          <TabsTrigger value="overview" className="text-xs md:text-sm">Overview</TabsTrigger>
+          <TabsTrigger value="teachers" className="text-xs md:text-sm">Teachers</TabsTrigger>
+          <TabsTrigger value="api-keys" className="text-xs md:text-sm">API Keys</TabsTrigger>
+          <TabsTrigger value="analytics" className="text-xs md:text-sm">Analytics</TabsTrigger>
+          <TabsTrigger value="activity" className="text-xs md:text-sm">Activity</TabsTrigger>
+          <TabsTrigger value="settings" className="text-xs md:text-sm">Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="teachers" className="space-y-6">
