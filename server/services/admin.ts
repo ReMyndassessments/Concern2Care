@@ -1,6 +1,6 @@
 import { db } from "../db";
 import { users, schools, adminLogs, concerns, interventions } from "@shared/schema";
-import { eq, count, sql } from "drizzle-orm";
+import { eq, count, sql, and } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
 
 export interface BulkCSVUploadResult {
@@ -381,7 +381,12 @@ export async function getTeachersWithDetails() {
         createdAt: users.createdAt,
       })
       .from(users)
-      .where(eq(users.role, 'teacher'));
+      .where(
+        and(
+          eq(users.isAdmin, false), // Non-admin users are teachers
+          eq(users.isActive, true)  // Only active users
+        )
+      );
 
     return teachersData.map(teacher => ({
       ...teacher,
