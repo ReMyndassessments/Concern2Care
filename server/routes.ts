@@ -246,6 +246,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         severityLevel: String(req.body.severityLevel),
         actionsTaken: req.body.actionsTaken || [],
         otherActionTaken: req.body.otherActionTaken || null,
+        
+        // Student differentiation fields
+        hasIep: Boolean(req.body.hasIep),
+        hasDisability: Boolean(req.body.hasDisability),
+        disabilityType: req.body.disabilityType || null,
+        isEalLearner: Boolean(req.body.isEalLearner),
+        ealProficiency: req.body.ealProficiency || null,
+        isGifted: Boolean(req.body.isGifted),
+        isStruggling: Boolean(req.body.isStruggling),
+        otherNeeds: req.body.otherNeeds || null,
       });
       
       // Generate AI recommendations using the enhanced format
@@ -262,6 +272,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         severityLevel: newConcern.severityLevel || "moderate",
         actionsTaken: Array.isArray(newConcern.actionsTaken) ? newConcern.actionsTaken : [],
         otherActionTaken: newConcern.otherActionTaken || undefined,
+        
+        // Pass through student differentiation fields for AI personalization
+        hasIep: newConcern.hasIep || false,
+        hasDisability: newConcern.hasDisability || false,
+        disabilityType: newConcern.disabilityType || undefined,
+        isEalLearner: newConcern.isEalLearner || false,
+        ealProficiency: newConcern.ealProficiency || undefined,
+        isGifted: newConcern.isGifted || false,
+        isStruggling: newConcern.isStruggling || false,
+        otherNeeds: newConcern.otherNeeds || undefined,
       };
 
       const recommendationResponse = await generateRecommendations(recommendationRequest);
