@@ -10,7 +10,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info, BookmarkPlus, Bookmark, Save } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info, BookmarkPlus, Bookmark, Save, X, Plus, Mail } from "lucide-react";
 import { Concern, Intervention, FollowUpQuestion } from "@shared/schema";
 // Email sharing temporarily removed
 
@@ -237,6 +240,8 @@ export default function InterventionResults({
 }: InterventionResultsProps) {
   const [followUpQuestion, setFollowUpQuestion] = useState("");
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailRecipients, setEmailRecipients] = useState([{ name: "", email: "" }]);
+  const [emailMessage, setEmailMessage] = useState("");
   const [savedInterventions, setSavedInterventions] = useState<Set<string>>(() => {
     const savedIds = interventions.filter(i => i.saved).map(i => i.id);
     return new Set(savedIds);
@@ -350,6 +355,74 @@ export default function InterventionResults({
 
   const handleShareReport = () => {
     setShowEmailModal(true);
+  };
+
+  // Email sharing mutation
+  const emailMutation = useMutation({
+    mutationFn: async (emailData: { recipients: Array<{ name: string; email: string }>; message: string }) => {
+      return apiRequest("POST", `/api/concerns/${concern.id}/share`, emailData);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Report Shared Successfully!",
+        description: "The intervention report has been sent to student support staff.",
+      });
+      setShowEmailModal(false);
+      setEmailRecipients([{ name: "", email: "" }]);
+      setEmailMessage("");
+    },
+    onError: (error: Error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      
+      toast({
+        title: "Failed to Share Report",
+        description: error.message || "There was an error sending the email. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSendEmail = () => {
+    const validRecipients = emailRecipients.filter(r => r.email.trim() !== "");
+    if (validRecipients.length === 0) {
+      toast({
+        title: "No Recipients",
+        description: "Please add at least one email recipient.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    emailMutation.mutate({
+      recipients: validRecipients,
+      message: emailMessage || `Please find attached the intervention report for ${concern.studentFirstName} ${concern.studentLastInitial}.`
+    });
+  };
+
+  const addRecipient = () => {
+    setEmailRecipients([...emailRecipients, { name: "", email: "" }]);
+  };
+
+  const removeRecipient = (index: number) => {
+    if (emailRecipients.length > 1) {
+      setEmailRecipients(emailRecipients.filter((_, i) => i !== index));
+    }
+  };
+
+  const updateRecipient = (index: number, field: "name" | "email", value: string) => {
+    const updated = [...emailRecipients];
+    updated[index][field] = value;
+    setEmailRecipients(updated);
   };
 
   const saveInterventionMutation = useMutation({
@@ -661,7 +734,107 @@ export default function InterventionResults({
       </Card>
 
       {/* Email Sharing Modal */}
-      {/* Email sharing temporarily disabled */}
+      <Dialog open={showEmailModal} onOpenChange={setShowEmailModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5" />
+              Share With Student Support
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="recipients">Recipients</Label>
+              <div className="space-y-2 mt-2">
+                {emailRecipients.map((recipient, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      placeholder="Name (optional)"
+                      value={recipient.name}
+                      onChange={(e) => updateRecipient(index, "name", e.target.value)}
+                      className="flex-1"
+                      data-testid={`input-recipient-name-${index}`}
+                    />
+                    <Input
+                      placeholder="Email address"
+                      type="email"
+                      value={recipient.email}
+                      onChange={(e) => updateRecipient(index, "email", e.target.value)}
+                      className="flex-1"
+                      data-testid={`input-recipient-email-${index}`}
+                    />
+                    {emailRecipients.length > 1 && (
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => removeRecipient(index)}
+                        data-testid={`button-remove-recipient-${index}`}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={addRecipient}
+                  className="w-full"
+                  data-testid="button-add-recipient"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Recipient
+                </Button>
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="message">Message (optional)</Label>
+              <Textarea
+                id="message"
+                placeholder="Add a personal message..."
+                value={emailMessage}
+                onChange={(e) => setEmailMessage(e.target.value)}
+                className="mt-2"
+                rows={3}
+                data-testid="textarea-email-message"
+              />
+            </div>
+            
+            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-md">
+              <strong>Note:</strong> This will send a PDF report with the intervention recommendations as an attachment.
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowEmailModal(false)}
+              data-testid="button-cancel-email"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleSendEmail}
+              disabled={emailMutation.isPending}
+              data-testid="button-send-email"
+            >
+              {emailMutation.isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Report
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
