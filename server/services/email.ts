@@ -68,8 +68,12 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
 
     // Try to get user-specific or school-specific email configuration
     if (options.userId) {
+      console.log(`🔧 Attempting to get email config for user: ${options.userId}`);
       const emailConfig = await emailConfigService.getEmailConfiguration(options.userId);
+      console.log(`📧 Email config retrieved:`, emailConfig ? 'Found' : 'Not found');
+      
       if (emailConfig) {
+        console.log(`📨 Creating transporter with host: ${emailConfig.smtpHost}`);
         transporter = nodemailer.createTransport({
           host: emailConfig.smtpHost,
           port: emailConfig.smtpPort,
@@ -81,7 +85,12 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
         });
         fromAddress = emailConfig.fromAddress;
         fromName = emailConfig.fromName;
+        console.log(`✅ Transporter created successfully`);
+      } else {
+        console.log(`❌ No email config found for user ${options.userId}`);
       }
+    } else {
+      console.log(`⚠️ No userId provided to sendReportEmail`);
     }
 
     // Fallback to environment variables or dev mode
