@@ -299,7 +299,7 @@ setInterval(() => {
   const now = new Date();
   const tokensToDelete: string[] = [];
   
-  for (const [token, data] of passwordResetTokens.entries()) {
+  for (const [token, data] of Array.from(passwordResetTokens.entries())) {
     if (now > data.expires) {
       tokensToDelete.push(token);
     }

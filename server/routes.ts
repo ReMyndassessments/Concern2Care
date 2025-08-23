@@ -1698,6 +1698,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Initiate password reset
+      if (!teacher.email) {
+        return res.status(400).json({ message: 'Teacher email not found' });
+      }
       const result = await initiatePasswordReset(teacher.email);
       
       if (result.success) {

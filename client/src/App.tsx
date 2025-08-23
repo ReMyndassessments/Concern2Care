@@ -36,6 +36,14 @@ function Router() {
         <>
           <Route path="/" component={Landing} />
           <Route path="/login" component={Login} />
+          {/* Redirect all authenticated routes to login */}
+          <Route path="/admin" component={() => { window.location.href = '/login'; return null; }} />
+          <Route path="/admin/*" component={() => { window.location.href = '/login'; return null; }} />
+          <Route path="/new-request" component={() => { window.location.href = '/login'; return null; }} />
+          <Route path="/my-support-requests" component={() => { window.location.href = '/login'; return null; }} />
+          <Route path="/meeting-prep" component={() => { window.location.href = '/login'; return null; }} />
+          <Route path="/settings" component={() => { window.location.href = '/login'; return null; }} />
+          <Route path="/concerns/:id" component={() => { window.location.href = '/login'; return null; }} />
         </>
       ) : (
         <>
@@ -47,6 +55,8 @@ function Router() {
           <Route path="/meeting-prep" component={TeacherMeetingPrep} />
           <Route path="/settings" component={Settings} />
           <Route path="/concerns/:id" component={ConcernDetail} />
+          {/* Redirect login to home when authenticated */}
+          <Route path="/login" component={() => { window.location.href = '/'; return null; }} />
         </>
       )}
       <Route component={NotFound} />
