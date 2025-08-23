@@ -175,7 +175,7 @@ export default function TeacherMeetingPrep() {
       
       const response = await apiRequest('/api/meeting-preparation/generate', {
         method: 'POST',
-        body: meetingData
+        body: { meetingData }
       });
 
       if (response?.pdfUrl) {
