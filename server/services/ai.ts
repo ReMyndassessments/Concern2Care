@@ -31,6 +31,10 @@ export interface GenerateRecommendationsRequest {
   isGifted?: boolean;
   isStruggling?: boolean;
   otherNeeds?: string;
+  
+  // File uploads for enhanced recommendations
+  studentAssessmentFile?: string;
+  lessonPlanFile?: string;
 }
 
 export interface GenerateRecommendationsResponse {
@@ -93,6 +97,32 @@ export async function generateRecommendations(
     
   console.log("📝 Final differentiation text for AI:", differentiationText);
 
+  // Read uploaded file contents for enhanced recommendations
+  let assessmentContent = "";
+  let lessonPlanContent = "";
+  
+  if (req.studentAssessmentFile) {
+    try {
+      const { ObjectStorageService } = await import("../objectStorage");
+      const objectStorageService = new ObjectStorageService();
+      assessmentContent = await objectStorageService.readFileContent(req.studentAssessmentFile);
+      console.log("📄 Read student assessment file content:", assessmentContent.substring(0, 200) + "...");
+    } catch (error) {
+      console.error("Error reading assessment file:", error);
+    }
+  }
+  
+  if (req.lessonPlanFile) {
+    try {
+      const { ObjectStorageService } = await import("../objectStorage");
+      const objectStorageService = new ObjectStorageService();
+      lessonPlanContent = await objectStorageService.readFileContent(req.lessonPlanFile);
+      console.log("📚 Read lesson plan file content:", lessonPlanContent.substring(0, 200) + "...");
+    } catch (error) {
+      console.error("Error reading lesson plan file:", error);
+    }
+  }
+
   const prompt = `You are an educational specialist AI assistant helping teachers with Tier 2 intervention recommendations for students who may need 504/IEP accommodations.
 
 Student Information:
@@ -105,7 +135,7 @@ Student Information:
 - Severity Level: ${req.severityLevel}
 - Actions Already Taken: ${actionsTakenText}
 - Student Learning Profile: ${differentiationText}
-- Detailed Description: ${req.concernDescription}
+- Detailed Description: ${req.concernDescription}${assessmentContent ? `\n- Student Assessment Data: ${assessmentContent}` : ''}${lessonPlanContent ? `\n- Lesson Plan to Differentiate: ${lessonPlanContent}` : ''}
 
 Based on the concern type(s) identified (${concernTypesText}), severity level (${req.severityLevel}), and the student's learning profile (${differentiationText}), please provide specific, actionable Tier 2 intervention recommendations that a teacher could implement in the classroom. 
 
@@ -114,6 +144,10 @@ IMPORTANT: If the student has specific learning needs (IEP, diagnosis, EAL statu
 - If student is an EAL learner: Include visual supports, peer partnerships, modified language
 - If student is gifted: Include extension activities, higher-order thinking, independent projects
 - If student has anxiety: Include predictable routines, choice options, calming strategies
+
+${assessmentContent ? 'IMPORTANT: Use the student assessment data provided to create targeted interventions based on their specific strengths, weaknesses, and documented needs.' : ''}
+
+${lessonPlanContent ? 'IMPORTANT: If a lesson plan was provided, suggest specific adaptations and modifications to make the lesson accessible and challenging for this student. Include concrete examples of how to differentiate content, process, product, and learning environment.' : ''}
 
 Focus on evidence-based strategies that specifically address both the concern AND the student's learning profile.
 

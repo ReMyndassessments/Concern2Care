@@ -87,6 +87,10 @@ export const concerns = pgTable("concerns", {
   isStruggling: boolean("is_struggling").default(false),
   otherNeeds: varchar("other_needs"), // Free text for anything else
   
+  // File uploads for enhanced AI recommendations
+  studentAssessmentFile: varchar("student_assessment_file"), // URL to uploaded assessment
+  lessonPlanFile: varchar("lesson_plan_file"), // URL to uploaded lesson plan
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -20,7 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Edit3, Wand2, GraduationCap, AlertTriangle, Users, CalendarX, User, Calendar, MapPin, AlertCircle, ChevronDown, ChevronUp, Lightbulb } from "lucide-react";
+import { ObjectUploader } from "@/components/ObjectUploader";
+import { Edit3, Wand2, GraduationCap, AlertTriangle, Users, CalendarX, User, Calendar, MapPin, AlertCircle, ChevronDown, ChevronUp, Lightbulb, Upload, FileText, BookOpen } from "lucide-react";
 
 const enhancedConcernFormSchema = z.object({
   studentFirstName: z.string().min(1, "First name is required"),
@@ -44,6 +45,10 @@ const enhancedConcernFormSchema = z.object({
   isGifted: z.boolean().default(false),
   isStruggling: z.boolean().default(false),
   otherNeeds: z.string().optional(),
+  
+  // File uploads for better AI recommendations
+  studentAssessmentFile: z.string().optional(),
+  lessonPlanFile: z.string().optional(),
 });
 
 type EnhancedConcernFormData = z.infer<typeof enhancedConcernFormSchema>;
@@ -103,6 +108,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const [showOtherConcern, setShowOtherConcern] = useState(false);
   const [showOtherAction, setShowOtherAction] = useState(false);
   const [showDifferentiation, setShowDifferentiation] = useState(false);
+  const [studentAssessmentUploading, setStudentAssessmentUploading] = useState(false);
+  const [lessonPlanUploading, setLessonPlanUploading] = useState(false);
 
   const form = useForm<EnhancedConcernFormData>({
     resolver: zodResolver(enhancedConcernFormSchema),
@@ -128,11 +135,25 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       isGifted: false,
       isStruggling: false,
       otherNeeds: "",
+      studentAssessmentFile: "",
+      lessonPlanFile: "",
     },
   });
 
   const createConcernMutation = useMutation({
     mutationFn: async (data: EnhancedConcernFormData) => {
+      // Debug: Log what data is being sent to the backend
+      console.log("🚀 Frontend sending data to backend:", data);
+      console.log("🎯 Differentiation fields being sent:", {
+        hasIep: data.hasIep,
+        hasDisability: data.hasDisability,
+        disabilityType: data.disabilityType,
+        isEalLearner: data.isEalLearner,
+        ealProficiency: data.ealProficiency,
+        isGifted: data.isGifted,
+        isStruggling: data.isStruggling,
+        otherNeeds: data.otherNeeds,
+      });
       const response = await apiRequest("POST", "/api/concerns", data);
       return response;
     },
@@ -492,6 +513,79 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       </FormItem>
                     )}
                   />
+                  
+                  {/* File Uploads */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-amber-200">
+                    <FormField
+                      control={form.control}
+                      name="studentAssessmentFile"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <FileText className="h-4 w-4" />
+                            Student Assessment Report
+                          </FormLabel>
+                          <div className="space-y-2">
+                            <ObjectUploader
+                              acceptedFileTypes={['.pdf', '.doc', '.docx', '.txt']}
+                              onFileUploaded={(fileUrl, fileName) => {
+                                field.onChange(fileUrl);
+                                toast({
+                                  title: "Assessment uploaded",
+                                  description: `${fileName} will help generate better recommendations`,
+                                });
+                              }}
+                              onFileRemoved={() => field.onChange("")}
+                              currentFile={field.value}
+                              disabled={isAtLimit || studentAssessmentUploading}
+                              data-testid="upload-student-assessment"
+                            >
+                              Upload Assessment
+                            </ObjectUploader>
+                            <p className="text-xs text-amber-600">
+                              Upload student reports, assessments, or evaluations (PDF, DOC, TXT)
+                            </p>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="lessonPlanFile"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2">
+                            <BookOpen className="h-4 w-4" />
+                            Lesson Plan to Adapt
+                          </FormLabel>
+                          <div className="space-y-2">
+                            <ObjectUploader
+                              acceptedFileTypes={['.pdf', '.doc', '.docx', '.txt']}
+                              onFileUploaded={(fileUrl, fileName) => {
+                                field.onChange(fileUrl);
+                                toast({
+                                  title: "Lesson plan uploaded",
+                                  description: `${fileName} will be analyzed for differentiation opportunities`,
+                                });
+                              }}
+                              onFileRemoved={() => field.onChange("")}
+                              currentFile={field.value}
+                              disabled={isAtLimit || lessonPlanUploading}
+                              data-testid="upload-lesson-plan"
+                            >
+                              Upload Lesson Plan
+                            </ObjectUploader>
+                            <p className="text-xs text-amber-600">
+                              Upload a lesson plan that needs differentiation for this student
+                            </p>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               )}
             </div>

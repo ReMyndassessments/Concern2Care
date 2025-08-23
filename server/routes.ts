@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateInterventions, answerFollowUpQuestion, generateRecommendations, followUpAssistance, GenerateRecommendationsRequest, FollowUpAssistanceRequest } from "./services/ai";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { generateConcernReport, ensureReportsDirectory } from "./services/pdf";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
 import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports } from "@shared/schema";
@@ -256,6 +257,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isGifted: Boolean(req.body.isGifted),
         isStruggling: Boolean(req.body.isStruggling),
         otherNeeds: req.body.otherNeeds || null,
+        
+        // File uploads
+        studentAssessmentFile: req.body.studentAssessmentFile || null,
+        lessonPlanFile: req.body.lessonPlanFile || null,
       });
       
       // Debug: Log the differentiation data being received
@@ -294,6 +299,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isGifted: newConcern.isGifted || false,
         isStruggling: newConcern.isStruggling || false,
         otherNeeds: newConcern.otherNeeds || undefined,
+        
+        // File uploads for enhanced AI recommendations
+        studentAssessmentFile: newConcern.studentAssessmentFile || undefined,
+        lessonPlanFile: newConcern.lessonPlanFile || undefined,
       };
 
       const recommendationResponse = await generateRecommendations(recommendationRequest);
@@ -372,6 +381,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error saving intervention:", error);
       res.status(500).json({ message: "Failed to save intervention" });
+    }
+  });
+
+  // Object storage upload endpoint
+  app.post("/api/objects/upload", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Failed to get upload URL" });
     }
   });
 
