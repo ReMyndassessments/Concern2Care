@@ -22,7 +22,8 @@ import {
   CheckCircle,
   Download,
   FileText,
-  Database
+  Database,
+  Key
 } from "lucide-react";
 
 interface Teacher {
@@ -173,6 +174,28 @@ export default function TeacherManagement() {
       toast({
         title: "Error",
         description: error.message || "Failed to update teacher",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handlePasswordReset = async (teacher: Teacher) => {
+    try {
+      const response = await apiRequest(`/api/admin/teachers/${teacher.id}/password-reset`, {
+        method: "POST"
+      });
+
+      if (response.success) {
+        toast({
+          title: "Password Reset Sent",
+          description: `Password reset email sent to ${teacher.email}`,
+        });
+      }
+    } catch (error: any) {
+      console.error("Error sending password reset:", error);
+      toast({
+        title: "Password Reset Failed",
+        description: error.message || "Failed to send password reset email",
         variant: "destructive"
       });
     }
@@ -728,6 +751,16 @@ export default function TeacherManagement() {
                           title="Edit teacher"
                         >
                           <Edit2 className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePasswordReset(teacher)}
+                          className="h-6 w-6 p-0 text-blue-600 hover:text-blue-700 hover:border-blue-300"
+                          data-testid={`button-password-reset-${teacher.id}`}
+                          title="Send password reset email"
+                        >
+                          <Key className="h-3 w-3" />
                         </Button>
                         <Button
                           variant="outline"

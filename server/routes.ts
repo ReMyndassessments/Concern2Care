@@ -1646,6 +1646,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Send password reset email to teacher
+  app.post('/api/admin/teachers/:id/password-reset', requireAdmin, async (req: any, res) => {
+    try {
+      const teacherId = req.params.id;
+      
+      // Get teacher information
+      const teacher = await storage.getUser(teacherId);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      // Initiate password reset
+      const result = await initiatePasswordReset(teacher.email);
+      
+      if (result.success) {
+        res.json({ 
+          success: true, 
+          message: `Password reset email sent to ${teacher.email}` 
+        });
+      } else {
+        res.status(500).json({ 
+          success: false, 
+          message: result.message || 'Failed to send password reset email' 
+        });
+      }
+    } catch (error) {
+      console.error('Error sending password reset:', error);
+      res.status(500).json({ message: 'Failed to send password reset email' });
+    }
+  });
+
   // Admin: Grant additional requests to teacher
   app.post('/api/admin/teachers/:id/grant-requests', requireAdmin, async (req: any, res) => {
     try {
