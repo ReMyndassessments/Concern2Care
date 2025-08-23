@@ -282,13 +282,11 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
               Please select a school to configure its email settings. School email configurations provide default email settings for all teachers in that school.
-              {schools && schools.length === 0 && (
-                <div className="mt-3">
-                  <AutoCreateSchools onSchoolsCreated={() => {
-                    queryClient.invalidateQueries({ queryKey: ["/api/admin/schools"] });
-                  }} />
-                </div>
-              )}
+              <div className="mt-3">
+                <AutoCreateSchools onSchoolsCreated={() => {
+                  queryClient.invalidateQueries({ queryKey: ["/api/admin/schools"] });
+                }} />
+              </div>
             </AlertDescription>
           </Alert>
         )}
