@@ -3,7 +3,7 @@ import { users } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
+// nodemailer import removed - using existing email service
 
 // Simple in-memory token store (use Redis in production)
 const passwordResetTokens = new Map<string, { email: string; expires: Date }>();
@@ -63,7 +63,7 @@ export async function initiatePasswordReset(email: string): Promise<PasswordRese
       
       return {
         success: false,
-        message: 'Failed to send password reset email. Please try again later or contact support.'
+        message: 'Email service not configured. Please configure email settings in the Admin panel under School Settings.'
       };
     }
 
@@ -165,14 +165,19 @@ export async function confirmPasswordReset(token: string, newPassword: string): 
 }
 
 async function sendPasswordResetEmail(email: string, resetLink: string, userName: string) {
-  const transporter = createEmailTransporter();
+  // Use the existing email service
+  const emailService = await import('./email');
+  const { getEmailTransporter } = emailService;
   
-  if (!transporter) {
-    throw new Error('Email service not configured');
+  const emailSetup = await getEmailTransporter();
+  if (!emailSetup) {
+    throw new Error('Email service not configured. Please configure email settings in the Admin panel.');
   }
+  
+  const { transporter, fromAddress, fromName } = emailSetup;
 
   const mailOptions = {
-    from: process.env.FROM_EMAIL || 'noreply@concern2care.app',
+    from: `${fromName} <${fromAddress}>`,
     to: email,
     subject: 'Password Reset Request - Concern2Care',
     html: `
@@ -222,14 +227,19 @@ async function sendPasswordResetEmail(email: string, resetLink: string, userName
 }
 
 async function sendPasswordResetConfirmationEmail(email: string, userName: string) {
-  const transporter = createEmailTransporter();
+  // Use the existing email service
+  const emailService = await import('./email');
+  const { getEmailTransporter } = emailService;
   
-  if (!transporter) {
+  const emailSetup = await getEmailTransporter();
+  if (!emailSetup) {
     return; // Skip if email not configured
   }
+  
+  const { transporter, fromAddress, fromName } = emailSetup;
 
   const mailOptions = {
-    from: process.env.FROM_EMAIL || 'noreply@concern2care.app',
+    from: `${fromName} <${fromAddress}>`,
     to: email,
     subject: 'Password Reset Successful - Concern2Care',
     html: `
@@ -272,36 +282,7 @@ async function sendPasswordResetConfirmationEmail(email: string, userName: strin
   await transporter.sendMail(mailOptions);
 }
 
-function createEmailTransporter() {
-  // Check if email service is configured
-  if (!process.env.SMTP_HOST && !process.env.EMAIL_SERVICE) {
-    console.log('Email service not configured for password reset');
-    return null;
-  }
-
-  // Configure transporter based on available settings
-  if (process.env.EMAIL_SERVICE === 'gmail') {
-    return nodemailer.createTransporter({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
-  } else if (process.env.SMTP_HOST) {
-    return nodemailer.createTransporter({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD
-      }
-    });
-  }
-
-  return null;
-}
+// Removed createEmailTransporter - now using existing email service
 
 // Clean up expired tokens periodically
 setInterval(() => {

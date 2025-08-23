@@ -19,6 +19,47 @@ export interface EmailOptions {
   reportLink?: string;
 }
 
+// Export function to get email transporter for password reset and other services
+export async function getEmailTransporter(userId?: string) {
+  let transporter;
+  let fromAddress = process.env.SMTP_FROM || process.env.SMTP_USER;
+  let fromName = 'Concern2Care';
+
+  // Try to get user-specific or school-specific email configuration
+  if (userId) {
+    const emailConfig = await emailConfigService.getEmailConfiguration(userId);
+    if (emailConfig) {
+      transporter = nodemailer.createTransport({
+        host: emailConfig.smtpHost,
+        port: emailConfig.smtpPort,
+        secure: emailConfig.smtpSecure,
+        auth: {
+          user: emailConfig.smtpUser,
+          pass: emailConfig.smtpPassword,
+        },
+      });
+      return { transporter, fromAddress: emailConfig.fromAddress, fromName: emailConfig.fromName };
+    }
+  }
+
+  // Fallback to environment variables
+  if (!process.env.SMTP_HOST) {
+    return null; // No email configuration available
+  }
+
+  transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_PORT === '465',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
+  return { transporter, fromAddress, fromName };
+}
+
 export async function sendReportEmail(options: EmailOptions & { userId?: string }): Promise<boolean> {
   try {
     let transporter;
