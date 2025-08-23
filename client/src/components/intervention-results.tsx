@@ -10,7 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info, BookmarkPlus, Bookmark } from "lucide-react";
 import { Concern, Intervention, FollowUpQuestion } from "@shared/schema";
 // Email sharing temporarily removed
@@ -447,19 +446,19 @@ export default function InterventionResults({
                         <FormattedRecommendations content={intervention.description} />
                       </div>
                       
-                      {intervention.steps && Array.isArray(intervention.steps) && (intervention.steps as string[]).length > 0 && (
+                      {intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0 && (
                         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6 border border-blue-100">
                           <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
                             <div className="w-5 h-5 bg-blue-500 rounded-full mr-3" />
                             Implementation Steps
                           </h4>
                           <ul className="space-y-3">
-                            {(intervention.steps as string[]).map((step, stepIndex) => (
+                            {intervention.steps.map((step: unknown, stepIndex: number) => (
                               <li key={stepIndex} className="flex items-start space-x-4">
                                 <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                                   {stepIndex + 1}
                                 </div>
-                                <span className="text-gray-800 leading-relaxed">{step}</span>
+                                <span className="text-gray-800 leading-relaxed">{String(step)}</span>
                               </li>
                             ))}
                           </ul>
