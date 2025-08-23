@@ -294,8 +294,7 @@ export class DatabaseStorage implements IStorage {
 
     return result.map(row => ({
       ...row.user,
-      // Return the related School object if it exists, otherwise keep the original string school field
-      school: row.schoolData || (row.user.school ? { name: row.user.school, id: '', district: null, address: null, contactEmail: null, maxTeachers: null, defaultRequestsPerTeacher: null, isActive: true, createdAt: new Date(), updatedAt: new Date() } : null)
+      school: row.schoolData
     }));
   }
 

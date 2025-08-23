@@ -547,7 +547,7 @@ export default function TeacherManagement() {
                       <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
                       <p className="text-xs text-muted-foreground mt-1">{teacher.email}</p>
                       <Badge variant="outline" className="text-xs mt-1">
-                        {teacher.school}
+                        {typeof teacher.school === 'object' ? teacher.school?.name : teacher.school || "Not specified"}
                       </Badge>
                     </div>
                     <Badge variant={teacher.isActive ? "default" : "secondary"} className="text-xs">
@@ -676,7 +676,7 @@ export default function TeacherManagement() {
                     <TableCell>
                       <div className="flex items-center space-x-1">
                         <School className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs lg:text-sm truncate">{teacher.school || "Not specified"}</span>
+                        <span className="text-xs lg:text-sm truncate">{typeof teacher.school === 'object' ? teacher.school?.name : teacher.school || "Not specified"}</span>
                       </div>
                     </TableCell>
                     <TableCell>
