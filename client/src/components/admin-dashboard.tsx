@@ -21,6 +21,7 @@ import {
   LogOut
 } from "lucide-react";
 import TeacherManagement from "@/components/teacher-management";
+import ApiKeyManagement from "@/components/api-key-management";
 
 interface DashboardStats {
   totalUsers: number;
@@ -247,9 +248,10 @@ export default function AdminDashboard() {
 
       {/* Tabs Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="teachers">Teachers</TabsTrigger>
+          <TabsTrigger value="api-keys">API Keys</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -257,6 +259,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="teachers" className="space-y-6">
           <TeacherManagement />
+        </TabsContent>
+
+        <TabsContent value="api-keys" className="space-y-6">
+          <ApiKeyManagement />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">

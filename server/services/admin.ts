@@ -1,5 +1,5 @@
 import { db } from "../db";
-import { users, schools, adminLogs, concerns, interventions } from "@shared/schema";
+import { users, schools, adminLogs, concerns, interventions, apiKeys, insertApiKeySchema } from "@shared/schema";
 import { eq, count, sql, and } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
 
@@ -471,6 +471,117 @@ export async function bulkDeleteTeachers(teacherIds: string[]) {
     };
   } catch (error) {
     console.error('Error bulk deleting teachers:', error);
+    throw error;
+  }
+}
+
+// API Key Management Functions
+export async function getApiKeys() {
+  try {
+    const keys = await db
+      .select({
+        id: apiKeys.id,
+        name: apiKeys.name,
+        provider: apiKeys.provider,
+        isActive: apiKeys.isActive,
+        description: apiKeys.description,
+        usageCount: apiKeys.usageCount,
+        maxUsage: apiKeys.maxUsage,
+        lastUsedAt: apiKeys.lastUsedAt,
+        createdAt: apiKeys.createdAt,
+        createdByUser: users.firstName
+      })
+      .from(apiKeys)
+      .leftJoin(users, eq(apiKeys.createdBy, users.id))
+      .orderBy(apiKeys.createdAt);
+
+    return keys.map(key => ({
+      ...key,
+      maskedKey: '••••••••••••••••••••••••••••••••',
+      usagePercentage: key.maxUsage ? Math.round((key.usageCount || 0) / key.maxUsage * 100) : 0
+    }));
+  } catch (error) {
+    console.error('Error fetching API keys:', error);
+    throw error;
+  }
+}
+
+export async function createApiKey(apiKeyData: any, createdBy: string) {
+  try {
+    const newApiKey = await db
+      .insert(apiKeys)
+      .values({
+        name: apiKeyData.name,
+        provider: apiKeyData.provider || 'deepseek',
+        apiKey: apiKeyData.apiKey, // In production, this should be encrypted
+        description: apiKeyData.description,
+        maxUsage: apiKeyData.maxUsage || 10000,
+        isActive: apiKeyData.isActive !== false,
+        createdBy
+      })
+      .returning();
+
+    return {
+      success: true,
+      message: 'API key created successfully',
+      apiKey: newApiKey[0]
+    };
+  } catch (error) {
+    console.error('Error creating API key:', error);
+    throw error;
+  }
+}
+
+export async function updateApiKey(keyId: string, updates: any) {
+  try {
+    const updateData: any = {};
+    
+    if (updates.name !== undefined) updateData.name = updates.name;
+    if (updates.description !== undefined) updateData.description = updates.description;
+    if (updates.isActive !== undefined) updateData.isActive = updates.isActive;
+    if (updates.maxUsage !== undefined) updateData.maxUsage = parseInt(updates.maxUsage);
+    if (updates.apiKey !== undefined) updateData.apiKey = updates.apiKey; // Should be encrypted
+    
+    updateData.updatedAt = new Date();
+
+    const result = await db
+      .update(apiKeys)
+      .set(updateData)
+      .where(eq(apiKeys.id, keyId))
+      .returning();
+
+    if (!result.length) {
+      throw new Error('API key not found');
+    }
+
+    return {
+      success: true,
+      message: 'API key updated successfully',
+      apiKey: result[0]
+    };
+  } catch (error) {
+    console.error('Error updating API key:', error);
+    throw error;
+  }
+}
+
+export async function deleteApiKey(keyId: string) {
+  try {
+    const result = await db
+      .delete(apiKeys)
+      .where(eq(apiKeys.id, keyId))
+      .returning();
+
+    if (!result.length) {
+      throw new Error('API key not found');
+    }
+
+    return {
+      success: true,
+      message: 'API key deleted successfully'
+    };
+  } catch (error) {
+    console.error('Error deleting API key:', error);
     throw error;
   }
 }

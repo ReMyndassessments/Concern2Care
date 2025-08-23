@@ -160,6 +160,22 @@ export const schoolFeatureOverrides = pgTable("school_feature_overrides", {
   enabledAt: timestamp("enabled_at").defaultNow(),
 }, (table) => [index("school_feature_idx").on(table.schoolId, table.flagName)]);
 
+// AI API Keys management for DeepSeek and other providers
+export const apiKeys = pgTable("api_keys", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name").notNull(),
+  provider: varchar("provider").notNull().default('deepseek'), // 'deepseek', 'openai', etc.
+  apiKey: text("api_key").notNull(), // Encrypted API key
+  isActive: boolean("is_active").default(true),
+  description: text("description"),
+  usageCount: integer("usage_count").default(0),
+  maxUsage: integer("max_usage").default(10000), // Monthly usage limit
+  createdBy: varchar("created_by").references(() => users.id).notNull(),
+  lastUsedAt: timestamp("last_used_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const schoolRelations = relations(schools, ({ many }) => ({
   users: many(users),
@@ -296,6 +312,21 @@ export const insertProgressNoteSchema = createInsertSchema(progressNotes).omit({
   updatedAt: true,
 });
 
+export const insertApiKeySchema = createInsertSchema(apiKeys).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  usageCount: true,
+  lastUsedAt: true,
+});
+
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  createdByUser: one(users, {
+    fields: [apiKeys.createdBy],
+    references: [users.id],
+  }),
+}));
+
 // Types
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
@@ -317,6 +348,8 @@ export type InsertReport = z.infer<typeof insertReportSchema>;
 export type Report = typeof reports.$inferSelect;
 export type InsertProgressNote = z.infer<typeof insertProgressNoteSchema>;
 export type ProgressNote = typeof progressNotes.$inferSelect;
+export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
+export type ApiKey = typeof apiKeys.$inferSelect;
 
 // Extended types with relations
 export type ConcernWithDetails = Concern & {

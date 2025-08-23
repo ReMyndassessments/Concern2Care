@@ -22,7 +22,11 @@ import {
   generateDemoData, 
   getTeachersWithDetails, 
   bulkUpdateTeachers, 
-  bulkDeleteTeachers 
+  bulkDeleteTeachers,
+  getApiKeys,
+  createApiKey,
+  updateApiKey,
+  deleteApiKey
 } from "./services/admin";
 // Removed unused analytics and deepseek-ai imports
 import { getReferrals, createReferral } from "./services/referrals";
@@ -1362,6 +1366,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Bulk delete error:', error);
       res.status(500).json({ message: 'Failed to delete teachers' });
+    }
+  });
+
+  // API Key Management Routes
+  app.get('/api/admin/api-keys', requireAdmin, async (req: any, res) => {
+    try {
+      const apiKeys = await getApiKeys();
+      res.json({ apiKeys });
+    } catch (error) {
+      console.error('API keys fetch error:', error);
+      res.status(500).json({ message: 'Failed to fetch API keys' });
+    }
+  });
+
+  app.post('/api/admin/api-keys', requireAdmin, async (req: any, res) => {
+    try {
+      const { name, apiKey, provider, description, maxUsage, isActive } = req.body;
+      
+      if (!name || !apiKey) {
+        return res.status(400).json({ message: 'Name and API key are required' });
+      }
+
+      const adminId = req.user.claims.sub;
+      const result = await createApiKey({
+        name,
+        apiKey,
+        provider: provider || 'deepseek',
+        description,
+        maxUsage: maxUsage ? parseInt(maxUsage) : 10000,
+        isActive: isActive !== false,
+      }, adminId);
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Create API key error:', error);
+      res.status(500).json({ message: 'Failed to create API key' });
+    }
+  });
+
+  app.put('/api/admin/api-keys/:id', requireAdmin, async (req: any, res) => {
+    try {
+      const keyId = req.params.id;
+      const updates = req.body;
+      
+      const result = await updateApiKey(keyId, updates);
+      res.json(result);
+    } catch (error) {
+      console.error('Update API key error:', error);
+      res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to update API key' });
+    }
+  });
+
+  app.delete('/api/admin/api-keys/:id', requireAdmin, async (req: any, res) => {
+    try {
+      const keyId = req.params.id;
+      
+      const result = await deleteApiKey(keyId);
+      res.json(result);
+    } catch (error) {
+      console.error('Delete API key error:', error);
+      res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to delete API key' });
     }
   });
 
