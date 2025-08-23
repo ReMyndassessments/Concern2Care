@@ -37,6 +37,8 @@ export function ObjectUploader({
 }: ObjectUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
+  // Generate unique ID for this uploader instance to avoid conflicts
+  const uploaderId = useState(() => `uploader-${Math.random().toString(36).substr(2, 9)}`)[0];
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -137,13 +139,13 @@ export function ObjectUploader({
     <div>
       <input
         type="file"
-        id="file-upload"
+        id={uploaderId}
         className="hidden"
         accept={acceptedFileTypes.join(',')}
         onChange={handleFileSelect}
         disabled={uploading || disabled}
       />
-      <label htmlFor="file-upload">
+      <label htmlFor={uploaderId}>
         <Button
           type="button"
           variant="outline"
