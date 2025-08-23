@@ -94,7 +94,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const createConcernMutation = useMutation({
     mutationFn: async (data: EnhancedConcernFormData) => {
       const response = await apiRequest("POST", "/api/concerns", data);
-      return await response.json();
+      return response;
     },
     onSuccess: (data: { concern: Concern; interventions: Intervention[]; recommendations?: string; disclaimer?: string }) => {
       toast({
