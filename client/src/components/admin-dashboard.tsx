@@ -20,7 +20,7 @@ import {
   BarChart3,
   LogOut
 } from "lucide-react";
-// TeacherManagement and AnalyticsDashboard components temporarily removed
+import TeacherManagement from "@/components/teacher-management";
 
 interface DashboardStats {
   totalUsers: number;
@@ -256,7 +256,7 @@ export default function AdminDashboard() {
         </TabsList>
 
         <TabsContent value="teachers" className="space-y-6">
-          {/* <TeacherManagement /> - Temporarily disabled */}
+          <TeacherManagement />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
