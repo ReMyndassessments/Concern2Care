@@ -399,7 +399,7 @@ export default function EmailSettings() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="smtp-host">SMTP Server *</Label>
+                    <Label htmlFor="smtp-host">SMTP Server Hostname *</Label>
                     <Input
                       id="smtp-host"
                       value={formData.smtpHost}
@@ -408,6 +408,9 @@ export default function EmailSettings() {
                       required
                       data-testid="input-smtp-host"
                     />
+                    <p className="text-xs text-gray-600">
+                      Server hostname (e.g., smtp.gmail.com), not your email address
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="smtp-port">Port *</Label>
@@ -420,19 +423,27 @@ export default function EmailSettings() {
                       required
                       data-testid="input-smtp-port"
                     />
+                    <p className="text-xs text-gray-600">
+                      587 (TLS) or 465 (SSL)
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    id="smtp-secure"
-                    type="checkbox"
-                    checked={formData.smtpSecure}
-                    onChange={(e) => setFormData({...formData, smtpSecure: e.target.checked})}
-                    data-testid="switch-smtp-secure"
-                    className="rounded border-gray-300"
-                  />
-                  <Label htmlFor="smtp-secure">Use SSL (port 465)</Label>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      id="smtp-secure"
+                      type="checkbox"
+                      checked={formData.smtpSecure}
+                      onChange={(e) => setFormData({...formData, smtpSecure: e.target.checked})}
+                      data-testid="switch-smtp-secure"
+                      className="rounded border-gray-300"
+                    />
+                    <Label htmlFor="smtp-secure">Use SSL (port 465)</Label>
+                  </div>
+                  <p className="text-xs text-gray-600">
+                    Check this if using port 465, leave unchecked for port 587 (TLS)
+                  </p>
                 </div>
 
                 <div className="space-y-2">
