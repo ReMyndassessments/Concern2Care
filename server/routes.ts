@@ -7,7 +7,7 @@ import { sendReportEmail, generateSecureReportLink } from "./services/email";
 import { insertConcernSchema, insertFollowUpQuestionSchema, users } from "@shared/schema";
 import { db } from "./db";
 import { concerns } from "@shared/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import path from "path";
 import fs from "fs";
 import session from "express-session";
@@ -755,9 +755,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const adminId = req.user.claims.sub;
       
-      // Get all users with school information
-      const allUsers = await storage.getAllUsers();
-      console.log(`🔍 Found ${allUsers.length} users for school auto-creation`);
+      // Get school names directly from users table to avoid join complications
+      const usersWithSchools = await db.select({ 
+        id: users.id, 
+        school: users.school 
+      }).from(users).where(sql`${users.school} IS NOT NULL AND ${users.school} != ''`);
+      
+      console.log(`🔍 Found ${usersWithSchools.length} users with school information`);
       
       // Get existing schools to avoid duplicates
       const existingSchools = await storage.getSchools();
@@ -766,27 +770,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Extract unique school names from users
       const userSchools = new Set<string>();
-      allUsers.forEach((user: any) => {
-        console.log(`🔍 Checking user ${user.id}: school field =`, user.school, `(type: ${typeof user.school})`);
+      usersWithSchools.forEach((user: any) => {
+        console.log(`🔍 Checking user ${user.id}: school = "${user.school}"`);
         
-        // Handle both legacy string school field and new School object
-        let schoolName: string | null = null;
-        
-        if (typeof user.school === 'string' && user.school.trim()) {
-          // Legacy string format: school field is directly the school name
-          schoolName = user.school.trim();
-          console.log(`🔍 Extracted school name from string: "${schoolName}"`);
-        } else if (user.school && typeof user.school === 'object' && user.school.name) {
-          // New object format: school is a School object with name property
-          schoolName = user.school.name;
-          console.log(`🔍 Extracted school name from object: "${schoolName}"`);
-        }
-        
-        if (schoolName && !existingSchoolNames.has(schoolName.toLowerCase())) {
-          userSchools.add(schoolName);
-          console.log(`🔍 Added school to creation list: "${schoolName}"`);
-        } else if (schoolName) {
-          console.log(`🔍 School "${schoolName}" already exists, skipping`);
+        if (user.school && user.school.trim()) {
+          const schoolName = user.school.trim();
+          if (!existingSchoolNames.has(schoolName.toLowerCase())) {
+            userSchools.add(schoolName);
+            console.log(`🔍 Added school to creation list: "${schoolName}"`);
+          } else {
+            console.log(`🔍 School "${schoolName}" already exists, skipping`);
+          }
         }
       });
       
