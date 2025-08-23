@@ -749,6 +749,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message,
         attachmentPath: report.pdfPath || undefined,
         reportLink,
+        userId: userId  // Pass userId to use personal email configuration
       });
 
       if (emailSuccess) {
