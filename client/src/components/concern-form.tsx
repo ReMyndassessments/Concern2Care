@@ -619,41 +619,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         </FormItem>
                       )}
                     />
-                    
-                    <FormField
-                      control={form.control}
-                      name="lessonPlanFile"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <BookOpen className="h-4 w-4" />
-                            Lesson Plan to Adapt
-                          </FormLabel>
-                          <div className="space-y-2">
-                            <ObjectUploader
-                              acceptedFileTypes={['.pdf', '.doc', '.docx', '.txt']}
-                              onFileUploaded={(fileUrl, fileName) => {
-                                field.onChange(fileUrl);
-                                toast({
-                                  title: "Lesson plan uploaded",
-                                  description: `${fileName} will be analyzed for differentiation opportunities`,
-                                });
-                              }}
-                              onFileRemoved={() => field.onChange("")}
-                              currentFile={field.value}
-                              disabled={isAtLimit || lessonPlanUploading}
-                              data-testid="upload-lesson-plan"
-                            >
-                              Upload Lesson Plan
-                            </ObjectUploader>
-                            <p className="text-xs text-amber-600">
-                              Upload a lesson plan that needs differentiation for this student
-                            </p>
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
                 </div>
               )}
