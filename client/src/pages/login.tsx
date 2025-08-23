@@ -32,28 +32,16 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Invalidate auth queries to refetch user data
+        toast({
+          title: "Welcome back!",
+          description: "You've been successfully signed in.",
+        });
+        
+        // Invalidate auth queries to refetch user data, then navigate
         await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
         
-        // Wait a moment for the auth state to update, then verify authentication
-        setTimeout(async () => {
-          try {
-            const authCheck = await fetch('/api/auth/user');
-            if (authCheck.ok) {
-              toast({
-                title: "Welcome back!",
-                description: "You've been successfully signed in.",
-              });
-              setLocation('/');
-            } else {
-              // If auth check fails, force a page reload to reset state
-              window.location.href = '/';
-            }
-          } catch {
-            // Fallback to page reload if there's an error
-            window.location.href = '/';
-          }
-        }, 100);
+        // Navigate directly - the useAuth hook will handle the state update
+        setLocation('/');
       } else {
         toast({
           title: "Sign In Failed",
