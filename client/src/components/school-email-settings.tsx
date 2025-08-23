@@ -60,7 +60,7 @@ function AutoCreateSchools({ onSchoolsCreated }: { onSchoolsCreated: () => void 
     onSuccess: (result: any) => {
       toast({
         title: "Schools Created",
-        description: `Created ${result.created} schools from teacher data.`,
+        description: `Found ${result.created} new school${result.created === 1 ? '' : 's'} and created them from teacher data.`,
       });
       onSchoolsCreated();
     },
