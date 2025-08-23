@@ -20,7 +20,7 @@ import nodemailer from "nodemailer";
 import { 
   processBulkCSVUpload, 
   generateDemoData, 
-  getTeachersWithDetails, 
+ 
   bulkUpdateTeachers, 
   bulkDeleteTeachers,
   getApiKeys,
@@ -765,8 +765,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Extract unique school names from users
       const userSchools = new Set<string>();
       allUsers.forEach((user: any) => {
-        if (user.school && !existingSchoolNames.has(user.school.toLowerCase())) {
-          userSchools.add(user.school);
+        // Check different possible school field names
+        // user.school is a School object with name property (from UserWithSchool type)
+        // Also check the legacy school field (string) for backward compatibility
+        const schoolName = (user.school && user.school.name) || (typeof user.school === 'string' ? user.school : null);
+        if (schoolName && !existingSchoolNames.has(schoolName.toLowerCase())) {
+          userSchools.add(schoolName);
         }
       });
       
@@ -1195,8 +1199,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Enhanced Teacher Management
   app.get('/api/admin/teachers', requireAdmin, async (req: any, res) => {
     try {
-      const teachers = await getTeachersWithDetails();
-      res.json({ teachers });
+      const allUsers = await storage.getAllUsers();
+      res.json({ teachers: allUsers });
     } catch (error) {
       console.error('Teachers fetch error:', error);
       res.status(500).json({ message: 'Failed to fetch teachers' });
