@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info, BookmarkPlus, Bookmark } from "lucide-react";
+import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info, BookmarkPlus, Bookmark, Save } from "lucide-react";
 import { Concern, Intervention, FollowUpQuestion } from "@shared/schema";
 // Email sharing temporarily removed
 
@@ -632,6 +632,29 @@ export default function InterventionResults({
             >
               <Share className="h-5 w-5 mr-3" />
               Share with Staff
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => {
+                // Save the first intervention (the main AI response)
+                if (interventions && interventions.length > 0) {
+                  saveInterventionMutation.mutate(interventions[0].id);
+                }
+              }}
+              disabled={saveInterventionMutation.isPending}
+              className="flex-1 h-12 border-2 border-green-300 hover:border-green-400 bg-white hover:bg-green-50 shadow-sm hover:shadow-md transition-all duration-200 text-base font-semibold"
+            >
+              {saveInterventionMutation.isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600 mr-3"></div>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-5 w-5 mr-3" />
+                  Save Intervention
+                </>
+              )}
             </Button>
           </div>
         </CardContent>
