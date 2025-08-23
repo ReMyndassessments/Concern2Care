@@ -19,7 +19,8 @@ import {
   Trash2,
   AlertTriangle,
   Building2,
-  Users
+  Users,
+  Plus
 } from "lucide-react";
 
 interface SchoolEmailConfig {
@@ -44,6 +45,44 @@ interface School {
   name: string;
   district?: string;
   contactEmail?: string;
+}
+
+// Component for auto-creating schools from teacher data
+function AutoCreateSchools({ onSchoolsCreated }: { onSchoolsCreated: () => void }) {
+  const { toast } = useToast();
+  
+  const autoCreateMutation = useMutation({
+    mutationFn: async () => {
+      return await apiRequest("/api/admin/schools/auto-create", "POST");
+    },
+    onSuccess: (result: any) => {
+      toast({
+        title: "Schools Created",
+        description: `Created ${result.created} schools from teacher data.`,
+      });
+      onSchoolsCreated();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Auto-Creation Failed",
+        description: error.message || "Failed to auto-create schools",
+        variant: "destructive",
+      });
+    },
+  });
+
+  return (
+    <Button
+      onClick={() => autoCreateMutation.mutate()}
+      disabled={autoCreateMutation.isPending}
+      size="sm"
+      className="w-full"
+      data-testid="button-auto-create-schools"
+    >
+      <Plus className="w-4 h-4 mr-2" />
+      {autoCreateMutation.isPending ? "Creating Schools..." : "Create Schools from Teacher Data"}
+    </Button>
+  );
 }
 
 interface SchoolEmailSettingsProps {
@@ -241,6 +280,13 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
               Please select a school to configure its email settings. School email configurations provide default email settings for all teachers in that school.
+              {schools && schools.length === 0 && (
+                <div className="mt-3">
+                  <AutoCreateSchools onSchoolsCreated={() => {
+                    queryClient.invalidateQueries({ queryKey: ["/api/admin/schools"] });
+                  }} />
+                </div>
+              )}
             </AlertDescription>
           </Alert>
         )}

@@ -749,6 +749,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch schools" });
     }
   });
+
+  // Auto-create schools from teacher data
+  app.post("/api/admin/schools/auto-create", requireAdmin, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      
+      // Get all users with school information
+      const allUsers = await storage.getAllUsers();
+      
+      // Get existing schools to avoid duplicates
+      const existingSchools = await storage.getSchools();
+      const existingSchoolNames = new Set(existingSchools.map(s => s.name.toLowerCase()));
+      
+      // Extract unique school names from users
+      const userSchools = new Set<string>();
+      allUsers.forEach((user: any) => {
+        if (user.school && !existingSchoolNames.has(user.school.toLowerCase())) {
+          userSchools.add(user.school);
+        }
+      });
+      
+      // Create school records for each unique school name
+      const createdSchools = [];
+      for (const schoolName of Array.from(userSchools)) {
+        try {
+          const school = await storage.createSchool({ 
+            name: schoolName,
+            district: null,
+            contactEmail: null
+          });
+          
+          // Log admin action
+          await storage.logAdminAction({
+            adminId,
+            action: 'auto_create_school',
+            targetSchoolId: school.id,
+            details: { schoolName: school.name }
+          });
+          
+          createdSchools.push(school);
+        } catch (error) {
+          console.error(`Failed to create school ${schoolName}:`, error);
+        }
+      }
+      
+      res.json({ 
+        success: true, 
+        created: createdSchools.length,
+        schools: createdSchools 
+      });
+    } catch (error) {
+      console.error("Error auto-creating schools:", error);
+      res.status(500).json({ message: "Failed to auto-create schools" });
+    }
+  });
   
   // Create new school
   app.post("/api/admin/schools", requireAuth, async (req: any, res) => {
