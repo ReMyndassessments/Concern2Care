@@ -631,7 +631,7 @@ export default function InterventionResults({
               className="flex-1 h-12 border-2 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition-all duration-200 text-base font-semibold"
             >
               <Share className="h-5 w-5 mr-3" />
-              Share with Staff
+              Share With Student Support
             </Button>
             <Button 
               variant="outline"
