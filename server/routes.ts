@@ -5,7 +5,7 @@ import { generateInterventions, answerFollowUpQuestion, generateRecommendations,
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { generateConcernReport, ensureReportsDirectory } from "./services/pdf";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
-import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports } from "@shared/schema";
+import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports, schools, featureFlags, schoolFeatureOverrides } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, sql } from "drizzle-orm";
 import path from "path";
@@ -1540,6 +1540,156 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Demo data generation error:', error);
       res.status(500).json({ message: 'Failed to generate demo data' });
+    }
+  });
+
+  // Feature Flag Management Routes
+  // Get all feature flags
+  app.get('/api/admin/feature-flags', requireAdmin, async (req: any, res) => {
+    try {
+      const flags = await db.select().from(featureFlags).orderBy(featureFlags.createdAt);
+      res.json({ flags });
+    } catch (error) {
+      console.error('Error fetching feature flags:', error);
+      res.status(500).json({ message: 'Failed to fetch feature flags' });
+    }
+  });
+
+  // Create a new feature flag
+  app.post('/api/admin/feature-flags', requireAdmin, async (req: any, res) => {
+    try {
+      const { flagName, description, isGloballyEnabled } = req.body;
+
+      if (!flagName) {
+        return res.status(400).json({ message: 'Flag name is required' });
+      }
+
+      // Check if flag already exists
+      const existingFlag = await db.select()
+        .from(featureFlags)
+        .where(eq(featureFlags.flagName, flagName))
+        .limit(1);
+
+      if (existingFlag.length > 0) {
+        return res.status(400).json({ message: 'Feature flag with this name already exists' });
+      }
+
+      const [newFlag] = await db.insert(featureFlags).values({
+        flagName,
+        description: description || null,
+        isGloballyEnabled: isGloballyEnabled || false,
+      }).returning();
+
+      res.json({ flag: newFlag });
+    } catch (error) {
+      console.error('Error creating feature flag:', error);
+      res.status(500).json({ message: 'Failed to create feature flag' });
+    }
+  });
+
+  // Update a feature flag
+  app.put('/api/admin/feature-flags/:id', requireAdmin, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { description, isGloballyEnabled } = req.body;
+
+      const [updatedFlag] = await db.update(featureFlags)
+        .set({
+          description: description || null,
+          isGloballyEnabled: isGloballyEnabled,
+          updatedAt: new Date(),
+        })
+        .where(eq(featureFlags.id, id))
+        .returning();
+
+      if (!updatedFlag) {
+        return res.status(404).json({ message: 'Feature flag not found' });
+      }
+
+      res.json({ flag: updatedFlag });
+    } catch (error) {
+      console.error('Error updating feature flag:', error);
+      res.status(500).json({ message: 'Failed to update feature flag' });
+    }
+  });
+
+  // Delete a feature flag
+  app.delete('/api/admin/feature-flags/:id', requireAdmin, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+
+      // First get the flag name to clean up overrides
+      const [flag] = await db.select()
+        .from(featureFlags)
+        .where(eq(featureFlags.id, id))
+        .limit(1);
+
+      if (!flag) {
+        return res.status(404).json({ message: 'Feature flag not found' });
+      }
+
+      // Delete associated school overrides
+      await db.delete(schoolFeatureOverrides)
+        .where(eq(schoolFeatureOverrides.flagName, flag.flagName));
+
+      // Delete the feature flag
+      await db.delete(featureFlags)
+        .where(eq(featureFlags.id, id));
+
+      res.json({ message: 'Feature flag deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting feature flag:', error);
+      res.status(500).json({ message: 'Failed to delete feature flag' });
+    }
+  });
+
+  // Toggle global status of a feature flag
+  app.post('/api/admin/feature-flags/:id/toggle', requireAdmin, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { enabled } = req.body;
+
+      const [updatedFlag] = await db.update(featureFlags)
+        .set({
+          isGloballyEnabled: enabled,
+          updatedAt: new Date(),
+        })
+        .where(eq(featureFlags.id, id))
+        .returning();
+
+      if (!updatedFlag) {
+        return res.status(404).json({ message: 'Feature flag not found' });
+      }
+
+      res.json({ flag: updatedFlag });
+    } catch (error) {
+      console.error('Error toggling feature flag:', error);
+      res.status(500).json({ message: 'Failed to toggle feature flag' });
+    }
+  });
+
+  // Get school overrides for a specific feature flag
+  app.get('/api/admin/feature-flags/:flagName/overrides', requireAdmin, async (req: any, res) => {
+    try {
+      const { flagName } = req.params;
+
+      const overrides = await db.select({
+        schoolId: schoolFeatureOverrides.schoolId,
+        flagName: schoolFeatureOverrides.flagName,
+        isEnabled: schoolFeatureOverrides.isEnabled,
+        enabledBy: schoolFeatureOverrides.enabledBy,
+        enabledAt: schoolFeatureOverrides.enabledAt,
+        schoolName: schools.name,
+      })
+        .from(schoolFeatureOverrides)
+        .leftJoin(schools, eq(schoolFeatureOverrides.schoolId, schools.id))
+        .where(eq(schoolFeatureOverrides.flagName, flagName))
+        .orderBy(schoolFeatureOverrides.enabledAt);
+
+      res.json({ overrides });
+    } catch (error) {
+      console.error('Error fetching feature flag overrides:', error);
+      res.status(500).json({ message: 'Failed to fetch feature flag overrides' });
     }
   });
 

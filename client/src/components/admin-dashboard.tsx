@@ -26,6 +26,7 @@ import ApiKeyManagement from "@/components/api-key-management";
 import SchoolExport from "@/components/school-export";
 import SchoolEmailSettings from "@/components/school-email-settings";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
+import FeatureFlagManagement from "@/components/feature-flag-management";
 
 interface DashboardStats {
   totalUsers: number;
@@ -264,12 +265,13 @@ export default function AdminDashboard() {
 
       {/* Tabs Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 gap-1">
+        <TabsList className="grid w-full grid-cols-3 md:grid-cols-9 gap-1">
           <TabsTrigger value="overview" className="text-xs md:text-sm">Overview</TabsTrigger>
           <TabsTrigger value="teachers" className="text-xs md:text-sm">Teachers</TabsTrigger>
           <TabsTrigger value="email" className="text-xs md:text-sm">Email</TabsTrigger>
           <TabsTrigger value="data-export" className="text-xs md:text-sm">Data Export</TabsTrigger>
           <TabsTrigger value="api-keys" className="text-xs md:text-sm">API Keys</TabsTrigger>
+          <TabsTrigger value="feature-flags" className="text-xs md:text-sm">Feature Flags</TabsTrigger>
           <TabsTrigger value="analytics" className="text-xs md:text-sm">Analytics</TabsTrigger>
           <TabsTrigger value="activity" className="text-xs md:text-sm">Activity</TabsTrigger>
           <TabsTrigger value="settings" className="text-xs md:text-sm">Settings</TabsTrigger>
@@ -289,6 +291,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="api-keys" className="space-y-6">
           <ApiKeyManagement />
+        </TabsContent>
+
+        <TabsContent value="feature-flags" className="space-y-6">
+          <FeatureFlagManagement />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
