@@ -24,6 +24,7 @@ import {
 import TeacherManagement from "@/components/teacher-management";
 import ApiKeyManagement from "@/components/api-key-management";
 import SchoolExport from "@/components/school-export";
+import SchoolEmailSettings from "@/components/school-email-settings";
 
 interface DashboardStats {
   totalUsers: number;
@@ -262,9 +263,10 @@ export default function AdminDashboard() {
 
       {/* Tabs Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 gap-1">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 gap-1">
           <TabsTrigger value="overview" className="text-xs md:text-sm">Overview</TabsTrigger>
           <TabsTrigger value="teachers" className="text-xs md:text-sm">Teachers</TabsTrigger>
+          <TabsTrigger value="email" className="text-xs md:text-sm">Email</TabsTrigger>
           <TabsTrigger value="data-export" className="text-xs md:text-sm">Data Export</TabsTrigger>
           <TabsTrigger value="api-keys" className="text-xs md:text-sm">API Keys</TabsTrigger>
           <TabsTrigger value="analytics" className="text-xs md:text-sm">Analytics</TabsTrigger>
@@ -274,6 +276,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="teachers" className="space-y-6">
           <TeacherManagement />
+        </TabsContent>
+
+        <TabsContent value="email" className="space-y-6">
+          <SchoolEmailSettings />
         </TabsContent>
 
         <TabsContent value="data-export" className="space-y-6">

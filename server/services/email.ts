@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { emailConfigService } from './emailConfig';
 
 if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
   console.warn("Email service not configured. Email functionality will be limited.");
@@ -18,24 +19,49 @@ export interface EmailOptions {
   reportLink?: string;
 }
 
-export async function sendReportEmail(options: EmailOptions): Promise<boolean> {
+export async function sendReportEmail(options: EmailOptions & { userId?: string }): Promise<boolean> {
   try {
-    if (!process.env.SMTP_HOST) {
-      console.log("Email would be sent to:", options.recipients.map(r => r.email).join(', '));
-      console.log("Subject:", options.subject);
-      console.log("Message:", options.message);
-      return true; // Return success for development
+    let transporter;
+    let fromAddress = process.env.SMTP_FROM || process.env.SMTP_USER;
+    let fromName = 'Concern2Care';
+
+    // Try to get user-specific or school-specific email configuration
+    if (options.userId) {
+      const emailConfig = await emailConfigService.getEmailConfiguration(options.userId);
+      if (emailConfig) {
+        transporter = nodemailer.createTransport({
+          host: emailConfig.smtpHost,
+          port: emailConfig.smtpPort,
+          secure: emailConfig.smtpSecure,
+          auth: {
+            user: emailConfig.smtpUser,
+            pass: emailConfig.smtpPassword,
+          },
+        });
+        fromAddress = emailConfig.fromAddress;
+        fromName = emailConfig.fromName;
+      }
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_PORT === '465',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    // Fallback to environment variables or dev mode
+    if (!transporter) {
+      if (!process.env.SMTP_HOST) {
+        console.log("Email would be sent to:", options.recipients.map(r => r.email).join(', '));
+        console.log("Subject:", options.subject);
+        console.log("Message:", options.message);
+        return true; // Return success for development
+      }
+
+      transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: process.env.SMTP_PORT === '465',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+    }
 
     const recipientEmails = options.recipients.map(r => r.email).join(', ');
 
@@ -78,7 +104,7 @@ export async function sendReportEmail(options: EmailOptions): Promise<boolean> {
     `;
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      from: `${fromName} <${fromAddress}>`,
       to: recipientEmails,
       subject: options.subject,
       html: htmlContent,

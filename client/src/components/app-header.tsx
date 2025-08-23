@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Sparkles, LogOut, BarChart3, Home, History, Menu, X, Shield } from "lucide-react";
+import { Sparkles, LogOut, BarChart3, Home, History, Menu, X, Shield, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { User } from "@shared/schema";
 import { Link } from "wouter";
@@ -74,6 +74,12 @@ export default function AppHeader() {
                   <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
                     <History className="h-4 w-4 mr-2" />
                     My Requests
+                  </Button>
+                </Link>
+                <Link href="/settings">
+                  <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
                   </Button>
                 </Link>
               </>

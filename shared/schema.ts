@@ -176,10 +176,48 @@ export const apiKeys = pgTable("api_keys", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// User-level email configurations
+export const userEmailConfigs = pgTable("user_email_configs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull().unique(),
+  smtpHost: varchar("smtp_host").notNull(),
+  smtpPort: integer("smtp_port").notNull().default(587),
+  smtpSecure: boolean("smtp_secure").default(false), // true for 465, false for other ports
+  smtpUser: varchar("smtp_user").notNull(),
+  smtpPassword: text("smtp_password").notNull(), // Encrypted
+  fromAddress: varchar("from_address"), // Optional custom from address
+  fromName: varchar("from_name"), // Optional custom from name
+  isActive: boolean("is_active").default(true),
+  lastTestedAt: timestamp("last_tested_at"),
+  testStatus: varchar("test_status"), // 'success' | 'failed' | 'pending'
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// School-level email configurations 
+export const schoolEmailConfigs = pgTable("school_email_configs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  schoolId: varchar("school_id").references(() => schools.id).notNull().unique(),
+  smtpHost: varchar("smtp_host").notNull(),
+  smtpPort: integer("smtp_port").notNull().default(587),
+  smtpSecure: boolean("smtp_secure").default(false),
+  smtpUser: varchar("smtp_user").notNull(),
+  smtpPassword: text("smtp_password").notNull(), // Encrypted
+  fromAddress: varchar("from_address"), // School's preferred from address
+  fromName: varchar("from_name"), // School name for emails
+  isActive: boolean("is_active").default(true),
+  configuredBy: varchar("configured_by").references(() => users.id).notNull(),
+  lastTestedAt: timestamp("last_tested_at"),
+  testStatus: varchar("test_status"), // 'success' | 'failed' | 'pending'
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
-export const schoolRelations = relations(schools, ({ many }) => ({
+export const schoolRelations = relations(schools, ({ one, many }) => ({
   users: many(users),
   featureOverrides: many(schoolFeatureOverrides),
+  emailConfig: one(schoolEmailConfigs),
 }));
 
 export const userRelations = relations(users, ({ one, many }) => ({
@@ -190,6 +228,7 @@ export const userRelations = relations(users, ({ one, many }) => ({
   concerns: many(concerns),
   adminLogs: many(adminLogs, { relationName: "admin_actions" }),
   targetLogs: many(adminLogs, { relationName: "admin_targets" }),
+  emailConfig: one(userEmailConfigs),
 }));
 
 export const concernRelations = relations(concerns, ({ one, many }) => ({
@@ -320,9 +359,43 @@ export const insertApiKeySchema = createInsertSchema(apiKeys).omit({
   lastUsedAt: true,
 });
 
+export const insertUserEmailConfigSchema = createInsertSchema(userEmailConfigs).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastTestedAt: true,
+  testStatus: true,
+});
+
+export const insertSchoolEmailConfigSchema = createInsertSchema(schoolEmailConfigs).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastTestedAt: true,
+  testStatus: true,
+});
+
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   createdByUser: one(users, {
     fields: [apiKeys.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const userEmailConfigRelations = relations(userEmailConfigs, ({ one }) => ({
+  user: one(users, {
+    fields: [userEmailConfigs.userId],
+    references: [users.id],
+  }),
+}));
+
+export const schoolEmailConfigRelations = relations(schoolEmailConfigs, ({ one }) => ({
+  school: one(schools, {
+    fields: [schoolEmailConfigs.schoolId],
+    references: [schools.id],
+  }),
+  configuredByUser: one(users, {
+    fields: [schoolEmailConfigs.configuredBy],
     references: [users.id],
   }),
 }));
@@ -350,6 +423,10 @@ export type InsertProgressNote = z.infer<typeof insertProgressNoteSchema>;
 export type ProgressNote = typeof progressNotes.$inferSelect;
 export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
 export type ApiKey = typeof apiKeys.$inferSelect;
+export type InsertUserEmailConfig = z.infer<typeof insertUserEmailConfigSchema>;
+export type UserEmailConfig = typeof userEmailConfigs.$inferSelect;
+export type InsertSchoolEmailConfig = z.infer<typeof insertSchoolEmailConfigSchema>;
+export type SchoolEmailConfig = typeof schoolEmailConfigs.$inferSelect;
 
 // Extended types with relations
 export type ConcernWithDetails = Concern & {
@@ -368,6 +445,14 @@ export type UserWithSchool = Omit<User, 'school'> & {
 
 export type SchoolWithUsers = School & {
   users: User[];
+};
+
+export type UserWithEmailConfig = User & {
+  emailConfig: UserEmailConfig | null;
+};
+
+export type SchoolWithEmailConfig = School & {
+  emailConfig: SchoolEmailConfig | null;
 };
 
 export type AdminLogWithDetails = AdminLog & {
