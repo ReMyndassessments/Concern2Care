@@ -34,6 +34,21 @@ import { getSystemHealth, getDetailedSystemHealth, trackRequest } from "./servic
 import { initiatePasswordReset, confirmPasswordReset } from "./services/auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint for deployment - must be first to avoid conflicts
+  app.get('/', async (req, res) => {
+    // Simple health check for deployment systems
+    try {
+      const health = await getSystemHealth();
+      res.status(200).json(health);
+    } catch (error) {
+      res.status(503).json({ 
+        status: 'unhealthy', 
+        timestamp: new Date().toISOString(),
+        error: 'Health check failed'
+      });
+    }
+  });
+
   // Enable sessions for professional authentication
   app.use(session({
     secret: 'concern2care-session-secret',
