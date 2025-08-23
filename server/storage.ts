@@ -357,26 +357,52 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getAdminLogs(limit: number = 50): Promise<AdminLogWithDetails[]> {
-    const result = await db
-      .select({
-        log: adminLogs,
-        admin: users,
-        targetUser: users,
-        targetSchool: schools
-      })
+    // Simplified query to avoid alias conflicts - get basic admin logs first
+    const logs = await db
+      .select()
       .from(adminLogs)
-      .leftJoin(users, eq(adminLogs.adminId, users.id))
-      .leftJoin(users, eq(adminLogs.targetUserId, users.id))
-      .leftJoin(schools, eq(adminLogs.targetSchoolId, schools.id))
       .orderBy(desc(adminLogs.createdAt))
       .limit(limit);
 
-    return result.map(row => ({
-      ...row.log,
-      admin: row.admin!,
-      targetUser: row.targetUser,
-      targetSchool: row.targetSchool
-    }));
+    // Fetch admin and target user details separately to avoid alias conflicts
+    const result: AdminLogWithDetails[] = [];
+    
+    for (const log of logs) {
+      // Get admin user
+      const [admin] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, log.adminId));
+
+      // Get target user if exists
+      let targetUser = null;
+      if (log.targetUserId) {
+        const [target] = await db
+          .select()
+          .from(users)
+          .where(eq(users.id, log.targetUserId));
+        targetUser = target || null;
+      }
+
+      // Get target school if exists
+      let targetSchool = null;
+      if (log.targetSchoolId) {
+        const [school] = await db
+          .select()
+          .from(schools)
+          .where(eq(schools.id, log.targetSchoolId));
+        targetSchool = school || null;
+      }
+
+      result.push({
+        ...log,
+        admin: admin!,
+        targetUser,
+        targetSchool
+      });
+    }
+
+    return result;
   }
 
   async getDashboardStats(): Promise<{
