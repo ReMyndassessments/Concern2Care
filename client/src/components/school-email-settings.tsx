@@ -53,7 +53,9 @@ function AutoCreateSchools({ onSchoolsCreated }: { onSchoolsCreated: () => void 
   
   const autoCreateMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest("/api/admin/schools/auto-create", "POST");
+      return await apiRequest("/api/admin/schools/auto-create", {
+        method: "POST"
+      });
     },
     onSuccess: (result: any) => {
       toast({
