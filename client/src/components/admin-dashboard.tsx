@@ -265,17 +265,65 @@ export default function AdminDashboard() {
 
       {/* Tabs Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3 md:grid-cols-9 gap-1">
-          <TabsTrigger value="overview" className="text-xs md:text-sm">Overview</TabsTrigger>
-          <TabsTrigger value="teachers" className="text-xs md:text-sm">Teachers</TabsTrigger>
-          <TabsTrigger value="email" className="text-xs md:text-sm">Email</TabsTrigger>
-          <TabsTrigger value="data-export" className="text-xs md:text-sm">Data Export</TabsTrigger>
-          <TabsTrigger value="api-keys" className="text-xs md:text-sm">API Keys</TabsTrigger>
-          <TabsTrigger value="feature-flags" className="text-xs md:text-sm">Feature Flags</TabsTrigger>
-          <TabsTrigger value="analytics" className="text-xs md:text-sm">Analytics</TabsTrigger>
-          <TabsTrigger value="activity" className="text-xs md:text-sm">Activity</TabsTrigger>
-          <TabsTrigger value="settings" className="text-xs md:text-sm">Settings</TabsTrigger>
-        </TabsList>
+        {/* Mobile: Scrollable horizontal tabs */}
+        <div className="w-full overflow-x-auto">
+          <TabsList className="inline-flex min-w-full w-max h-auto p-1 bg-muted rounded-md">
+            <TabsTrigger 
+              value="overview" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Overview
+            </TabsTrigger>
+            <TabsTrigger 
+              value="teachers" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Teachers
+            </TabsTrigger>
+            <TabsTrigger 
+              value="email" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Email
+            </TabsTrigger>
+            <TabsTrigger 
+              value="data-export" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Data Export
+            </TabsTrigger>
+            <TabsTrigger 
+              value="api-keys" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              API Keys
+            </TabsTrigger>
+            <TabsTrigger 
+              value="feature-flags" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Feature Flags
+            </TabsTrigger>
+            <TabsTrigger 
+              value="analytics" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger 
+              value="activity" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Activity
+            </TabsTrigger>
+            <TabsTrigger 
+              value="settings" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Settings
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="teachers" className="space-y-6">
           <TeacherManagement />

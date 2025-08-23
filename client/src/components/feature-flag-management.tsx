@@ -358,8 +358,96 @@ export default function FeatureFlagManagement() {
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          {/* Feature Flags Table */}
-          <div>
+          {/* Mobile view */}
+          <div className="block lg:hidden space-y-4">
+            {flags.length === 0 ? (
+              <div className="text-center text-gray-500 py-8">
+                No feature flags created yet. Add your first feature flag to get started.
+              </div>
+            ) : (
+              flags.map((flag) => (
+                <Card key={flag.id} className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Flag className="h-4 w-4 text-gray-400" />
+                        <code className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
+                          {flag.flagName}
+                        </code>
+                      </div>
+                      <Badge
+                        variant={flag.isGloballyEnabled ? "default" : "secondary"}
+                        className={flag.isGloballyEnabled ? "bg-green-100 text-green-800" : ""}
+                      >
+                        {flag.isGloballyEnabled ? (
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                        ) : (
+                          <XCircle className="h-3 w-3 mr-1" />
+                        )}
+                        {flag.isGloballyEnabled ? "Enabled" : "Disabled"}
+                      </Badge>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">
+                        {flag.description || "No description"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t">
+                      <div className="flex items-center space-x-1 text-sm text-gray-500">
+                        <Calendar className="h-3 w-3" />
+                        <span>{format(new Date(flag.createdAt), "MMM dd, yyyy")}</span>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleToggleGlobal(flag)}
+                        disabled={toggleGlobalMutation.isPending}
+                        data-testid={`button-toggle-${flag.flagName}`}
+                        className="p-2"
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => 
+                          setSelectedFlag(selectedFlag === flag.flagName ? null : flag.flagName)
+                        }
+                        data-testid={`button-view-overrides-${flag.flagName}`}
+                        className="flex-1"
+                      >
+                        <Building2 className="h-3 w-3 mr-1" />
+                        Overrides
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEdit(flag)}
+                        data-testid={`button-edit-${flag.flagName}`}
+                        className="px-3"
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(flag)}
+                        data-testid={`button-delete-${flag.flagName}`}
+                        className="px-3"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
+
+          {/* Desktop table view */}
+          <div className="hidden lg:block">
             <Table>
               <TableHeader>
                 <TableRow>
