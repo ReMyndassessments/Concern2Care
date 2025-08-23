@@ -69,7 +69,7 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
   });
 
   // Get all schools for admin
-  const { data: schools } = useQuery<{ schools: School[] }>({
+  const { data: schools } = useQuery<School[]>({
     queryKey: ["/api/admin/schools"]
   });
 
@@ -207,7 +207,7 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
     testConfigMutation.mutate(testEmail);
   };
 
-  const selectedSchool = schools?.schools.find(s => s.id === currentSchoolId);
+  const selectedSchool = schools?.find(s => s.id === currentSchoolId);
 
   return (
     <Card>
@@ -227,7 +227,7 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
               <SelectValue placeholder="Choose a school to configure" />
             </SelectTrigger>
             <SelectContent>
-              {schools?.schools.map((school) => (
+              {schools?.map((school) => (
                 <SelectItem key={school.id} value={school.id} data-testid={`select-school-${school.id}`}>
                   {school.name}
                 </SelectItem>
