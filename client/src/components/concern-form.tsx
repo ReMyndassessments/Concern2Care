@@ -624,11 +624,13 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
               )}
             </div>
 
-            {/* Teacher and Incident Information */}
+            {/* Teacher and Lesson Information */}
             <div className="bg-blue-50 rounded-lg p-4 sm:p-6">
               <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                 <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-brand-blue flex-shrink-0" />
-                <h3 className="text-base sm:text-lg font-medium text-gray-900">Incident Details</h3>
+                <h3 className="text-base sm:text-lg font-medium text-gray-900">
+                  {form.watch('taskType') === 'differentiation' ? 'Lesson Details' : 'Incident Details'}
+                </h3>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
@@ -638,10 +640,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Your Position/Title <span className="text-red-500">*</span>
+                        {form.watch('taskType') === 'differentiation' ? 'Your Subject Area' : 'Your Position/Title'} <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., 3rd Grade Teacher" {...field} disabled={isAtLimit} />
+                        <Input placeholder={form.watch('taskType') === 'differentiation' ? "e.g., Mathematics, English Language Arts" : "e.g., 3rd Grade Teacher"} {...field} disabled={isAtLimit} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -654,10 +656,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Location <span className="text-red-500">*</span>
+                        {form.watch('taskType') === 'differentiation' ? 'Class Details' : 'Location'} <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Classroom, Playground" {...field} disabled={isAtLimit} />
+                        <Input placeholder={form.watch('taskType') === 'differentiation' ? "e.g., Grade 3, 25 students, mixed abilities" : "e.g., Classroom, Playground"} {...field} disabled={isAtLimit} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
