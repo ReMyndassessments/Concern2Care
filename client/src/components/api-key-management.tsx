@@ -384,9 +384,9 @@ export default function ApiKeyManagement() {
         {apiKeys.length === 0 ? (
           <div className="text-center py-8">
             <Key className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">No API Keys</h3>
+            <h3 className="text-lg font-medium mb-2">Loading API Keys</h3>
             <p className="text-muted-foreground mb-4">
-              Add your first API key to start using AI services.
+              Please wait while we load your API keys...
             </p>
           </div>
         ) : (
