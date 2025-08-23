@@ -112,29 +112,39 @@ export async function confirmPasswordReset(token: string, newPassword: string): 
       };
     }
 
-    // Find user
-    const user = await db.select().from(users).where(eq(users.email, tokenData.email)).limit(1);
+    // Find user or create if they don't exist
+    let user = await db.select().from(users).where(eq(users.email, tokenData.email)).limit(1);
     
-    if (!user.length) {
-      passwordResetTokens.delete(token);
-      return {
-        success: false,
-        message: 'User account not found.'
-      };
-    }
-
     // Hash new password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    // Update password in database
-    await db.update(users)
-      .set({ 
-        // Note: In the current schema, we don't have a password field
-        // This would need to be added to the schema for full password reset functionality
-        updatedAt: new Date()
-      })
-      .where(eq(users.id, user[0].id));
+    if (!user.length) {
+      // Create new user if they don't exist
+      const [newUser] = await db.insert(users)
+        .values({
+          email: tokenData.email,
+          password: hashedPassword,
+          firstName: 'New', // Default values - user can update later
+          lastName: 'User',
+          school: 'Unknown School',
+          isAdmin: false,
+          isActive: true,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
+        .returning();
+      
+      user = [newUser];
+    } else {
+      // Update password for existing user
+      await db.update(users)
+        .set({ 
+          password: hashedPassword,
+          updatedAt: new Date()
+        })
+        .where(eq(users.id, user[0].id));
+    }
 
     // Remove used token
     passwordResetTokens.delete(token);
@@ -287,9 +297,13 @@ async function sendPasswordResetConfirmationEmail(email: string, userName: strin
 // Clean up expired tokens periodically
 setInterval(() => {
   const now = new Date();
+  const tokensToDelete: string[] = [];
+  
   for (const [token, data] of passwordResetTokens.entries()) {
     if (now > data.expires) {
-      passwordResetTokens.delete(token);
+      tokensToDelete.push(token);
     }
   }
+  
+  tokensToDelete.forEach(token => passwordResetTokens.delete(token));
 }, 15 * 60 * 1000); // Clean up every 15 minutes

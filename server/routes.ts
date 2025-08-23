@@ -83,8 +83,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Email and password are required" });
       }
 
-      // For demo purposes - in production this would validate against school's user database
-      // Simulate teacher login validation
+      // First, check for real database users with hashed passwords
+      try {
+        const dbUser = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1);
+        
+        if (dbUser.length > 0 && dbUser[0].password) {
+          // User exists in database with a password, check against hashed password
+          const isValidPassword = await bcrypt.compare(password, dbUser[0].password);
+          
+          if (isValidPassword) {
+            // Valid database user login
+            const user = dbUser[0];
+            
+            // Update last login time
+            await db.update(users)
+              .set({ lastLoginAt: new Date() })
+              .where(eq(users.id, user.id));
+
+            // Create session
+            req.session.user = {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              school: user.school,
+              isAdmin: user.isAdmin || false
+            };
+            req.session.isAuthenticated = true;
+
+            return res.json({ 
+              success: true, 
+              user: req.session.user,
+              message: "Login successful"
+            });
+          }
+        }
+      } catch (dbError) {
+        console.error("Database login check error:", dbError);
+        // Continue to demo authentication if database check fails
+      }
+
+      // Fall back to demo authentication for hardcoded accounts
       const demoTeachers = [
         { 
           id: "admin-001", 
