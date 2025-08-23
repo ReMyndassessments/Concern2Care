@@ -21,6 +21,16 @@ export interface GenerateRecommendationsRequest {
   severityLevel: string;
   actionsTaken: string[];
   otherActionTaken?: string;
+  
+  // Student differentiation fields
+  hasIep?: boolean;
+  hasDisability?: boolean;
+  disabilityType?: string;
+  isEalLearner?: boolean;
+  ealProficiency?: string;
+  isGifted?: boolean;
+  isStruggling?: boolean;
+  otherNeeds?: string;
 }
 
 export interface GenerateRecommendationsResponse {
@@ -57,6 +67,19 @@ export async function generateRecommendations(
     ? req.actionsTaken.join(', ') + (req.otherActionTaken ? `, ${req.otherActionTaken}` : '')
     : 'None documented';
 
+  // Build differentiation context for better AI recommendations
+  const differentiationInfo = [];
+  if (req.hasIep) differentiationInfo.push('Has IEP (Individualized Education Program)');
+  if (req.hasDisability && req.disabilityType) differentiationInfo.push(`Diagnosed with: ${req.disabilityType}`);
+  if (req.isEalLearner && req.ealProficiency) differentiationInfo.push(`EAL Learner (${req.ealProficiency} English proficiency)`);
+  if (req.isGifted) differentiationInfo.push('Identified as gifted/talented');
+  if (req.isStruggling) differentiationInfo.push('Currently struggling academically');
+  if (req.otherNeeds) differentiationInfo.push(`Additional needs: ${req.otherNeeds}`);
+  
+  const differentiationText = differentiationInfo.length > 0 
+    ? differentiationInfo.join('; ')
+    : 'No specific learning needs documented';
+
   const prompt = `You are an educational specialist AI assistant helping teachers with Tier 2 intervention recommendations for students who may need 504/IEP accommodations.
 
 Student Information:
@@ -68,9 +91,18 @@ Student Information:
 - Type of Concern: ${concernTypesText}
 - Severity Level: ${req.severityLevel}
 - Actions Already Taken: ${actionsTakenText}
+- Student Learning Profile: ${differentiationText}
 - Detailed Description: ${req.concernDescription}
 
-Based on the concern type(s) identified (${concernTypesText}) and severity level (${req.severityLevel}), please provide specific, actionable Tier 2 intervention recommendations that a teacher could implement in the classroom. Focus on evidence-based strategies that address the described concerns.
+Based on the concern type(s) identified (${concernTypesText}), severity level (${req.severityLevel}), and the student's learning profile (${differentiationText}), please provide specific, actionable Tier 2 intervention recommendations that a teacher could implement in the classroom. 
+
+IMPORTANT: If the student has specific learning needs (IEP, diagnosis, EAL status, gifted, struggling, etc.), ensure ALL recommendations are differentiated to address these needs. For example:
+- If student has ADHD: Include movement breaks, visual cues, chunked instructions
+- If student is an EAL learner: Include visual supports, peer partnerships, modified language
+- If student is gifted: Include extension activities, higher-order thinking, independent projects
+- If student has anxiety: Include predictable routines, choice options, calming strategies
+
+Focus on evidence-based strategies that specifically address both the concern AND the student's learning profile.
 
 Format your response using this EXACT markdown structure for proper display:
 

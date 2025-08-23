@@ -76,6 +76,17 @@ export const concerns = pgTable("concerns", {
   severityLevel: varchar("severity_level").notNull(),
   actionsTaken: jsonb("actions_taken").notNull().default('[]'),
   otherActionTaken: varchar("other_action_taken"),
+  
+  // Student differentiation needs (optional fields for better AI recommendations)
+  hasIep: boolean("has_iep").default(false),
+  hasDisability: boolean("has_disability").default(false),
+  disabilityType: varchar("disability_type"), // e.g., "ADHD", "Autism", "Learning Disability"
+  isEalLearner: boolean("is_eal_learner").default(false),
+  ealProficiency: varchar("eal_proficiency"), // e.g., "Beginner", "Intermediate", "Advanced"
+  isGifted: boolean("is_gifted").default(false),
+  isStruggling: boolean("is_struggling").default(false),
+  otherNeeds: varchar("other_needs"), // Free text for anything else
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Edit3, Wand2, GraduationCap, AlertTriangle, Users, CalendarX, User, Calendar, MapPin, AlertCircle } from "lucide-react";
+import { Edit3, Wand2, GraduationCap, AlertTriangle, Users, CalendarX, User, Calendar, MapPin, AlertCircle, ChevronDown, ChevronUp, Lightbulb } from "lucide-react";
 
 const enhancedConcernFormSchema = z.object({
   studentFirstName: z.string().min(1, "First name is required"),
@@ -34,6 +34,16 @@ const enhancedConcernFormSchema = z.object({
   severityLevel: z.string().min(1, "Severity level is required"),
   actionsTaken: z.array(z.string()).default([]),
   otherActionTaken: z.string().optional(),
+  
+  // Student differentiation needs (optional)
+  hasIep: z.boolean().default(false),
+  hasDisability: z.boolean().default(false),
+  disabilityType: z.string().optional(),
+  isEalLearner: z.boolean().default(false),
+  ealProficiency: z.string().optional(),
+  isGifted: z.boolean().default(false),
+  isStruggling: z.boolean().default(false),
+  otherNeeds: z.string().optional(),
 });
 
 type EnhancedConcernFormData = z.infer<typeof enhancedConcernFormSchema>;
@@ -67,12 +77,32 @@ const GRADE_OPTIONS = [
   'Pre-K', 'K', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th'
 ];
 
+const EAL_PROFICIENCY_LEVELS = [
+  'Beginner',
+  'Intermediate', 
+  'Advanced'
+];
+
+const COMMON_DISABILITY_TYPES = [
+  'ADHD',
+  'Autism Spectrum',
+  'Learning Disability',
+  'Emotional/Behavioral',
+  'Physical Disability',
+  'Intellectual Disability',
+  'Hearing Impairment',
+  'Visual Impairment',
+  'Speech/Language',
+  'Other'
+];
+
 export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const { user } = useAuth() as { user: UserType | undefined };
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [showOtherConcern, setShowOtherConcern] = useState(false);
   const [showOtherAction, setShowOtherAction] = useState(false);
+  const [showDifferentiation, setShowDifferentiation] = useState(false);
 
   const form = useForm<EnhancedConcernFormData>({
     resolver: zodResolver(enhancedConcernFormSchema),
@@ -88,6 +118,16 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       severityLevel: "",
       actionsTaken: [],
       otherActionTaken: "",
+      
+      // Student differentiation defaults
+      hasIep: false,
+      hasDisability: false,
+      disabilityType: "",
+      isEalLearner: false,
+      ealProficiency: "",
+      isGifted: false,
+      isStruggling: false,
+      otherNeeds: "",
     },
   });
 
@@ -106,6 +146,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       form.reset();
       setShowOtherConcern(false);
       setShowOtherAction(false);
+      setShowDifferentiation(false);
       
       // Invalidate concerns cache to refresh the recent concerns list
       queryClient.invalidateQueries({ queryKey: ["/api/concerns"] });
@@ -240,6 +281,219 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   )}
                 />
               </div>
+            </div>
+
+            {/* Student Learning Needs (Optional) */}
+            <div className="bg-amber-50 rounded-lg p-4 sm:p-6 border border-amber-200">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <div className="flex items-center space-x-2">
+                  <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 flex-shrink-0" />
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900">Student Learning Needs</h3>
+                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full">Optional</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowDifferentiation(!showDifferentiation)}
+                  className="text-amber-700 hover:text-amber-800"
+                  data-testid="button-toggle-differentiation"
+                >
+                  {showDifferentiation ? (
+                    <>Hide <ChevronUp className="h-4 w-4 ml-1" /></>
+                  ) : (
+                    <>Add Info <ChevronDown className="h-4 w-4 ml-1" /></>
+                  )}
+                </Button>
+              </div>
+              
+              <p className="text-sm text-amber-700 mb-4">
+                💡 Help our AI generate better, differentiated strategies by sharing any relevant student information.
+              </p>
+              
+              {showDifferentiation && (
+                <div className="space-y-4">
+                  {/* Quick Checkboxes */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                    <FormField
+                      control={form.control}
+                      name="hasIep"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-has-iep"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">Has IEP</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="hasDisability"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-has-disability"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">Has Diagnosis</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isEalLearner"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-is-eal"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">EAL Learner</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isGifted"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-is-gifted"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">Gifted</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isStruggling"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-is-struggling"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">Struggling</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  {/* Conditional Details */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {form.watch('hasDisability') && (
+                      <FormField
+                        control={form.control}
+                        name="disabilityType"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Diagnosis/Disability Type</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isAtLimit}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-disability-type">
+                                  <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {COMMON_DISABILITY_TYPES.map((type) => (
+                                  <SelectItem key={type} value={type}>
+                                    {type}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                    
+                    {form.watch('isEalLearner') && (
+                      <FormField
+                        control={form.control}
+                        name="ealProficiency"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>English Proficiency Level</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isAtLimit}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-eal-proficiency">
+                                  <SelectValue placeholder="Select level" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {EAL_PROFICIENCY_LEVELS.map((level) => (
+                                  <SelectItem key={level} value={level}>
+                                    {level}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+                  
+                  {/* Additional Notes */}
+                  <FormField
+                    control={form.control}
+                    name="otherNeeds"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Other Learning Needs or Notes</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="e.g., visual learner, needs frequent breaks, anxiety..."
+                            {...field} 
+                            disabled={isAtLimit}
+                            data-testid="input-other-needs"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Teacher and Incident Information */}
