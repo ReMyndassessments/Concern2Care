@@ -59,7 +59,22 @@ export async function generateRecommendations(
   
   if (!deepseekClient) {
     console.log("DeepSeek API key not set, returning mock data.");
-    const mockRecommendations = generateMockRecommendations(req);
+    let mockRecommendations = generateMockRecommendations(req);
+    
+    // Add urgent case message for mock data too
+    if (req.severityLevel === 'urgent') {
+      mockRecommendations += `\n\n### **🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED**
+
+**Share this case with Student Support immediately:**
+* Forward this concern and intervention plan to your school's student support team
+* Schedule urgent consultation with counselor, social worker, or special education coordinator  
+* Document all interventions and student responses for the support team
+* Consider immediate safety protocols if student welfare is at risk
+* Escalate to administration if no improvement within 48-72 hours
+
+**Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
+    }
+    
     const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (API key not set, returning mock data)";
     return { recommendations: mockRecommendations, disclaimer };
   }
@@ -230,7 +245,21 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
     }
 
     const data = await response.json();
-    const recommendations = data.choices[0]?.message?.content || 'Unable to generate recommendations at this time.';
+    let recommendations = data.choices[0]?.message?.content || 'Unable to generate recommendations at this time.';
+
+    // Automatically add student support sharing message for urgent cases
+    if (req.severityLevel === 'urgent') {
+      recommendations += `\n\n### **🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED**
+
+**Share this case with Student Support immediately:**
+* Forward this concern and intervention plan to your school's student support team
+* Schedule urgent consultation with counselor, social worker, or special education coordinator  
+* Document all interventions and student responses for the support team
+* Consider immediate safety protocols if student welfare is at risk
+* Escalate to administration if no improvement within 48-72 hours
+
+**Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
+    }
 
     const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation.";
 
@@ -246,7 +275,22 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
       if (error.message.includes('401')) {
         console.log('🚫 Authentication error - Invalid API key');
         // Fall back to mock data instead of throwing error
-        const mockRecommendations = generateMockRecommendations(req);
+        let mockRecommendations = generateMockRecommendations(req);
+        
+        // Add urgent case message for mock data too
+        if (req.severityLevel === 'urgent') {
+          mockRecommendations += `\n\n### **🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED**
+
+**Share this case with Student Support immediately:**
+* Forward this concern and intervention plan to your school's student support team
+* Schedule urgent consultation with counselor, social worker, or special education coordinator  
+* Document all interventions and student responses for the support team
+* Consider immediate safety protocols if student welfare is at risk
+* Escalate to administration if no improvement within 48-72 hours
+
+**Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
+        }
+        
         const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (DeepSeek API authentication failed, returning mock data)";
         return { recommendations: mockRecommendations, disclaimer };
       }
@@ -256,7 +300,22 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
     }
     
     console.log('🔄 API call failed, falling back to mock data');
-    const mockRecommendations = generateMockRecommendations(req);
+    let mockRecommendations = generateMockRecommendations(req);
+    
+    // Add urgent case message for mock data too
+    if (req.severityLevel === 'urgent') {
+      mockRecommendations += `\n\n### **🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED**
+
+**Share this case with Student Support immediately:**
+* Forward this concern and intervention plan to your school's student support team
+* Schedule urgent consultation with counselor, social worker, or special education coordinator  
+* Document all interventions and student responses for the support team
+* Consider immediate safety protocols if student welfare is at risk
+* Escalate to administration if no improvement within 48-72 hours
+
+**Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
+    }
+    
     const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (DeepSeek API unavailable, returning mock data)";
     return { recommendations: mockRecommendations, disclaimer };
   }
