@@ -19,7 +19,10 @@ import {
   School, 
   Calendar,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
+  Download,
+  FileText,
+  Database
 } from "lucide-react";
 
 interface Teacher {
@@ -63,6 +66,9 @@ export default function TeacherManagement() {
     supportRequestsLimit: 20,
     isActive: true
   });
+  const [selectedTeachers, setSelectedTeachers] = useState<string[]>([]);
+  const [exportLoading, setExportLoading] = useState<string | null>(null);
+  const [showBulkExport, setShowBulkExport] = useState(false);
 
   useEffect(() => {
     loadTeachers();
@@ -212,6 +218,108 @@ export default function TeacherManagement() {
     });
   };
 
+  const handleExportTeacher = async (teacherId: string, format: 'csv' | 'json' = 'csv') => {
+    try {
+      setExportLoading(teacherId);
+      const response = await fetch(`/api/admin/export/teacher/${teacherId}?format=${format}`);
+      
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+
+      const blob = await response.blob();
+      const teacher = teachers.find(t => t.id === teacherId);
+      const teacherName = teacher ? `${teacher.firstName}_${teacher.lastName}` : 'teacher';
+      const filename = `${teacherName}_data_export.${format}`;
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Success",
+        description: `Teacher data exported successfully`
+      });
+    } catch (error: any) {
+      console.error('Export error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to export teacher data",
+        variant: "destructive"
+      });
+    } finally {
+      setExportLoading(null);
+    }
+  };
+
+  const handleBulkExport = async (format: 'csv' | 'json' = 'csv') => {
+    if (selectedTeachers.length === 0) {
+      toast({
+        title: "Error",
+        description: "Please select at least one teacher to export",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      setExportLoading('bulk');
+      const response = await apiRequest('/api/admin/export/teachers/bulk', {
+        method: 'POST',
+        body: { teacherIds: selectedTeachers, format }
+      });
+      
+      const blob = new Blob([format === 'csv' ? response : JSON.stringify(response, null, 2)], {
+        type: format === 'csv' ? 'text/csv' : 'application/json'
+      });
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `bulk_teacher_export_${new Date().toISOString().split('T')[0]}.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Success",
+        description: `${selectedTeachers.length} teachers exported successfully`
+      });
+      setSelectedTeachers([]);
+    } catch (error: any) {
+      console.error('Bulk export error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to export teachers data",
+        variant: "destructive"
+      });
+    } finally {
+      setExportLoading(null);
+    }
+  };
+
+  const toggleTeacherSelection = (teacherId: string) => {
+    setSelectedTeachers(prev => 
+      prev.includes(teacherId)
+        ? prev.filter(id => id !== teacherId)
+        : [...prev, teacherId]
+    );
+  };
+
+  const selectAllTeachers = () => {
+    if (selectedTeachers.length === filteredTeachers.length) {
+      setSelectedTeachers([]);
+    } else {
+      setSelectedTeachers(filteredTeachers.map(t => t.id));
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -335,20 +443,68 @@ export default function TeacherManagement() {
         </CardHeader>
       </Card>
 
-      {/* Search and Stats */}
+      {/* Search and Export Controls */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <Card className="sm:col-span-2">
           <CardContent className="p-3 md:p-4">
-            <div className="space-y-2">
-              <Label htmlFor="search" className="text-sm">Search Teachers</Label>
-              <Input
-                id="search"
-                placeholder="Search by name, email, or school..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                data-testid="input-search"
-                className="text-sm"
-              />
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label htmlFor="search" className="text-sm">Search Teachers</Label>
+                <Input
+                  id="search"
+                  placeholder="Search by name, email, or school..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  data-testid="input-search"
+                  className="text-sm"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowBulkExport(!showBulkExport)}
+                  className="text-xs"
+                  data-testid="button-toggle-bulk-export"
+                >
+                  <Database className="h-3 w-3 mr-1" />
+                  {showBulkExport ? 'Hide' : 'Show'} Bulk Export
+                </Button>
+                {showBulkExport && selectedTeachers.length > 0 && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleBulkExport('csv')}
+                      disabled={exportLoading === 'bulk'}
+                      className="text-xs"
+                      data-testid="button-bulk-export-csv"
+                    >
+                      {exportLoading === 'bulk' ? 'Exporting...' : (
+                        <>
+                          <Download className="h-3 w-3 mr-1" />
+                          Export CSV ({selectedTeachers.length})
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleBulkExport('json')}
+                      disabled={exportLoading === 'bulk'}
+                      className="text-xs"
+                      data-testid="button-bulk-export-json"
+                    >
+                      {exportLoading === 'bulk' ? 'Exporting...' : (
+                        <>
+                          <FileText className="h-3 w-3 mr-1" />
+                          Export JSON ({selectedTeachers.length})
+                        </>
+                      )}
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -410,27 +566,51 @@ export default function TeacherManagement() {
                     </div>
                   </div>
 
-                  <div className="flex justify-end gap-2 pt-2 border-t">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => handleEditTeacher(teacher)}
-                      className="text-xs"
-                      data-testid={`button-edit-${teacher.id}`}
-                    >
-                      <Edit2 className="h-3 w-3 mr-1" />
-                      Edit
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => handleDeleteTeacher(teacher)}
-                      className="text-red-600 hover:text-red-800 text-xs"
-                      data-testid={`button-delete-${teacher.id}`}
-                    >
-                      <Trash2 className="h-3 w-3 mr-1" />
-                      Delete
-                    </Button>
+                  <div className="space-y-2 pt-2 border-t">
+                    {showBulkExport && (
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          checked={selectedTeachers.includes(teacher.id)}
+                          onCheckedChange={() => toggleTeacherSelection(teacher.id)}
+                          data-testid={`checkbox-select-${teacher.id}`}
+                        />
+                        <Label className="text-xs">Select for export</Label>
+                      </div>
+                    )}
+                    <div className="flex justify-end gap-1 flex-wrap">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleExportTeacher(teacher.id, 'csv')}
+                        disabled={exportLoading === teacher.id}
+                        className="text-xs"
+                        data-testid={`button-export-csv-${teacher.id}`}
+                        title="Export teacher data as CSV"
+                      >
+                        {exportLoading === teacher.id ? '...' : <Download className="h-3 w-3" />}
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => {
+                          setSelectedTeacher(teacher);
+                          setShowEditDialog(true);
+                        }}
+                        className="text-xs"
+                        data-testid={`button-edit-${teacher.id}`}
+                      >
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleDeleteTeacher(teacher)}
+                        className="text-red-600 hover:text-red-800 text-xs"
+                        data-testid={`button-delete-${teacher.id}`}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -442,19 +622,28 @@ export default function TeacherManagement() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  {showBulkExport && (
+                    <TableHead className="w-[50px] text-xs lg:text-sm">
+                      <Checkbox
+                        checked={selectedTeachers.length === filteredTeachers.length && filteredTeachers.length > 0}
+                        onCheckedChange={selectAllTeachers}
+                        data-testid="checkbox-select-all"
+                      />
+                    </TableHead>
+                  )}
                   <TableHead className="min-w-[120px] text-xs lg:text-sm">Name</TableHead>
                   <TableHead className="min-w-[180px] text-xs lg:text-sm">Email</TableHead>
                   <TableHead className="min-w-[100px] text-xs lg:text-sm">School</TableHead>
                   <TableHead className="min-w-[80px] text-xs lg:text-sm">Requests</TableHead>
                   <TableHead className="min-w-[60px] text-xs lg:text-sm">Status</TableHead>
                   <TableHead className="min-w-[80px] text-xs lg:text-sm">Joined</TableHead>
-                  <TableHead className="min-w-[80px] sticky right-0 bg-white text-xs lg:text-sm">Actions</TableHead>
+                  <TableHead className="min-w-[120px] sticky right-0 bg-white text-xs lg:text-sm">Actions</TableHead>
                 </TableRow>
               </TableHeader>
             <TableBody>
               {filteredTeachers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
+                  <TableCell colSpan={showBulkExport ? 8 : 7} className="text-center py-8">
                     <div className="flex flex-col items-center space-y-2">
                       <Users className="h-8 w-8 text-gray-400" />
                       <p className="text-gray-500">No teachers found</p>
@@ -464,6 +653,15 @@ export default function TeacherManagement() {
               ) : (
                 filteredTeachers.map((teacher) => (
                   <TableRow key={teacher.id}>
+                    {showBulkExport && (
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedTeachers.includes(teacher.id)}
+                          onCheckedChange={() => toggleTeacherSelection(teacher.id)}
+                          data-testid={`checkbox-select-${teacher.id}`}
+                        />
+                      </TableCell>
+                    )}
                     <TableCell>
                       <div className="font-medium text-xs lg:text-sm">
                         {teacher.firstName} {teacher.lastName}
@@ -503,6 +701,21 @@ export default function TeacherManagement() {
                     </TableCell>
                     <TableCell className="sticky right-0 bg-white">
                       <div className="flex items-center space-x-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleExportTeacher(teacher.id, 'csv')}
+                          disabled={exportLoading === teacher.id}
+                          className="h-6 w-6 p-0"
+                          data-testid={`button-export-csv-${teacher.id}`}
+                          title="Export teacher data as CSV"
+                        >
+                          {exportLoading === teacher.id ? (
+                            <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full" />
+                          ) : (
+                            <Download className="h-3 w-3" />
+                          )}
+                        </Button>
                         <Button
                           variant="outline"
                           size="sm"

@@ -32,6 +32,7 @@ import {
 import { getReferrals, createReferral } from "./services/referrals";
 import { getSystemHealth, getDetailedSystemHealth, trackRequest } from "./services/health";
 import { initiatePasswordReset, confirmPasswordReset } from "./services/auth";
+import { getTeacherExportData, getSchoolExportData, convertToCSV, getAllSchoolNames } from "./services/export";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for deployment systems only - check for health check requests
@@ -1451,6 +1452,174 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Delete API key error:', error);
       res.status(500).json({ message: error instanceof Error ? error.message : 'Failed to delete API key' });
+    }
+  });
+
+  // ===========================================
+  // DATA EXPORT MANAGEMENT
+  // ===========================================
+
+  // Get all available school names for export
+  app.get('/api/admin/export/schools', requireAdmin, async (req: any, res) => {
+    try {
+      const schools = await getAllSchoolNames();
+      res.json({ schools });
+    } catch (error) {
+      console.error('Error fetching schools for export:', error);
+      res.status(500).json({ message: 'Failed to fetch schools' });
+    }
+  });
+
+  // Export individual teacher data
+  app.get('/api/admin/export/teacher/:teacherId', requireAdmin, async (req: any, res) => {
+    try {
+      const { teacherId } = req.params;
+      const { format = 'json' } = req.query;
+
+      const teacherData = await getTeacherExportData(teacherId);
+      if (!teacherData) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      // Log admin action
+      const adminId = req.user.claims.sub;
+      await storage.logAdminAction({
+        adminId,
+        action: 'export_teacher_data',
+        targetUserId: teacherId,
+        details: { format, timestamp: new Date().toISOString() }
+      });
+
+      if (format === 'csv') {
+        const csvData = convertToCSV(teacherData);
+        const teacherName = `${teacherData.teacher.firstName}_${teacherData.teacher.lastName}`.replace(/\s+/g, '_');
+        const filename = `teacher_export_${teacherName}_${new Date().toISOString().split('T')[0]}.csv`;
+        
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.send(csvData);
+      } else {
+        res.json(teacherData);
+      }
+    } catch (error) {
+      console.error('Error exporting teacher data:', error);
+      res.status(500).json({ message: 'Failed to export teacher data' });
+    }
+  });
+
+  // Export school data (all teachers from a school)
+  app.get('/api/admin/export/school/:schoolName', requireAdmin, async (req: any, res) => {
+    try {
+      const { schoolName } = req.params;
+      const { format = 'json' } = req.query;
+
+      const schoolData = await getSchoolExportData(decodeURIComponent(schoolName));
+      if (!schoolData) {
+        return res.status(404).json({ message: 'School not found or has no teachers' });
+      }
+
+      // Log admin action
+      const adminId = req.user.claims.sub;
+      await storage.logAdminAction({
+        adminId,
+        action: 'export_school_data',
+        details: { 
+          schoolName, 
+          format, 
+          teacherCount: schoolData.teachers.length,
+          timestamp: new Date().toISOString() 
+        }
+      });
+
+      if (format === 'csv') {
+        const csvData = convertToCSV(schoolData);
+        const schoolFileName = schoolName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        const filename = `school_export_${schoolFileName}_${new Date().toISOString().split('T')[0]}.csv`;
+        
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.send(csvData);
+      } else {
+        res.json(schoolData);
+      }
+    } catch (error) {
+      console.error('Error exporting school data:', error);
+      res.status(500).json({ message: 'Failed to export school data' });
+    }
+  });
+
+  // Bulk export multiple teachers by IDs
+  app.post('/api/admin/export/teachers/bulk', requireAdmin, async (req: any, res) => {
+    try {
+      const { teacherIds, format = 'json' } = req.body;
+
+      if (!Array.isArray(teacherIds) || teacherIds.length === 0) {
+        return res.status(400).json({ message: 'Teacher IDs array is required' });
+      }
+
+      const exportData: any[] = [];
+      const failedTeachers: string[] = [];
+
+      for (const teacherId of teacherIds) {
+        try {
+          const teacherData = await getTeacherExportData(teacherId);
+          if (teacherData) {
+            exportData.push(teacherData);
+          } else {
+            failedTeachers.push(teacherId);
+          }
+        } catch (error) {
+          console.error(`Failed to export teacher ${teacherId}:`, error);
+          failedTeachers.push(teacherId);
+        }
+      }
+
+      // Log admin action
+      const adminId = req.user.claims.sub;
+      await storage.logAdminAction({
+        adminId,
+        action: 'bulk_export_teachers',
+        details: { 
+          teacherCount: exportData.length,
+          failedCount: failedTeachers.length,
+          format,
+          timestamp: new Date().toISOString() 
+        }
+      });
+
+      if (format === 'csv') {
+        // For bulk CSV, create a combined CSV with all teachers
+        const csvRows: string[] = [];
+        csvRows.push('Export Type,Bulk Teacher Data');
+        csvRows.push(`Export Date,${new Date().toLocaleDateString()}`);
+        csvRows.push(`Total Teachers,${exportData.length}`);
+        csvRows.push('');
+
+        exportData.forEach((teacherData, index) => {
+          if (index > 0) csvRows.push(''); // Add spacing between teachers
+          
+          const teacherCsv = convertToCSV(teacherData);
+          csvRows.push(teacherCsv);
+        });
+
+        const filename = `bulk_teacher_export_${new Date().toISOString().split('T')[0]}.csv`;
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.send(csvRows.join('\n'));
+      } else {
+        res.json({
+          exportData,
+          summary: {
+            totalRequested: teacherIds.length,
+            successfulExports: exportData.length,
+            failedExports: failedTeachers.length,
+            failedTeacherIds: failedTeachers
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error bulk exporting teacher data:', error);
+      res.status(500).json({ message: 'Failed to bulk export teacher data' });
     }
   });
 
