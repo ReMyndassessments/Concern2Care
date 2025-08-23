@@ -151,88 +151,276 @@ export function convertToCSV(data: TeacherExportData | SchoolExportData): string
   const csvRows: string[] = [];
 
   if ('teacher' in data) {
-    // Single teacher export
+    // Single teacher export - detailed version
     const teacher = data.teacher;
     
     // Header
-    csvRows.push('Export Type,Teacher Data');
-    csvRows.push('');
-    
-    // Teacher Information
-    csvRows.push('Teacher Information');
-    csvRows.push('Field,Value');
-    csvRows.push(`Name,"${teacher.firstName} ${teacher.lastName}"`);
+    csvRows.push('Export Type,Teacher Data - Complete Details');
+    csvRows.push(`Teacher Name,"${teacher.firstName} ${teacher.lastName}"`);
     csvRows.push(`Email,${teacher.email}`);
     csvRows.push(`School,"${teacher.school || 'Not specified'}"`);
-    csvRows.push(`Support Requests Used,${teacher.supportRequestsUsed || 0}`);
-    csvRows.push(`Support Requests Limit,${teacher.supportRequestsLimit || 0}`);
-    csvRows.push(`Active,${teacher.isActive ? 'Yes' : 'No'}`);
-    csvRows.push(`Created,${teacher.createdAt?.toLocaleDateString() || 'Unknown'}`);
+    csvRows.push(`Export Date,${new Date().toLocaleDateString()}`);
     csvRows.push('');
 
-    // Summary
-    csvRows.push('Summary Statistics');
-    csvRows.push('Metric,Count');
-    csvRows.push(`Total Concerns,${data.summary.totalConcerns}`);
-    csvRows.push(`Total Interventions,${data.summary.totalInterventions}`);
-    csvRows.push(`Total Follow-up Questions,${data.summary.totalFollowUpQuestions}`);
-    csvRows.push(`Total Progress Notes,${data.summary.totalProgressNotes}`);
-    csvRows.push('');
-
-    // Concerns Details
+    // All Concerns with Full Details
     if (data.concerns.length > 0) {
-      csvRows.push('Concerns Details');
-      csvRows.push('Student Name,Grade,Concern Types,Severity,Date Created,Interventions Count,Follow-up Questions Count,Progress Notes Count');
+      csvRows.push('STUDENT CONCERNS - COMPLETE DETAILS');
+      csvRows.push('Concern ID,Student Name,Grade,Teacher Position,Incident Date,Location,Concern Types,Severity,Description,Actions Taken,Date Created');
       
       data.concerns.forEach(concern => {
         const concernTypes = Array.isArray(concern.concernTypes) 
           ? (concern.concernTypes as string[]).join('; ') 
           : 'Not specified';
+        const actionsTaken = Array.isArray(concern.actionsTaken)
+          ? (concern.actionsTaken as string[]).join('; ')
+          : 'None specified';
         
         csvRows.push([
+          concern.id,
           `"${concern.studentFirstName} ${concern.studentLastInitial}."`,
           concern.grade,
+          concern.teacherPosition,
+          concern.incidentDate?.toLocaleDateString() || 'Unknown',
+          concern.location,
           `"${concernTypes}"`,
           concern.severityLevel,
-          concern.createdAt?.toLocaleDateString() || 'Unknown',
-          concern.interventions.length.toString(),
-          concern.followUpQuestions.length.toString(),
-          concern.progressNotes.length.toString()
+          `"${concern.description.replace(/"/g, '""')}"`, // Escape quotes in description
+          `"${actionsTaken}"`,
+          concern.createdAt?.toLocaleDateString() || 'Unknown'
         ].join(','));
       });
+      csvRows.push('');
+
+      // All Interventions Details
+      csvRows.push('AI-GENERATED INTERVENTIONS - COMPLETE DETAILS');
+      csvRows.push('Intervention ID,Concern ID,Student Name,Intervention Title,Description,Steps,Timeline,Saved,Date Created');
+      
+      data.concerns.forEach(concern => {
+        concern.interventions.forEach(intervention => {
+          const steps = Array.isArray(intervention.steps)
+            ? (intervention.steps as string[]).join(' | ')
+            : JSON.stringify(intervention.steps);
+          
+          csvRows.push([
+            intervention.id,
+            concern.id,
+            `"${concern.studentFirstName} ${concern.studentLastInitial}."`,
+            `"${intervention.title.replace(/"/g, '""')}"`,
+            `"${intervention.description.replace(/"/g, '""')}"`,
+            `"${steps.replace(/"/g, '""')}"`,
+            intervention.timeline || 'Not specified',
+            intervention.saved ? 'Yes' : 'No',
+            intervention.createdAt?.toLocaleDateString() || 'Unknown'
+          ].join(','));
+        });
+      });
+      csvRows.push('');
+
+      // Follow-up Questions Details
+      const allFollowUps = data.concerns.flatMap(concern => 
+        concern.followUpQuestions.map(q => ({ ...q, concernId: concern.id, studentName: `${concern.studentFirstName} ${concern.studentLastInitial}.` }))
+      );
+      
+      if (allFollowUps.length > 0) {
+        csvRows.push('FOLLOW-UP QUESTIONS - COMPLETE DETAILS');
+        csvRows.push('Question ID,Concern ID,Student Name,Question,AI Response,Date Asked');
+        
+        allFollowUps.forEach(followUp => {
+          csvRows.push([
+            followUp.id,
+            followUp.concernId,
+            `"${followUp.studentName}"`,
+            `"${followUp.question.replace(/"/g, '""')}"`,
+            `"${followUp.response.replace(/"/g, '""')}"`,
+            followUp.createdAt?.toLocaleDateString() || 'Unknown'
+          ].join(','));
+        });
+        csvRows.push('');
+      }
+
+      // Progress Notes Details
+      const allProgressNotes = data.concerns.flatMap(concern => 
+        concern.progressNotes.map(note => ({ 
+          ...note, 
+          concernId: concern.id, 
+          studentName: `${concern.studentFirstName} ${concern.studentLastInitial}.`
+        }))
+      );
+      
+      if (allProgressNotes.length > 0) {
+        csvRows.push('PROGRESS NOTES - COMPLETE DETAILS');
+        csvRows.push('Note ID,Concern ID,Student Name,Progress Note,Outcome,Next Steps,Date Added');
+        
+        allProgressNotes.forEach(note => {
+          csvRows.push([
+            note.id,
+            note.concernId,
+            `"${note.studentName}"`,
+            `"${note.note.replace(/"/g, '""')}"`,
+            note.outcome || 'Not specified',
+            `"${(note.nextSteps || 'None specified').replace(/"/g, '""')}"`,
+            note.createdAt?.toLocaleDateString() || 'Unknown'
+          ].join(','));
+        });
+      }
+    } else {
+      csvRows.push('No concerns found for this teacher.');
     }
   } else {
-    // School export
-    csvRows.push('Export Type,School Data');
+    // School export - comprehensive details
+    csvRows.push('Export Type,School Data - Complete Details');
     csvRows.push(`School Name,"${data.school}"`);
-    csvRows.push('');
-    
-    // School Summary
-    csvRows.push('School Summary');
-    csvRows.push('Metric,Count');
+    csvRows.push(`Export Date,${new Date().toLocaleDateString()}`);
     csvRows.push(`Total Teachers,${data.summary.totalTeachers}`);
     csvRows.push(`Total Concerns,${data.summary.totalConcerns}`);
-    csvRows.push(`Total Interventions,${data.summary.totalInterventions}`);
-    csvRows.push(`Total Follow-up Questions,${data.summary.totalFollowUpQuestions}`);
-    csvRows.push(`Total Progress Notes,${data.summary.totalProgressNotes}`);
     csvRows.push('');
 
-    // Teachers Summary
-    csvRows.push('Teachers Summary');
-    csvRows.push('Teacher Name,Email,Concerns Count,Interventions Count,Support Requests Used,Support Requests Limit,Active');
+    // All Teachers Details
+    csvRows.push('TEACHERS - COMPLETE LIST');
+    csvRows.push('Teacher Name,Email,Support Requests Used,Support Requests Limit,Active,Created Date,Last Login');
     
     data.teachers.forEach(teacherData => {
       const teacher = teacherData.teacher;
       csvRows.push([
         `"${teacher.firstName} ${teacher.lastName}"`,
         teacher.email,
-        teacherData.summary.totalConcerns.toString(),
-        teacherData.summary.totalInterventions.toString(),
         (teacher.supportRequestsUsed || 0).toString(),
         (teacher.supportRequestsLimit || 0).toString(),
-        teacher.isActive ? 'Yes' : 'No'
+        teacher.isActive ? 'Yes' : 'No',
+        teacher.createdAt?.toLocaleDateString() || 'Unknown',
+        teacher.lastLoginAt?.toLocaleDateString() || 'Never'
       ].join(','));
     });
+    csvRows.push('');
+
+    // All Student Concerns Across School
+    const allConcerns = data.teachers.flatMap(teacherData => 
+      teacherData.concerns.map(concern => ({
+        ...concern,
+        teacherName: `${teacherData.teacher.firstName} ${teacherData.teacher.lastName}`
+      }))
+    );
+
+    if (allConcerns.length > 0) {
+      csvRows.push('ALL STUDENT CONCERNS - COMPLETE DETAILS');
+      csvRows.push('Concern ID,Teacher Name,Student Name,Grade,Teacher Position,Incident Date,Location,Concern Types,Severity,Description,Actions Taken,Date Created');
+      
+      allConcerns.forEach(concern => {
+        const concernTypes = Array.isArray(concern.concernTypes) 
+          ? (concern.concernTypes as string[]).join('; ') 
+          : 'Not specified';
+        const actionsTaken = Array.isArray(concern.actionsTaken)
+          ? (concern.actionsTaken as string[]).join('; ')
+          : 'None specified';
+        
+        csvRows.push([
+          concern.id,
+          `"${concern.teacherName}"`,
+          `"${concern.studentFirstName} ${concern.studentLastInitial}."`,
+          concern.grade,
+          concern.teacherPosition,
+          concern.incidentDate?.toLocaleDateString() || 'Unknown',
+          concern.location,
+          `"${concernTypes}"`,
+          concern.severityLevel,
+          `"${concern.description.replace(/"/g, '""')}"`,
+          `"${actionsTaken}"`,
+          concern.createdAt?.toLocaleDateString() || 'Unknown'
+        ].join(','));
+      });
+      csvRows.push('');
+
+      // All Interventions Across School
+      const allInterventions = allConcerns.flatMap(concern => 
+        concern.interventions.map(intervention => ({
+          ...intervention,
+          concernId: concern.id,
+          teacherName: concern.teacherName,
+          studentName: `${concern.studentFirstName} ${concern.studentLastInitial}.`
+        }))
+      );
+
+      csvRows.push('ALL AI INTERVENTIONS - COMPLETE DETAILS');
+      csvRows.push('Intervention ID,Concern ID,Teacher Name,Student Name,Title,Description,Steps,Timeline,Saved,Date Created');
+      
+      allInterventions.forEach(intervention => {
+        const steps = Array.isArray(intervention.steps)
+          ? (intervention.steps as string[]).join(' | ')
+          : JSON.stringify(intervention.steps);
+        
+        csvRows.push([
+          intervention.id,
+          intervention.concernId,
+          `"${intervention.teacherName}"`,
+          `"${intervention.studentName}"`,
+          `"${intervention.title.replace(/"/g, '""')}"`,
+          `"${intervention.description.replace(/"/g, '""')}"`,
+          `"${steps.replace(/"/g, '""')}"`,
+          intervention.timeline || 'Not specified',
+          intervention.saved ? 'Yes' : 'No',
+          intervention.createdAt?.toLocaleDateString() || 'Unknown'
+        ].join(','));
+      });
+      csvRows.push('');
+
+      // All Follow-up Questions Across School
+      const allFollowUps = allConcerns.flatMap(concern => 
+        concern.followUpQuestions.map(q => ({ 
+          ...q, 
+          concernId: concern.id, 
+          teacherName: concern.teacherName,
+          studentName: `${concern.studentFirstName} ${concern.studentLastInitial}.` 
+        }))
+      );
+      
+      if (allFollowUps.length > 0) {
+        csvRows.push('ALL FOLLOW-UP QUESTIONS - COMPLETE DETAILS');
+        csvRows.push('Question ID,Concern ID,Teacher Name,Student Name,Question,AI Response,Date Asked');
+        
+        allFollowUps.forEach(followUp => {
+          csvRows.push([
+            followUp.id,
+            followUp.concernId,
+            `"${followUp.teacherName}"`,
+            `"${followUp.studentName}"`,
+            `"${followUp.question.replace(/"/g, '""')}"`,
+            `"${followUp.response.replace(/"/g, '""')}"`,
+            followUp.createdAt?.toLocaleDateString() || 'Unknown'
+          ].join(','));
+        });
+        csvRows.push('');
+      }
+
+      // All Progress Notes Across School
+      const allProgressNotes = allConcerns.flatMap(concern => 
+        concern.progressNotes.map(note => ({ 
+          ...note, 
+          concernId: concern.id, 
+          teacherName: concern.teacherName,
+          studentName: `${concern.studentFirstName} ${concern.studentLastInitial}.`
+        }))
+      );
+      
+      if (allProgressNotes.length > 0) {
+        csvRows.push('ALL PROGRESS NOTES - COMPLETE DETAILS');
+        csvRows.push('Note ID,Concern ID,Teacher Name,Student Name,Progress Note,Outcome,Next Steps,Date Added');
+        
+        allProgressNotes.forEach(note => {
+          csvRows.push([
+            note.id,
+            note.concernId,
+            `"${note.teacherName}"`,
+            `"${note.studentName}"`,
+            `"${note.note.replace(/"/g, '""')}"`,
+            note.outcome || 'Not specified',
+            `"${(note.nextSteps || 'None specified').replace(/"/g, '""')}"`,
+            note.createdAt?.toLocaleDateString() || 'Unknown'
+          ].join(','));
+        });
+      }
+    } else {
+      csvRows.push('No concerns found for this school.');
+    }
   }
 
   return csvRows.join('\n');
