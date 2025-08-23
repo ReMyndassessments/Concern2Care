@@ -88,7 +88,7 @@ export default function EmailSettings() {
   // Save email configuration
   const saveConfigMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      return await apiRequest("/api/email/user-config", "POST", data);
+      return await apiRequest("POST", "/api/email/user-config", data);
     },
     onSuccess: () => {
       toast({
@@ -111,7 +111,7 @@ export default function EmailSettings() {
   // Test email configuration
   const testConfigMutation = useMutation({
     mutationFn: async (email: string) => {
-      return await apiRequest("/api/email/user-config/test", "POST", { testEmail: email });
+      return await apiRequest("POST", "/api/email/user-config/test", { testEmail: email });
     },
     onSuccess: (result: any) => {
       toast({
@@ -134,7 +134,7 @@ export default function EmailSettings() {
   // Delete email configuration
   const deleteConfigMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest("/api/email/user-config", "DELETE");
+      return await apiRequest("DELETE", "/api/email/user-config");
     },
     onSuccess: () => {
       toast({
