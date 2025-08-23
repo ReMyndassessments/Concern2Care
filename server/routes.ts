@@ -765,10 +765,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Extract unique school names from users
       const userSchools = new Set<string>();
       allUsers.forEach((user: any) => {
-        // Check different possible school field names
-        // user.school is a School object with name property (from UserWithSchool type)
-        // Also check the legacy school field (string) for backward compatibility
-        const schoolName = (user.school && user.school.name) || (typeof user.school === 'string' ? user.school : null);
+        // Handle both legacy string school field and new School object
+        let schoolName: string | null = null;
+        
+        if (typeof user.school === 'string' && user.school.trim()) {
+          // Legacy string format: school field is directly the school name
+          schoolName = user.school.trim();
+        } else if (user.school && typeof user.school === 'object' && user.school.name) {
+          // New object format: school is a School object with name property
+          schoolName = user.school.name;
+        }
+        
         if (schoolName && !existingSchoolNames.has(schoolName.toLowerCase())) {
           userSchools.add(schoolName);
         }
