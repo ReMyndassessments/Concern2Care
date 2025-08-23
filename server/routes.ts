@@ -258,6 +258,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         otherNeeds: req.body.otherNeeds || null,
       });
       
+      // Debug: Log the differentiation data being received
+      console.log("🔍 Differentiation data received from form:", {
+        hasIep: req.body.hasIep,
+        hasDisability: req.body.hasDisability,
+        disabilityType: req.body.disabilityType,
+        isEalLearner: req.body.isEalLearner,
+        ealProficiency: req.body.ealProficiency,
+        isGifted: req.body.isGifted,
+        isStruggling: req.body.isStruggling,
+        otherNeeds: req.body.otherNeeds,
+      });
+
       // Generate AI recommendations using the enhanced format
       const recommendationRequest: GenerateRecommendationsRequest = {
         studentFirstName: newConcern.studentFirstName,

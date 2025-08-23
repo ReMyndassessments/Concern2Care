@@ -68,6 +68,17 @@ export async function generateRecommendations(
     : 'None documented';
 
   // Build differentiation context for better AI recommendations
+  console.log("🎯 AI Service received differentiation data:", {
+    hasIep: req.hasIep,
+    hasDisability: req.hasDisability,
+    disabilityType: req.disabilityType,
+    isEalLearner: req.isEalLearner,
+    ealProficiency: req.ealProficiency,
+    isGifted: req.isGifted,
+    isStruggling: req.isStruggling,
+    otherNeeds: req.otherNeeds,
+  });
+
   const differentiationInfo = [];
   if (req.hasIep) differentiationInfo.push('Has IEP (Individualized Education Program)');
   if (req.hasDisability && req.disabilityType) differentiationInfo.push(`Diagnosed with: ${req.disabilityType}`);
@@ -79,6 +90,8 @@ export async function generateRecommendations(
   const differentiationText = differentiationInfo.length > 0 
     ? differentiationInfo.join('; ')
     : 'No specific learning needs documented';
+    
+  console.log("📝 Final differentiation text for AI:", differentiationText);
 
   const prompt = `You are an educational specialist AI assistant helping teachers with Tier 2 intervention recommendations for students who may need 504/IEP accommodations.
 
