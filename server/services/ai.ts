@@ -35,6 +35,9 @@ export interface GenerateRecommendationsRequest {
   // File uploads for enhanced recommendations
   studentAssessmentFile?: string;
   lessonPlanFile?: string;
+  
+  // Task type for focused AI responses
+  taskType?: string;
 }
 
 export interface GenerateRecommendationsResponse {
@@ -138,7 +141,70 @@ export async function generateRecommendations(
     }
   }
 
-  const prompt = `You are an educational specialist AI assistant helping teachers with Tier 2 intervention recommendations for students who may need 504/IEP accommodations.
+  // Generate different prompts based on task type
+  const isDifferentiationTask = req.taskType === 'differentiation';
+  console.log("🎯 Task type:", req.taskType, "- Is differentiation task:", isDifferentiationTask);
+  
+  const filePrompts = [];
+  if (assessmentContent) {
+    filePrompts.push(`- Student Assessment Data: ${assessmentContent}`);
+  }
+  if (lessonPlanContent) {
+    filePrompts.push(`- Lesson Plan to Differentiate: ${lessonPlanContent}`);
+  }
+  
+  const prompt = isDifferentiationTask ? 
+    `You are an educational differentiation specialist AI assistant helping teachers adapt instruction for diverse learners. Your role is to provide evidence-based differentiation strategies that accommodate different learning styles, abilities, and needs.
+
+**Context:**
+- Student: ${req.studentFirstName} ${req.studentLastInitial}
+- Grade: ${req.grade}
+- Teacher: ${req.teacherPosition}
+- Location: ${req.location}
+- Date: ${req.incidentDate}
+
+**Concern Areas:** ${concernTypesText}
+**Concern Description:** ${req.concernDescription}
+**Severity Level:** ${req.severityLevel}
+**Actions Already Taken:** ${actionsTakenText}
+
+**Student Learning Profile:**
+${differentiationInfo.join('\n')}
+
+${filePrompts.join('\n')}
+
+**Please provide comprehensive differentiation strategies that include:**
+
+1. **Instructional Adaptations:**
+   - Content modifications (what students learn)
+   - Process adjustments (how students learn)
+   - Product alternatives (how students demonstrate learning)
+
+2. **Learning Environment Accommodations:**
+   - Physical classroom setup modifications
+   - Social learning arrangements
+   - Technology integration
+
+3. **Assessment Differentiation:**
+   - Alternative assessment formats
+   - Modified rubrics and criteria
+   - Progress monitoring strategies
+
+4. **Individual Support Strategies:**
+   - Scaffolding techniques
+   - Visual and auditory supports
+   - Executive function aids
+
+5. **Implementation Timeline:**
+   - Immediate adjustments (today)
+   - Short-term strategies (this week)
+   - Long-term adaptations (ongoing)
+
+**Format your response as a comprehensive markdown document with clear headings and actionable strategies. Focus on practical, evidence-based differentiation techniques that this teacher can implement immediately.**
+
+Remember: Differentiation is about providing multiple pathways to learning success, not lowering expectations.` 
+    :
+    `You are an educational specialist AI assistant helping teachers with Tier 2 intervention recommendations for students who may need 504/IEP accommodations.
 
 Student Information:
 - Name: ${req.studentFirstName} ${req.studentLastInitial}.
@@ -440,6 +506,110 @@ Focus on actionable advice that a classroom teacher can realistically implement.
 }
 
 function generateMockRecommendations(req: GenerateRecommendationsRequest): string {
+  const isDifferentiationTask = req.taskType === 'differentiation';
+  
+  if (isDifferentiationTask) {
+    return generateMockDifferentiationStrategies(req);
+  } else {
+    return generateMockInterventionRecommendations(req);
+  }
+}
+
+function generateMockDifferentiationStrategies(req: GenerateRecommendationsRequest): string {
+  return `# Differentiation Strategies for ${req.studentFirstName} ${req.studentLastInitial}
+
+## Student Learning Profile Summary
+Based on the provided information, this student requires differentiated instruction to address their individual learning needs and the concerns identified.
+
+## 1. Instructional Adaptations
+
+### Content Modifications
+- **Adjusting Complexity**: Provide materials at appropriate reading level while maintaining grade-level concepts
+- **Multiple Representations**: Present information using visual, auditory, and kinesthetic modalities
+- **Choice in Topics**: Offer options for research projects or examples that connect to student interests
+
+### Process Adjustments
+- **Flexible Grouping**: Use various grouping strategies (individual, pairs, small groups) based on task and student needs
+- **Scaffolded Instruction**: Break complex tasks into manageable chunks with clear steps
+- **Extended Time**: Provide additional time for processing and completion when needed
+
+### Product Alternatives
+- **Multiple Formats**: Allow demonstrations of learning through projects, presentations, written work, or multimedia
+- **Tiered Assignments**: Offer tasks at varying levels of complexity while targeting same learning goals
+- **Student Choice**: Provide options for how students can show what they've learned
+
+## 2. Learning Environment Accommodations
+
+### Physical Space
+- **Flexible Seating**: Provide various seating options (standing desk, stability ball, traditional desk)
+- **Reduced Distractions**: Create quiet spaces or use noise-cancelling headphones when needed
+- **Visual Supports**: Use charts, graphic organizers, and visual schedules
+
+### Social Arrangements
+- **Peer Partnerships**: Pair with supportive classmates for collaborative work
+- **Small Group Work**: Facilitate participation in structured small group activities
+- **Individual Workspace**: Provide option for independent work space when needed
+
+## 3. Assessment Differentiation
+
+### Alternative Formats
+- **Oral Assessments**: Allow students to demonstrate knowledge verbally
+- **Portfolio Assessment**: Collect work samples over time to show growth
+- **Performance-Based Tasks**: Use real-world applications and hands-on demonstrations
+
+### Modified Criteria
+- **Individual Growth**: Measure progress against student's own baseline rather than class average
+- **Process AND Product**: Evaluate both the learning process and final outcomes
+- **Multiple Attempts**: Allow revision and re-submission opportunities
+
+## 4. Individual Support Strategies
+
+### Scaffolding Techniques
+- **Graphic Organizers**: Provide structured templates for organizing thoughts and information
+- **Step-by-Step Guides**: Break complex processes into clear, sequential steps
+- **Models and Examples**: Show exemplars of expected work quality
+
+### Communication Supports
+- **Visual Cues**: Use hand signals, pictures, or written prompts to guide behavior
+- **Clear Instructions**: Provide written and verbal directions in simple, concise language
+- **Check for Understanding**: Regularly verify comprehension through questioning
+
+## 5. Implementation Timeline
+
+### Immediate (Today)
+- Set up flexible seating options
+- Introduce visual schedule and supports
+- Establish clear routines and expectations
+
+### This Week
+- Implement tiered assignments for current unit
+- Begin using graphic organizers for writing tasks
+- Establish peer partnership for collaborative work
+
+### Ongoing
+- Monitor student response and adjust strategies
+- Collect data on student engagement and progress
+- Maintain regular communication with student and family
+
+## Progress Monitoring
+
+- **Daily Observations**: Note student engagement and response to accommodations
+- **Weekly Check-ins**: Brief conversations with student about what's working
+- **Bi-weekly Data Review**: Analyze work samples and assessment results
+- **Monthly Adjustments**: Modify strategies based on student progress and needs
+
+## When to Escalate
+
+Consider additional support if:
+- Student continues to struggle despite accommodations
+- Gaps in learning are widening over time
+- Student expresses frustration or stress about school work
+- Additional evaluation may be needed to identify learning differences
+
+Remember: Differentiation is about providing multiple pathways to success, not lowering expectations.`;
+}
+
+function generateMockInterventionRecommendations(req: GenerateRecommendationsRequest): string {
   const concernTypes = req.concernTypes.join(', ');
   
   return `# Assessment Summary

@@ -341,6 +341,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // File uploads
         studentAssessmentFile: req.body.studentAssessmentFile || null,
         lessonPlanFile: req.body.lessonPlanFile || null,
+        
+        // Task type selection
+        taskType: req.body.taskType || "tier2_intervention",
       });
       
       // Debug: Log the differentiation data being received
@@ -383,17 +386,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // File uploads for enhanced AI recommendations
         studentAssessmentFile: newConcern.studentAssessmentFile || undefined,
         lessonPlanFile: newConcern.lessonPlanFile || undefined,
+        
+        // Task type for focused AI responses
+        taskType: newConcern.taskType || "tier2_intervention",
       };
 
       const recommendationResponse = await generateRecommendations(recommendationRequest);
 
-      // Save the AI response as a single intervention record for now
+      // Save the AI response with appropriate title based on task type
+      const taskTypeLabel = newConcern.taskType === "differentiation" ? "Differentiation Strategies" : "Tier 2 Intervention Recommendations";
       const savedInterventions = await storage.createInterventions([{
         concernId: newConcern.id,
-        title: "AI-Generated Tier 2 Recommendations",
+        title: `AI-Generated ${taskTypeLabel}`,
         description: recommendationResponse.recommendations,
-        steps: ["Review Assessment Summary", "Implement Immediate Interventions", "Apply Short-term Strategies", "Monitor Progress"],
-        timeline: "2-6 weeks",
+        steps: newConcern.taskType === "differentiation" 
+          ? ["Review Student Needs", "Adapt Instruction Methods", "Implement Accommodations", "Monitor Learning Progress"]
+          : ["Review Assessment Summary", "Implement Immediate Interventions", "Apply Short-term Strategies", "Monitor Progress"],
+        timeline: newConcern.taskType === "differentiation" ? "Ongoing" : "2-6 weeks",
       }]);
 
       // Increment usage count after successful concern creation

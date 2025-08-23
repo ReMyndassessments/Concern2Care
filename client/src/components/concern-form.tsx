@@ -49,6 +49,9 @@ const enhancedConcernFormSchema = z.object({
   // File uploads for better AI recommendations
   studentAssessmentFile: z.string().optional(),
   lessonPlanFile: z.string().optional(),
+  
+  // Task type selection for focused AI responses
+  taskType: z.string().min(1, "Task type is required"),
 });
 
 type EnhancedConcernFormData = z.infer<typeof enhancedConcernFormSchema>;
@@ -101,6 +104,19 @@ const COMMON_DISABILITY_TYPES = [
   'Other'
 ];
 
+const TASK_TYPES = [
+  { 
+    value: 'differentiation', 
+    label: 'Differentiation Task',
+    description: 'Get specific strategies to adapt instruction for different learning styles, abilities, and needs'
+  },
+  { 
+    value: 'tier2_intervention', 
+    label: 'Tier 2 Intervention Task',
+    description: 'Generate evidence-based behavioral and academic intervention strategies for concerning behaviors'
+  }
+];
+
 export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const { user } = useAuth() as { user: UserType | undefined };
   const { toast } = useToast();
@@ -137,6 +153,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       otherNeeds: "",
       studentAssessmentFile: "",
       lessonPlanFile: "",
+      taskType: "",
     },
   });
 
@@ -158,9 +175,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       return response;
     },
     onSuccess: (data: { concern: Concern; interventions: Intervention[]; recommendations?: string; disclaimer?: string }) => {
+      const taskTypeLabel = form.getValues('taskType') === 'differentiation' ? 'differentiation strategies' : 'intervention recommendations';
       toast({
         title: "Success!",
-        description: `Generated AI-powered intervention recommendations`,
+        description: `Generated AI-powered ${taskTypeLabel}`,
       });
       
       // Reset form
@@ -772,6 +790,54 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 </FormItem>
               )}
             />
+
+            {/* Task Type Selection */}
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6">
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-lg">🎯</span>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Choose Your Task Type</h3>
+              </div>
+              <p className="text-sm text-gray-600 mb-4">
+                Select the type of AI-powered support you need for this student concern:
+              </p>
+              
+              <FormField
+                control={form.control}
+                name="taskType"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-4"
+                        disabled={isAtLimit}
+                      >
+                        {TASK_TYPES.map((taskType) => (
+                          <div key={taskType.value} className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
+                            <RadioGroupItem value={taskType.value} id={taskType.value} disabled={isAtLimit} className="mt-1" />
+                            <div className="flex-1">
+                              <label
+                                htmlFor={taskType.value}
+                                className="text-base font-medium text-gray-900 cursor-pointer block mb-1"
+                              >
+                                {taskType.label}
+                              </label>
+                              <p className="text-sm text-gray-600 leading-relaxed">
+                                {taskType.description}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* Actions Taken */}
             <FormField

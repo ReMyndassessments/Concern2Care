@@ -91,6 +91,9 @@ export const concerns = pgTable("concerns", {
   studentAssessmentFile: varchar("student_assessment_file"), // URL to uploaded assessment
   lessonPlanFile: varchar("lesson_plan_file"), // URL to uploaded lesson plan
   
+  // Task type selection for focused AI responses
+  taskType: varchar("task_type").default("tier2_intervention"), // "differentiation" | "tier2_intervention"
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
