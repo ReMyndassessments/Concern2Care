@@ -1054,31 +1054,40 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   </div>
                 </div>
 
-                {/* Lesson Plan Upload - Standalone for Differentiation */}
-                <FormField
-                  control={form.control}
-                  name="lessonPlanFile"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <FileText className="h-4 w-4" />
-                        Current Lesson Plan (Optional)
-                      </FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Upload your lesson plan for targeted differentiation suggestions..."
-                          {...field} 
-                          disabled={isAtLimit}
-                          data-testid="input-lesson-plan"
-                        />
-                      </FormControl>
-                      <p className="text-xs text-gray-600">
-                        Upload your lesson plan to get specific adaptation suggestions for this student
-                      </p>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {/* Lesson Plan Upload - Standalone Section for Differentiation */}
+                <div className="bg-green-50 rounded-lg p-4 sm:p-6">
+                  <div className="flex items-center space-x-2 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <FileText className="h-4 w-4 text-white" />
+                    </div>
+                    <h3 className="text-base sm:text-lg font-medium text-gray-900">Lesson Plan to Adapt</h3>
+                  </div>
+                  
+                  <FormField
+                    control={form.control}
+                    name="lessonPlanFile"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2">
+                          <span>📤</span>
+                          Upload Lesson Plan
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Upload a lesson plan that needs differentiation for this student"
+                            {...field} 
+                            disabled={isAtLimit}
+                            data-testid="input-lesson-plan"
+                          />
+                        </FormControl>
+                        <p className="text-xs text-gray-600">
+                          Upload a lesson plan that needs differentiation for this student
+                        </p>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </>
             )}
             
