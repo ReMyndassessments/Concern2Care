@@ -1403,8 +1403,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Analytics Dashboard Data
   app.get('/api/analytics/dashboard', requireAdmin, async (req: any, res) => {
     try {
-      // Temporarily disabled - service removed
-      const analytics = { totalConcerns: 0, totalUsers: 0, monthlyStats: [] };
+      const dashboardStats = await storage.getDashboardStats();
+      const recentActivity = await storage.getRecentActivity(10);
+      const dailyStats = await storage.getDailyStats(30);
+      
+      const analytics = {
+        ...dashboardStats,
+        recentActivity,
+        dailyStats
+      };
+      
       res.json(analytics);
     } catch (error) {
       console.error('Analytics error:', error);

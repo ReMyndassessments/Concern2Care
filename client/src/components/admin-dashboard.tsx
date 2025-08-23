@@ -25,6 +25,7 @@ import TeacherManagement from "@/components/teacher-management";
 import ApiKeyManagement from "@/components/api-key-management";
 import SchoolExport from "@/components/school-export";
 import SchoolEmailSettings from "@/components/school-email-settings";
+import AnalyticsDashboard from "@/components/analytics-dashboard";
 
 interface DashboardStats {
   totalUsers: number;
@@ -291,7 +292,7 @@ export default function AdminDashboard() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          {/* <AnalyticsDashboard /> - Temporarily disabled */}
+          <AnalyticsDashboard />
         </TabsContent>
 
         <TabsContent value="overview" className="space-y-6">
