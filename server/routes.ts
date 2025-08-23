@@ -4,9 +4,8 @@ import { storage } from "./storage";
 import { generateInterventions, answerFollowUpQuestion, generateRecommendations, followUpAssistance, GenerateRecommendationsRequest, FollowUpAssistanceRequest } from "./services/ai";
 import { generateConcernReport, ensureReportsDirectory } from "./services/pdf";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
-import { insertConcernSchema, insertFollowUpQuestionSchema, users } from "@shared/schema";
+import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports } from "@shared/schema";
 import { db } from "./db";
-import { concerns } from "@shared/schema";
 import { eq, and, sql } from "drizzle-orm";
 import path from "path";
 import fs from "fs";
@@ -877,7 +876,133 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Delete school
+  // Data impact analysis for school deletion safety
+  app.get('/api/admin/schools/:schoolId/deletion-impact', requireAuth, async (req, res) => {
+    try {
+      const schoolId = req.params.schoolId;
+      
+      // Get school details
+      const school = await storage.getSchool(schoolId);
+      if (!school) {
+        return res.status(404).json({ message: "School not found" });
+      }
+
+      // Get affected users
+      const affectedUsers = await storage.getUsersBySchoolId(schoolId);
+      
+      // Get total concerns from all teachers in this school
+      const concernsQuery = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(concerns)
+        .innerJoin(users, eq(concerns.teacherId, users.id))
+        .where(eq(users.schoolId, schoolId));
+      
+      const totalConcerns = concernsQuery[0]?.count || 0;
+
+      // Get interventions count
+      const interventionsQuery = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(interventions)
+        .innerJoin(concerns, eq(interventions.concernId, concerns.id))
+        .innerJoin(users, eq(concerns.teacherId, users.id))
+        .where(eq(users.schoolId, schoolId));
+      
+      const totalInterventions = interventionsQuery[0]?.count || 0;
+
+      // Get reports count
+      const reportsQuery = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(reports)
+        .innerJoin(concerns, eq(reports.concernId, concerns.id))
+        .innerJoin(users, eq(concerns.teacherId, users.id))
+        .where(eq(users.schoolId, schoolId));
+      
+      const totalReports = reportsQuery[0]?.count || 0;
+
+      const impact = {
+        school: school,
+        affectedUsers: affectedUsers.length,
+        userDetails: affectedUsers.map(u => ({
+          id: u.id,
+          name: `${u.firstName} ${u.lastName}`,
+          email: u.email,
+          requestsUsed: u.supportRequestsUsed
+        })),
+        totalConcerns,
+        totalInterventions,
+        totalReports,
+        warnings: [
+          `${affectedUsers.length} teacher accounts will be affected`,
+          `${totalConcerns} student concerns will be lost`,
+          `${totalInterventions} AI interventions will be lost`,
+          `${totalReports} generated reports will be lost`,
+          "All school email configurations will be removed",
+          "All school feature settings will be lost"
+        ]
+      };
+
+      res.json(impact);
+    } catch (error) {
+      console.error("Error analyzing school deletion impact:", error);
+      res.status(500).json({ message: "Failed to analyze deletion impact" });
+    }
+  });
+
+  // Comprehensive data export before school deletion
+  app.get('/api/admin/schools/:schoolId/full-export', requireAuth, async (req, res) => {
+    try {
+      const schoolId = req.params.schoolId;
+      
+      const school = await storage.getSchool(schoolId);
+      if (!school) {
+        return res.status(404).json({ message: "School not found" });
+      }
+
+      // Get all users in this school with their complete data
+      const schoolUsers = await storage.getUsersBySchoolId(schoolId);
+      
+      const fullExportData = {
+        school: school,
+        exportDate: new Date().toISOString(),
+        users: []
+      };
+
+      for (const user of schoolUsers) {
+        const userData = await storage.getFullUserExportData(user.id);
+        (fullExportData.users as any[]).push(userData);
+      }
+
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="school-${school.name.replace(/\s+/g, '-')}-complete-export-${new Date().toISOString().split('T')[0]}.json"`);
+      res.json(fullExportData);
+    } catch (error) {
+      console.error("Error creating full school export:", error);
+      res.status(500).json({ message: "Failed to create export" });
+    }
+  });
+
+  // Soft deletion alternative for schools
+  app.put('/api/admin/schools/:id/mark-inactive', requireAuth, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const school = await storage.markSchoolInactive(req.params.id);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'mark_school_inactive',
+        targetSchoolId: school.id,
+        details: { schoolName: school.name }
+      });
+      
+      res.json({ success: true, school });
+    } catch (error) {
+      console.error("Error marking school inactive:", error);
+      res.status(500).json({ message: "Failed to mark school inactive" });
+    }
+  });
+
+  // Delete school (now with enhanced safety logging)
   app.delete("/api/admin/schools/:id", requireAuth, async (req: any, res) => {
     try {
       const adminId = req.user.claims.sub;
@@ -888,11 +1013,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       await storage.deleteSchool(req.params.id);
       
-      // Log admin action
+      // Log admin action with enhanced details
       await storage.logAdminAction({
         adminId,
-        action: 'delete_school',
-        details: { schoolName }
+        action: 'delete_school_permanently',
+        details: { 
+          schoolName,
+          warning: 'PERMANENT DELETION - All associated data was permanently removed',
+          deletedAt: new Date().toISOString()
+        }
       });
       
       res.json({ success: true });
@@ -985,7 +1114,112 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Delete user
+  // Data impact analysis for user deletion safety
+  app.get('/api/admin/users/:userId/deletion-impact', requireAdmin, async (req: any, res) => {
+    try {
+      const userId = req.params.userId;
+      
+      // Get user details
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Get user's concerns
+      const userConcerns = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(concerns)
+        .where(eq(concerns.teacherId, userId));
+      
+      const totalConcerns = userConcerns[0]?.count || 0;
+
+      // Get interventions for this user's concerns
+      const interventionsQuery = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(interventions)
+        .innerJoin(concerns, eq(interventions.concernId, concerns.id))
+        .where(eq(concerns.teacherId, userId));
+      
+      const totalInterventions = interventionsQuery[0]?.count || 0;
+
+      // Get reports for this user's concerns
+      const reportsQuery = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(reports)
+        .innerJoin(concerns, eq(reports.concernId, concerns.id))
+        .where(eq(concerns.teacherId, userId));
+      
+      const totalReports = reportsQuery[0]?.count || 0;
+
+      const impact = {
+        user: {
+          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          school: user.school || 'No school assigned',
+          requestsUsed: user.supportRequestsUsed
+        },
+        totalConcerns,
+        totalInterventions,
+        totalReports,
+        warnings: [
+          `${totalConcerns} student concerns will be lost`,
+          `${totalInterventions} AI interventions will be lost`,
+          `${totalReports} generated reports will be lost`,
+          "All progress notes created by this teacher will be lost",
+          "Personal email configuration will be removed",
+          "All activity logs will remain for audit purposes"
+        ]
+      };
+
+      res.json(impact);
+    } catch (error) {
+      console.error("Error analyzing user deletion impact:", error);
+      res.status(500).json({ message: "Failed to analyze deletion impact" });
+    }
+  });
+
+  // Comprehensive data export before user deletion
+  app.get('/api/admin/users/:userId/full-export', requireAdmin, async (req: any, res) => {
+    try {
+      const userId = req.params.userId;
+      
+      const userData = await storage.getFullUserExportData(userId);
+      if (!userData) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="user-${userData.user.firstName}-${userData.user.lastName}-export-${new Date().toISOString().split('T')[0]}.json"`);
+      res.json(userData);
+    } catch (error) {
+      console.error("Error creating full user export:", error);
+      res.status(500).json({ message: "Failed to create export" });
+    }
+  });
+
+  // Soft deletion alternative for users
+  app.put('/api/admin/users/:id/mark-inactive', requireAdmin, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const user = await storage.markUserInactive(req.params.id);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'mark_user_inactive',
+        targetUserId: user.id,
+        details: { userEmail: user.email }
+      });
+      
+      res.json({ success: true, user });
+    } catch (error) {
+      console.error("Error marking user inactive:", error);
+      res.status(500).json({ message: "Failed to mark user inactive" });
+    }
+  });
+
+  // Delete user (now with enhanced safety logging)
   app.delete("/api/admin/users/:id", requireAdmin, async (req: any, res) => {
     try {
       const adminId = req.user.claims.sub;
@@ -996,11 +1230,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       await storage.deleteUser(req.params.id);
       
-      // Log admin action
+      // Log admin action with enhanced details
       await storage.logAdminAction({
         adminId,
-        action: 'delete_user',
-        details: { userEmail }
+        action: 'delete_user_permanently',
+        details: { 
+          userEmail,
+          warning: 'PERMANENT DELETION - All user data and associated concerns were permanently removed',
+          deletedAt: new Date().toISOString()
+        }
       });
       
       res.json({ success: true });

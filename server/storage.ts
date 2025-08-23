@@ -93,6 +93,11 @@ export interface IStorage {
   getSchoolFeatureOverrides(schoolId: string): Promise<SchoolFeatureOverride[]>;
   setSchoolFeatureOverride(schoolId: string, flagName: string, enabled: boolean, adminId: string): Promise<SchoolFeatureOverride>;
   
+  // Data safety methods for deletion analysis
+  getUsersBySchoolId(schoolId: string): Promise<User[]>;
+  getSchool(schoolId: string): Promise<School | undefined>;
+  getFullUserExportData(userId: string): Promise<any>;
+  
   // Concern operations
   createConcern(concern: InsertConcern): Promise<Concern>;
   getConcernsByTeacher(teacherId: string): Promise<Concern[]>;
@@ -119,6 +124,10 @@ export interface IStorage {
   getProgressNotesByInterventionId(interventionId: string): Promise<ProgressNote[]>;
   updateProgressNote(id: string, updates: Partial<Omit<InsertProgressNote, 'interventionId' | 'teacherId'>>): Promise<ProgressNote | undefined>;
   deleteProgressNote(id: string): Promise<boolean>;
+  
+  // Soft deletion alternatives
+  markSchoolInactive(id: string): Promise<School>;
+  markUserInactive(id: string): Promise<User>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -638,6 +647,102 @@ export class DatabaseStorage implements IStorage {
       .delete(progressNotes)
       .where(eq(progressNotes.id, id));
     return (result.rowCount || 0) > 0;
+  }
+
+  // Data safety methods for deletion analysis
+  async getUsersBySchoolId(schoolId: string): Promise<User[]> {
+    const schoolUsers = await db
+      .select()
+      .from(users)
+      .where(eq(users.schoolId, schoolId));
+    return schoolUsers;
+  }
+
+  async getSchool(schoolId: string): Promise<School | undefined> {
+    const [school] = await db
+      .select()
+      .from(schools)
+      .where(eq(schools.id, schoolId));
+    return school;
+  }
+
+  async getFullUserExportData(userId: string): Promise<any> {
+    // Get user details
+    const user = await this.getUser(userId);
+    if (!user) return null;
+
+    // Get all concerns by this teacher
+    const userConcerns = await db
+      .select()
+      .from(concerns)
+      .where(eq(concerns.teacherId, userId));
+
+    // Get interventions for each concern
+    const concernsWithDetails = [];
+    for (const concern of userConcerns) {
+      const interventionList = await db
+        .select()
+        .from(interventions)
+        .where(eq(interventions.concernId, concern.id));
+
+      const followUps = await db
+        .select()
+        .from(followUpQuestions)
+        .where(eq(followUpQuestions.concernId, concern.id));
+
+      const reports = await db
+        .select()
+        .from(reports)
+        .where(eq(reports.concernId, concern.id));
+
+      concernsWithDetails.push({
+        ...concern,
+        interventions: interventionList,
+        followUpQuestions: followUps,
+        reports: reports
+      });
+    }
+
+    // Get progress notes created by this teacher
+    const teacherProgressNotes = await db
+      .select()
+      .from(progressNotes)
+      .where(eq(progressNotes.teacherId, userId));
+
+    return {
+      user,
+      concerns: concernsWithDetails,
+      progressNotesCreated: teacherProgressNotes,
+      exportDate: new Date().toISOString(),
+      totalConcerns: userConcerns.length,
+      totalInterventions: concernsWithDetails.reduce((sum, c) => sum + c.interventions.length, 0),
+      totalReports: concernsWithDetails.reduce((sum, c) => sum + c.reports.length, 0)
+    };
+  }
+
+  // Soft deletion alternatives
+  async markSchoolInactive(id: string): Promise<School> {
+    const [updatedSchool] = await db
+      .update(schools)
+      .set({ 
+        isActive: false,
+        updatedAt: new Date()
+      })
+      .where(eq(schools.id, id))
+      .returning();
+    return updatedSchool;
+  }
+
+  async markUserInactive(id: string): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({ 
+        isActive: false,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser;
   }
 }
 
