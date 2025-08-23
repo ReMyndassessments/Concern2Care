@@ -701,11 +701,12 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
               </div>
             </div>
 
-            {/* Concern Types */}
-            <FormField
-              control={form.control}
-              name="concernTypes"
-              render={() => (
+            {/* Concern Types - Only for Tier 2 Intervention */}
+            {form.watch('taskType') === 'tier2_intervention' && (
+              <FormField
+                control={form.control}
+                name="concernTypes"
+                render={() => (
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel className="text-base">
@@ -781,46 +782,14 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 </FormItem>
               )}
             />
+            )}
 
-            {/* Severity Level */}
-            <FormField
-              control={form.control}
-              name="severityLevel"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel className="text-base">
-                    Severity Level <span className="text-red-500">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-3"
-                      disabled={isAtLimit}
-                    >
-                      {SEVERITY_LEVELS.map((level) => (
-                        <div key={level.value} className="flex items-center space-x-3 py-2 min-h-[44px]">
-                          <RadioGroupItem value={level.value} id={level.value} disabled={isAtLimit} />
-                          <label
-                            htmlFor={level.value}
-                            className="text-sm font-normal leading-relaxed cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex-1"
-                          >
-                            {level.label}
-                          </label>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Concern Description */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
+            {/* Concern Description - Only for Tier 2 Intervention */}
+            {form.watch('taskType') === 'tier2_intervention' && (
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base">
                     Detailed Description of Concern <span className="text-red-500">*</span>
@@ -841,7 +810,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 </FormItem>
               )}
             />
-
+            )}
 
             {/* Task-Specific Sections */}
             {form.watch('taskType') === 'tier2_intervention' && (
@@ -992,128 +961,124 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
             {/* Differentiation Task Section */}
             {form.watch('taskType') === 'differentiation' && (
               <>
-                {/* Student Learning Profile - For Differentiation */}
+                {/* Student Learning Needs - For Differentiation */}
                 <div className="bg-amber-50 rounded-lg p-4 sm:p-6">
                   <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                     <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm">📚</span>
                     </div>
-                    <h3 className="text-base sm:text-lg font-medium text-gray-900">Student Learning Profile</h3>
+                    <h3 className="text-base sm:text-lg font-medium text-gray-900">Student Learning Needs</h3>
                     <p className="text-sm text-gray-600 ml-2">(Optional - helps create better differentiation strategies)</p>
                   </div>
                   
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="hasIep"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                                disabled={isAtLimit}
-                                data-testid="checkbox-has-iep"
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel className="text-sm">Has IEP/504</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="isGifted"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                                disabled={isAtLimit}
-                                data-testid="checkbox-is-gifted"
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel className="text-sm">Gifted</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="isEalLearner"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                                disabled={isAtLimit}
-                                data-testid="checkbox-is-eal"
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel className="text-sm">EAL Learner</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="isStruggling"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                                disabled={isAtLimit}
-                                data-testid="checkbox-is-struggling"
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel className="text-sm">Struggling</FormLabel>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* Lesson Plan Upload - For Differentiation */}
-                    <div className="border-t border-amber-200 pt-4">
-                      <FormField
-                        control={form.control}
-                        name="lessonPlanFile"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center gap-2">
-                              <FileText className="h-4 w-4" />
-                              Current Lesson Plan (Optional)
-                            </FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="Upload your lesson plan for targeted differentiation suggestions..."
-                                {...field} 
-                                disabled={isAtLimit}
-                                data-testid="input-lesson-plan"
-                              />
-                            </FormControl>
-                            <p className="text-xs text-gray-600">
-                              Upload your lesson plan to get specific adaptation suggestions for this student
-                            </p>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="hasIep"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-has-iep"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">Has IEP/504</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isGifted"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-is-gifted"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">Gifted</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isEalLearner"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-is-eal"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">EAL Learner</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isStruggling"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isAtLimit}
+                              data-testid="checkbox-is-struggling"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm">Struggling</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
+
+                {/* Lesson Plan Upload - Standalone for Differentiation */}
+                <FormField
+                  control={form.control}
+                  name="lessonPlanFile"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        Current Lesson Plan (Optional)
+                      </FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Upload your lesson plan for targeted differentiation suggestions..."
+                          {...field} 
+                          disabled={isAtLimit}
+                          data-testid="input-lesson-plan"
+                        />
+                      </FormControl>
+                      <p className="text-xs text-gray-600">
+                        Upload your lesson plan to get specific adaptation suggestions for this student
+                      </p>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </>
             )}
             
