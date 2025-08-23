@@ -757,29 +757,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get all users with school information
       const allUsers = await storage.getAllUsers();
+      console.log(`🔍 Found ${allUsers.length} users for school auto-creation`);
       
       // Get existing schools to avoid duplicates
       const existingSchools = await storage.getSchools();
+      console.log(`🔍 Found ${existingSchools.length} existing schools`);
       const existingSchoolNames = new Set(existingSchools.map(s => s.name.toLowerCase()));
       
       // Extract unique school names from users
       const userSchools = new Set<string>();
       allUsers.forEach((user: any) => {
+        console.log(`🔍 Checking user ${user.id}: school field =`, user.school, `(type: ${typeof user.school})`);
+        
         // Handle both legacy string school field and new School object
         let schoolName: string | null = null;
         
         if (typeof user.school === 'string' && user.school.trim()) {
           // Legacy string format: school field is directly the school name
           schoolName = user.school.trim();
+          console.log(`🔍 Extracted school name from string: "${schoolName}"`);
         } else if (user.school && typeof user.school === 'object' && user.school.name) {
           // New object format: school is a School object with name property
           schoolName = user.school.name;
+          console.log(`🔍 Extracted school name from object: "${schoolName}"`);
         }
         
         if (schoolName && !existingSchoolNames.has(schoolName.toLowerCase())) {
           userSchools.add(schoolName);
+          console.log(`🔍 Added school to creation list: "${schoolName}"`);
+        } else if (schoolName) {
+          console.log(`🔍 School "${schoolName}" already exists, skipping`);
         }
       });
+      
+      console.log(`🔍 Total unique schools to create: ${userSchools.size}`);
       
       // Create school records for each unique school name
       const createdSchools = [];
