@@ -178,6 +178,12 @@ export default function AppHeader() {
                       My Requests
                     </Button>
                   </Link>
+                  <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
+                      <Settings className="h-4 w-4 mr-3" />
+                      Settings
+                    </Button>
+                  </Link>
                 </>
               )}
               {user?.isAdmin && (
