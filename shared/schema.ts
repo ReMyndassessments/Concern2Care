@@ -376,6 +376,7 @@ export const insertApiKeySchema = createInsertSchema(apiKeys).omit({
 
 export const insertUserEmailConfigSchema = createInsertSchema(userEmailConfigs).omit({
   id: true,
+  userId: true, // Omit userId - it comes from authenticated user, not request body
   createdAt: true,
   updatedAt: true,
   lastTestedAt: true,
@@ -384,6 +385,8 @@ export const insertUserEmailConfigSchema = createInsertSchema(userEmailConfigs).
 
 export const insertSchoolEmailConfigSchema = createInsertSchema(schoolEmailConfigs).omit({
   id: true,
+  schoolId: true, // Omit schoolId - it comes from authenticated user's school
+  configuredBy: true, // Omit configuredBy - it comes from authenticated user
   createdAt: true,
   updatedAt: true,
   lastTestedAt: true,

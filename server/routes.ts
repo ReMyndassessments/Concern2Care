@@ -2418,9 +2418,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       
+      if (!userId) {
+        console.error("No userId found in session");
+        return res.status(401).json({ message: "User not authenticated properly" });
+      }
+      
       // Validate request body
       const result = insertUserEmailConfigSchema.safeParse(req.body);
       if (!result.success) {
+        console.error("Email config validation failed:", result.error.errors);
         return res.status(400).json({ message: "Invalid email configuration data", errors: result.error.errors });
       }
 
