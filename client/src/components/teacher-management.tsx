@@ -380,18 +380,19 @@ export default function TeacherManagement() {
       {/* Teachers Table */}
       <Card>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>School</TableHead>
-                <TableHead>Requests</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[120px]">Name</TableHead>
+                  <TableHead className="min-w-[200px]">Email</TableHead>
+                  <TableHead className="min-w-[120px]">School</TableHead>
+                  <TableHead className="min-w-[100px]">Requests</TableHead>
+                  <TableHead className="min-w-[80px]">Status</TableHead>
+                  <TableHead className="min-w-[100px]">Joined</TableHead>
+                  <TableHead className="min-w-[100px] sticky right-0 bg-white">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
             <TableBody>
               {filteredTeachers.length === 0 ? (
                 <TableRow>
@@ -442,8 +443,8 @@ export default function TeacherManagement() {
                         <span className="text-sm">{formatDate(teacher.createdAt)}</span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
+                    <TableCell className="sticky right-0 bg-white">
+                      <div className="flex items-center space-x-1">
                         <Button
                           variant="outline"
                           size="sm"
@@ -451,7 +452,9 @@ export default function TeacherManagement() {
                             setSelectedTeacher(teacher);
                             setShowEditDialog(true);
                           }}
+                          className="h-8 w-8 p-0"
                           data-testid={`button-edit-${teacher.id}`}
+                          title="Edit teacher"
                         >
                           <Edit2 className="h-4 w-4" />
                         </Button>
@@ -459,8 +462,9 @@ export default function TeacherManagement() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleDeleteTeacher(teacher)}
-                          className="text-red-600 hover:text-red-700 hover:border-red-300"
+                          className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:border-red-300"
                           data-testid={`button-delete-${teacher.id}`}
+                          title="Delete teacher"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -470,7 +474,8 @@ export default function TeacherManagement() {
                 ))
               )}
             </TableBody>
-          </Table>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
