@@ -331,40 +331,56 @@ export default function HelpGuide() {
         </Section>
 
         {/* Admin Features */}
-        <Section icon={Shield} title="Administrator Features">
+        <Section icon={Shield} title="School Administrator Features">
           <p className="text-sm text-gray-600 mb-4">
-            <Badge variant="outline" className="mr-2">Admin Only</Badge>
-            These features are only available to users with administrator privileges.
+            <Badge variant="outline" className="mr-2">School Admin Only</Badge>
+            These features are available to designated school administrators for managing their institution's Concern2Care usage.
           </p>
 
-          <SubSection title="Teacher Management">
+          <SubSection title="Teacher Account Management">
             <FeatureList features={[
-              "Add new teacher accounts",
-              "Edit teacher information and permissions",
-              "Manage usage limits and additional requests",
-              "Deactivate or remove teacher accounts",
-              "View teacher activity and usage statistics"
+              "Add new teacher accounts for your school",
+              "Edit teacher contact information and profiles",
+              "Grant additional monthly requests when needed",
+              "Deactivate teacher accounts (e.g., staff changes)",
+              "View teacher usage statistics and activity"
             ]} />
           </SubSection>
 
-          <SubSection title="System Configuration">
+          <SubSection title="School-Wide Email Configuration">
             <FeatureList features={[
-              "Manage API keys for AI services",
-              "Configure school-wide email settings",
-              "Set default usage limits for new teachers",
-              "Export school data and analytics",
-              "Monitor system performance and usage"
+              "Set up school district email settings for all teachers",
+              "Configure institutional SMTP server details", 
+              "Allow teachers to use school email for report sharing",
+              "Test and validate school email configuration"
             ]} />
           </SubSection>
 
-          <SubSection title="Data Management">
+          <SubSection title="School Analytics and Reporting">
             <FeatureList features={[
-              "School data export with impact analysis",
-              "Safe deletion procedures with data protection",
-              "Analytics dashboard with key metrics",
-              "User activity monitoring and reporting"
+              "View school-wide usage dashboard and trends",
+              "Generate reports on intervention effectiveness",
+              "Monitor teacher engagement and adoption rates",
+              "Export school data for institutional analysis",
+              "Track most common concern types and patterns"
             ]} />
           </SubSection>
+
+          <SubSection title="User Support and Training">
+            <FeatureList features={[
+              "Send password reset emails to teachers",
+              "Access teacher training resources and guides",
+              "Monitor help desk issues and common problems",
+              "Coordinate staff training sessions"
+            ]} />
+          </SubSection>
+
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Note:</strong> School administrators cannot access individual teacher's concern details or reports for privacy protection, but can view aggregated usage statistics.
+            </AlertDescription>
+          </Alert>
         </Section>
 
         {/* Mobile Usage */}
