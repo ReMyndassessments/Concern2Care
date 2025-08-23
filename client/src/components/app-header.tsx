@@ -4,19 +4,30 @@ import { Button } from "@/components/ui/button";
 import { User } from "@shared/schema";
 import { Link } from "wouter";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AppHeader() {
   const { user } = useAuth() as { user: User | undefined };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      // Redirect to home page instead of reloading to avoid 404
-      window.location.href = "/";
+      // Clear React Query cache to ensure auth state is properly cleared
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
+      // Small delay to ensure cache is cleared before redirect
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     } catch (error) {
       console.error('Logout failed:', error);
-      window.location.href = "/";
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     }
   };
 

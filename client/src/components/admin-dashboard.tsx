@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useQueryClient } from "@tanstack/react-query";
 import { 
   Shield, 
   Users, 
@@ -50,13 +51,25 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
 
+  const queryClient = useQueryClient();
+
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.href = "/";
+      // Clear React Query cache to ensure auth state is properly cleared
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
+      // Small delay to ensure cache is cleared before redirect
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     } catch (error) {
       console.error('Logout failed:', error);
-      window.location.href = "/";
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     }
   };
 
