@@ -248,7 +248,9 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
     let recommendations = data.choices[0]?.message?.content || 'Unable to generate recommendations at this time.';
 
     // Automatically add student support sharing message for urgent cases
+    console.log('🚨 Checking severity level:', req.severityLevel, 'Type:', typeof req.severityLevel);
     if (req.severityLevel === 'urgent') {
+      console.log('🚨 URGENT DETECTED! Adding urgent case message...');
       recommendations += `\n\n### **🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED**
 
 **Share this case with Student Support immediately:**
@@ -259,6 +261,9 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
 * Escalate to administration if no improvement within 48-72 hours
 
 **Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
+      console.log('🚨 Urgent message appended. Final recommendations length:', recommendations.length);
+    } else {
+      console.log('🚨 Severity is not urgent, no special message added');
     }
 
     const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation.";
