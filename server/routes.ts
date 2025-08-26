@@ -273,7 +273,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createUser(userData);
 
       // Generate BuyMeACoffee payment URL with user data
-      const paymentUrl = `https://buymeacoffee.com/concern2care/e/concern2care-annual?email=${encodeURIComponent(email)}&userId=${encodeURIComponent(userId)}`;
+      const paymentUrl = `https://buymeacoffee.com/remyndtimetrack/e/450612?email=${encodeURIComponent(email)}&userId=${encodeURIComponent(userId)}`;
 
       res.json({ 
         success: true, 
