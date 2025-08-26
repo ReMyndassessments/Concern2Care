@@ -940,20 +940,30 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2">
-                          <span>📤</span>
+                          <BookOpen className="h-4 w-4" />
                           Upload Lesson Plan
                         </FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Upload a lesson plan that needs differentiation for this student"
-                            {...field} 
-                            disabled={isAtLimit}
-                            data-testid="input-lesson-plan"
-                          />
-                        </FormControl>
-                        <p className="text-xs text-gray-600">
-                          Upload a lesson plan that needs differentiation for this student
-                        </p>
+                        <div className="space-y-2">
+                          <ObjectUploader
+                            acceptedFileTypes={['.pdf', '.doc', '.docx', '.txt']}
+                            onFileUploaded={(fileUrl, fileName) => {
+                              field.onChange(fileUrl);
+                              toast({
+                                title: "Lesson plan uploaded",
+                                description: `${fileName} will help generate better differentiation strategies`,
+                              });
+                            }}
+                            onFileRemoved={() => field.onChange("")}
+                            currentFile={field.value}
+                            disabled={isAtLimit || lessonPlanUploading}
+                            data-testid="upload-lesson-plan"
+                          >
+                            Upload Lesson Plan
+                          </ObjectUploader>
+                          <p className="text-xs text-green-600">
+                            Upload a lesson plan that needs differentiation for this student (PDF, DOC, TXT)
+                          </p>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
