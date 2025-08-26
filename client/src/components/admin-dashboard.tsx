@@ -19,7 +19,9 @@ import {
   Settings,
   Activity,
   BarChart3,
-  LogOut
+  LogOut,
+  Gift,
+  UserPlus
 } from "lucide-react";
 import TeacherManagement from "@/components/teacher-management";
 import ApiKeyManagement from "@/components/api-key-management";
@@ -27,6 +29,7 @@ import SchoolExport from "@/components/school-export";
 import SchoolEmailSettings from "@/components/school-email-settings";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
 import FeatureFlagManagement from "@/components/feature-flag-management";
+import ReferralManagement from "@/components/referral-management";
 
 interface DashboardStats {
   totalUsers: number;
@@ -281,6 +284,12 @@ export default function AdminDashboard() {
               Teachers
             </TabsTrigger>
             <TabsTrigger 
+              value="referrals" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Referrals
+            </TabsTrigger>
+            <TabsTrigger 
               value="email" 
               className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
             >
@@ -327,6 +336,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="teachers" className="space-y-6">
           <TeacherManagement />
+        </TabsContent>
+
+        <TabsContent value="referrals" className="space-y-6">
+          <ReferralManagement />
         </TabsContent>
 
         <TabsContent value="email" className="space-y-6">

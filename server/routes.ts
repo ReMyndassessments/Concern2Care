@@ -232,8 +232,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Generate a unique user ID
+      // Generate a unique user ID and referral code
       const userId = `teacher-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const myReferralCode = `${username.toUpperCase()}${Date.now().toString().slice(-4)}`;
+
+      // Validate referral code if provided
+      let referredBy = null;
+      let bonusRequests = 0;
+      if (referralCode) {
+        const referrer = await storage.getUserByReferralCode(referralCode);
+        if (referrer && referrer.isActive) {
+          referredBy = referrer.id;
+          bonusRequests = 5; // New user gets 5 bonus requests
+        }
+      }
 
       // Create pending user record (not active until payment)
       const userData = {
@@ -246,10 +258,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         school: school,
         country: country,
         referralCode: referralCode || null,
+        myReferralCode: myReferralCode,
+        referredBy: referredBy,
+        referralCount: 0,
         isActive: false, // Not active until payment confirmed
         isAdmin: false,
         supportRequestsLimit: 20,
         supportRequestsUsed: 0,
+        additionalRequests: bonusRequests,
         createdAt: new Date(),
         lastLoginAt: null
       };
@@ -301,6 +317,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         subscriptionStartDate: new Date(),
         subscriptionEndDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year from now
       });
+
+      // Process referral bonus if user was referred
+      if (user.referredBy) {
+        try {
+          await storage.grantReferralBonus(user.referredBy, 10); // Referring user gets 10 bonus requests
+          console.log(`🎁 Referral bonus granted to user: ${user.referredBy}`);
+        } catch (error) {
+          console.error("Error granting referral bonus:", error);
+        }
+      }
 
       // Log successful activation
       console.log(`🎉 Account activated for user: ${email} (${userId})`);
@@ -2183,6 +2209,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Bulk delete error:', error);
       res.status(500).json({ message: 'Failed to delete teachers' });
+    }
+  });
+
+  // Admin: Get referral statistics
+  app.get("/api/admin/referral-stats", requireAdmin, async (req, res) => {
+    try {
+      const stats = await storage.getReferralStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching referral stats:", error);
+      res.status(500).json({ message: "Failed to fetch referral statistics" });
+    }
+  });
+
+  // Admin: Get referral details for a user
+  app.get("/api/admin/user/:userId/referrals", requireAdmin, async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const referrals = await storage.getUserReferrals(userId);
+      res.json(referrals);
+    } catch (error) {
+      console.error("Error fetching user referrals:", error);
+      res.status(500).json({ message: "Failed to fetch user referrals" });
     }
   });
 

@@ -57,7 +57,10 @@ export const users = pgTable("users", {
   isActive: boolean("is_active").default(true),
   username: varchar("username").unique(), // For individual teacher accounts
   country: varchar("country"), // For registration data
-  referralCode: varchar("referral_code"), // For referral tracking
+  referralCode: varchar("referral_code"), // Code used when this user registered
+  myReferralCode: varchar("my_referral_code").unique(), // This user's unique code for sharing
+  referredBy: varchar("referred_by").references(() => users.id), // Who referred this user
+  referralCount: integer("referral_count").default(0), // How many people this user has referred
   paymentConfirmedAt: timestamp("payment_confirmed_at"), // When payment was confirmed
   subscriptionStartDate: timestamp("subscription_start_date"), // Subscription start
   subscriptionEndDate: timestamp("subscription_end_date"), // Subscription end
