@@ -2,8 +2,36 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, CheckCircle } from "lucide-react";
-// ProgressNotesSection temporarily removed
-// FormattedInterventionContent temporarily removed
+
+// Function to format markdown-like text to HTML
+function formatMarkdownText(text: string): string {
+  if (!text) return '';
+  
+  return text
+    // Convert **bold** and ***bold italic*** to HTML
+    .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    
+    // Convert ## Headers ## to HTML headers
+    .replace(/###\s*(.*?)\s*###/g, '<h3 class="font-semibold text-gray-900 mt-4 mb-2">$1</h3>')
+    .replace(/##\s*(.*?)\s*##/g, '<h2 class="font-bold text-gray-900 mt-4 mb-2 text-lg">$1</h2>')
+    .replace(/#\s*(.*?)\s*#/g, '<h1 class="font-bold text-gray-900 mt-4 mb-2 text-xl">$1</h1>')
+    
+    // Convert numbered lists
+    .replace(/^\d+\.\s(.+)$/gm, '<li class="ml-4 mb-1">$1</li>')
+    
+    // Convert bullet points
+    .replace(/^[-*]\s(.+)$/gm, '<li class="ml-4 mb-1 list-disc">$1</li>')
+    
+    // Convert line breaks to proper HTML
+    .replace(/\n\n/g, '</p><p class="mb-2">')
+    .replace(/\n/g, '<br/>')
+    
+    // Wrap in paragraph tags
+    .replace(/^(.+)/, '<p class="mb-2">$1')
+    .replace(/(.+)$/, '$1</p>');
+}
 
 interface InterventionsDisplayProps {
   concernId: string;
@@ -90,9 +118,12 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                 
                 {/* Full intervention description with professional formatting */}
                 <div className="mb-4">
-                  <div className="prose max-w-none text-sm text-gray-700">
-                    {intervention.description || 'No description available'}
-                  </div>
+                  <div 
+                    className="prose max-w-none text-sm text-gray-700"
+                    dangerouslySetInnerHTML={{
+                      __html: formatMarkdownText(intervention.description || 'No description available')
+                    }}
+                  />
                 </div>
 
                 {/* Display intervention steps if available */}
