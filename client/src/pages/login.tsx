@@ -104,23 +104,23 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="card shadow-2xl border-0">
-          <div className="card-header text-center space-y-4 pb-8">
+        <Card className="shadow-2xl border-0">
+          <CardHeader className="text-center space-y-4 pb-8">
             <div className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center">
               <Sparkles className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h2 className="card-title text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent">
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Welcome Back
-              </h2>
+              </CardTitle>
               <p className="text-gray-600 mt-2">Sign in to your teacher account</p>
             </div>
-          </div>
-          <div className="card-content space-y-6">
+          </CardHeader>
+          <CardContent className="space-y-6">
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="label">Email</label>
-                <input
+                <Label htmlFor="email">Email</Label>
+                <Input
                   id="email"
                   type="email"
                   value={email}
@@ -128,13 +128,12 @@ export default function Login() {
                   placeholder="Enter your email"
                   required
                   data-testid="input-email"
-                  className="input"
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="password" className="label">Password</label>
+                <Label htmlFor="password">Password</Label>
                 <div className="relative">
-                  <input
+                  <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={password}
@@ -142,11 +141,12 @@ export default function Login() {
                     placeholder="Enter your password"
                     required
                     data-testid="input-password"
-                    className="input"
                   />
-                  <button
+                  <Button
                     type="button"
-                    className="btn btn-ghost absolute right-0 top-0 h-full px-3 py-2"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                     data-testid="button-toggle-password"
                   >
@@ -155,17 +155,17 @@ export default function Login() {
                     ) : (
                       <Eye className="h-4 w-4 text-gray-400" />
                     )}
-                  </button>
+                  </Button>
                 </div>
               </div>
-              <button
+              <Button
                 type="submit"
-                className="btn btn-primary w-full"
+                className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
                 disabled={isLoading}
                 data-testid="button-login"
               >
                 {isLoading ? "Signing in..." : "Sign In"}
-              </button>
+              </Button>
             </form>
             
             <div className="text-center space-y-4">
@@ -182,18 +182,18 @@ export default function Login() {
                 <p className="text-sm text-gray-600 mb-3">
                   Need an account? Create one to start documenting student concerns.
                 </p>
-                <button
-                  type="button"
-                  className="btn btn-outline w-full"
+                <Button
+                  variant="outline"
+                  className="w-full"
                   onClick={() => setLocation('/')}
                   data-testid="button-create-account"
                 >
                   Create Teacher Account
-                </button>
+                </Button>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
