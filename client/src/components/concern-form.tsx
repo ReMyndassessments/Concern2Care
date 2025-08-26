@@ -29,10 +29,10 @@ const enhancedConcernFormSchema = z.object({
   grade: z.string().min(1, "Grade is required"),
   teacherPosition: z.string().min(1, "Teacher position is required"),
   location: z.string().min(1, "Location is required"),
-  concernTypes: z.array(z.string()).min(1, "At least one concern type is required"),
+  concernTypes: z.array(z.string()).default([]),
   otherConcernType: z.string().optional(),
-  description: z.string().min(10, "Please provide at least 10 characters of detail"),
-  severityLevel: z.string().min(1, "Severity level is required"),
+  description: z.string().optional(),
+  severityLevel: z.string().optional(),
   actionsTaken: z.array(z.string()).default([]),
   otherActionTaken: z.string().optional(),
   
@@ -52,6 +52,18 @@ const enhancedConcernFormSchema = z.object({
   
   // Task type selection for focused AI responses
   taskType: z.string().min(1, "Task type is required"),
+}).refine((data) => {
+  // For tier2_intervention tasks, require certain fields
+  if (data.taskType === 'tier2_intervention') {
+    return data.concernTypes.length > 0 && 
+           data.description && data.description.length >= 10 && 
+           data.severityLevel;
+  }
+  // For differentiation tasks, no additional validation needed
+  return true;
+}, {
+  message: "Please fill in all required fields for the selected task type",
+  path: ["taskType"], // This will show the error on the taskType field
 });
 
 type EnhancedConcernFormData = z.infer<typeof enhancedConcernFormSchema>;
