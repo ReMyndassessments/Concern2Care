@@ -2521,12 +2521,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         doc.text('Student Concerns to Discuss:', { underline: true });
         doc.moveDown();
         
-        // Fetch detailed concern information
-        const userId = session.user.id;
-        const userConcerns = await storage.getConcerns(userId);
-        const selectedConcernDetails = userConcerns.filter((concern: any) => 
-          meetingData.selectedConcerns.includes(concern.id)
-        );
+        // Fetch detailed concern information with all related data (interventions, etc.)
+        const selectedConcernDetails = [];
+        for (const concernId of meetingData.selectedConcerns) {
+          const concernWithDetails = await storage.getConcernWithDetails(concernId);
+          if (concernWithDetails) {
+            selectedConcernDetails.push(concernWithDetails);
+          }
+        }
 
         // Group concerns by student
         const concernsByStudent: { [key: string]: any[] } = {};
@@ -2543,6 +2545,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         doc.moveDown();
 
         // Display each student's concerns in detail
+        let concernCounter = 1;
         for (const [studentName, concerns] of Object.entries(concernsByStudent)) {
           doc.fontSize(14).font('Helvetica-Bold');
           doc.text(`${studentName} (Grade ${concerns[0].grade})`, { underline: true });
@@ -2550,17 +2553,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           concerns.forEach((concern: any, index: number) => {
             doc.fontSize(12).font('Helvetica-Bold');
-            doc.text(`Concern ${index + 1}: ${Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'N/A'}`);
+            doc.text(`${concernCounter}. ${Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'N/A'} Concern`);
             doc.moveDown(0.5);
 
             doc.fontSize(10).font('Helvetica');
             doc.text(`Severity: ${concern.severityLevel || 'N/A'} | Location: ${concern.location || 'N/A'} | Date: ${concern.createdAt ? new Date(concern.createdAt).toLocaleDateString() : 'N/A'}`);
             doc.moveDown(0.5);
 
+            doc.fontSize(11).font('Helvetica-Bold');
+            doc.text('Description:');
             doc.fontSize(11).font('Helvetica');
-            doc.text('Description:', { continued: false });
             doc.text(concern.description || 'No description provided', { width: 500, align: 'left' });
             doc.moveDown(0.5);
+
+            concernCounter++;
 
             if (concern.actionsTaken && Array.isArray(concern.actionsTaken) && concern.actionsTaken.length > 0) {
               doc.text('Actions Already Taken:', { continued: false });
