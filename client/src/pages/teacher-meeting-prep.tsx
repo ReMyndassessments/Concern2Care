@@ -85,7 +85,7 @@ export default function TeacherMeetingPrep() {
       const response = await apiRequest('/api/concerns');
       setConcerns(response || []);
     } catch (error) {
-      console.error('Error loading concerns:', error);
+      // Error loading concerns - handled by user feedback
       toast({
         title: "Error",
         description: "Failed to load your concerns for meeting preparation.",
@@ -262,7 +262,7 @@ export default function TeacherMeetingPrep() {
         throw new Error('Failed to generate document');
       }
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      // Error generating meeting preparation document
       toast({
         title: "Error",
         description: "Failed to generate meeting preparation document. Please try again.",

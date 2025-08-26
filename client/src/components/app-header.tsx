@@ -22,7 +22,7 @@ export default function AppHeader() {
         window.location.href = "/";
       }, 100);
     } catch (error) {
-      console.error('Logout failed:', error);
+      // Handle logout failure gracefully
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
       setTimeout(() => {

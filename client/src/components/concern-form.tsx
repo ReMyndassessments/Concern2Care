@@ -172,17 +172,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const createConcernMutation = useMutation({
     mutationFn: async (data: EnhancedConcernFormData) => {
       // Debug: Log what data is being sent to the backend
-      console.log("🚀 Frontend sending data to backend:", data);
-      console.log("🎯 Differentiation fields being sent:", {
-        hasIep: data.hasIep,
-        hasDisability: data.hasDisability,
-        disabilityType: data.disabilityType,
-        isEalLearner: data.isEalLearner,
-        ealProficiency: data.ealProficiency,
-        isGifted: data.isGifted,
-        isStruggling: data.isStruggling,
-        otherNeeds: data.otherNeeds,
-      });
+      // Submitting concern data to generate AI recommendations
       const response = await apiRequest("POST", "/api/concerns", data);
       return response;
     },
