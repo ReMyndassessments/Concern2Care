@@ -5,7 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import Landing from "@/pages/landing";
-import Login from "@/pages/login";
+// import Login from "@/pages/login";
+import TestLogin from "./test-login";
 import Home from "@/pages/home";
 import MySupportRequests from "@/pages/my-support-requests";
 import ConcernDetail from "@/pages/concern-detail";
@@ -35,12 +36,21 @@ function Router() {
 
   return (
     <Switch>
-      {!isAuthenticated ? (
+      <Route path="/" component={!isAuthenticated ? Landing : Home} />
+      <Route path="/login" component={TestLogin} />
+      {isAuthenticated ? (
         <>
-          <Route path="/" component={Landing} />
-          <Route path="/login" component={Login} />
-          {/* <Route path="/register" component={Register} /> */}
-          {/* Redirect all authenticated routes to login */}
+          <Route path="/admin" component={AdminPage} />
+          <Route path="/admin/*" component={AdminPage} />
+          <Route path="/new-request" component={Home} />
+          <Route path="/my-support-requests" component={MySupportRequests} />
+          <Route path="/meeting-prep" component={TeacherMeetingPrep} />
+          <Route path="/settings" component={Settings} />
+          <Route path="/concerns/:id" component={ConcernDetail} />
+        </>
+      ) : (
+        <>
+          {/* Redirect authenticated routes to login when not authenticated */}
           <Route path="/admin" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/admin/*" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/new-request" component={() => { window.location.href = '/login'; return null; }} />
@@ -48,19 +58,6 @@ function Router() {
           <Route path="/meeting-prep" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/settings" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/concerns/:id" component={() => { window.location.href = '/login'; return null; }} />
-        </>
-      ) : (
-        <>
-          <Route path="/admin" component={AdminPage} />
-          <Route path="/admin/*" component={AdminPage} />
-          <Route path="/" component={Home} />
-          <Route path="/new-request" component={Home} />
-          <Route path="/my-support-requests" component={MySupportRequests} />
-          <Route path="/meeting-prep" component={TeacherMeetingPrep} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/concerns/:id" component={ConcernDetail} />
-          {/* Redirect login to home when authenticated */}
-          <Route path="/login" component={() => { window.location.href = '/'; return null; }} />
         </>
       )}
       <Route component={NotFound} />
