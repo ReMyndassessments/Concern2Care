@@ -153,57 +153,84 @@ export async function generateRecommendations(
     filePrompts.push(`- Lesson Plan to Differentiate: ${lessonPlanContent}`);
   }
   
-  const prompt = isDifferentiationTask ? 
-    `You are an educational differentiation specialist AI assistant helping teachers adapt instruction for diverse learners. Your role is to provide evidence-based differentiation strategies that accommodate different learning styles, abilities, and needs.
+  let prompt;
+  
+  if (isDifferentiationTask) {
+    if (lessonPlanContent) {
+      prompt = `You are an educational differentiation specialist AI assistant. Your primary task is to take the uploaded lesson plan and create a differentiated version specifically adapted for this student's learning needs.
 
-**Context:**
-- Student: ${req.studentFirstName} ${req.studentLastInitial}
+**Student Information:**
+- Name: ${req.studentFirstName} ${req.studentLastInitial}
 - Grade: ${req.grade}
 - Teacher: ${req.teacherPosition}
 - Location: ${req.location}
-- Date: ${req.incidentDate}
-
-**Concern Areas:** ${concernTypesText}
-**Concern Description:** ${req.concernDescription}
-**Severity Level:** ${req.severityLevel}
-**Actions Already Taken:** ${actionsTakenText}
 
 **Student Learning Profile:**
 ${differentiationInfo.join('\n')}
 
-${filePrompts.join('\n')}
+**ORIGINAL LESSON PLAN TO DIFFERENTIATE:**
+${lessonPlanContent}
 
-**Please provide comprehensive differentiation strategies that include:**
+**YOUR TASK:** Create a differentiated version of the above lesson plan specifically adapted for ${req.studentFirstName}'s learning needs. Provide a complete, ready-to-use lesson plan that includes:
 
-1. **Instructional Adaptations:**
-   - Content modifications (what students learn)
-   - Process adjustments (how students learn)
-   - Product alternatives (how students demonstrate learning)
+1. **Differentiated Learning Objectives:**
+   - Modified or tiered objectives that match the student's ability level
+   - Clear, measurable goals appropriate for their needs
 
-2. **Learning Environment Accommodations:**
-   - Physical classroom setup modifications
-   - Social learning arrangements
-   - Technology integration
+2. **Adapted Content Delivery:**
+   - Modified explanation methods
+   - Visual supports and graphic organizers
+   - Chunked information presentation
+   - Alternative vocabulary or simplified language
 
-3. **Assessment Differentiation:**
-   - Alternative assessment formats
-   - Modified rubrics and criteria
-   - Progress monitoring strategies
+3. **Differentiated Activities:**
+   - Step-by-step modified activities from the original lesson
+   - Alternative ways to engage with the content
+   - Scaffolded practice opportunities
+   - Choice options for different learning preferences
 
-4. **Individual Support Strategies:**
-   - Scaffolding techniques
-   - Visual and auditory supports
-   - Executive function aids
+4. **Modified Assessment Methods:**
+   - Alternative ways for the student to demonstrate understanding
+   - Adapted rubrics or success criteria
+   - Formative assessment strategies during the lesson
 
-5. **Implementation Timeline:**
-   - Immediate adjustments (today)
-   - Short-term strategies (this week)
-   - Long-term adaptations (ongoing)
+5. **Specific Accommodations:**
+   - Environmental modifications needed
+   - Technology tools or supports
+   - Time adjustments
+   - Material adaptations
 
-**Format your response as a comprehensive markdown document with clear headings and actionable strategies. Focus on practical, evidence-based differentiation techniques that this teacher can implement immediately.**
+6. **Implementation Notes:**
+   - Specific instructions for the teacher
+   - What to prepare in advance
+   - Timing considerations
 
-Remember: Differentiation is about providing multiple pathways to learning success, not lowering expectations.` 
-    :
+**Format:** Provide a complete, restructured lesson plan that the teacher can use immediately. Include specific examples, actual materials, and concrete directions. This should be a differentiated version of the original lesson, not general strategies.`;
+    } else {
+      prompt = `You are an educational differentiation specialist AI assistant. Since no lesson plan was uploaded, provide comprehensive differentiation strategies for ${req.studentFirstName} based on their learning profile:
+
+**Student Information:**
+- Name: ${req.studentFirstName} ${req.studentLastInitial}
+- Grade: ${req.grade}
+- Teacher: ${req.teacherPosition}
+- Location: ${req.location}
+
+**Student Learning Profile:**
+${differentiationInfo.join('\n')}
+
+**Please provide detailed differentiation strategies organized by:**
+
+1. **Content Modifications:** How to adapt what the student learns
+2. **Process Adaptations:** How to modify learning activities and instruction
+3. **Product Alternatives:** Different ways for the student to show learning
+4. **Learning Environment:** Physical and social accommodations needed
+5. **Assessment Differentiation:** Alternative evaluation methods
+6. **Implementation Timeline:** Immediate, short-term, and long-term strategies
+
+**Format your response as actionable strategies the teacher can implement across different subjects and activities.**`;
+    }
+  } else {
+    prompt =
     `You are an educational specialist AI assistant helping teachers with Tier 2 intervention recommendations for students who may need 504/IEP accommodations.
 
 Student Information:
@@ -269,6 +296,7 @@ Brief analysis of the student's needs based on the concern type and severity
   * Clear sign 2
 
 Use this EXACT formatting with ### for main headings, * ** for strategy names, and bullet points for implementation steps.`;
+  }
 
   try {
     console.log(`🌐 Making DeepSeek API call to: ${deepseekClient.baseURL}/chat/completions`);
