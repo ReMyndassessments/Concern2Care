@@ -63,7 +63,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Enable sessions for professional authentication
   app.use(session({
-    secret: 'concern2care-session-secret',
+    secret: process.env.SESSION_SECRET || 'concern2care-session-secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
