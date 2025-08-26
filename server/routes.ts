@@ -95,6 +95,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Valid database user login
             const user = dbUser[0];
             
+            // Check if account is active (for registered users who need to pay)
+            if (user.isActive === false) {
+              return res.status(403).json({ 
+                message: "Account not activated. Please complete your payment to activate your account.",
+                accountInactive: true
+              });
+            }
+            
             // Update last login time
             await db.update(users)
               .set({ lastLoginAt: new Date() })
@@ -198,6 +206,112 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json({ success: true, message: "Logged out successfully" });
     });
+  });
+
+  // Teacher registration endpoint (creates pending account)
+  app.post('/api/auth/register', async (req: any, res) => {
+    try {
+      const { fullName, email, username, password, school, country, referralCode } = req.body;
+      
+      if (!fullName || !email || !username || !password || !school || !country) {
+        return res.status(400).json({ message: "All required fields must be filled" });
+      }
+
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email.toLowerCase());
+      if (existingUser) {
+        return res.status(409).json({ message: "An account with this email already exists" });
+      }
+
+      // Check if username is taken
+      const existingUsername = await storage.getUserByUsername(username);
+      if (existingUsername) {
+        return res.status(409).json({ message: "This username is already taken" });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Generate a unique user ID
+      const userId = `teacher-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+      // Create pending user record (not active until payment)
+      const userData = {
+        id: userId,
+        email: email.toLowerCase(),
+        username: username,
+        password: hashedPassword,
+        firstName: fullName.split(' ')[0],
+        lastName: fullName.split(' ').slice(1).join(' ') || '',
+        school: school,
+        country: country,
+        referralCode: referralCode || null,
+        isActive: false, // Not active until payment confirmed
+        isAdmin: false,
+        supportRequestsLimit: 20,
+        supportRequestsUsed: 0,
+        createdAt: new Date(),
+        lastLoginAt: null
+      };
+
+      await storage.createUser(userData);
+
+      // Generate BuyMeACoffee payment URL with user data
+      const paymentUrl = `https://buymeacoffee.com/concern2care/e/concern2care-annual?email=${encodeURIComponent(email)}&userId=${encodeURIComponent(userId)}`;
+
+      res.json({ 
+        success: true, 
+        paymentUrl: paymentUrl,
+        message: "Registration initiated. Please complete payment to activate your account."
+      });
+
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ message: "Registration failed. Please try again." });
+    }
+  });
+
+  // Payment activation endpoint (called by BuyMeACoffee after successful payment)
+  app.get('/api/payment/activate', async (req: any, res) => {
+    try {
+      const { email, userId, status } = req.query;
+
+      if (status !== 'success') {
+        return res.redirect('/login?error=payment-failed');
+      }
+
+      if (!email || !userId) {
+        return res.redirect('/login?error=invalid-activation');
+      }
+
+      // Find the user and activate their account
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.redirect('/login?error=user-not-found');
+      }
+
+      if (user.email !== email.toLowerCase()) {
+        return res.redirect('/login?error=email-mismatch');
+      }
+
+      // Activate the user account
+      await storage.updateUser(userId, { 
+        isActive: true,
+        paymentConfirmedAt: new Date(),
+        subscriptionStartDate: new Date(),
+        subscriptionEndDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year from now
+      });
+
+      // Log successful activation
+      console.log(`🎉 Account activated for user: ${email} (${userId})`);
+
+      // Redirect to login with success message
+      res.redirect('/login?activated=true');
+
+    } catch (error) {
+      console.error("Payment activation error:", error);
+      res.redirect('/login?error=activation-failed');
+    }
   });
 
 

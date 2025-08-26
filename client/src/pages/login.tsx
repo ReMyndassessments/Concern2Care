@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,51 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+
+  // Handle query parameters for payment activation messages
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.get('activated') === 'true') {
+      toast({
+        title: "Account Activated! 🎉",
+        description: "Your payment was successful. You can now sign in to your account.",
+      });
+      // Clean up URL
+      window.history.replaceState({}, '', '/login');
+    }
+    
+    if (urlParams.get('error')) {
+      const error = urlParams.get('error');
+      let message = "An error occurred during activation.";
+      
+      switch (error) {
+        case 'payment-failed':
+          message = "Payment was not completed. Please try registering again.";
+          break;
+        case 'invalid-activation':
+          message = "Invalid activation link. Please contact support.";
+          break;
+        case 'user-not-found':
+          message = "User account not found. Please register again.";
+          break;
+        case 'email-mismatch':
+          message = "Email mismatch during activation. Please contact support.";
+          break;
+        case 'activation-failed':
+          message = "Account activation failed. Please contact support.";
+          break;
+      }
+      
+      toast({
+        title: "Activation Error",
+        description: message,
+        variant: "destructive",
+      });
+      // Clean up URL
+      window.history.replaceState({}, '', '/login');
+    }
+  }, [toast]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,11 +88,20 @@ export default function Login() {
         // Navigate directly - the useAuth hook will handle the state update
         setLocation('/');
       } else {
-        toast({
-          title: "Sign In Failed",
-          description: data.message || "Invalid email or password",
-          variant: "destructive",
-        });
+        // Handle account activation error specifically
+        if (data.accountInactive) {
+          toast({
+            title: "Account Not Activated",
+            description: data.message || "Please complete your payment to activate your account.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Sign In Failed",
+            description: data.message || "Invalid email or password",
+            variant: "destructive",
+          });
+        }
       }
     } catch (error) {
       toast({
@@ -166,6 +220,20 @@ export default function Login() {
               </Button>
             </form>
             
+            {/* Registration Link */}
+            <div className="text-center mt-4 pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-600 mb-2">
+                New to Concern2Care?
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => setLocation('/register')}
+                className="text-purple-600 border-purple-200 hover:bg-purple-50 text-sm"
+                data-testid="button-register"
+              >
+                Register as Individual Teacher
+              </Button>
+            </div>
             
             {/* Footer */}
             <div className="text-center mt-6 space-y-2">

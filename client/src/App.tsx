@@ -13,6 +13,7 @@ import TeacherMeetingPrep from "@/pages/teacher-meeting-prep";
 import Settings from "@/pages/settings";
 import AdminPage from "@/pages/admin-page";
 import NotFound from "@/pages/not-found";
+import Register from "@/pages/register";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -36,6 +37,7 @@ function Router() {
         <>
           <Route path="/" component={Landing} />
           <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
           {/* Redirect all authenticated routes to login */}
           <Route path="/admin" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/admin/*" component={() => { window.location.href = '/login'; return null; }} />

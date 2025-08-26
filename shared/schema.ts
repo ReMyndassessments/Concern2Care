@@ -55,6 +55,12 @@ export const users = pgTable("users", {
   isAdmin: boolean("is_admin").default(false),
   role: varchar("role").default('teacher'), // 'teacher' | 'admin' | 'super_admin'
   isActive: boolean("is_active").default(true),
+  username: varchar("username").unique(), // For individual teacher accounts
+  country: varchar("country"), // For registration data
+  referralCode: varchar("referral_code"), // For referral tracking
+  paymentConfirmedAt: timestamp("payment_confirmed_at"), // When payment was confirmed
+  subscriptionStartDate: timestamp("subscription_start_date"), // Subscription start
+  subscriptionEndDate: timestamp("subscription_end_date"), // Subscription end
   lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
