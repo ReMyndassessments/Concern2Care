@@ -120,12 +120,12 @@ const TASK_TYPES = [
   { 
     value: 'differentiation', 
     label: 'Differentiation Task',
-    description: 'Get specific strategies to adapt instruction for different learning styles, abilities, and needs'
+    description: 'Get specific strategies to adapt instruction for different learning styles, abilities, and needs. Focus on instructional modifications and learning accommodations.'
   },
   { 
     value: 'tier2_intervention', 
     label: 'Tier 2 Intervention Task',
-    description: 'Generate evidence-based behavioral and academic intervention strategies for concerning behaviors'
+    description: 'Generate evidence-based behavioral and academic intervention strategies for concerning behaviors. Focus on targeted interventions for specific behavioral or academic issues.'
   }
 ];
 
@@ -305,6 +305,22 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 )}
               />
             </div>
+
+            {/* Clarifying message after task type selection */}
+            {form.watch('taskType') && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-sm font-medium text-blue-900 mb-1">One Task Per Request</h4>
+                    <p className="text-sm text-blue-700">
+                      If you need both differentiation strategies AND Tier 2 intervention recommendations for the same student, 
+                      please submit separate requests. This helps ensure each task receives focused, specialized attention.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Show form sections only after task type is selected */}
             {form.watch('taskType') && (
