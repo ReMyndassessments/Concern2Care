@@ -20,7 +20,9 @@ import {
   Plus,
   Trash2,
   Eye,
-  ArrowLeft
+  ArrowLeft,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -70,6 +72,7 @@ export default function TeacherMeetingPrep() {
   const [newAttendee, setNewAttendee] = useState('');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewContent, setPreviewContent] = useState('');
+  const [expandedStudents, setExpandedStudents] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   useEffect(() => {
@@ -129,7 +132,7 @@ export default function TeacherMeetingPrep() {
     
     if (checked) {
       // Add all concerns for this student
-      const newSelectedConcerns = [...new Set([...meetingData.selectedConcerns, ...studentConcerns])];
+      const newSelectedConcerns = Array.from(new Set([...meetingData.selectedConcerns, ...studentConcerns]));
       setMeetingData({
         ...meetingData,
         selectedConcerns: newSelectedConcerns
@@ -164,6 +167,16 @@ export default function TeacherMeetingPrep() {
     const studentConcerns = groupedConcerns[studentKey];
     const selectedCount = studentConcerns.filter(concern => meetingData.selectedConcerns.includes(concern.id)).length;
     return selectedCount > 0 && selectedCount < studentConcerns.length;
+  };
+
+  const toggleStudentExpansion = (studentKey: string) => {
+    const newExpanded = new Set(expandedStudents);
+    if (newExpanded.has(studentKey)) {
+      newExpanded.delete(studentKey);
+    } else {
+      newExpanded.add(studentKey);
+    }
+    setExpandedStudents(newExpanded);
   };
 
   const generatePreview = () => {
@@ -417,15 +430,32 @@ export default function TeacherMeetingPrep() {
                   return (
                     <div key={studentKey} className="border rounded-lg p-4">
                       {/* Student Header */}
-                      <div className="flex items-start space-x-3 mb-4">
-                        <Checkbox
-                          checked={isFullySelected}
-                          ref={(el) => {
-                            if (el) el.indeterminate = isPartiallySelected;
-                          }}
-                          onCheckedChange={(checked) => handleStudentSelection(studentKey, Boolean(checked))}
-                          data-testid={`checkbox-student-${studentKey.replace(/\s+/g, '-')}`}
-                        />
+                      <div className="flex items-start space-x-3 mb-2">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={isFullySelected}
+                            ref={(el) => {
+                              if (el && el instanceof HTMLInputElement) {
+                                el.indeterminate = isPartiallySelected;
+                              }
+                            }}
+                            onCheckedChange={(checked) => handleStudentSelection(studentKey, Boolean(checked))}
+                            data-testid={`checkbox-student-${studentKey.replace(/\s+/g, '-')}`}
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleStudentExpansion(studentKey)}
+                            className="h-6 w-6 p-0"
+                            data-testid={`button-toggle-${studentKey.replace(/\s+/g, '-')}`}
+                          >
+                            {expandedStudents.has(studentKey) ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-semibold text-lg text-gray-900">
@@ -435,41 +465,50 @@ export default function TeacherMeetingPrep() {
                             <Badge variant="secondary" className="text-xs">
                               {studentConcerns.length} concern{studentConcerns.length !== 1 ? 's' : ''}
                             </Badge>
+                            {!expandedStudents.has(studentKey) && (
+                              <span className="text-xs text-gray-500">
+                                {meetingData.selectedConcerns.filter(id => studentConcerns.map(c => c.id).includes(id)).length} of {studentConcerns.length} selected
+                              </span>
+                            )}
                           </div>
-                          <p className="text-sm text-gray-600">
-                            Select all concerns for this student to include in meeting
-                          </p>
+                          {expandedStudents.has(studentKey) && (
+                            <p className="text-sm text-gray-600">
+                              Select all concerns for this student to include in meeting
+                            </p>
+                          )}
                         </div>
                       </div>
 
-                      {/* Individual Concerns for this Student */}
-                      <div className="ml-8 space-y-3 border-l-2 border-gray-100 pl-4">
-                        {studentConcerns.map((concern) => (
-                          <div key={concern.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                            <Checkbox
-                              checked={meetingData.selectedConcerns.includes(concern.id)}
-                              onCheckedChange={(checked) => handleConcernSelection(concern.id, Boolean(checked))}
-                              data-testid={`checkbox-concern-${concern.id}`}
-                            />
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Badge variant={concern.severityLevel === 'High' ? 'destructive' : concern.severityLevel === 'Medium' ? 'default' : 'secondary'}>
-                                  {concern.severityLevel}
-                                </Badge>
-                                <span className="text-xs text-gray-500">
-                                  {new Date(concern.createdAt).toLocaleDateString()}
-                                </span>
+                      {/* Individual Concerns for this Student - Collapsible */}
+                      {expandedStudents.has(studentKey) && (
+                        <div className="ml-8 space-y-3 border-l-2 border-gray-100 pl-4">
+                          {studentConcerns.map((concern) => (
+                            <div key={concern.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                              <Checkbox
+                                checked={meetingData.selectedConcerns.includes(concern.id)}
+                                onCheckedChange={(checked) => handleConcernSelection(concern.id, Boolean(checked))}
+                                data-testid={`checkbox-concern-${concern.id}`}
+                              />
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Badge variant={concern.severityLevel === 'High' ? 'destructive' : concern.severityLevel === 'Medium' ? 'default' : 'secondary'}>
+                                    {concern.severityLevel}
+                                  </Badge>
+                                  <span className="text-xs text-gray-500">
+                                    {new Date(concern.createdAt).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-700 mb-1 font-medium">
+                                  {concern.concernTypes.join(', ')}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  {concern.description}
+                                </p>
                               </div>
-                              <p className="text-sm text-gray-700 mb-1 font-medium">
-                                {concern.concernTypes.join(', ')}
-                              </p>
-                              <p className="text-sm text-gray-600">
-                                {concern.description}
-                              </p>
                             </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
