@@ -2522,13 +2522,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         doc.moveDown();
         
         // Fetch detailed concern information with all related data (interventions, etc.)
+        console.log('📋 Fetching concern details for:', meetingData.selectedConcerns);
         const selectedConcernDetails = [];
         for (const concernId of meetingData.selectedConcerns) {
           const concernWithDetails = await storage.getConcernWithDetails(concernId);
+          console.log(`📋 Fetched concern ${concernId}:`, concernWithDetails ? 'SUCCESS' : 'NOT FOUND');
           if (concernWithDetails) {
             selectedConcernDetails.push(concernWithDetails);
           }
         }
+        console.log('📋 Total concern details fetched:', selectedConcernDetails.length);
 
         // Group concerns by student
         const concernsByStudent: { [key: string]: any[] } = {};
