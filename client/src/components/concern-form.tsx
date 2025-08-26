@@ -989,9 +989,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 </div>
               </div>
             )}
-            
-                </>
-              )}
+            </>
+            )}
             
             {/* Submit Button */}
             <div className="flex justify-center sm:justify-end pt-4 sm:pt-6">
