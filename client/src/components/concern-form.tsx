@@ -282,7 +282,9 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         className="flex flex-col space-y-4"
                         disabled={isAtLimit}
                       >
-                        {TASK_TYPES.map((taskType) => (
+                        {TASK_TYPES.filter(taskType => 
+                          !field.value || field.value === taskType.value
+                        ).map((taskType) => (
                           <div key={taskType.value} className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
                             <RadioGroupItem value={taskType.value} id={taskType.value} disabled={isAtLimit} className="mt-1" />
                             <div className="flex-1">
@@ -306,18 +308,37 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
               />
             </div>
 
-            {/* Clarifying message after task type selection */}
+            {/* Task confirmation and change option */}
             {form.watch('taskType') && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <div className="flex items-start space-x-3">
-                  <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-sm font-medium text-blue-900 mb-1">One Task Per Request</h4>
-                    <p className="text-sm text-blue-700">
-                      If you need both differentiation strategies AND Tier 2 intervention recommendations for the same student, 
-                      please submit separate requests. This helps ensure each task receives focused, specialized attention.
-                    </p>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start space-x-3">
+                    <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-sm font-medium text-blue-900 mb-1">Task Selected: {TASK_TYPES.find(t => t.value === form.watch('taskType'))?.label}</h4>
+                      <p className="text-sm text-blue-700">
+                        If you need both differentiation strategies AND Tier 2 intervention recommendations for the same student, 
+                        please submit separate requests. This helps ensure each task receives focused, specialized attention.
+                      </p>
+                    </div>
                   </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      form.setValue('taskType', '');
+                      // Reset other conditional fields that depend on task type
+                      form.setValue('concernTypes', []);
+                      form.setValue('description', '');
+                      form.setValue('severityLevel', '');
+                      form.setValue('actionsTaken', []);
+                    }}
+                    className="text-blue-600 border-blue-300 hover:bg-blue-100 flex-shrink-0"
+                    data-testid="button-change-task-type"
+                  >
+                    Change Task
+                  </Button>
                 </div>
               </div>
             )}
