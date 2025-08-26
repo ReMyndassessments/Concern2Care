@@ -228,30 +228,44 @@ export default function TeacherMeetingPrep() {
     try {
       setGeneratingPDF(true);
       
-      const response = await apiRequest('/api/meeting-preparation/generate', {
+      // Make the API request but handle it differently since it returns a PDF directly
+      const response = await fetch('/api/meeting-preparation/generate', {
         method: 'POST',
-        body: { meetingData }
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ meetingData })
       });
 
-      if (response?.pdfUrl) {
+      if (response.ok) {
+        // Get the PDF blob from the response
+        const pdfBlob = await response.blob();
+        
         // Create a download link
+        const url = window.URL.createObjectURL(pdfBlob);
         const link = document.createElement('a');
-        link.href = response.pdfUrl;
+        link.href = url;
         link.download = `meeting-prep-${meetingData.meetingTitle.replace(/[^a-zA-Z0-9]/g, '-')}-${meetingData.meetingDate}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        
+        // Clean up the object URL
+        window.URL.revokeObjectURL(url);
 
         toast({
           title: "Success",
           description: "Meeting preparation document has been generated and downloaded.",
         });
+      } else {
+        throw new Error('Failed to generate document');
       }
     } catch (error) {
       console.error('Error generating PDF:', error);
       toast({
         title: "Error",
-        description: "Failed to generate meeting preparation document.",
+        description: "Failed to generate meeting preparation document. Please try again.",
         variant: "destructive",
       });
     } finally {
