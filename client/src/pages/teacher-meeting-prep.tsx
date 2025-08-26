@@ -124,6 +124,48 @@ export default function TeacherMeetingPrep() {
     }
   };
 
+  const handleStudentSelection = (studentKey: string, checked: boolean) => {
+    const studentConcerns = groupedConcerns[studentKey].map(concern => concern.id);
+    
+    if (checked) {
+      // Add all concerns for this student
+      const newSelectedConcerns = [...new Set([...meetingData.selectedConcerns, ...studentConcerns])];
+      setMeetingData({
+        ...meetingData,
+        selectedConcerns: newSelectedConcerns
+      });
+    } else {
+      // Remove all concerns for this student
+      setMeetingData({
+        ...meetingData,
+        selectedConcerns: meetingData.selectedConcerns.filter(id => !studentConcerns.includes(id))
+      });
+    }
+  };
+
+  // Group concerns by student
+  const groupedConcerns = concerns.reduce((groups, concern) => {
+    const studentKey = `${concern.studentFirstName} ${concern.studentLastInitial}`;
+    if (!groups[studentKey]) {
+      groups[studentKey] = [];
+    }
+    groups[studentKey].push(concern);
+    return groups;
+  }, {} as Record<string, typeof concerns>);
+
+  // Helper function to check if all concerns for a student are selected
+  const isStudentFullySelected = (studentKey: string) => {
+    const studentConcerns = groupedConcerns[studentKey];
+    return studentConcerns.every(concern => meetingData.selectedConcerns.includes(concern.id));
+  };
+
+  // Helper function to check if some (but not all) concerns for a student are selected
+  const isStudentPartiallySelected = (studentKey: string) => {
+    const studentConcerns = groupedConcerns[studentKey];
+    const selectedCount = studentConcerns.filter(concern => meetingData.selectedConcerns.includes(concern.id)).length;
+    return selectedCount > 0 && selectedCount < studentConcerns.length;
+  };
+
   const generatePreview = () => {
     const selectedConcernData = concerns.filter(concern => 
       meetingData.selectedConcerns.includes(concern.id)
@@ -346,8 +388,11 @@ export default function TeacherMeetingPrep() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              Select Student Concerns to Discuss
+              Select Students & Concerns to Discuss
             </CardTitle>
+            <p className="text-sm text-gray-600 mt-2">
+              Choose entire students (all their concerns) or individual concerns to include in your meeting preparation.
+            </p>
           </CardHeader>
           <CardContent>
             {loading ? (
@@ -363,33 +408,71 @@ export default function TeacherMeetingPrep() {
                 </AlertDescription>
               </Alert>
             ) : (
-              <div className="space-y-3">
-                {concerns.map((concern) => (
-                  <div key={concern.id} className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50">
-                    <Checkbox
-                      checked={meetingData.selectedConcerns.includes(concern.id)}
-                      onCheckedChange={(checked) => handleConcernSelection(concern.id, Boolean(checked))}
-                      data-testid={`checkbox-concern-${concern.id}`}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="font-medium">
-                          {concern.studentFirstName} {concern.studentLastInitial}.
-                        </span>
-                        <Badge variant="outline">Grade {concern.grade}</Badge>
-                        <Badge variant={concern.severityLevel === 'High' ? 'destructive' : concern.severityLevel === 'Medium' ? 'default' : 'secondary'}>
-                          {concern.severityLevel}
-                        </Badge>
+              <div className="space-y-6">
+                {Object.entries(groupedConcerns).map(([studentKey, studentConcerns]) => {
+                  const firstConcern = studentConcerns[0];
+                  const isFullySelected = isStudentFullySelected(studentKey);
+                  const isPartiallySelected = isStudentPartiallySelected(studentKey);
+                  
+                  return (
+                    <div key={studentKey} className="border rounded-lg p-4">
+                      {/* Student Header */}
+                      <div className="flex items-start space-x-3 mb-4">
+                        <Checkbox
+                          checked={isFullySelected}
+                          ref={(el) => {
+                            if (el) el.indeterminate = isPartiallySelected;
+                          }}
+                          onCheckedChange={(checked) => handleStudentSelection(studentKey, Boolean(checked))}
+                          data-testid={`checkbox-student-${studentKey.replace(/\s+/g, '-')}`}
+                        />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold text-lg text-gray-900">
+                              {studentKey}.
+                            </span>
+                            <Badge variant="outline">Grade {firstConcern.grade}</Badge>
+                            <Badge variant="secondary" className="text-xs">
+                              {studentConcerns.length} concern{studentConcerns.length !== 1 ? 's' : ''}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            Select all concerns for this student to include in meeting
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">{concern.description}</p>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span>Types: {concern.concernTypes.join(', ')}</span>
-                        <span>•</span>
-                        <span>Documented: {new Date(concern.createdAt).toLocaleDateString()}</span>
+
+                      {/* Individual Concerns for this Student */}
+                      <div className="ml-8 space-y-3 border-l-2 border-gray-100 pl-4">
+                        {studentConcerns.map((concern) => (
+                          <div key={concern.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <Checkbox
+                              checked={meetingData.selectedConcerns.includes(concern.id)}
+                              onCheckedChange={(checked) => handleConcernSelection(concern.id, Boolean(checked))}
+                              data-testid={`checkbox-concern-${concern.id}`}
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Badge variant={concern.severityLevel === 'High' ? 'destructive' : concern.severityLevel === 'Medium' ? 'default' : 'secondary'}>
+                                  {concern.severityLevel}
+                                </Badge>
+                                <span className="text-xs text-gray-500">
+                                  {new Date(concern.createdAt).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-700 mb-1 font-medium">
+                                {concern.concernTypes.join(', ')}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                {concern.description}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>
