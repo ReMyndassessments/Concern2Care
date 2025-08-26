@@ -473,10 +473,12 @@ export default function InterventionResults({
             <div className="w-8 h-8 bg-brand-green/10 rounded-lg flex items-center justify-center">
               <Lightbulb className="h-4 w-4 text-brand-green" />
             </div>
-            <CardTitle>AI-Generated Intervention Strategies</CardTitle>
+            <CardTitle>
+              {concern.taskType === 'differentiation' ? 'AI-Generated Differentiation Strategies' : 'AI-Generated Intervention Strategies'}
+            </CardTitle>
             <Badge className="bg-green-100 text-green-800">
               <CheckCircle className="h-3 w-3 mr-1" />
-              Tier 2 Evidence-Based
+              {concern.taskType === 'differentiation' ? 'Research-Based' : 'Tier 2 Evidence-Based'}
             </Badge>
           </div>
           
@@ -485,13 +487,14 @@ export default function InterventionResults({
               <Info className="h-5 w-5 text-blue-600 mt-0.5" />
               <div>
                 <p className="text-sm text-blue-800 font-medium">
-                  Intervention strategies for {concern.studentFirstName} {concern.studentLastInitial}. - {(() => {
+                  {concern.taskType === 'differentiation' ? 'Differentiation strategies' : 'Intervention strategies'} for {concern.studentFirstName} {concern.studentLastInitial}.
+                  {concern.taskType === 'tier2_intervention' && (() => {
                     const concernTypes = concern.concernTypes as string[] | undefined;
                     const firstConcernType = concernTypes && Array.isArray(concernTypes) && concernTypes.length > 0 
                       ? concernTypes[0] 
                       : 'Academic';
-                    return firstConcernType.charAt(0).toUpperCase() + firstConcernType.slice(1).replace('-', ' ');
-                  })()} Concern
+                    return ' - ' + firstConcernType.charAt(0).toUpperCase() + firstConcernType.slice(1).replace('-', ' ') + ' Concern';
+                  })()}
                 </p>
                 <p className="text-xs text-blue-700 mt-1">
                   Generated instantly | Research-based recommendations
@@ -531,7 +534,7 @@ export default function InterventionResults({
                                 <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                                   {stepIndex + 1}
                                 </div>
-                                <span className="text-gray-800 leading-relaxed">{String(step)}</span>
+                                <span className="text-gray-800 leading-relaxed">{typeof step === 'string' ? step : JSON.stringify(step)}</span>
                               </li>
                             ))}
                           </ul>
@@ -592,7 +595,7 @@ export default function InterventionResults({
                               ) : (
                                 <>
                                   <BookmarkPlus className="h-3 w-3 mr-2" />
-                                  Save Intervention
+                                  {concern.taskType === 'differentiation' ? 'Save Strategy' : 'Save Intervention'}
                                 </>
                               )}
                             </Button>

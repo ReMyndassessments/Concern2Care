@@ -59,7 +59,7 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-medium text-blue-900 mb-3 flex items-center">
           <Sparkles className="h-4 w-4 mr-2 text-blue-600" />
-          AI-Generated Interventions
+          {concern.taskType === 'differentiation' ? 'AI-Generated Differentiation Strategies' : 'AI-Generated Interventions'}
         </h4>
         
         <div className="space-y-4">
@@ -69,7 +69,7 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-2">
                     <Badge variant="outline" className="text-xs">
-                      Strategy {index + 1}
+                      {concern.taskType === 'differentiation' ? `Differentiation ${index + 1}` : `Intervention ${index + 1}`}
                     </Badge>
                     {intervention.saved && (
                       <Badge className="bg-green-100 text-green-800 text-xs">
