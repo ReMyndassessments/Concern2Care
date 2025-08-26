@@ -2521,11 +2521,125 @@ export async function registerRoutes(app: Express): Promise<Server> {
         doc.text('Student Concerns to Discuss:', { underline: true });
         doc.moveDown();
         
-        // Get concern details (this would need to be passed from frontend or fetched)
+        // Fetch detailed concern information
+        const userId = session.user.id;
+        const userConcerns = await storage.getConcerns(userId);
+        const selectedConcernDetails = userConcerns.filter((concern: any) => 
+          meetingData.selectedConcerns.includes(concern.id)
+        );
+
+        // Group concerns by student
+        const concernsByStudent: { [key: string]: any[] } = {};
+        selectedConcernDetails.forEach((concern: any) => {
+          const studentKey = `${concern.studentFirstName} ${concern.studentLastInitial}`;
+          if (!concernsByStudent[studentKey]) {
+            concernsByStudent[studentKey] = [];
+          }
+          concernsByStudent[studentKey].push(concern);
+        });
+
         doc.fontSize(12).font('Helvetica');
-        doc.text(`Number of concerns selected: ${meetingData.selectedConcerns.length}`);
-        doc.text('(Detailed concern information would be included here based on your documented concerns)');
-        doc.moveDown(2);
+        doc.text(`Total concerns selected: ${selectedConcernDetails.length}`);
+        doc.moveDown();
+
+        // Display each student's concerns in detail
+        for (const [studentName, concerns] of Object.entries(concernsByStudent)) {
+          doc.fontSize(14).font('Helvetica-Bold');
+          doc.text(`${studentName} (Grade ${concerns[0].grade})`, { underline: true });
+          doc.moveDown();
+
+          concerns.forEach((concern: any, index: number) => {
+            doc.fontSize(12).font('Helvetica-Bold');
+            doc.text(`Concern ${index + 1}: ${Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'N/A'}`);
+            doc.moveDown(0.5);
+
+            doc.fontSize(10).font('Helvetica');
+            doc.text(`Severity: ${concern.severityLevel || 'N/A'} | Location: ${concern.location || 'N/A'} | Date: ${concern.createdAt ? new Date(concern.createdAt).toLocaleDateString() : 'N/A'}`);
+            doc.moveDown(0.5);
+
+            doc.fontSize(11).font('Helvetica');
+            doc.text('Description:', { continued: false });
+            doc.text(concern.description || 'No description provided', { width: 500, align: 'left' });
+            doc.moveDown(0.5);
+
+            if (concern.actionsTaken && Array.isArray(concern.actionsTaken) && concern.actionsTaken.length > 0) {
+              doc.text('Actions Already Taken:', { continued: false });
+              concern.actionsTaken.forEach((action: string) => {
+                doc.text(`• ${action}`, { width: 500 });
+              });
+              if (concern.otherActionTaken) {
+                doc.text(`• ${concern.otherActionTaken}`, { width: 500 });
+              }
+              doc.moveDown(0.5);
+            }
+
+            // Include intervention recommendations if requested
+            if (meetingData.includeRecommendations && concern.interventions && concern.interventions.length > 0) {
+              doc.fontSize(11).font('Helvetica-Bold');
+              doc.text('AI-Generated Interventions:', { underline: true });
+              doc.moveDown(0.5);
+
+              concern.interventions.forEach((intervention: any, intIndex: number) => {
+                doc.fontSize(10).font('Helvetica-Bold');
+                doc.text(`${concern.taskType === 'differentiation' ? 'Differentiation' : 'Intervention'} ${intIndex + 1}: ${intervention.title || 'Strategy'}`);
+                doc.moveDown(0.3);
+
+                doc.fontSize(9).font('Helvetica');
+                if (intervention.description) {
+                  // Clean up markdown-style formatting for PDF
+                  const cleanDescription = intervention.description
+                    .replace(/\*\*\*(.*?)\*\*\*/g, '$1')
+                    .replace(/\*\*(.*?)\*\*/g, '$1')
+                    .replace(/\*(.*?)\*/g, '$1')
+                    .replace(/#{1,4}\s*(.*?)$/gm, '$1')
+                    .replace(/[-*]\s/g, '• ');
+                  
+                  doc.text(cleanDescription, { width: 480, align: 'left' });
+                }
+
+                if (intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0) {
+                  doc.moveDown(0.3);
+                  doc.text('Implementation Steps:');
+                  intervention.steps.forEach((step: any, stepIndex: number) => {
+                    doc.text(`${stepIndex + 1}. ${typeof step === 'string' ? step : JSON.stringify(step)}`, { width: 460 });
+                  });
+                }
+
+                if (intervention.timeline) {
+                  doc.moveDown(0.3);
+                  doc.text(`Timeline: ${intervention.timeline}`);
+                }
+
+                doc.moveDown(0.5);
+              });
+            }
+
+            // Add student learning profile information
+            if (concern.hasIep || concern.hasDisability || concern.isEalLearner || concern.isGifted || concern.isStruggling || concern.otherNeeds) {
+              doc.fontSize(11).font('Helvetica-Bold');
+              doc.text('Student Learning Profile:', { underline: true });
+              doc.moveDown(0.3);
+
+              doc.fontSize(9).font('Helvetica');
+              const profileItems = [];
+              if (concern.hasIep) profileItems.push('Has IEP/504 Plan');
+              if (concern.hasDisability) profileItems.push(`Diagnosed with: ${concern.disabilityType || 'Not specified'}`);
+              if (concern.isEalLearner) profileItems.push(`EAL Learner (${concern.ealProficiency || 'Unspecified'} English proficiency)`);
+              if (concern.isGifted) profileItems.push('Gifted/Talented');
+              if (concern.isStruggling) profileItems.push('Currently struggling academically');
+              if (concern.otherNeeds) profileItems.push(`Other needs: ${concern.otherNeeds}`);
+
+              profileItems.forEach(item => {
+                doc.text(`• ${item}`, { width: 480 });
+              });
+              doc.moveDown(0.5);
+            }
+
+            doc.moveDown(1);
+          });
+
+          doc.moveDown(1);
+        }
       }
 
       // Additional Notes
