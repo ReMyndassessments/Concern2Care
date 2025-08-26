@@ -942,31 +942,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
               )}
             />
 
-                {/* Student Assessment Upload - For Tier 2 Intervention */}
-                <FormField
-                  control={form.control}
-                  name="studentAssessmentFile"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <FileText className="h-4 w-4" />
-                        Student Assessment Data (Optional)
-                      </FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Upload assessment reports or behavioral data..."
-                          {...field} 
-                          disabled={isAtLimit}
-                          data-testid="input-student-assessment"
-                        />
-                      </FormControl>
-                      <p className="text-xs text-gray-600">
-                        Upload any assessments or behavioral data to help create targeted interventions
-                      </p>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
             </>
             )}
 
