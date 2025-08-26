@@ -2474,64 +2474,130 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.send(pdfBuffer);
       });
 
-      // Header
-      doc.fontSize(20).font('Helvetica-Bold');
+      // Professional Header with styling
+      doc.fontSize(24).font('Helvetica-Bold');
+      doc.fillColor('#1f2937'); // Professional dark gray
       doc.text('MEETING PREPARATION DOCUMENT', { align: 'center' });
-      doc.moveDown(2);
-
-      // Meeting Details
-      doc.fontSize(16).font('Helvetica-Bold');
-      doc.text('Meeting Information', { underline: true });
-      doc.moveDown();
+      doc.fillColor('#000000'); // Reset to black
       
-      doc.fontSize(12).font('Helvetica');
-      doc.text(`Title: ${meetingData.meetingTitle}`);
-      doc.text(`Type: ${meetingData.meetingType}`);
-      doc.text(`Date: ${meetingData.meetingDate}`);
-      doc.text(`Time: ${meetingData.meetingTime}`);
-      doc.moveDown();
+      // Add decorative line under title
+      doc.moveTo(50, doc.y + 10)
+         .lineTo(550, doc.y + 10)
+         .strokeColor('#3b82f6')
+         .lineWidth(3)
+         .stroke();
+      
+      doc.moveDown(2.5);
 
-      // Attendees
+      // Meeting Information Section with professional formatting
+      doc.fontSize(18).font('Helvetica-Bold');
+      doc.fillColor('#374151');
+      doc.text('📅 Meeting Information');
+      doc.fillColor('#000000');
+      doc.moveDown(0.5);
+      
+      // Create info box with subtle background
+      const infoY = doc.y;
+      doc.rect(40, infoY, 520, 85)
+         .fillColor('#f8fafc')
+         .strokeColor('#e5e7eb')
+         .lineWidth(1)
+         .fillAndStroke();
+      doc.fillColor('#000000');
+      
+      // Position content inside the box
+      doc.y = infoY + 15;
+      doc.x = 60;
+      
+      doc.fontSize(12).font('Helvetica-Bold');
+      doc.text('Title:', { continued: true, width: 80 });
+      doc.font('Helvetica').text(`${meetingData.meetingTitle}`, { indent: 85 });
+      
+      doc.x = 60;
+      doc.font('Helvetica-Bold').text('Type:', { continued: true, width: 80 });
+      doc.font('Helvetica').text(`${meetingData.meetingType}`, { indent: 85 });
+      
+      doc.x = 60;
+      doc.font('Helvetica-Bold').text('Date:', { continued: true, width: 80 });
+      doc.font('Helvetica').text(`${meetingData.meetingDate}`, { indent: 85 });
+      
+      doc.x = 60;
+      doc.font('Helvetica-Bold').text('Time:', { continued: true, width: 80 });
+      doc.font('Helvetica').text(`${meetingData.meetingTime}`, { indent: 85 });
+      
+      doc.x = 50; // Reset margin
+      doc.moveDown(2.5);
+
+      // Attendees Section with improved formatting
       if (meetingData.attendees && meetingData.attendees.length > 0) {
-        doc.fontSize(16).font('Helvetica-Bold');
-        doc.text('Attendees:', { underline: true });
-        doc.moveDown();
+        doc.fontSize(18).font('Helvetica-Bold');
+        doc.fillColor('#374151');
+        doc.text('👥 Meeting Attendees');
+        doc.fillColor('#000000');
+        doc.moveDown(0.5);
         
         doc.fontSize(12).font('Helvetica');
-        meetingData.attendees.forEach((attendee: string) => {
-          doc.text(`• ${attendee}`);
+        meetingData.attendees.forEach((attendee: string, index: number) => {
+          doc.text(`${index + 1}. ${attendee}`, { indent: 20 });
         });
         doc.moveDown(2);
       }
 
-      // Agenda
+      // Agenda Section with better formatting
       if (meetingData.agenda) {
-        doc.fontSize(16).font('Helvetica-Bold');
-        doc.text('Meeting Agenda:', { underline: true });
-        doc.moveDown();
+        doc.fontSize(18).font('Helvetica-Bold');
+        doc.fillColor('#374151');
+        doc.text('📋 Meeting Agenda');
+        doc.fillColor('#000000');
+        doc.moveDown(0.5);
         
+        // Agenda content box
+        const agendaY = doc.y;
+        doc.rect(40, agendaY, 520, doc.heightOfString(meetingData.agenda, { width: 480 }) + 20)
+           .fillColor('#fefefe')
+           .strokeColor('#d1d5db')
+           .lineWidth(1)
+           .fillAndStroke();
+        doc.fillColor('#000000');
+        
+        doc.y = agendaY + 10;
+        doc.x = 60;
         doc.fontSize(12).font('Helvetica');
-        doc.text(meetingData.agenda, { align: 'left', width: 500 });
+        doc.text(meetingData.agenda, { width: 480, align: 'left' });
+        doc.x = 50;
         doc.moveDown(2);
       }
 
       // Selected Concerns (if any)
       if (meetingData.selectedConcerns && meetingData.selectedConcerns.length > 0) {
-        doc.fontSize(16).font('Helvetica-Bold');
-        doc.text('Student Concerns to Discuss:', { underline: true });
-        doc.moveDown();
+        // Start new page for concerns if needed
+        if (doc.y > 650) {
+          doc.addPage();
+        }
+        
+        doc.fontSize(20).font('Helvetica-Bold');
+        doc.fillColor('#1f2937');
+        doc.text('📚 STUDENT CONCERNS TO DISCUSS', { align: 'center' });
+        doc.fillColor('#000000');
+        
+        // Add separator line
+        doc.moveTo(50, doc.y + 10)
+           .lineTo(550, doc.y + 10)
+           .strokeColor('#3b82f6')
+           .lineWidth(2)
+           .stroke();
+        
+        doc.moveDown(2);
         
         // Fetch detailed concern information with all related data (interventions, etc.)
-        console.log('📋 Fetching concern details for:', meetingData.selectedConcerns);
+        // Fetch complete concern details with all related data
         const selectedConcernDetails = [];
         for (const concernId of meetingData.selectedConcerns) {
           const concernWithDetails = await storage.getConcernWithDetails(concernId);
-          console.log(`📋 Fetched concern ${concernId}:`, concernWithDetails ? 'SUCCESS' : 'NOT FOUND');
           if (concernWithDetails) {
             selectedConcernDetails.push(concernWithDetails);
           }
         }
-        console.log('📋 Total concern details fetched:', selectedConcernDetails.length);
 
         // Group concerns by student
         const concernsByStudent: { [key: string]: any[] } = {};
@@ -2543,149 +2609,326 @@ export async function registerRoutes(app: Express): Promise<Server> {
           concernsByStudent[studentKey].push(concern);
         });
 
-        doc.fontSize(12).font('Helvetica');
-        doc.text(`Total concerns selected: ${selectedConcernDetails.length}`);
-        doc.moveDown();
+        // Summary info box
+        const summaryY = doc.y;
+        doc.rect(40, summaryY, 520, 30)
+           .fillColor('#eff6ff')
+           .strokeColor('#3b82f6')
+           .lineWidth(1)
+           .fillAndStroke();
+        doc.fillColor('#000000');
+        
+        doc.y = summaryY + 8;
+        doc.x = 60;
+        doc.fontSize(12).font('Helvetica-Bold');
+        doc.fillColor('#1e40af');
+        doc.text(`📊 Total concerns selected: ${selectedConcernDetails.length}`);
+        doc.fillColor('#000000');
+        doc.x = 50;
+        doc.moveDown(2);
 
-        // Display each student's concerns in detail
+        // Display each student's concerns with professional formatting
         let concernCounter = 1;
         for (const [studentName, concerns] of Object.entries(concernsByStudent)) {
-          doc.fontSize(14).font('Helvetica-Bold');
-          doc.text(`${studentName} (Grade ${concerns[0].grade})`, { underline: true });
-          doc.moveDown();
+          // Check if we need a new page
+          if (doc.y > 700) {
+            doc.addPage();
+          }
+          
+          // Student header with background
+          const studentY = doc.y;
+          doc.rect(40, studentY, 520, 35)
+             .fillColor('#f1f5f9')
+             .strokeColor('#64748b')
+             .lineWidth(1)
+             .fillAndStroke();
+          doc.fillColor('#000000');
+          
+          doc.y = studentY + 10;
+          doc.x = 60;
+          doc.fontSize(16).font('Helvetica-Bold');
+          doc.fillColor('#0f172a');
+          doc.text(`🎓 ${studentName} (Grade ${concerns[0].grade})`);
+          doc.fillColor('#000000');
+          doc.x = 50;
+          doc.moveDown(1.5);
 
           concerns.forEach((concern: any, index: number) => {
-            doc.fontSize(12).font('Helvetica-Bold');
-            doc.text(`${concernCounter}. ${Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'N/A'} Concern`);
-            doc.moveDown(0.5);
+            // Check page break for each concern
+            if (doc.y > 650) {
+              doc.addPage();
+            }
+            
+            // Concern header with numbering
+            doc.fontSize(14).font('Helvetica-Bold');
+            doc.fillColor('#dc2626');
+            const concernTypes = Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'N/A';
+            doc.text(`${concernCounter}. ${concernTypes} Concern`, { indent: 20 });
+            doc.fillColor('#000000');
+            doc.moveDown(0.3);
 
-            doc.fontSize(10).font('Helvetica');
-            doc.text(`Severity: ${concern.severityLevel || 'N/A'} | Location: ${concern.location || 'N/A'} | Date: ${concern.createdAt ? new Date(concern.createdAt).toLocaleDateString() : 'N/A'}`);
-            doc.moveDown(0.5);
+            // Metadata bar with colored background
+            const metaY = doc.y;
+            const severityColor = concern.severityLevel === 'urgent' ? '#dc2626' : 
+                                concern.severityLevel === 'moderate' ? '#f59e0b' : '#10b981';
+            
+            doc.rect(60, metaY, 480, 25)
+               .fillColor('#f9fafb')
+               .strokeColor('#e5e7eb')
+               .lineWidth(1)
+               .fillAndStroke();
+            
+            doc.y = metaY + 6;
+            doc.x = 80;
+            doc.fontSize(10).font('Helvetica-Bold');
+            doc.fillColor(severityColor);
+            doc.text(`Severity: ${concern.severityLevel?.toUpperCase() || 'N/A'}`, { continued: true });
+            doc.fillColor('#6b7280');
+            doc.text(` | Location: ${concern.location || 'N/A'} | Date: ${concern.createdAt ? new Date(concern.createdAt).toLocaleDateString() : 'N/A'}`);
+            doc.fillColor('#000000');
+            doc.x = 50;
+            doc.moveDown(1);
 
+            // Description section with subtle background
             doc.fontSize(11).font('Helvetica-Bold');
-            doc.text('Description:');
+            doc.fillColor('#374151');
+            doc.text('📝 Description:', { indent: 20 });
+            doc.fillColor('#000000');
+            doc.moveDown(0.3);
+            
             doc.fontSize(11).font('Helvetica');
-            doc.text(concern.description || 'No description provided', { width: 500, align: 'left' });
+            doc.text(concern.description || 'No description provided', { 
+              width: 460, 
+              align: 'left',
+              indent: 40
+            });
             doc.moveDown(0.5);
 
             concernCounter++;
 
+            // Actions taken section with improved formatting
             if (concern.actionsTaken && Array.isArray(concern.actionsTaken) && concern.actionsTaken.length > 0) {
-              doc.text('Actions Already Taken:', { continued: false });
+              doc.fontSize(11).font('Helvetica-Bold');
+              doc.fillColor('#059669');
+              doc.text('✅ Actions Already Taken:', { indent: 20 });
+              doc.fillColor('#000000');
+              doc.moveDown(0.3);
+              
+              doc.fontSize(10).font('Helvetica');
               concern.actionsTaken.forEach((action: string) => {
-                doc.text(`• ${action}`, { width: 500 });
+                doc.text(`• ${action}`, { width: 460, indent: 40 });
               });
               if (concern.otherActionTaken) {
-                doc.text(`• ${concern.otherActionTaken}`, { width: 500 });
+                doc.text(`• ${concern.otherActionTaken}`, { width: 460, indent: 40 });
               }
-              doc.moveDown(0.5);
+              doc.moveDown(0.8);
             }
 
-            // Include intervention recommendations if requested
+            // AI-Generated interventions with professional styling
             if (meetingData.includeRecommendations && concern.interventions && concern.interventions.length > 0) {
-              doc.fontSize(11).font('Helvetica-Bold');
-              doc.text('AI-Generated Interventions:', { underline: true });
+              // Check for page break
+              if (doc.y > 600) {
+                doc.addPage();
+              }
+              
+              doc.fontSize(12).font('Helvetica-Bold');
+              doc.fillColor('#7c3aed');
+              doc.text('🤖 AI-Generated Interventions', { indent: 20 });
+              doc.fillColor('#000000');
               doc.moveDown(0.5);
 
               concern.interventions.forEach((intervention: any, intIndex: number) => {
-                doc.fontSize(10).font('Helvetica-Bold');
-                doc.text(`${concern.taskType === 'differentiation' ? 'Differentiation' : 'Intervention'} ${intIndex + 1}: ${intervention.title || 'Strategy'}`);
-                doc.moveDown(0.3);
+                // Intervention header with colored background
+                const intY = doc.y;
+                doc.rect(60, intY, 480, 25)
+                   .fillColor('#faf5ff')
+                   .strokeColor('#a855f7')
+                   .lineWidth(1)
+                   .fillAndStroke();
+                
+                doc.y = intY + 6;
+                doc.x = 80;
+                doc.fontSize(11).font('Helvetica-Bold');
+                doc.fillColor('#7c3aed');
+                const taskLabel = concern.taskType === 'differentiation' ? 'Differentiation Strategy' : 'Intervention Strategy';
+                doc.text(`${taskLabel} ${intIndex + 1}: ${intervention.title || 'Recommended Strategy'}`);
+                doc.fillColor('#000000');
+                doc.x = 50;
+                doc.moveDown(0.8);
 
-                doc.fontSize(9).font('Helvetica');
                 if (intervention.description) {
-                  // Clean up markdown-style formatting for PDF
+                  doc.fontSize(10).font('Helvetica');
+                  // Clean up markdown formatting for professional PDF display
                   const cleanDescription = intervention.description
                     .replace(/\*\*\*(.*?)\*\*\*/g, '$1')
                     .replace(/\*\*(.*?)\*\*/g, '$1')
                     .replace(/\*(.*?)\*/g, '$1')
                     .replace(/#{1,4}\s*(.*?)$/gm, '$1')
-                    .replace(/[-*]\s/g, '• ');
+                    .replace(/[-*]\s/g, '• ')
+                    .replace(/\n{3,}/g, '\n\n'); // Clean up excessive line breaks
                   
-                  doc.text(cleanDescription, { width: 480, align: 'left' });
+                  doc.text(cleanDescription, { width: 460, align: 'left', indent: 40 });
+                  doc.moveDown(0.5);
                 }
 
                 if (intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0) {
-                  doc.moveDown(0.3);
-                  doc.text('Implementation Steps:');
+                  doc.fontSize(10).font('Helvetica-Bold');
+                  doc.fillColor('#374151');
+                  doc.text('Implementation Steps:', { indent: 40 });
+                  doc.fillColor('#000000');
+                  doc.moveDown(0.2);
+                  
+                  doc.fontSize(9).font('Helvetica');
                   intervention.steps.forEach((step: any, stepIndex: number) => {
-                    doc.text(`${stepIndex + 1}. ${typeof step === 'string' ? step : JSON.stringify(step)}`, { width: 460 });
+                    const stepText = typeof step === 'string' ? step : JSON.stringify(step);
+                    doc.text(`${stepIndex + 1}. ${stepText}`, { width: 420, indent: 60 });
                   });
+                  doc.moveDown(0.3);
                 }
 
                 if (intervention.timeline) {
+                  doc.fontSize(10).font('Helvetica-Bold');
+                  doc.fillColor('#b45309');
+                  doc.text(`⏱️ Timeline: ${intervention.timeline}`, { indent: 40 });
+                  doc.fillColor('#000000');
                   doc.moveDown(0.3);
-                  doc.text(`Timeline: ${intervention.timeline}`);
                 }
 
-                doc.moveDown(0.5);
+                doc.moveDown(0.8);
               });
             }
 
-            // Add student learning profile information
+            // Student learning profile with professional styling
             if (concern.hasIep || concern.hasDisability || concern.isEalLearner || concern.isGifted || concern.isStruggling || concern.otherNeeds) {
+              // Profile header with background
+              const profileY = doc.y;
+              doc.rect(60, profileY, 480, 25)
+                 .fillColor('#ecfdf5')
+                 .strokeColor('#10b981')
+                 .lineWidth(1)
+                 .fillAndStroke();
+              
+              doc.y = profileY + 6;
+              doc.x = 80;
               doc.fontSize(11).font('Helvetica-Bold');
-              doc.text('Student Learning Profile:', { underline: true });
-              doc.moveDown(0.3);
+              doc.fillColor('#047857');
+              doc.text('📄 Student Learning Profile');
+              doc.fillColor('#000000');
+              doc.x = 50;
+              doc.moveDown(0.8);
 
-              doc.fontSize(9).font('Helvetica');
               const profileItems = [];
-              if (concern.hasIep) profileItems.push('Has IEP/504 Plan');
-              if (concern.hasDisability) profileItems.push(`Diagnosed with: ${concern.disabilityType || 'Not specified'}`);
-              if (concern.isEalLearner) profileItems.push(`EAL Learner (${concern.ealProficiency || 'Unspecified'} English proficiency)`);
-              if (concern.isGifted) profileItems.push('Gifted/Talented');
-              if (concern.isStruggling) profileItems.push('Currently struggling academically');
-              if (concern.otherNeeds) profileItems.push(`Other needs: ${concern.otherNeeds}`);
+              if (concern.hasIep) profileItems.push('📋 Has IEP/504 Plan');
+              if (concern.hasDisability) profileItems.push(`🧠 Diagnosed with: ${concern.disabilityType || 'Not specified'}`);
+              if (concern.isEalLearner) profileItems.push(`🌍 EAL Learner (${concern.ealProficiency || 'Unspecified'} English proficiency)`);
+              if (concern.isGifted) profileItems.push('✨ Gifted/Talented');
+              if (concern.isStruggling) profileItems.push('📚 Currently struggling academically');
+              if (concern.otherNeeds) profileItems.push(`📝 Other needs: ${concern.otherNeeds}`);
 
+              doc.fontSize(10).font('Helvetica');
               profileItems.forEach(item => {
-                doc.text(`• ${item}`, { width: 480 });
+                doc.text(`• ${item}`, { width: 440, indent: 40 });
               });
-              doc.moveDown(0.5);
+              doc.moveDown(1);
             }
 
-            doc.moveDown(1);
+            // Add separator line between concerns
+            doc.moveTo(80, doc.y)
+               .lineTo(520, doc.y)
+               .strokeColor('#e5e7eb')
+               .lineWidth(1)
+               .stroke();
+            doc.moveDown(1.5);
+            
+            concernCounter++;
           });
 
-          doc.moveDown(1);
+          doc.moveDown(2);
         }
       }
 
-      // Additional Notes
+      // Additional Notes with improved formatting
       if (meetingData.notes) {
-        doc.fontSize(16).font('Helvetica-Bold');
-        doc.text('Additional Notes:', { underline: true });
-        doc.moveDown();
+        if (doc.y > 650) {
+          doc.addPage();
+        }
         
+        doc.fontSize(18).font('Helvetica-Bold');
+        doc.fillColor('#374151');
+        doc.text('📝 Additional Notes');
+        doc.fillColor('#000000');
+        doc.moveDown(0.5);
+        
+        // Notes content box
+        const notesY = doc.y;
+        const notesHeight = doc.heightOfString(meetingData.notes, { width: 480 }) + 20;
+        doc.rect(40, notesY, 520, notesHeight)
+           .fillColor('#fffbeb')
+           .strokeColor('#f59e0b')
+           .lineWidth(1)
+           .fillAndStroke();
+        doc.fillColor('#000000');
+        
+        doc.y = notesY + 10;
+        doc.x = 60;
         doc.fontSize(12).font('Helvetica');
-        doc.text(meetingData.notes, { align: 'left', width: 500 });
+        doc.text(meetingData.notes, { width: 480, align: 'left' });
+        doc.x = 50;
         doc.moveDown(2);
       }
 
-      // Document Options
+      // Document Options with professional styling
       if (meetingData.includeRecommendations || meetingData.includeProgressNotes) {
         doc.fontSize(16).font('Helvetica-Bold');
-        doc.text('Document Includes:', { underline: true });
-        doc.moveDown();
+        doc.fillColor('#374151');
+        doc.text('📋 Document Includes');
+        doc.fillColor('#000000');
+        doc.moveDown(0.5);
         
         doc.fontSize(12).font('Helvetica');
         if (meetingData.includeRecommendations) {
-          doc.text('✓ Intervention recommendations');
+          doc.fillColor('#059669');
+          doc.text('✅ AI-generated intervention recommendations', { indent: 20 });
         }
         if (meetingData.includeProgressNotes) {
-          doc.text('✓ Progress notes section');
+          doc.fillColor('#059669');
+          doc.text('✅ Progress tracking section', { indent: 20 });
         }
+        doc.fillColor('#000000');
         doc.moveDown(2);
       }
 
-      // Footer
+      // Professional footer with styling
+      if (doc.y > 720) {
+        doc.addPage();
+      }
+      
+      // Footer separator line
+      doc.moveTo(50, doc.y + 20)
+         .lineTo(550, doc.y + 20)
+         .strokeColor('#e5e7eb')
+         .lineWidth(1)
+         .stroke();
+      
+      doc.moveDown(1);
+      
+      // Footer content with professional styling
+      doc.fontSize(11).font('Helvetica');
+      doc.fillColor('#6b7280');
+      doc.text('Document Information', { align: 'center' });
+      doc.moveDown(0.3);
+      
       doc.fontSize(10).font('Helvetica');
-      doc.text(`Document generated on: ${new Date().toLocaleDateString()}`, {
+      doc.text(`Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, {
         align: 'center'
       });
       doc.text(`Prepared by: ${session.user.firstName} ${session.user.lastName}`, {
         align: 'center'
       });
+      doc.text('Concern2Care - AI-Powered Educational Support Platform', {
+        align: 'center'
+      });
+      doc.fillColor('#000000');
 
       // Finalize PDF
       doc.end();
