@@ -13,14 +13,11 @@ import TeacherMeetingPrep from "@/pages/teacher-meeting-prep";
 import Settings from "@/pages/settings";
 import AdminPage from "@/pages/admin-page";
 import NotFound from "@/pages/not-found";
-// import Register from "@/pages/register";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
 
-  // Simplified routing - always show pages, auth determines content
   if (isLoading) {
-    // Show immediate loading state
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center">
         <div className="text-center">
@@ -35,21 +32,11 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/" component={!isAuthenticated ? Landing : Home} />
-      <Route path="/login" component={Login} />
-      {isAuthenticated ? (
+      {!isAuthenticated ? (
         <>
-          <Route path="/admin" component={AdminPage} />
-          <Route path="/admin/*" component={AdminPage} />
-          <Route path="/new-request" component={Home} />
-          <Route path="/my-support-requests" component={MySupportRequests} />
-          <Route path="/meeting-prep" component={TeacherMeetingPrep} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/concerns/:id" component={ConcernDetail} />
-        </>
-      ) : (
-        <>
-          {/* Redirect authenticated routes to login when not authenticated */}
+          <Route path="/" component={Landing} />
+          <Route path="/login" component={Login} />
+          {/* Redirect all authenticated routes to login */}
           <Route path="/admin" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/admin/*" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/new-request" component={() => { window.location.href = '/login'; return null; }} />
@@ -57,6 +44,19 @@ function Router() {
           <Route path="/meeting-prep" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/settings" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/concerns/:id" component={() => { window.location.href = '/login'; return null; }} />
+        </>
+      ) : (
+        <>
+          <Route path="/admin" component={AdminPage} />
+          <Route path="/admin/*" component={AdminPage} />
+          <Route path="/" component={Home} />
+          <Route path="/new-request" component={Home} />
+          <Route path="/my-support-requests" component={MySupportRequests} />
+          <Route path="/meeting-prep" component={TeacherMeetingPrep} />
+          <Route path="/settings" component={Settings} />
+          <Route path="/concerns/:id" component={ConcernDetail} />
+          {/* Redirect login to home when authenticated */}
+          <Route path="/login" component={() => { window.location.href = '/'; return null; }} />
         </>
       )}
       <Route component={NotFound} />

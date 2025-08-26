@@ -43,12 +43,7 @@ export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  getUserByReferralCode(referralCode: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
-  grantReferralBonus(userId: string, bonusAmount: number): Promise<void>;
-  getReferralStats(): Promise<any>;
-  getUserReferrals(userId: string): Promise<any[]>;
   updateUserRequestCount(id: string, count: number): Promise<void>;
   incrementUserRequestCount(id: string): Promise<User>;
   checkUserUsageLimit(id: string): Promise<{ canCreate: boolean; used: number; limit: number; }>;
@@ -145,80 +140,6 @@ export class DatabaseStorage implements IStorage {
   async getUserByEmail(email: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user;
-  }
-
-  async getUserByReferralCode(referralCode: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.myReferralCode, referralCode));
-    return user;
-  }
-
-  async grantReferralBonus(userId: string, bonusAmount: number): Promise<void> {
-    await db.update(users)
-      .set({ 
-        additionalRequests: sql`${users.additionalRequests} + ${bonusAmount}`,
-        referralCount: sql`${users.referralCount} + 1`
-      })
-      .where(eq(users.id, userId));
-  }
-
-  async getReferralStats(): Promise<any> {
-    // Get total referrals and top referrers
-    const topReferrers = await db
-      .select({
-        id: users.id,
-        firstName: users.firstName,
-        lastName: users.lastName,
-        email: users.email,
-        school: users.school,
-        referralCount: users.referralCount,
-        myReferralCode: users.myReferralCode
-      })
-      .from(users)
-      .where(sql`${users.referralCount} > 0`)
-      .orderBy(desc(users.referralCount))
-      .limit(10);
-
-    // Get total stats
-    const totalReferrals = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(users)
-      .where(sql`${users.referredBy} IS NOT NULL`);
-
-    const totalBonusesGranted = await db
-      .select({ total: sql<number>`sum(${users.additionalRequests})` })
-      .from(users)
-      .where(sql`${users.additionalRequests} > 0`);
-
-    return {
-      totalReferrals: totalReferrals[0]?.count || 0,
-      totalBonusesGranted: totalBonusesGranted[0]?.total || 0,
-      topReferrers: topReferrers
-    };
-  }
-
-  async getUserReferrals(userId: string): Promise<any[]> {
-    // Get users referred by this user
-    const referrals = await db
-      .select({
-        id: users.id,
-        firstName: users.firstName,
-        lastName: users.lastName,
-        email: users.email,
-        school: users.school,
-        isActive: users.isActive,
-        createdAt: users.createdAt,
-        paymentConfirmedAt: users.paymentConfirmedAt
-      })
-      .from(users)
-      .where(eq(users.referredBy, userId))
-      .orderBy(desc(users.createdAt));
-
-    return referrals;
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {

@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, FileText, Calendar, Gift, Copy, Users } from "lucide-react";
+import { Sparkles, FileText, Calendar } from "lucide-react";
 import { User, Concern, Intervention } from "@shared/schema";
 import AppHeader from "@/components/app-header";
 import ConcernForm from "@/components/concern-form";
 import InterventionResults from "@/components/intervention-results";
 import { useLocation, Link } from "wouter";
-import { useToast } from "@/hooks/use-toast";
 
 export default function Home() {
   const { user } = useAuth() as { user: User | undefined };
@@ -24,17 +23,6 @@ export default function Home() {
   const [currentConcern, setCurrentConcern] = useState<Concern | null>(null);
   const [currentInterventions, setCurrentInterventions] = useState<Intervention[]>([]);
   const [showInterventions, setShowInterventions] = useState(false);
-  const { toast } = useToast();
-
-  const copyReferralCode = () => {
-    if (user?.myReferralCode) {
-      navigator.clipboard.writeText(user.myReferralCode);
-      toast({
-        title: "Copied!",
-        description: `Referral code ${user.myReferralCode} copied to clipboard`,
-      });
-    }
-  };
 
   const handleConcernSubmitted = (concern: Concern, interventions: Intervention[]) => {
     setCurrentConcern(concern);
@@ -84,45 +72,6 @@ export default function Home() {
               <p className="text-gray-600 text-sm">{Math.round(usagePercentage)}% Used</p>
             </div>
           </div>
-          
-          {/* Referral Section */}
-          {user?.myReferralCode && (
-            <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Gift className="h-5 w-5 text-green-600" />
-                  <div>
-                    <p className="font-medium text-green-800">Your Referral Code</p>
-                    <p className="text-sm text-green-600">Share with colleagues to earn bonus AI requests!</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <code className="px-3 py-1 bg-white border border-green-300 rounded text-sm font-mono">
-                    {user.myReferralCode}
-                  </code>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={copyReferralCode}
-                    className="border-green-300 text-green-600 hover:bg-green-50"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              {user.referralCount > 0 && (
-                <div className="mt-3 pt-3 border-t border-green-200">
-                  <div className="flex items-center gap-2 text-sm text-green-700">
-                    <Users className="h-4 w-4" />
-                    <span>You've referred {user.referralCount} teacher{user.referralCount !== 1 ? 's' : ''}</span>
-                    <span className="ml-2 px-2 py-0.5 bg-green-100 rounded-full text-xs font-medium">
-                      +{user.referralCount * 10} bonus requests earned!
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
         {/* Usage Limit Warning - Show when at limit */}
