@@ -323,12 +323,8 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
   const handlePasswordChange = async () => {
     if (!passwordTeacher) return;
     
-    console.log("Starting password change for:", passwordTeacher.firstName, passwordTeacher.lastName);
-    console.log("New password length:", newPassword.length);
-    
     try {
       if (!newPassword) {
-        console.log("No password entered");
         toast({
           title: "Error",
           description: "Please enter a new password",
@@ -338,7 +334,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
       }
 
       if (newPassword.length < 6) {
-        console.log("Password too short");
         toast({
           title: "Error",
           description: "Password must be at least 6 characters long",
@@ -351,8 +346,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
         method: "POST",
         body: { newPassword }
       });
-      
-      console.log("Password change response:", response);
       
       // Always close dialog and show success message since API returned 200
       toast({
