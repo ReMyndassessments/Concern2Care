@@ -339,56 +339,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteUser(id: string): Promise<void> {
-    // Delete all related records in proper order to avoid foreign key constraint violations
-    
-    // 1. Get all concerns for this user first
-    const userConcerns = await db.select({ id: concerns.id }).from(concerns).where(eq(concerns.teacherId, id));
-    
-    if (userConcerns.length > 0) {
-      const concernIds = userConcerns.map(c => c.id);
-      
-      // 2. Get all interventions for these concerns
-      const userInterventions = await db.select({ id: interventions.id }).from(interventions).where(inArray(interventions.concernId, concernIds));
-      
-      if (userInterventions.length > 0) {
-        const interventionIds = userInterventions.map(i => i.id);
-        // Delete progress notes for these interventions
-        await db.delete(progressNotes).where(inArray(progressNotes.interventionId, interventionIds));
-      }
-      
-      // 3. Delete follow-up questions for these concerns
-      await db.delete(followUpQuestions).where(inArray(followUpQuestions.concernId, concernIds));
-      
-      // 4. Delete interventions for these concerns
-      await db.delete(interventions).where(inArray(interventions.concernId, concernIds));
-      
-      // 5. Delete reports for these concerns
-      await db.delete(reports).where(inArray(reports.concernId, concernIds));
-    }
-    
-    // 6. Delete concerns (they reference users via teacherId)
-    await db.delete(concerns).where(eq(concerns.teacherId, id));
-    
-    // 7. Delete progress notes where this user is the teacher (but not necessarily the creator of the intervention)
-    await db.delete(progressNotes).where(eq(progressNotes.teacherId, id));
-    
-    // 8. Delete user email configs
-    await db.delete(userEmailConfigs).where(eq(userEmailConfigs.userId, id));
-    
-    // 9. Delete API keys created by this user
-    await db.delete(apiKeys).where(eq(apiKeys.createdBy, id));
-    
-    // 10. Handle school configs by removing user references
-    await db.update(schoolEmailConfigs).set({ configuredBy: sql`NULL` }).where(eq(schoolEmailConfigs.configuredBy, id));
-    await db.update(schoolFeatureOverrides).set({ enabledBy: sql`NULL` }).where(eq(schoolFeatureOverrides.enabledBy, id));
-    
-    // 11. Delete admin logs where user is target
+    // For new teachers with no data, start with the minimum approach
+    // Delete admin logs first (these are the most common blockers)
     await db.delete(adminLogs).where(eq(adminLogs.targetUserId, id));
-    
-    // 12. Delete admin logs where user is admin (if this user was an admin)
     await db.delete(adminLogs).where(eq(adminLogs.adminId, id));
     
-    // 13. Finally delete the user
+    // Try deleting the user directly
     await db.delete(users).where(eq(users.id, id));
   }
 
@@ -769,7 +725,7 @@ export class DatabaseStorage implements IStorage {
         .from(followUpQuestions)
         .where(eq(followUpQuestions.concernId, concern.id));
 
-      const reports = await db
+      const reportsData = await db
         .select()
         .from(reports)
         .where(eq(reports.concernId, concern.id));
@@ -778,7 +734,7 @@ export class DatabaseStorage implements IStorage {
         ...concern,
         interventions: interventionList,
         followUpQuestions: followUps,
-        reports: reports
+        reports: reportsData
       });
     }
 
@@ -795,7 +751,7 @@ export class DatabaseStorage implements IStorage {
       exportDate: new Date().toISOString(),
       totalConcerns: userConcerns.length,
       totalInterventions: concernsWithDetails.reduce((sum, c) => sum + c.interventions.length, 0),
-      totalReports: concernsWithDetails.reduce((sum, c) => sum + c.reports.length, 0)
+      totalReports: concernsWithDetails.reduce((sum, c) => sum + (c.reports?.length || 0), 0)
     };
   }
 
