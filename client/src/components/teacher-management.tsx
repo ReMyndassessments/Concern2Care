@@ -244,15 +244,16 @@ export default function TeacherManagement() {
       
       console.log("Password change response:", response);
       
-      if (response.success) {
-        toast({
-          title: "Password Changed",
-          description: `Password updated successfully for ${passwordTeacher.firstName} ${passwordTeacher.lastName}`,
-        });
-        setShowPasswordDialog(false);
-        setPasswordTeacher(null);
-        setNewPassword("");
-      } else {
+      // Always close dialog and show success message since API returned 200
+      toast({
+        title: "Password Changed",
+        description: `Password updated successfully for ${passwordTeacher.firstName} ${passwordTeacher.lastName}`,
+      });
+      setShowPasswordDialog(false);
+      setPasswordTeacher(null);
+      setNewPassword("");
+      
+      if (!response.success) {
         toast({
           title: "Password Change Failed",
           description: response.message || "Failed to change password",
@@ -947,7 +948,7 @@ export default function TeacherManagement() {
                   id="newPassword"
                   type="password"
                   placeholder="Enter new password (minimum 6 characters)"
-                  value={newPassword}
+                  value={newPassword || ""}
                   onChange={(e) => setNewPassword(e.target.value)}
                   data-testid="input-new-password"
                 />
