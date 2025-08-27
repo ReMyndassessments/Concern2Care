@@ -30,7 +30,7 @@ Preferred communication style: Simple, everyday language.
 - **Runtime**: Node.js with Express.js framework
 - **Language**: TypeScript with ES modules
 - **Database ORM**: Drizzle ORM for type-safe database operations
-- **Authentication**: Passport.js with OpenID Connect strategy for Replit integration
+- **Authentication**: Custom session-based authentication with email/password login
 - **Session Management**: Express sessions with PostgreSQL session store
 - **API Design**: RESTful API endpoints with proper error handling and logging
 
@@ -69,7 +69,7 @@ Preferred communication style: Simple, everyday language.
 ### Core Services
 - **Neon Database**: Serverless PostgreSQL hosting for production data storage
 - **DeepSeek API**: AI model for generating evidence-based intervention strategies (NOT OpenAI)
-- **Replit Authentication**: OIDC-based authentication system for user management
+- **Custom Authentication**: Session-based authentication system with demo accounts for development
 
 ### Email & Communication
 - **SMTP Service**: Configurable email service for sharing reports with school staff
