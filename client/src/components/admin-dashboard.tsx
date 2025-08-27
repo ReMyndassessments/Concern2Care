@@ -17,7 +17,6 @@ import {
   AlertTriangle, 
   Database,
   Settings,
-  Activity,
   BarChart3,
   LogOut
 } from "lucide-react";
@@ -39,16 +38,8 @@ interface DashboardStats {
     lastMonth: number;
     percentChange: number;
   };
-  recentActivity?: ActivityItem[];
 }
 
-interface ActivityItem {
-  id: string;
-  type: 'concern_created' | 'intervention_generated' | 'user_registered';
-  description: string;
-  timestamp: string;
-  userId: string;
-}
 
 export default function AdminDashboard() {
   const { toast } = useToast();
@@ -88,21 +79,7 @@ export default function AdminDashboard() {
       // Fetch real statistics from the admin API
       const response = await apiRequest('/api/admin/dashboard-stats');
       
-      // Add mock recent activity since backend doesn't provide it yet
-      const statsWithActivity = {
-        ...response,
-        recentActivity: [
-          {
-            id: '1',
-            type: 'concern_created' as const,
-            description: 'Recent concern activity tracked in database',
-            timestamp: new Date().toISOString(),
-            userId: 'system'
-          }
-        ]
-      };
-      
-      setStats(statsWithActivity);
+      setStats(response);
     } catch (error) {
       console.error('Error loading dashboard stats:', error);
       toast({
@@ -124,18 +101,6 @@ export default function AdminDashboard() {
     });
   };
 
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case 'concern_created':
-        return <FileText className="h-4 w-4 text-blue-600" />;
-      case 'intervention_generated':
-        return <Sparkles className="h-4 w-4 text-green-600" />;
-      case 'user_registered':
-        return <Users className="h-4 w-4 text-purple-600" />;
-      default:
-        return <Activity className="h-4 w-4 text-gray-600" />;
-    }
-  };
 
   if (loading) {
     return (
@@ -293,12 +258,6 @@ export default function AdminDashboard() {
               Analytics
             </TabsTrigger>
             <TabsTrigger 
-              value="activity" 
-              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
-            >
-              Activity
-            </TabsTrigger>
-            <TabsTrigger 
               value="settings" 
               className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
             >
@@ -400,33 +359,6 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="activity" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Activity className="h-5 w-5" />
-                <span>Recent System Activity</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {(stats.recentActivity || []).map((activity) => (
-                  <div key={activity.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                    {getActivityIcon(activity.type)}
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
-                        {activity.description}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {formatDate(activity.timestamp)} • User: {activity.userId}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         <TabsContent value="settings" className="space-y-6">
           <Card>
