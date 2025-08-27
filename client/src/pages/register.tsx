@@ -78,7 +78,7 @@ export default function Register() {
                   <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
                   <div>
                     <p className="font-medium text-gray-800">Email Report Sharing</p>
-                    <p className="text-sm text-gray-600">Send reports directly to administrators</p>
+                    <p className="text-sm text-gray-600">Send reports directly to student support or when necessary</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
