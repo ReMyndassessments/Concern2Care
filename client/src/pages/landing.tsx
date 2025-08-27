@@ -48,10 +48,6 @@ export default function Landing() {
             A Teacher Tool for Differentiation and Classroom Interventions
           </p>
           
-          {/* Attribution */}
-          <p className="text-sm text-gray-500 mb-8 md:mb-16">
-            from Remynd
-          </p>
         </div>
       </section>
 
