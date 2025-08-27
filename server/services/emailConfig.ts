@@ -12,14 +12,22 @@ import nodemailer from 'nodemailer';
 import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 
-// Simple encryption for storing email passwords
-const ENCRYPTION_KEY = process.env.EMAIL_ENCRYPTION_KEY || 'default-key-change-in-production';
+// Secure encryption for storing email passwords - set development default if not in production
+if (process.env.NODE_ENV !== 'production' && !process.env.EMAIL_ENCRYPTION_KEY) {
+  process.env.EMAIL_ENCRYPTION_KEY = 'dev-key-32-chars-minimum-required!';
+  console.warn('Using development default for EMAIL_ENCRYPTION_KEY');
+}
+
+const ENCRYPTION_KEY = process.env.EMAIL_ENCRYPTION_KEY;
+if (!ENCRYPTION_KEY || ENCRYPTION_KEY === 'default-key-change-in-production') {
+  throw new Error('EMAIL_ENCRYPTION_KEY environment variable is required and must be set to a secure value');
+}
 const scryptAsync = promisify(scrypt);
 
 async function encryptPassword(password: string): Promise<string> {
   try {
     const iv = randomBytes(16);
-    const key = (await scryptAsync(ENCRYPTION_KEY, 'salt', 32)) as Buffer;
+    const key = (await scryptAsync(ENCRYPTION_KEY!, 'salt', 32)) as Buffer;
     const cipher = createCipheriv('aes-256-cbc', key, iv);
     
     let encrypted = cipher.update(password, 'utf8', 'hex');
@@ -40,7 +48,7 @@ async function decryptPassword(encryptedPassword: string): Promise<string> {
     }
     
     const iv = Buffer.from(ivHex, 'hex');
-    const key = (await scryptAsync(ENCRYPTION_KEY, 'salt', 32)) as Buffer;
+    const key = (await scryptAsync(ENCRYPTION_KEY!, 'salt', 32)) as Buffer;
     const decipher = createDecipheriv('aes-256-cbc', key, iv);
     
     let decrypted = decipher.update(encrypted, 'hex', 'utf8');

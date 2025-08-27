@@ -71,7 +71,12 @@ export const users = pgTable("users", {
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-});
+}, (table) => ({
+  emailIdx: index("users_email_idx").on(table.email),
+  schoolIdIdx: index("users_school_id_idx").on(table.schoolId),
+  activeUsersIdx: index("users_active_idx").on(table.isActive),
+  lastLoginIdx: index("users_last_login_idx").on(table.lastLoginAt),
+}));
 
 export const concerns = pgTable("concerns", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -109,7 +114,12 @@ export const concerns = pgTable("concerns", {
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-});
+}, (table) => ({
+  teacherIdIdx: index("concerns_teacher_id_idx").on(table.teacherId),
+  createdAtIdx: index("concerns_created_at_idx").on(table.createdAt),
+  severityIdx: index("concerns_severity_idx").on(table.severityLevel),
+  taskTypeIdx: index("concerns_task_type_idx").on(table.taskType),
+}));
 
 export const interventions = pgTable("interventions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
