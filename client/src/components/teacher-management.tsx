@@ -234,8 +234,7 @@ export default function TeacherManagement() {
 
       const response = await apiRequest(`/api/admin/teachers/${passwordTeacher.id}/change-password`, {
         method: "POST",
-        body: JSON.stringify({ newPassword }),
-        headers: { "Content-Type": "application/json" }
+        body: { newPassword }
       });
       
       if (response.success) {
