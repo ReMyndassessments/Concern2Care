@@ -217,6 +217,32 @@ export default function TeacherManagement() {
     fileInputRef.current?.click();
   };
 
+  const handleDownloadTemplate = () => {
+    // Create CSV template content
+    const csvTemplate = `name,email,password,school,school district,primary grade,primary subject,teacher type,support requests limit
+John Smith,john.smith@school.edu,,Lincoln Elementary,Springfield District,3rd Grade,Mathematics,Classroom Teacher,20
+Mary Johnson,mary.johnson@school.edu,TempPass123,Lincoln Elementary,Springfield District,5th Grade,English Language Arts,Classroom Teacher,25
+Robert Davis,robert.davis@school.edu,,Lincoln Elementary,Springfield District,K-5,Special Education,Special Education Teacher,30
+Sarah Wilson,sarah.wilson@school.edu,,Lincoln Elementary,Springfield District,4th Grade,Science,Classroom Teacher,20
+Michael Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,2nd Grade,Reading,Classroom Teacher,20`;
+
+    // Create and download the file
+    const blob = new Blob([csvTemplate], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'teacher_upload_template.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+
+    toast({
+      title: "Template Downloaded",
+      description: "CSV template has been downloaded. Fill it out and upload to add multiple teachers at once.",
+    });
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -513,6 +539,10 @@ export default function TeacherManagement() {
               <Button onClick={handleBulkUpload} variant="outline" className="w-full sm:w-auto" data-testid="button-bulk-upload">
                 <Upload className="h-4 w-4 mr-2" />
                 Bulk Upload CSV
+              </Button>
+              <Button onClick={handleDownloadTemplate} variant="outline" className="w-full sm:w-auto" data-testid="button-download-template">
+                <Download className="h-4 w-4 mr-2" />
+                Download Template
               </Button>
               <input
                 ref={fileInputRef}
