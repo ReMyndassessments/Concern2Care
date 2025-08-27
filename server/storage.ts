@@ -10,6 +10,9 @@ import {
   featureFlags,
   schoolFeatureOverrides,
   progressNotes,
+  apiKeys,
+  userEmailConfigs,
+  schoolEmailConfigs,
   type User,
   type UpsertUser,
   type InsertSchool,
@@ -336,10 +339,49 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteUser(id: string): Promise<void> {
-    // First delete related admin logs to avoid foreign key constraint violation
+    // Delete all related records in proper order to avoid foreign key constraint violations
+    
+    // 1. Delete progress notes (they reference users via teacherId)
+    await db.delete(progressNotes).where(eq(progressNotes.teacherId, id));
+    
+    // 2. Delete follow-up questions (they reference interventions, and interventions reference concerns, concerns reference users via teacherId)
+    const userConcerns = await db.select({ id: concerns.id }).from(concerns).where(eq(concerns.teacherId, id));
+    if (userConcerns.length > 0) {
+      const concernIds = userConcerns.map(c => c.id);
+      const userInterventions = await db.select({ id: interventions.id }).from(interventions).where(inArray(interventions.concernId, concernIds));
+      if (userInterventions.length > 0) {
+        const interventionIds = userInterventions.map(i => i.id);
+        await db.delete(followUpQuestions).where(inArray(followUpQuestions.interventionId, interventionIds));
+      }
+      // Delete interventions for this user's concerns
+      await db.delete(interventions).where(inArray(interventions.concernId, concernIds));
+    }
+    
+    // 3. Delete concerns (they reference users via teacherId)
+    await db.delete(concerns).where(eq(concerns.teacherId, id));
+    
+    // 4. Delete reports (they reference users via userId)
+    await db.delete(reports).where(eq(reports.userId, id));
+    
+    // 5. Delete user email configs
+    await db.delete(userEmailConfigs).where(eq(userEmailConfigs.userId, id));
+    
+    // 6. Delete API keys created by this user
+    await db.delete(apiKeys).where(eq(apiKeys.createdBy, id));
+    
+    // 7. Update school email configs (set configuredBy to null instead of deleting)
+    await db.update(schoolEmailConfigs).set({ configuredBy: null }).where(eq(schoolEmailConfigs.configuredBy, id));
+    
+    // 8. Update school feature overrides (set enabledBy to null instead of deleting)
+    await db.update(schoolFeatureOverrides).set({ enabledBy: null }).where(eq(schoolFeatureOverrides.enabledBy, id));
+    
+    // 9. Delete admin logs where user is target
     await db.delete(adminLogs).where(eq(adminLogs.targetUserId, id));
     
-    // Then delete the user
+    // 10. Delete admin logs where user is admin (if this user was an admin)
+    await db.delete(adminLogs).where(eq(adminLogs.adminId, id));
+    
+    // 11. Finally delete the user
     await db.delete(users).where(eq(users.id, id));
   }
 
