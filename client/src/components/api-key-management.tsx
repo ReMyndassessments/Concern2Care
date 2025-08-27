@@ -43,6 +43,7 @@ interface ApiKey {
   createdByUser: string | null;
   maskedKey: string;
   usagePercentage: number;
+  isEnvironmentKey?: boolean;
 }
 
 const apiKeyFormSchema = z.object({
@@ -197,6 +198,9 @@ export default function ApiKeyManagement() {
   };
 
   const getStatusBadge = (apiKey: ApiKey) => {
+    if (apiKey.isEnvironmentKey) {
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200" data-testid={`status-environment-${apiKey.id}`}>Environment</Badge>;
+    }
     if (!apiKey.isActive) {
       return <Badge variant="secondary" data-testid={`status-inactive-${apiKey.id}`}>Inactive</Badge>;
     }
@@ -432,26 +436,35 @@ export default function ApiKeyManagement() {
                     </div>
 
                     <div className="flex justify-end gap-2 pt-2 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(apiKey)}
-                        data-testid={`button-edit-${apiKey.id}`}
-                        className="text-xs"
-                      >
-                        <Edit className="h-3 w-3 mr-1" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(apiKey)}
-                        className="text-red-600 hover:text-red-800 text-xs"
-                        data-testid={`button-delete-${apiKey.id}`}
-                      >
-                        <Trash2 className="h-3 w-3 mr-1" />
-                        Delete
-                      </Button>
+                      {!apiKey.isEnvironmentKey && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEdit(apiKey)}
+                            data-testid={`button-edit-${apiKey.id}`}
+                            className="text-xs"
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(apiKey)}
+                            className="text-red-600 hover:text-red-800 text-xs"
+                            data-testid={`button-delete-${apiKey.id}`}
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Delete
+                          </Button>
+                        </>
+                      )}
+                      {apiKey.isEnvironmentKey && (
+                        <span className="text-xs text-muted-foreground px-2 py-1">
+                          Managed via environment
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Card>
@@ -541,24 +554,33 @@ export default function ApiKeyManagement() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEdit(apiKey)}
-                          data-testid={`button-edit-${apiKey.id}`}
-                          className="p-2"
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDelete(apiKey)}
-                          className="text-red-600 hover:text-red-800 p-2"
-                          data-testid={`button-delete-${apiKey.id}`}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
+                        {!apiKey.isEnvironmentKey && (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEdit(apiKey)}
+                              data-testid={`button-edit-${apiKey.id}`}
+                              className="p-2"
+                            >
+                              <Edit className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(apiKey)}
+                              className="text-red-600 hover:text-red-800 p-2"
+                              data-testid={`button-delete-${apiKey.id}`}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </>
+                        )}
+                        {apiKey.isEnvironmentKey && (
+                          <span className="text-xs text-muted-foreground">
+                            Environment key
+                          </span>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
