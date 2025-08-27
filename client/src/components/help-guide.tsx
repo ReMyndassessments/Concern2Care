@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 // Using manual separator and scrolling instead of missing components
 import { 
   HelpCircle, 
@@ -23,6 +24,7 @@ import {
 } from "lucide-react";
 
 export default function HelpGuide() {
+  const { isFeatureEnabled } = useFeatureFlags();
   const Section = ({ icon: Icon, title, children, className = "" }: {
     icon: any;
     title: string;
@@ -171,18 +173,32 @@ export default function HelpGuide() {
         </Section>
 
         {/* AI Interventions */}
-        <Section icon={Lightbulb} title="AI-Generated Interventions">
-          <SubSection title="How Interventions Work">
-            <p>Our AI analyzes your concern documentation and provides evidence-based Tier 2 intervention strategies tailored to your specific situation.</p>
+        <Section icon={Lightbulb} title="AI-Generated Support Strategies">
+          <SubSection title="Two Types of AI Support">
+            <p>Concern2Care provides two distinct types of AI-generated support strategies:</p>
+            <div className="space-y-3 mt-3">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h5 className="font-medium text-blue-800 mb-2">📚 Differentiation Strategies</h5>
+                <p className="text-sm text-blue-700">
+                  Teaching adjustments and personalized learning approaches to meet individual student needs within the classroom setting.
+                </p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <h5 className="font-medium text-purple-800 mb-2">🎯 Tier 2 Intervention Strategies</h5>
+                <p className="text-sm text-purple-700">
+                  Evidence-based intervention approaches for students requiring additional support beyond regular classroom instruction.
+                </p>
+              </div>
+            </div>
           </SubSection>
 
-          <SubSection title="Intervention Features">
+          <SubSection title="Strategy Features">
             <FeatureList features={[
-              "Multiple intervention strategies per concern",
-              "Step-by-step implementation guidance",
-              "Timeline recommendations",
+              "Multiple strategies per concern with focused approaches",
+              "Step-by-step implementation guidance", 
+              "Timeline recommendations and progress monitoring",
               "Evidence-based approaches aligned with educational best practices",
-              "Personalized based on student needs and context"
+              "Personalized based on student needs, context, and chosen strategy type"
             ]} />
           </SubSection>
 
@@ -225,14 +241,15 @@ export default function HelpGuide() {
             <p>Generate professional reports that include your concern documentation and recommended interventions:</p>
             <StepList steps={[
               "Navigate to 'My Support Requests' from the main menu",
+              "Use the 'Differentiation Requests' and 'Intervention Requests' tabs to find your concerns",
               "Find the concern you want to share",
-              "Click the 'Share' button next to the concern",
+              "Click the 'Share' button next to the concern", 
               "The system generates a comprehensive PDF report"
             ]} />
           </SubSection>
 
           <SubSection title="Email Sharing">
-            <p>Share reports directly with school staff via email:</p>
+            <p>Share reports directly with student support staff or when necessary:</p>
             <StepList steps={[
               "Ensure your email configuration is set up (Settings → Email)",
               "Add recipient names and email addresses",
@@ -241,11 +258,25 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
+          <SubSection title="Organized Request Management">
+            <p>Your support requests are now organized into clear categories:</p>
+            <div className="space-y-2 mt-3">
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <h6 className="font-medium text-blue-800 text-sm mb-1">📚 Differentiation Requests</h6>
+                <p className="text-xs text-blue-700">Teaching strategies and classroom adjustments</p>
+              </div>
+              <div className="bg-purple-50 p-3 rounded-lg">
+                <h6 className="font-medium text-purple-800 text-sm mb-1">🎯 Intervention Requests</h6>
+                <p className="text-xs text-purple-700">Tier 2 intervention strategies and support plans</p>
+              </div>
+            </div>
+          </SubSection>
+
           <SubSection title="Report Contents">
             <FeatureList features={[
               "Original concern documentation",
-              "AI-generated intervention strategies",
-              "Implementation timelines and steps",
+              "AI-generated support strategies (differentiation or intervention)",
+              "Implementation timelines and steps", 
               "Professional formatting suitable for school records",
               "Date stamps and teacher information"
             ]} />
@@ -329,6 +360,69 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
         </Section>
+
+        {/* Individual Teacher Registration - Feature Flag Conditional */}
+        {isFeatureEnabled('individual_teacher_registration') && (
+          <Section icon={User} title="Individual Teacher Registration">
+            <p className="text-sm text-gray-600 mb-4">
+              <Badge variant="outline" className="mr-2 bg-orange-50 text-orange-700 border-orange-200">Individual Teachers</Badge>
+              For individual teachers who want to use Concern2Care without school administration setup.
+            </p>
+
+            <SubSection title="Getting Started as Individual Teacher">
+              <FeatureList features={[
+                "Register independently for $10/month through Buy Me a Coffee",
+                "Complete your professional profile with school and teaching details", 
+                "Get the same powerful AI-generated differentiation and intervention strategies",
+                "Access all features including PDF reports and email sharing",
+                "Cancel anytime with no long-term commitment"
+              ]} />
+            </SubSection>
+
+            <SubSection title="Registration Information Required">
+              <FeatureList features={[
+                "First Name and Last Name *",
+                "Email Address * (for account access)",
+                "Password * (minimum 6 characters)",
+                "School Name *",
+                "School District (optional for private/standalone schools)",
+                "Primary Grade * (e.g., '3rd Grade', 'K-5')",
+                "Primary Subject * (e.g., 'Mathematics', 'ELA')",
+                "Teacher Type * (Classroom Teacher, Special Education, etc.)"
+              ]} />
+            </SubSection>
+
+            <SubSection title="Individual vs. School-Managed Accounts">
+              <div className="space-y-3">
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h6 className="font-medium text-green-800 mb-2">Individual Account Benefits</h6>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    <li>• Complete autonomy over your account</li>
+                    <li>• No need for school administrator setup</li>
+                    <li>• Direct payment and subscription management</li>
+                    <li>• Immediate access after registration</li>
+                  </ul>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h6 className="font-medium text-blue-800 mb-2">School-Managed Account Benefits</h6>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    <li>• Paid for by your school or district</li>
+                    <li>• Integrated with school email systems</li>
+                    <li>• Coordinated professional development</li>
+                    <li>• No personal payment required</li>
+                  </ul>
+                </div>
+              </div>
+            </SubSection>
+
+            <Alert>
+              <Info className="h-4 w-4" />
+              <AlertDescription>
+                <strong>Note:</strong> Individual teacher accounts function identically to school-managed accounts - you get full access to all differentiation and intervention features, with the same privacy protection for student data.
+              </AlertDescription>
+            </Alert>
+          </Section>
+        )}
 
         {/* Admin Features */}
         <Section icon={Shield} title="School Administrator Features">
