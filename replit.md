@@ -6,7 +6,7 @@ Concern2Care is a full-stack web application designed to help K-12 teachers docu
 
 The system allows teachers to:
 - Document student concerns across various categories (academic, behavioral, social-emotional, attendance)
-- Receive AI-generated intervention strategies from OpenAI
+- Receive AI-generated intervention strategies from DeepSeek API
 - Generate PDF reports of concerns and interventions
 - Share reports via email with school staff
 - Ask follow-up questions about interventions
@@ -46,10 +46,12 @@ Preferred communication style: Simple, everyday language.
   - `sessions`: Session storage for authentication
 
 ### AI Integration
-- **Provider**: OpenAI GPT-4o for generating intervention strategies
+- **Provider**: DeepSeek API for generating intervention strategies (NOT OpenAI)
+- **API Management**: Database-managed API keys through admin interface
 - **Prompt Engineering**: Structured prompts for evidence-based Tier 2 interventions
-- **Response Processing**: JSON-formatted responses for consistent data structure
+- **Response Processing**: JSON-formatted responses for consistent data structure  
 - **Follow-up Support**: Contextual AI responses to teacher questions about interventions
+- **Fallback System**: Mock data when no API key is configured
 
 ### File Generation & Sharing
 - **PDF Generation**: PDFKit for creating formatted concern reports
@@ -66,7 +68,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Core Services
 - **Neon Database**: Serverless PostgreSQL hosting for production data storage
-- **OpenAI API**: GPT-4o model for generating evidence-based intervention strategies
+- **DeepSeek API**: AI model for generating evidence-based intervention strategies (NOT OpenAI)
 - **Replit Authentication**: OIDC-based authentication system for user management
 
 ### Email & Communication
