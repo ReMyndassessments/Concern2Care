@@ -113,7 +113,7 @@ export default function TeacherManagement() {
   const handleAddTeacher = async () => {
     try {
       if (!newTeacher.firstName || !newTeacher.lastName || !newTeacher.email || !newTeacher.password || 
-          !newTeacher.school || !newTeacher.schoolDistrict || !newTeacher.primaryGrade || 
+          !newTeacher.school || !newTeacher.primaryGrade || 
           !newTeacher.primarySubject || !newTeacher.teacherType) {
         toast({
           title: "Error",
@@ -632,12 +632,12 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="schoolDistrict">School District *</Label>
+                    <Label htmlFor="schoolDistrict">School District</Label>
                     <Input
                       id="schoolDistrict"
                       value={newTeacher.schoolDistrict}
                       onChange={(e) => setNewTeacher({...newTeacher, schoolDistrict: e.target.value})}
-                      placeholder="Enter school district"
+                      placeholder="Enter school district (optional for private/standalone schools)"
                       data-testid="input-school-district"
                     />
                   </div>

@@ -174,15 +174,14 @@ export default function Register() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="schoolDistrict">School District *</Label>
+                  <Label htmlFor="schoolDistrict">School District</Label>
                   <Input
                     id="schoolDistrict"
                     type="text"
                     value={schoolDistrict}
                     onChange={(e) => setSchoolDistrict(e.target.value)}
-                    placeholder="Enter school district"
+                    placeholder="Enter school district (optional for private/standalone schools)"
                     className="mt-1"
-                    required
                     data-testid="input-school-district"
                   />
                 </div>
