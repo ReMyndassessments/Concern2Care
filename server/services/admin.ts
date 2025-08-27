@@ -535,8 +535,10 @@ export async function getActiveApiKey(provider: string = 'deepseek') {
         isActive: apiKeys.isActive,
       })
       .from(apiKeys)
-      .where(eq(apiKeys.provider, provider))
-      .where(eq(apiKeys.isActive, true))
+      .where(and(
+        eq(apiKeys.provider, provider),
+        eq(apiKeys.isActive, true)
+      ))
       .orderBy(apiKeys.createdAt)
       .limit(1);
 
