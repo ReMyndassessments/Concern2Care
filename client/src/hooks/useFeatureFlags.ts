@@ -15,7 +15,7 @@ export function useFeatureFlags() {
     retry: false,
   });
 
-  const flags = response?.flags || [];
+  const flags = (response as any)?.flags || [];
 
   const isFeatureEnabled = (flagName: string): boolean => {
     if (!Array.isArray(flags)) return false;
