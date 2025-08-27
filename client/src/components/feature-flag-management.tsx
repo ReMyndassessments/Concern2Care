@@ -71,7 +71,7 @@ export default function FeatureFlagManagement() {
     queryKey: ['/api/admin/feature-flags'],
     queryFn: async () => {
       const response = await apiRequest('/api/admin/feature-flags');
-      return response.flags as FeatureFlag[];
+      return (response.flags || []) as FeatureFlag[];
     },
   });
 
@@ -360,7 +360,7 @@ export default function FeatureFlagManagement() {
         <div className="space-y-6">
           {/* Mobile view */}
           <div className="block lg:hidden space-y-4">
-            {flags.length === 0 ? (
+            {!Array.isArray(flags) || flags.length === 0 ? (
               <div className="text-center text-gray-500 py-8">
                 No feature flags created yet. Add your first feature flag to get started.
               </div>
@@ -459,7 +459,7 @@ export default function FeatureFlagManagement() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {flags.length === 0 ? (
+                {!Array.isArray(flags) || flags.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center text-gray-500 py-8">
                       No feature flags created yet. Add your first feature flag to get started.
