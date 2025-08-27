@@ -89,7 +89,7 @@ export default function ApiKeyManagement() {
     mutationFn: async (data: ApiKeyFormData) => {
       return apiRequest('/api/admin/api-keys', {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: data,
       });
     },
     onSuccess: () => {
@@ -115,7 +115,7 @@ export default function ApiKeyManagement() {
     mutationFn: async ({ id, data }: { id: string; data: Partial<ApiKeyFormData> }) => {
       return apiRequest(`/api/admin/api-keys/${id}`, {
         method: 'PUT',
-        body: JSON.stringify(data),
+        body: data,
       });
     },
     onSuccess: () => {
