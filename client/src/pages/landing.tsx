@@ -688,6 +688,9 @@ export default function Landing() {
           <p className="text-gray-600">
             © 2025 Concern2Care. Built for educators, by educators.
           </p>
+          <p className="text-gray-500 text-sm mt-2">
+            Powered by ReMynd Student Services
+          </p>
         </div>
       </footer>
     </div>
