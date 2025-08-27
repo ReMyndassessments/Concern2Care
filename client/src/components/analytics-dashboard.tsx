@@ -3,12 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { 
-  Users, 
-  FileText, 
-  Sparkles, 
   TrendingUp, 
   TrendingDown, 
-  School,
   Activity,
   Calendar
 } from 'lucide-react';
@@ -72,57 +68,6 @@ export default function AnalyticsDashboard() {
 
   return (
     <div className="space-y-6" data-testid="analytics-dashboard">
-      {/* Key Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card data-testid="metric-total-users">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Users className="h-5 w-5 text-blue-600" />
-              <div>
-                <p className="text-sm text-gray-600">Total Teachers</p>
-                <p className="text-2xl font-bold">{analytics.totalUsers}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card data-testid="metric-total-schools">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <School className="h-5 w-5 text-green-600" />
-              <div>
-                <p className="text-sm text-gray-600">Total Schools</p>
-                <p className="text-2xl font-bold">{analytics.totalSchools}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card data-testid="metric-total-concerns">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <FileText className="h-5 w-5 text-orange-600" />
-              <div>
-                <p className="text-sm text-gray-600">Student Concerns</p>
-                <p className="text-2xl font-bold">{analytics.totalConcerns}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card data-testid="metric-total-interventions">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="h-5 w-5 text-purple-600" />
-              <div>
-                <p className="text-sm text-gray-600">AI Interventions</p>
-                <p className="text-2xl font-bold">{analytics.totalInterventions}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Usage Trends */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card data-testid="usage-trends">
