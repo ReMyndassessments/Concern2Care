@@ -10,19 +10,21 @@ interface FeatureFlag {
 }
 
 export function useFeatureFlags() {
-  const { data: flags, isLoading } = useQuery({
-    queryKey: ["/api/admin/feature-flags"],
+  const { data: response, isLoading } = useQuery({
+    queryKey: ["/api/feature-flags/enabled"],
     retry: false,
   });
 
+  const flags = response?.flags || [];
+
   const isFeatureEnabled = (flagName: string): boolean => {
-    if (!flags || !Array.isArray(flags)) return false;
+    if (!Array.isArray(flags)) return false;
     const flag = flags.find((f: FeatureFlag) => f.flagName === flagName);
     return flag?.isGloballyEnabled || false;
   };
 
   return {
-    flags: flags || [],
+    flags,
     isLoading,
     isFeatureEnabled,
   };

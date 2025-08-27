@@ -1703,6 +1703,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public endpoint to check enabled feature flags (no authentication required)
+  app.get('/api/feature-flags/enabled', async (req: any, res) => {
+    try {
+      const enabledFlags = await db.select({
+        flagName: featureFlags.flagName,
+        isGloballyEnabled: featureFlags.isGloballyEnabled,
+      })
+        .from(featureFlags)
+        .where(eq(featureFlags.isGloballyEnabled, true));
+
+      res.json({ flags: enabledFlags });
+    } catch (error) {
+      console.error('Error fetching enabled feature flags:', error);
+      res.status(500).json({ message: 'Failed to fetch feature flags' });
+    }
+  });
+
   // Enhanced AI Services with DeepSeek
   app.post('/api/ai/recommendations', requireAuth, async (req: any, res) => {
     try {
