@@ -9,7 +9,6 @@ import {
   TrendingUp, 
   TrendingDown, 
   School,
-  BarChart3,
   Activity,
   Calendar
 } from 'lucide-react';
@@ -35,7 +34,7 @@ export default function AnalyticsDashboard() {
     queryFn: async () => {
       const response = await fetch('/api/analytics/dashboard');
       if (!response.ok) throw new Error('Failed to fetch analytics');
-      return response.json() as DashboardAnalytics;
+      return response.json();
     },
     refetchInterval: 30000, // Refresh every 30 seconds
   });
@@ -239,43 +238,6 @@ export default function AnalyticsDashboard() {
         </CardContent>
       </Card>
 
-      {/* System Performance Summary */}
-      <Card data-testid="system-summary">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
-            System Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-            <div>
-              <p className="text-2xl font-bold text-blue-600">{analytics.totalUsers}</p>
-              <p className="text-xs text-gray-600">Registered Teachers</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-green-600">{analytics.totalSchools}</p>
-              <p className="text-xs text-gray-600">Schools Served</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-orange-600">
-                {analytics.totalInterventions > 0 
-                  ? Math.round((analytics.totalInterventions / analytics.totalConcerns) * 10) / 10
-                  : 0}
-              </p>
-              <p className="text-xs text-gray-600">Avg Interventions/Concern</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-purple-600">
-                {analytics.totalUsers > 0 
-                  ? Math.round((analytics.totalConcerns / analytics.totalUsers) * 10) / 10
-                  : 0}
-              </p>
-              <p className="text-xs text-gray-600">Avg Concerns/Teacher</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
