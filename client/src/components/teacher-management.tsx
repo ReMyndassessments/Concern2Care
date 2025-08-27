@@ -213,8 +213,12 @@ export default function TeacherManagement() {
   const handlePasswordChange = async () => {
     if (!passwordTeacher) return;
     
+    console.log("Starting password change for:", passwordTeacher.firstName, passwordTeacher.lastName);
+    console.log("New password length:", newPassword.length);
+    
     try {
       if (!newPassword) {
+        console.log("No password entered");
         toast({
           title: "Error",
           description: "Please enter a new password",
@@ -224,6 +228,7 @@ export default function TeacherManagement() {
       }
 
       if (newPassword.length < 6) {
+        console.log("Password too short");
         toast({
           title: "Error",
           description: "Password must be at least 6 characters long",
@@ -237,6 +242,8 @@ export default function TeacherManagement() {
         body: { newPassword }
       });
       
+      console.log("Password change response:", response);
+      
       if (response.success) {
         toast({
           title: "Password Changed",
@@ -245,6 +252,12 @@ export default function TeacherManagement() {
         setShowPasswordDialog(false);
         setPasswordTeacher(null);
         setNewPassword("");
+      } else {
+        toast({
+          title: "Password Change Failed",
+          description: response.message || "Failed to change password",
+          variant: "destructive"
+        });
       }
     } catch (error: any) {
       console.error("Error changing password:", error);
