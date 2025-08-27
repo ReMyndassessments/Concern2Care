@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,7 +31,9 @@ import {
   Trash2,
   Share2,
   Plus,
-  X
+  X,
+  BookOpen,
+  Target
 } from "lucide-react";
 import { Concern } from "@shared/schema";
 import { Link } from "wouter";
@@ -43,6 +46,7 @@ export default function MySupportRequests() {
   const [studentFilter, setStudentFilter] = useState("");
   const [expandedRequest, setExpandedRequest] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"all" | "differentiation" | "intervention">("all");
   
   // Email sharing state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -173,12 +177,30 @@ export default function MySupportRequests() {
     return null; // Will redirect via useEffect
   }
 
-  // Filter concerns by student name if specified
+  // Filter concerns by student name and task type
   const filteredConcerns = concerns?.filter(concern => {
-    if (!studentFilter) return true;
-    const fullName = `${concern.studentFirstName} ${concern.studentLastInitial}`.toLowerCase();
-    return fullName.includes(studentFilter.toLowerCase());
+    // First filter by student name if specified
+    if (studentFilter) {
+      const fullName = `${concern.studentFirstName} ${concern.studentLastInitial}`.toLowerCase();
+      if (!fullName.includes(studentFilter.toLowerCase())) {
+        return false;
+      }
+    }
+    
+    // Then filter by task type based on active tab
+    if (activeTab === "differentiation") {
+      return concern.taskType === "differentiation";
+    } else if (activeTab === "intervention") {
+      return concern.taskType === "tier2_intervention";
+    }
+    
+    // "all" tab shows everything
+    return true;
   }) || [];
+
+  // Get counts for each category
+  const differentiationCount = concerns?.filter(c => c.taskType === "differentiation").length || 0;
+  const interventionCount = concerns?.filter(c => c.taskType === "tier2_intervention").length || 0;
 
   const concernTypeColors = {
     academic: "bg-blue-100 text-blue-800 border-blue-200",
@@ -313,26 +335,42 @@ export default function MySupportRequests() {
           </div>
         </div>
 
-        {/* Filter Section */}
+        {/* Support Requests Tabs */}
         <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6 sm:mb-8">
-          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Filter Support Requests</h2>
-          
-          <div className="max-w-full sm:max-w-md">
-            <label htmlFor="student-filter" className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-              Filter by Student Name
-            </label>
-            <Input
-              id="student-filter"
-              placeholder="Enter student name to filter..."
-              value={studentFilter}
-              onChange={(e) => setStudentFilter(e.target.value)}
-              className="w-full text-sm sm:text-base"
-            />
-          </div>
-        </div>
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "all" | "differentiation" | "intervention")}>
+            <div className="flex flex-col space-y-4">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="all" className="text-xs sm:text-sm">
+                  All Requests ({concerns?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="differentiation" className="text-xs sm:text-sm">
+                  <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  Differentiation ({differentiationCount})
+                </TabsTrigger>
+                <TabsTrigger value="intervention" className="text-xs sm:text-sm">
+                  <Target className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  Interventions ({interventionCount})
+                </TabsTrigger>
+              </TabsList>
 
-        {/* Support Requests Content */}
-        {filteredConcerns.length === 0 ? (
+              {/* Filter Section */}
+              <div className="max-w-full sm:max-w-md">
+                <label htmlFor="student-filter" className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+                  Filter by Student Name
+                </label>
+                <Input
+                  id="student-filter"
+                  placeholder="Enter student name to filter..."
+                  value={studentFilter}
+                  onChange={(e) => setStudentFilter(e.target.value)}
+                  className="w-full text-sm sm:text-base"
+                />
+              </div>
+            </div>
+
+            <TabsContent value={activeTab} className="mt-6">
+              {/* Support Requests Content */}
+              {filteredConcerns.length === 0 ? (
           <div className="text-center py-24">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <History className="h-10 w-10 text-gray-400" />
@@ -385,8 +423,29 @@ export default function MySupportRequests() {
                           <span className="text-xs sm:text-sm text-gray-500">Grade {concern.grade}</span>
                         </div>
                         
-                        {/* Concern Types */}
+                        {/* Task Type and Concern Types */}
                         <div className="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-3">
+                          {/* Task Type Badge */}
+                          <Badge 
+                            className={concern.taskType === "differentiation" 
+                              ? "bg-emerald-100 text-emerald-800 border-emerald-200" 
+                              : "bg-indigo-100 text-indigo-800 border-indigo-200"
+                            }
+                          >
+                            {concern.taskType === "differentiation" ? (
+                              <>
+                                <BookOpen className="h-3 w-3 mr-1" />
+                                Differentiation
+                              </>
+                            ) : (
+                              <>
+                                <Target className="h-3 w-3 mr-1" />
+                                Intervention
+                              </>
+                            )}
+                          </Badge>
+                          
+                          {/* Concern Types */}
                           {(concern.concernTypes as string[] || []).map((type) => (
                             <Badge 
                               key={type}
@@ -510,8 +569,10 @@ export default function MySupportRequests() {
               </Card>
             ))}
           </div>
-        )}
-      </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
 
       {/* Email Sharing Modal */}
       <Dialog open={showEmailModal} onOpenChange={setShowEmailModal}>
@@ -610,6 +671,7 @@ export default function MySupportRequests() {
           </div>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
