@@ -10,9 +10,8 @@ import { env } from "./services/environment";
 const app = express();
 
 // Trust proxy for accurate IP addresses behind reverse proxy
-if (env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1);
-}
+// Always trust proxy in Replit environment
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet({
