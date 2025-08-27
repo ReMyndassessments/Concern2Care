@@ -16,6 +16,7 @@ export default function Register() {
   const [primaryGrade, setPrimaryGrade] = useState("");
   const [primarySubject, setPrimarySubject] = useState("");
   const [teacherType, setTeacherType] = useState("Classroom Teacher");
+  const [supportRequestsLimit, setSupportRequestsLimit] = useState(20);
   const [, setLocation] = useLocation();
 
   const handleBuyMeACoffeeSubscription = () => {
@@ -215,25 +216,39 @@ export default function Register() {
                   </div>
                 </div>
                 
-                <div>
-                  <Label htmlFor="teacherType">Teacher Type *</Label>
-                  <select
-                    id="teacherType"
-                    value={teacherType}
-                    onChange={(e) => setTeacherType(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 mt-1"
-                    required
-                    data-testid="select-teacher-type"
-                  >
-                    <option value="Classroom Teacher">Classroom Teacher</option>
-                    <option value="Special Education Teacher">Special Education Teacher</option>
-                    <option value="ESL Teacher">ESL Teacher</option>
-                    <option value="Reading Specialist">Reading Specialist</option>
-                    <option value="Math Specialist">Math Specialist</option>
-                    <option value="Counselor">Counselor</option>
-                    <option value="Administrator">Administrator</option>
-                    <option value="Other">Other</option>
-                  </select>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="teacherType">Teacher Type *</Label>
+                    <select
+                      id="teacherType"
+                      value={teacherType}
+                      onChange={(e) => setTeacherType(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 mt-1"
+                      required
+                      data-testid="select-teacher-type"
+                    >
+                      <option value="Classroom Teacher">Classroom Teacher</option>
+                      <option value="Special Education Teacher">Special Education Teacher</option>
+                      <option value="ESL Teacher">ESL Teacher</option>
+                      <option value="Reading Specialist">Reading Specialist</option>
+                      <option value="Math Specialist">Math Specialist</option>
+                      <option value="Counselor">Counselor</option>
+                      <option value="Administrator">Administrator</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="requestLimit">Request Limit</Label>
+                    <Input
+                      id="requestLimit"
+                      type="number"
+                      min="1"
+                      value={supportRequestsLimit}
+                      onChange={(e) => setSupportRequestsLimit(parseInt(e.target.value) || 20)}
+                      className="mt-1"
+                      data-testid="input-request-limit"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
