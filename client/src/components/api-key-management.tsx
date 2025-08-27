@@ -489,12 +489,14 @@ export default function ApiKeyManagement() {
                 {apiKeys.map((apiKey) => (
                   <TableRow key={apiKey.id} data-testid={`row-api-key-${apiKey.id}`}>
                     <TableCell className="font-medium text-xs lg:text-sm" data-testid={`text-name-${apiKey.id}`}>
-                      {apiKey.name}
-                      {apiKey.description && (
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {apiKey.description}
-                        </div>
-                      )}
+                      <div className="max-w-[150px]">
+                        <div className="truncate">{apiKey.name}</div>
+                        {apiKey.description && (
+                          <div className="text-xs text-muted-foreground truncate mt-0.5">
+                            {apiKey.description}
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary" className="text-xs" data-testid={`text-provider-${apiKey.id}`}>
