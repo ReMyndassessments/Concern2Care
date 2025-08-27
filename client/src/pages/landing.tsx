@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, FileText, Users, Clock, Shield, CheckCircle, Star, Mail, TrendingUp, DollarSign, BarChart3 } from "lucide-react";
 import { useState } from "react";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 export default function Landing() {
   const [showComparison, setShowComparison] = useState(false);
+  const { isFeatureEnabled } = useFeatureFlags();
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
@@ -75,7 +77,7 @@ export default function Landing() {
               </Button>
 
               {/* Individual Teacher Registration - Feature Flag */}
-              {process.env.NODE_ENV === 'development' && import.meta.env.VITE_ENABLE_INDIVIDUAL_REGISTRATION === 'true' && (
+              {isFeatureEnabled('individual_teacher_registration') && (
                 <div className="pt-4 border-t border-gray-200">
                   <p className="text-sm text-gray-600 mb-3">Individual teacher? Try Concern2Care for just $5/month:</p>
                   <Button 
