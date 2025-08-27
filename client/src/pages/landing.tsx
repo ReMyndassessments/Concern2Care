@@ -79,7 +79,7 @@ export default function Landing() {
               {/* Individual Teacher Registration - Feature Flag */}
               {isFeatureEnabled('individual_teacher_registration') && (
                 <div className="pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-3">Individual teacher? Try Concern2Care for just $5/month:</p>
+                  <p className="text-sm text-gray-600 mb-3">Individual teacher? Try Concern2Care for $10/month:</p>
                   <Button 
                     size="sm"
                     variant="outline"

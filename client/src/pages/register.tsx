@@ -41,7 +41,7 @@ export default function Register() {
               Individual Teacher Subscription
             </CardTitle>
             <p className="text-gray-600 text-lg">
-              Join Concern2Care for just $5/month
+              Join Concern2Care for $10/month/teacher
             </p>
           </CardHeader>
 
@@ -56,8 +56,15 @@ export default function Register() {
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800">Unlimited AI Interventions</p>
-                    <p className="text-sm text-gray-600">Get personalized strategies for every student concern</p>
+                    <p className="font-medium text-gray-800">AI-Generated Differentiation Strategies</p>
+                    <p className="text-sm text-gray-600">Get personalized teaching adjustments for student needs</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-gray-800">AI-Generated Tier 2 Interventions</p>
+                    <p className="text-sm text-gray-600">Evidence-based intervention strategies for student concerns</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -135,7 +142,7 @@ export default function Register() {
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <div className="flex items-center justify-center space-x-2 mb-2">
                   <Coffee className="h-5 w-5 text-orange-600" />
-                  <span className="text-lg font-semibold text-orange-800">$5/month</span>
+                  <span className="text-lg font-semibold text-orange-800">$10/month</span>
                 </div>
                 <p className="text-sm text-gray-600">
                   Cancel anytime • FERPA compliant • Secure payment

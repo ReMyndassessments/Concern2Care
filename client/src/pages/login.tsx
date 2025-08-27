@@ -173,7 +173,7 @@ export default function Login() {
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <div className="text-center">
                   <p className="text-sm text-gray-600 mb-3">
-                    Individual teacher? Try Concern2Care for just $5/month:
+                    Individual teacher? Try Concern2Care for $10/month:
                   </p>
                   <Button 
                     size="sm"
