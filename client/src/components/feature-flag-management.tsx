@@ -254,22 +254,6 @@ export default function FeatureFlagManagement() {
             <span>Feature Flag Management</span>
           </CardTitle>
           <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-            <DialogTrigger asChild>
-              <Button
-                onClick={() => {
-                  setEditingFlag(null);
-                  form.reset({
-                    flagName: "",
-                    description: "",
-                    isGloballyEnabled: false,
-                  });
-                }}
-                data-testid="button-add-feature-flag"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Feature Flag
-              </Button>
-            </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
