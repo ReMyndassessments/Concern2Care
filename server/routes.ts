@@ -2076,30 +2076,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API Key Management Routes
   app.get('/api/admin/api-keys', requireAdmin, async (req: any, res) => {
     try {
-      const dbApiKeys = await getApiKeys();
-      
-      // Include environment-based DeepSeek key if it exists
-      const envKeys = [];
-      if (process.env.DEEPSEEK_API_KEY) {
-        envKeys.push({
-          id: 'env-deepseek',
-          name: 'Environment DeepSeek Key',
-          provider: 'deepseek',
-          isActive: true,
-          description: 'DeepSeek API key configured via environment variable (currently in use)',
-          usageCount: 0,
-          maxUsage: 999999,
-          lastUsedAt: null,
-          createdAt: new Date().toISOString(),
-          createdByUser: 'System',
-          maskedKey: process.env.DEEPSEEK_API_KEY.substring(0, 8) + '••••••••••••••••••••••••••••',
-          usagePercentage: 0,
-          isEnvironmentKey: true
-        });
-      }
-      
-      const allKeys = [...envKeys, ...dbApiKeys];
-      res.json({ apiKeys: allKeys });
+      const apiKeys = await getApiKeys();
+      res.json({ apiKeys });
     } catch (error) {
       console.error('API keys fetch error:', error);
       res.status(500).json({ message: 'Failed to fetch API keys' });
