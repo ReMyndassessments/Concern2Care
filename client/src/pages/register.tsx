@@ -10,6 +10,12 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [password, setPassword] = useState("");
+  const [school, setSchool] = useState("");
+  const [schoolDistrict, setSchoolDistrict] = useState("");
+  const [primaryGrade, setPrimaryGrade] = useState("");
+  const [primarySubject, setPrimarySubject] = useState("");
+  const [teacherType, setTeacherType] = useState("Classroom Teacher");
   const [, setLocation] = useLocation();
 
   const handleBuyMeACoffeeSubscription = () => {
@@ -91,48 +97,143 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Contact Information Form */}
+            {/* Teacher Information Form - Matches Admin Form */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Your Information</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Teacher Information</h3>
               <div className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">First Name</Label>
+                    <Label htmlFor="firstName">First Name *</Label>
                     <Input
                       id="firstName"
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="Sarah"
+                      placeholder="Enter first name"
                       className="mt-1"
+                      required
                       data-testid="input-first-name"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Last Name</Label>
+                    <Label htmlFor="lastName">Last Name *</Label>
                     <Input
                       id="lastName"
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      placeholder="Johnson"
+                      placeholder="Enter last name"
                       className="mt-1"
+                      required
                       data-testid="input-last-name"
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <Label htmlFor="email">Email Address</Label>
+                  <Label htmlFor="email">Email Address *</Label>
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="sarah.johnson@school.edu"
+                    placeholder="teacher@school.edu"
                     className="mt-1"
+                    required
                     data-testid="input-email"
                   />
+                </div>
+                
+                <div>
+                  <Label htmlFor="password">Password *</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Minimum 6 characters"
+                    className="mt-1"
+                    required
+                    data-testid="input-password"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="school">School *</Label>
+                  <Input
+                    id="school"
+                    type="text"
+                    value={school}
+                    onChange={(e) => setSchool(e.target.value)}
+                    placeholder="Enter school name"
+                    className="mt-1"
+                    required
+                    data-testid="input-school"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="schoolDistrict">School District *</Label>
+                  <Input
+                    id="schoolDistrict"
+                    type="text"
+                    value={schoolDistrict}
+                    onChange={(e) => setSchoolDistrict(e.target.value)}
+                    placeholder="Enter school district"
+                    className="mt-1"
+                    required
+                    data-testid="input-school-district"
+                  />
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="primaryGrade">Primary Grade *</Label>
+                    <Input
+                      id="primaryGrade"
+                      type="text"
+                      value={primaryGrade}
+                      onChange={(e) => setPrimaryGrade(e.target.value)}
+                      placeholder="e.g., 3rd Grade, K-5"
+                      className="mt-1"
+                      required
+                      data-testid="input-primary-grade"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="primarySubject">Primary Subject *</Label>
+                    <Input
+                      id="primarySubject"
+                      type="text"
+                      value={primarySubject}
+                      onChange={(e) => setPrimarySubject(e.target.value)}
+                      placeholder="e.g., Mathematics, ELA"
+                      className="mt-1"
+                      required
+                      data-testid="input-primary-subject"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="teacherType">Teacher Type *</Label>
+                  <select
+                    id="teacherType"
+                    value={teacherType}
+                    onChange={(e) => setTeacherType(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 mt-1"
+                    required
+                    data-testid="select-teacher-type"
+                  >
+                    <option value="Classroom Teacher">Classroom Teacher</option>
+                    <option value="Special Education Teacher">Special Education Teacher</option>
+                    <option value="ESL Teacher">ESL Teacher</option>
+                    <option value="Reading Specialist">Reading Specialist</option>
+                    <option value="Math Specialist">Math Specialist</option>
+                    <option value="Counselor">Counselor</option>
+                    <option value="Administrator">Administrator</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
               </div>
             </div>
