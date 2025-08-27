@@ -1900,7 +1900,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: `Password reset email sent to ${teacher.email}` 
         });
       } else {
-        res.status(500).json({ 
+        // Use 400 for configuration issues, not 500
+        res.status(400).json({ 
           success: false, 
           message: result.message || 'Failed to send password reset email' 
         });
