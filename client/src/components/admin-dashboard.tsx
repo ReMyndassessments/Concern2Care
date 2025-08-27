@@ -26,6 +26,7 @@ import SchoolExport from "@/components/school-export";
 import SchoolEmailSettings from "@/components/school-email-settings";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
 import FeatureFlagManagement from "@/components/feature-flag-management";
+import DemoProgramManagement from "@/components/demo-program-management";
 
 interface DashboardStats {
   totalUsers: number;
@@ -252,6 +253,12 @@ export default function AdminDashboard() {
               Feature Flags
             </TabsTrigger>
             <TabsTrigger 
+              value="demo-program" 
+              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Demo Program
+            </TabsTrigger>
+            <TabsTrigger 
               value="analytics" 
               className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
             >
@@ -284,6 +291,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="feature-flags" className="space-y-6">
           <FeatureFlagManagement />
+        </TabsContent>
+
+        <TabsContent value="demo-program" className="space-y-6">
+          <DemoProgramManagement />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">

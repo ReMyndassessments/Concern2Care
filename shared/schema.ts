@@ -34,6 +34,14 @@ export const schools = pgTable("schools", {
   maxTeachers: integer("max_teachers").default(50),
   defaultRequestsPerTeacher: integer("default_requests_per_teacher").default(20),
   isActive: boolean("is_active").default(true),
+  
+  // Demo Program Management
+  isDemoSchool: boolean("is_demo_school").default(false),
+  demoStartDate: timestamp("demo_start_date"),
+  demoEndDate: timestamp("demo_end_date"),
+  demoStatus: varchar("demo_status").default("inactive"), // 'inactive' | 'active' | 'expired' | 'converted'
+  pilotTeacherCount: integer("pilot_teacher_count").default(0),
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -67,6 +75,11 @@ export const users = pgTable("users", {
   subscriptionProvider: varchar("subscription_provider"), // 'buymeacoffee' | null for admin_managed
   subscriptionId: varchar("subscription_id"), // External subscription ID
   subscriptionExpiry: timestamp("subscription_expiry"), // When subscription expires
+  
+  // Demo Program Management
+  isPilotTeacher: boolean("is_pilot_teacher").default(false),
+  pilotDiscount: integer("pilot_discount").default(0), // Percentage discount (0-100)
+  pilotDiscountExpiry: timestamp("pilot_discount_expiry"),
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

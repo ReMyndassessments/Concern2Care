@@ -1,6 +1,6 @@
 import { db } from "../db";
 import { users, schools, adminLogs, concerns, interventions, apiKeys, insertApiKeySchema } from "@shared/schema";
-import { eq, count, sql, and } from "drizzle-orm";
+import { eq, count, sql, and, desc, lt, gt } from "drizzle-orm";
 import * as bcrypt from "bcrypt";
 
 export interface BulkCSVUploadResult {
@@ -661,6 +661,194 @@ export async function deleteApiKey(keyId: string) {
     };
   } catch (error) {
     console.error('Error deleting API key:', error);
+    throw error;
+  }
+}
+
+// Demo Program Management Functions
+
+export interface DemoSchool {
+  id: string;
+  name: string;
+  district: string | null;
+  contactEmail: string | null;
+  isDemoSchool: boolean;
+  demoStartDate: Date | null;
+  demoEndDate: Date | null;
+  demoStatus: string;
+  pilotTeacherCount: number;
+  daysRemaining: number | null;
+  pilotTeachers: Array<{
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+    isPilotTeacher: boolean | null;
+  }>;
+}
+
+export async function startDemoProgram(schoolId: string, demoLengthDays: number = 60): Promise<DemoSchool> {
+  try {
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(startDate.getDate() + demoLengthDays);
+
+    // Update school with demo status
+    const [updatedSchool] = await db
+      .update(schools)
+      .set({
+        isDemoSchool: true,
+        demoStartDate: startDate,
+        demoEndDate: endDate,
+        demoStatus: 'active',
+        updatedAt: new Date()
+      })
+      .where(eq(schools.id, schoolId))
+      .returning();
+
+    if (!updatedSchool) {
+      throw new Error('School not found');
+    }
+
+    return getDemoSchoolDetails(schoolId);
+  } catch (error) {
+    console.error('Error starting demo program:', error);
+    throw error;
+  }
+}
+
+export async function getDemoSchools(): Promise<DemoSchool[]> {
+  try {
+    const demoSchools = await db
+      .select()
+      .from(schools)
+      .where(eq(schools.isDemoSchool, true))
+      .orderBy(desc(schools.demoStartDate));
+
+    const result = await Promise.all(
+      demoSchools.map(school => getDemoSchoolDetails(school.id))
+    );
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching demo schools:', error);
+    throw error;
+  }
+}
+
+export async function getDemoSchoolDetails(schoolId: string): Promise<DemoSchool> {
+  try {
+    // Get school details
+    const [school] = await db
+      .select()
+      .from(schools)
+      .where(eq(schools.id, schoolId));
+
+    if (!school) {
+      throw new Error('School not found');
+    }
+
+    // Get pilot teachers for this school
+    const pilotTeachers = await db
+      .select({
+        id: users.id,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        email: users.email,
+        isPilotTeacher: users.isPilotTeacher,
+      })
+      .from(users)
+      .where(and(
+        eq(users.schoolId, schoolId),
+        eq(users.isPilotTeacher, true)
+      ));
+
+    // Calculate days remaining
+    let daysRemaining: number | null = null;
+    if (school.demoEndDate && school.demoStatus === 'active') {
+      const now = new Date();
+      const endDate = new Date(school.demoEndDate);
+      const diffTime = endDate.getTime() - now.getTime();
+      daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      // Update status if expired
+      if (daysRemaining <= 0 && school.demoStatus === 'active') {
+        await db
+          .update(schools)
+          .set({ demoStatus: 'expired' })
+          .where(eq(schools.id, schoolId));
+        school.demoStatus = 'expired';
+        daysRemaining = 0;
+      }
+    }
+
+    return {
+      ...school,
+      daysRemaining,
+      pilotTeachers
+    };
+  } catch (error) {
+    console.error('Error fetching demo school details:', error);
+    throw error;
+  }
+}
+
+export async function setPilotTeacher(teacherId: string, isPilot: boolean, discount: number = 50): Promise<void> {
+  try {
+    const discountExpiry = new Date();
+    discountExpiry.setFullYear(discountExpiry.getFullYear() + 1); // 1 year discount
+
+    await db
+      .update(users)
+      .set({
+        isPilotTeacher: isPilot,
+        pilotDiscount: isPilot ? discount : 0,
+        pilotDiscountExpiry: isPilot ? discountExpiry : null,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, teacherId));
+
+    // Update pilot teacher count for the school
+    if (isPilot) {
+      const [teacher] = await db
+        .select({ schoolId: users.schoolId })
+        .from(users)
+        .where(eq(users.id, teacherId));
+
+      if (teacher?.schoolId) {
+        const pilotCount = await db
+          .select({ count: count() })
+          .from(users)
+          .where(and(
+            eq(users.schoolId, teacher.schoolId),
+            eq(users.isPilotTeacher, true)
+          ));
+
+        await db
+          .update(schools)
+          .set({ pilotTeacherCount: pilotCount[0].count })
+          .where(eq(schools.id, teacher.schoolId));
+      }
+    }
+  } catch (error) {
+    console.error('Error setting pilot teacher status:', error);
+    throw error;
+  }
+}
+
+export async function convertDemoToFull(schoolId: string): Promise<void> {
+  try {
+    await db
+      .update(schools)
+      .set({
+        demoStatus: 'converted',
+        updatedAt: new Date()
+      })
+      .where(eq(schools.id, schoolId));
+
+    console.log(`Demo school ${schoolId} converted to full subscription`);
+  } catch (error) {
+    console.error('Error converting demo to full:', error);
     throw error;
   }
 }

@@ -26,7 +26,12 @@ import {
   getApiKeys,
   createApiKey,
   updateApiKey,
-  deleteApiKey
+  deleteApiKey,
+  startDemoProgram,
+  getDemoSchools,
+  getDemoSchoolDetails,
+  setPilotTeacher,
+  convertDemoToFull
 } from "./services/admin";
 // Removed unused analytics and deepseek-ai imports
 import { getReferrals, createReferral } from "./services/referrals";
@@ -3264,6 +3269,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting school email config:", error);
       res.status(500).json({ message: "Failed to delete school email configuration" });
+    }
+  });
+
+  // ===========================================
+  // DEMO PROGRAM MANAGEMENT
+  // ===========================================
+  
+  // Get all demo schools
+  app.get('/api/admin/demo-schools', requireAdmin, async (req: any, res) => {
+    try {
+      const demoSchools = await getDemoSchools();
+      res.json({ demoSchools });
+    } catch (error) {
+      console.error('Error fetching demo schools:', error);
+      res.status(500).json({ message: 'Failed to fetch demo schools' });
+    }
+  });
+
+  // Get demo school details
+  app.get('/api/admin/demo-schools/:schoolId', requireAdmin, async (req: any, res) => {
+    try {
+      const { schoolId } = req.params;
+      const demoSchool = await getDemoSchoolDetails(schoolId);
+      res.json(demoSchool);
+    } catch (error) {
+      console.error('Error fetching demo school details:', error);
+      res.status(500).json({ message: 'Failed to fetch demo school details' });
+    }
+  });
+
+  // Start demo program for a school
+  app.post('/api/admin/demo-schools/:schoolId/start', requireAdmin, async (req: any, res) => {
+    try {
+      const { schoolId } = req.params;
+      const { demoLengthDays = 60 } = req.body;
+      
+      const demoSchool = await startDemoProgram(schoolId, demoLengthDays);
+      res.json({ success: true, demoSchool });
+    } catch (error) {
+      console.error('Error starting demo program:', error);
+      res.status(500).json({ message: 'Failed to start demo program' });
+    }
+  });
+
+  // Set pilot teacher status
+  app.post('/api/admin/teachers/:teacherId/pilot', requireAdmin, async (req: any, res) => {
+    try {
+      const { teacherId } = req.params;
+      const { isPilot, discount = 50 } = req.body;
+      
+      await setPilotTeacher(teacherId, isPilot, discount);
+      res.json({ success: true, message: isPilot ? 'Teacher marked as pilot' : 'Pilot status removed' });
+    } catch (error) {
+      console.error('Error setting pilot teacher status:', error);
+      res.status(500).json({ message: 'Failed to update pilot teacher status' });
+    }
+  });
+
+  // Convert demo school to full subscription
+  app.post('/api/admin/demo-schools/:schoolId/convert', requireAdmin, async (req: any, res) => {
+    try {
+      const { schoolId } = req.params;
+      
+      await convertDemoToFull(schoolId);
+      res.json({ success: true, message: 'Demo school converted to full subscription' });
+    } catch (error) {
+      console.error('Error converting demo school:', error);
+      res.status(500).json({ message: 'Failed to convert demo school' });
     }
   });
 
