@@ -7,7 +7,6 @@ import { Sparkles, Shield, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { queryClient } from "@/lib/queryClient";
-import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,21 +15,6 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
-  
-  // Show loading if feature flags are still loading
-  if (flagsLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-4 animate-pulse">
-            <Sparkles className="h-8 w-8 text-white" />
-          </div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -182,25 +166,23 @@ export default function Login() {
               </Button>
             </form>
 
-            {/* Individual Teacher Registration - Feature Flag */}
-            {isFeatureEnabled('individual_teacher_registration') && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-3">
-                    Individual teacher? Try Concern2Care for $10/month:
-                  </p>
-                  <Button 
-                    size="sm"
-                    variant="outline"
-                    onClick={() => window.location.href = '/register'}
-                    className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 font-medium px-6 py-2 rounded-lg"
-                    data-testid="button-individual-registration"
-                  >
-                    ☕ Start Your Individual Subscription
-                  </Button>
-                </div>
+            {/* Individual Teacher Registration */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-3">
+                  Individual teacher? Try Concern2Care for $10/month:
+                </p>
+                <Button 
+                  size="sm"
+                  variant="outline"
+                  onClick={() => window.location.href = '/register'}
+                  className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 font-medium px-6 py-2 rounded-lg"
+                  data-testid="button-individual-registration"
+                >
+                  ☕ Start Your Individual Subscription
+                </Button>
               </div>
-            )}
+            </div>
             
             {/* Footer */}
             <div className="text-center mt-6 space-y-2">
