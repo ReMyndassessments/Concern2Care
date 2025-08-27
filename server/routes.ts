@@ -1811,7 +1811,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Hash the password
-      const bcrypt = require('bcrypt');
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create the teacher
