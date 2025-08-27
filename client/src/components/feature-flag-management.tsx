@@ -100,8 +100,7 @@ export default function FeatureFlagManagement() {
     mutationFn: async (data: FeatureFlagFormData) => {
       return await apiRequest('/api/admin/feature-flags', {
         method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
+        body: data,
       });
     },
     onSuccess: () => {
@@ -127,8 +126,7 @@ export default function FeatureFlagManagement() {
     mutationFn: async ({ id, data }: { id: string; data: Partial<FeatureFlagFormData> }) => {
       return await apiRequest(`/api/admin/feature-flags/${id}`, {
         method: 'PUT',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
+        body: data,
       });
     },
     onSuccess: () => {
@@ -178,8 +176,7 @@ export default function FeatureFlagManagement() {
     mutationFn: async ({ id, enabled }: { id: string; enabled: boolean }) => {
       return await apiRequest(`/api/admin/feature-flags/${id}/toggle`, {
         method: 'POST',
-        body: JSON.stringify({ enabled }),
-        headers: { 'Content-Type': 'application/json' },
+        body: { enabled },
       });
     },
     onSuccess: () => {
