@@ -1,7 +1,6 @@
-// Get API client dynamically - prioritizes database-managed keys over environment
+// Get API client from database-managed keys only
 async function getApiClient() {
   try {
-    // Import admin service to get database API keys
     const { getActiveApiKey } = await import('./admin');
     const activeDeepSeekKey = await getActiveApiKey('deepseek');
     
@@ -13,27 +12,10 @@ async function getApiClient() {
       };
     }
     
-    // Fall back to environment variable
-    if (process.env.DEEPSEEK_API_KEY) {
-      console.log("🔑 Using environment-based DeepSeek API key (fallback)");
-      return {
-        apiKey: process.env.DEEPSEEK_API_KEY,
-        baseURL: 'https://api.deepseek.com/v1'
-      };
-    }
-    
-    console.warn("No DeepSeek API key found in database or environment. AI functionality will be limited.");
+    console.warn("No active DeepSeek API key found in database. Please add one through the admin interface.");
     return null;
   } catch (error) {
-    console.error("Error getting API client:", error);
-    // Fall back to environment variable on database error
-    if (process.env.DEEPSEEK_API_KEY) {
-      console.log("🔑 Database error, using environment-based DeepSeek API key");
-      return {
-        apiKey: process.env.DEEPSEEK_API_KEY,
-        baseURL: 'https://api.deepseek.com/v1'
-      };
-    }
+    console.error("Error getting API client from database:", error);
     return null;
   }
 }
@@ -93,7 +75,7 @@ export async function generateRecommendations(
   console.log("🔑 API client available:", !!apiClient);
   
   if (!apiClient) {
-    console.log("DeepSeek API key not set, returning mock data.");
+    console.log("No active API key found in database, returning mock data.");
     let mockRecommendations = generateMockRecommendations(req);
     
     // Add urgent case message for mock data too
@@ -110,7 +92,7 @@ export async function generateRecommendations(
 **Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
     }
     
-    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (API key not set, returning mock data)";
+    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (No API key configured in admin interface, returning mock data)";
     return { recommendations: mockRecommendations, disclaimer };
   }
   const concernTypesText = req.concernTypes.length > 0 
@@ -422,7 +404,7 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
 **Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
         }
         
-        const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (DeepSeek API authentication failed, returning mock data)";
+        const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (API authentication failed, returning mock data)";
         return { recommendations: mockRecommendations, disclaimer };
       }
       if (error.name === 'AbortError') {
@@ -447,7 +429,7 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
 **Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
     }
     
-    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (DeepSeek API unavailable, returning mock data)";
+    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation. (API service unavailable, returning mock data)";
     return { recommendations: mockRecommendations, disclaimer };
   }
 }
@@ -473,9 +455,9 @@ export async function followUpAssistance(
   const apiClient = await getApiClient();
   
   if (!apiClient) {
-    console.log("DeepSeek API key not set, returning mock data.");
+    console.log("No active API key found in database, returning mock data.");
     const mockAssistance = generateMockFollowUpAssistance(req);
-    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: This AI-generated assistance is for informational purposes only and should not replace professional educational consultation. Please work with your school's student support department, special education team, or educational specialists for comprehensive guidance. All suggestions should be reviewed and approved by qualified educational professionals before implementation. (API key not set, returning mock data)";
+    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: This AI-generated assistance is for informational purposes only and should not replace professional educational consultation. Please work with your school's student support department, special education team, or educational specialists for comprehensive guidance. All suggestions should be reviewed and approved by qualified educational professionals before implementation. (No API key configured in admin interface, returning mock data)";
     return { assistance: mockAssistance, disclaimer };
   }
 
