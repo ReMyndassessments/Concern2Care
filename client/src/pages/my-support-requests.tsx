@@ -312,9 +312,9 @@ export default function MySupportRequests() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">Recent Concerns</h3>
               </div>
-              <Badge variant="secondary" className="text-gray-600">
+              <div className="flex items-center justify-center w-8 h-8 bg-green-600 text-white rounded-full font-bold text-lg">
                 {concerns?.length || 0}
-              </Badge>
+              </div>
             </div>
             
             {concerns && concerns.length > 0 ? (
