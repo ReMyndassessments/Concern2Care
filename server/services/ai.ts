@@ -1,12 +1,42 @@
-if (!process.env.DEEPSEEK_API_KEY) {
-  console.warn("DEEPSEEK_API_KEY environment variable not set. AI functionality will be limited.");
+// Get API client dynamically - prioritizes database-managed keys over environment
+async function getApiClient() {
+  try {
+    // Import admin service to get database API keys
+    const { getActiveApiKey } = await import('./admin');
+    const activeDeepSeekKey = await getActiveApiKey('deepseek');
+    
+    if (activeDeepSeekKey) {
+      console.log("🔑 Using database-managed DeepSeek API key:", activeDeepSeekKey.name);
+      return {
+        apiKey: activeDeepSeekKey.apiKey,
+        baseURL: 'https://api.deepseek.com/v1'
+      };
+    }
+    
+    // Fall back to environment variable
+    if (process.env.DEEPSEEK_API_KEY) {
+      console.log("🔑 Using environment-based DeepSeek API key (fallback)");
+      return {
+        apiKey: process.env.DEEPSEEK_API_KEY,
+        baseURL: 'https://api.deepseek.com/v1'
+      };
+    }
+    
+    console.warn("No DeepSeek API key found in database or environment. AI functionality will be limited.");
+    return null;
+  } catch (error) {
+    console.error("Error getting API client:", error);
+    // Fall back to environment variable on database error
+    if (process.env.DEEPSEEK_API_KEY) {
+      console.log("🔑 Database error, using environment-based DeepSeek API key");
+      return {
+        apiKey: process.env.DEEPSEEK_API_KEY,
+        baseURL: 'https://api.deepseek.com/v1'
+      };
+    }
+    return null;
+  }
 }
-
-// DeepSeek API client
-const deepseekClient = process.env.DEEPSEEK_API_KEY ? {
-  apiKey: process.env.DEEPSEEK_API_KEY,
-  baseURL: 'https://api.deepseek.com/v1'
-} : null;
 
 export interface GenerateRecommendationsRequest {
   studentFirstName: string;
@@ -56,11 +86,13 @@ export async function generateRecommendations(
   req: GenerateRecommendationsRequest
 ): Promise<GenerateRecommendationsResponse> {
   console.log("🚀 Starting recommendation generation...");
-  console.log("🔑 DeepSeek client exists:", !!deepseekClient);
   console.log("📝 Student:", req.studentFirstName, req.studentLastInitial);
   console.log("📝 Concern types:", req.concernTypes);
   
-  if (!deepseekClient) {
+  const apiClient = await getApiClient();
+  console.log("🔑 API client available:", !!apiClient);
+  
+  if (!apiClient) {
     console.log("DeepSeek API key not set, returning mock data.");
     let mockRecommendations = generateMockRecommendations(req);
     
@@ -299,17 +331,17 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
   }
 
   try {
-    console.log(`🌐 Making DeepSeek API call to: ${deepseekClient.baseURL}/chat/completions`);
-    console.log(`🔑 Using API key: ${deepseekClient.apiKey.substring(0, 10)}...`);
+    console.log(`🌐 Making DeepSeek API call to: ${apiClient.baseURL}/chat/completions`);
+    console.log(`🔑 Using API key: ${apiClient.apiKey.substring(0, 10)}...`);
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
     
-    const response = await fetch(`${deepseekClient.baseURL}/chat/completions`, {
+    const response = await fetch(`${apiClient.baseURL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${deepseekClient.apiKey}`
+        'Authorization': `Bearer ${apiClient.apiKey}`
       },
       body: JSON.stringify({
         model: "deepseek-chat",
@@ -438,7 +470,9 @@ export interface FollowUpAssistanceResponse {
 export async function followUpAssistance(
   req: FollowUpAssistanceRequest
 ): Promise<FollowUpAssistanceResponse> {
-  if (!deepseekClient) {
+  const apiClient = await getApiClient();
+  
+  if (!apiClient) {
     console.log("DeepSeek API key not set, returning mock data.");
     const mockAssistance = generateMockFollowUpAssistance(req);
     const disclaimer = "⚠️ IMPORTANT DISCLAIMER: This AI-generated assistance is for informational purposes only and should not replace professional educational consultation. Please work with your school's student support department, special education team, or educational specialists for comprehensive guidance. All suggestions should be reviewed and approved by qualified educational professionals before implementation. (API key not set, returning mock data)";
@@ -482,11 +516,11 @@ Focus on actionable advice that a classroom teacher can realistically implement.
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
     
-    const response = await fetch(`${deepseekClient.baseURL}/chat/completions`, {
+    const response = await fetch(`${apiClient.baseURL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${deepseekClient.apiKey}`
+        'Authorization': `Bearer ${apiClient.apiKey}`
       },
       body: JSON.stringify({
         model: "deepseek-chat",

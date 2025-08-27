@@ -523,6 +523,30 @@ export async function getApiKeys() {
   }
 }
 
+// Internal function to get actual API key for service usage (not for admin display)
+export async function getActiveApiKey(provider: string = 'deepseek') {
+  try {
+    const key = await db
+      .select({
+        id: apiKeys.id,
+        name: apiKeys.name,
+        provider: apiKeys.provider,
+        apiKey: apiKeys.apiKey, // Get the actual API key
+        isActive: apiKeys.isActive,
+      })
+      .from(apiKeys)
+      .where(eq(apiKeys.provider, provider))
+      .where(eq(apiKeys.isActive, true))
+      .orderBy(apiKeys.createdAt)
+      .limit(1);
+
+    return key[0] || null;
+  } catch (error) {
+    console.error('Error fetching active API key:', error);
+    return null;
+  }
+}
+
 export async function createApiKey(apiKeyData: any, createdBy: string) {
   try {
     const newApiKey = await db
