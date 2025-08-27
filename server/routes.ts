@@ -3279,6 +3279,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all demo schools
   app.get('/api/admin/demo-schools', requireAdmin, async (req: any, res) => {
     try {
+      // Check if demo program feature is enabled
+      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
+      if (!isDemoProgramEnabled) {
+        return res.status(403).json({ message: 'Demo program feature is not enabled' });
+      }
+
       const demoSchools = await getDemoSchools();
       res.json({ demoSchools });
     } catch (error) {
@@ -3290,6 +3296,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get demo school details
   app.get('/api/admin/demo-schools/:schoolId', requireAdmin, async (req: any, res) => {
     try {
+      // Check if demo program feature is enabled
+      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
+      if (!isDemoProgramEnabled) {
+        return res.status(403).json({ message: 'Demo program feature is not enabled' });
+      }
+
       const { schoolId } = req.params;
       const demoSchool = await getDemoSchoolDetails(schoolId);
       res.json(demoSchool);
@@ -3302,6 +3314,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Start demo program for a school
   app.post('/api/admin/demo-schools/:schoolId/start', requireAdmin, async (req: any, res) => {
     try {
+      // Check if demo program feature is enabled
+      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
+      if (!isDemoProgramEnabled) {
+        return res.status(403).json({ message: 'Demo program feature is not enabled' });
+      }
+
       const { schoolId } = req.params;
       const { demoLengthDays = 60 } = req.body;
       
@@ -3316,6 +3334,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Set pilot teacher status
   app.post('/api/admin/teachers/:teacherId/pilot', requireAdmin, async (req: any, res) => {
     try {
+      // Check if demo program feature is enabled
+      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
+      if (!isDemoProgramEnabled) {
+        return res.status(403).json({ message: 'Demo program feature is not enabled' });
+      }
+
       const { teacherId } = req.params;
       const { isPilot, discount = 50 } = req.body;
       
@@ -3330,6 +3354,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Convert demo school to full subscription
   app.post('/api/admin/demo-schools/:schoolId/convert', requireAdmin, async (req: any, res) => {
     try {
+      // Check if demo program feature is enabled
+      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
+      if (!isDemoProgramEnabled) {
+        return res.status(403).json({ message: 'Demo program feature is not enabled' });
+      }
+
       const { schoolId } = req.params;
       
       await convertDemoToFull(schoolId);

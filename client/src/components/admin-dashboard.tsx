@@ -27,6 +27,7 @@ import SchoolEmailSettings from "@/components/school-email-settings";
 import AnalyticsDashboard from "@/components/analytics-dashboard";
 import FeatureFlagManagement from "@/components/feature-flag-management";
 import DemoProgramManagement from "@/components/demo-program-management";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 interface DashboardStats {
   totalUsers: number;
@@ -44,6 +45,7 @@ interface DashboardStats {
 
 export default function AdminDashboard() {
   const { toast } = useToast();
+  const { isFeatureEnabled } = useFeatureFlags();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
@@ -252,12 +254,14 @@ export default function AdminDashboard() {
             >
               Feature Flags
             </TabsTrigger>
-            <TabsTrigger 
-              value="demo-program" 
-              className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
-            >
-              Demo Program
-            </TabsTrigger>
+            {isFeatureEnabled('demo_program') && (
+              <TabsTrigger 
+                value="demo-program" 
+                className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+              >
+                Demo Program
+              </TabsTrigger>
+            )}
             <TabsTrigger 
               value="analytics" 
               className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
@@ -293,9 +297,11 @@ export default function AdminDashboard() {
           <FeatureFlagManagement />
         </TabsContent>
 
-        <TabsContent value="demo-program" className="space-y-6">
-          <DemoProgramManagement />
-        </TabsContent>
+        {isFeatureEnabled('demo_program') && (
+          <TabsContent value="demo-program" className="space-y-6">
+            <DemoProgramManagement />
+          </TabsContent>
+        )}
 
         <TabsContent value="analytics" className="space-y-6">
           <AnalyticsDashboard />

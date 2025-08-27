@@ -497,6 +497,15 @@ export class DatabaseStorage implements IStorage {
     return flag;
   }
 
+  async isFeatureEnabled(flagName: string): Promise<boolean> {
+    const [flag] = await db
+      .select({ isGloballyEnabled: featureFlags.isGloballyEnabled })
+      .from(featureFlags)
+      .where(eq(featureFlags.flagName, flagName));
+    
+    return flag?.isGloballyEnabled || false;
+  }
+
   async getSchoolFeatureOverrides(schoolId: string): Promise<SchoolFeatureOverride[]> {
     return await db
       .select()

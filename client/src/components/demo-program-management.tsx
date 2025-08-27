@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -58,9 +59,27 @@ type StartDemoFormData = z.infer<typeof startDemoFormSchema>;
 export default function DemoProgramManagement() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { isFeatureEnabled } = useFeatureFlags();
   const [showStartDialog, setShowStartDialog] = useState(false);
   const [convertingSchool, setConvertingSchool] = useState<string | null>(null);
   const [selectedSchool, setSelectedSchool] = useState<DemoSchool | null>(null);
+
+  // Check if demo program feature is enabled
+  const isDemoProgramEnabled = isFeatureEnabled('demo_program');
+
+  if (!isDemoProgramEnabled) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center max-w-md mx-auto">
+          <School className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Demo Program Disabled</h3>
+          <p className="text-gray-500">
+            The demo program feature is currently disabled. Enable it in Feature Flags to access demo management.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Fetch demo schools
   const { data: demoSchoolsData, isLoading } = useQuery({
