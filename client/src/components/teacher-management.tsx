@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,8 @@ import {
   Download,
   FileText,
   Database,
-  Key
+  Key,
+  Upload
 } from "lucide-react";
 
 interface Teacher {
@@ -53,6 +54,8 @@ interface NewTeacher {
 export default function TeacherManagement() {
   const { toast } = useToast();
   const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -208,6 +211,69 @@ export default function TeacherManagement() {
     setPasswordTeacher(teacher);
     setNewPassword("");
     setShowPasswordDialog(true);
+  };
+
+  const handleBulkUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.csv')) {
+      toast({
+        title: "Invalid File Type",
+        description: "Please select a CSV file.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const fileContent = await file.text();
+      const base64Content = btoa(fileContent);
+
+      const response = await apiRequest('/api/admin/teachers/bulk-csv-upload', {
+        method: 'POST',
+        body: {
+          csvData: base64Content,
+          filename: file.name,
+          schoolName: 'Default School',
+          sendCredentials: false
+        }
+      });
+
+      if (response.successfulImports > 0) {
+        toast({
+          title: "Bulk Upload Successful",
+          description: `Successfully imported ${response.successfulImports} teachers. ${response.errors?.length || 0} errors encountered.`,
+        });
+        loadTeachers(); // Refresh the teacher list
+      } else {
+        toast({
+          title: "Upload Failed",
+          description: response.summary || "No teachers were imported.",
+          variant: "destructive"
+        });
+      }
+
+      if (response.errors && response.errors.length > 0) {
+        console.error('Upload errors:', response.errors);
+      }
+    } catch (error: any) {
+      console.error('Error uploading file:', error);
+      toast({
+        title: "Upload Failed",
+        description: error.message || "Failed to upload CSV file.",
+        variant: "destructive"
+      });
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handlePasswordChange = async () => {
@@ -435,13 +501,29 @@ export default function TeacherManagement() {
                 Manage teacher accounts and permissions
               </p>
             </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+                <DialogTrigger asChild>
+                  <Button className="bg-brand-blue hover:bg-brand-blue/90 w-full sm:w-auto" data-testid="button-add-teacher">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Teacher
+                  </Button>
+                </DialogTrigger>
+              </Dialog>
+              <Button onClick={handleBulkUpload} variant="outline" className="w-full sm:w-auto" data-testid="button-bulk-upload">
+                <Upload className="h-4 w-4 mr-2" />
+                Bulk Upload CSV
+              </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv"
+                onChange={handleFileUpload}
+                style={{ display: 'none' }}
+                data-testid="file-input-bulk-upload"
+              />
+            </div>
             <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-              <DialogTrigger asChild>
-                <Button className="bg-brand-blue hover:bg-brand-blue/90 w-full sm:w-auto" data-testid="button-add-teacher">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Teacher
-                </Button>
-              </DialogTrigger>
               <DialogContent className="sm:max-w-[500px] mx-4 sm:mx-0">
                 <DialogHeader>
                   <DialogTitle>Add New Teacher</DialogTitle>
