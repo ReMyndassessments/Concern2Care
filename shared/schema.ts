@@ -60,6 +60,14 @@ export const users = pgTable("users", {
   role: varchar("role").default('teacher'), // 'teacher' | 'admin' | 'super_admin'
   isActive: boolean("is_active").default(true),
   lastLoginAt: timestamp("last_login_at"),
+  
+  // Individual teacher account fields (feature flag: ENABLE_INDIVIDUAL_REGISTRATION)
+  accountType: varchar("account_type").default('admin_managed'), // 'admin_managed' | 'individual'
+  subscriptionStatus: varchar("subscription_status"), // 'active' | 'expired' | 'pending' | null for admin_managed
+  subscriptionProvider: varchar("subscription_provider"), // 'buymeacoffee' | null for admin_managed
+  subscriptionId: varchar("subscription_id"), // External subscription ID
+  subscriptionExpiry: timestamp("subscription_expiry"), // When subscription expires
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

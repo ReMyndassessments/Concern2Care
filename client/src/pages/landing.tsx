@@ -65,13 +65,30 @@ export default function Landing() {
               capacity, consistent support, and better outcomes for every student.
             </p>
             
-            <Button 
-              size="lg"
-              onClick={() => window.location.href = '/login'}
-              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-base md:text-lg px-8 md:px-12 py-3 md:py-4 rounded-xl font-medium shadow-lg w-full sm:w-auto"
-            >
-              🔐 Secure Teacher Login
-            </Button>
+            <div className="space-y-4">
+              <Button 
+                size="lg"
+                onClick={() => window.location.href = '/login'}
+                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-base md:text-lg px-8 md:px-12 py-3 md:py-4 rounded-xl font-medium shadow-lg w-full sm:w-auto"
+              >
+                🔐 Secure Teacher Login
+              </Button>
+
+              {/* Individual Teacher Registration - Feature Flag */}
+              {process.env.NODE_ENV === 'development' && import.meta.env.VITE_ENABLE_INDIVIDUAL_REGISTRATION === 'true' && (
+                <div className="pt-4 border-t border-gray-200">
+                  <p className="text-sm text-gray-600 mb-3">Individual teacher? Try Concern2Care for just $5/month:</p>
+                  <Button 
+                    size="sm"
+                    variant="outline"
+                    onClick={() => window.location.href = '/register'}
+                    className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 font-medium px-6 py-2 rounded-lg"
+                  >
+                    ☕ Start Your Individual Subscription
+                  </Button>
+                </div>
+              )}
+            </div>
             
             <p className="text-xs md:text-sm text-gray-500 mt-4 md:mt-6 px-2">
               FERPA compliant • Evidence-based strategies • Trusted by educators
