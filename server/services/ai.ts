@@ -221,7 +221,7 @@ ${lessonPlanContent}
 
 **Format:** Provide a complete, restructured lesson plan that the teacher can use immediately. Include specific examples, actual materials, and concrete directions. This should be a differentiated version of the original lesson, not general strategies.`;
     } else {
-      prompt = `You are an educational differentiation specialist AI assistant. Since no lesson plan was uploaded, provide comprehensive differentiation strategies for ${req.studentFirstName} based on their learning profile:
+      prompt = `You are an expert educational differentiation specialist with advanced training in inclusive education and learning disabilities. Create comprehensive, research-based differentiation strategies specifically tailored for ${req.studentFirstName} based on their unique learning profile.
 
 **Student Information:**
 - Name: ${req.studentFirstName} ${req.studentLastInitial}
@@ -232,16 +232,101 @@ ${lessonPlanContent}
 **Student Learning Profile:**
 ${differentiationInfo.join('\n')}
 
-**Please provide detailed differentiation strategies organized by:**
+**CRITICAL REQUIREMENTS:**
+- All strategies must be evidence-based and cite relevant educational research
+- Provide specific, concrete examples with step-by-step implementation
+- Include materials lists and preparation requirements
+- Address multiple learning modalities (visual, auditory, kinesthetic, tactile)
+- Consider Universal Design for Learning (UDL) principles
+- Differentiate for this student's specific needs, not generic accommodations
 
-1. **Content Modifications:** How to adapt what the student learns
-2. **Process Adaptations:** How to modify learning activities and instruction
-3. **Product Alternatives:** Different ways for the student to show learning
-4. **Learning Environment:** Physical and social accommodations needed
-5. **Assessment Differentiation:** Alternative evaluation methods
-6. **Implementation Timeline:** Immediate, short-term, and long-term strategies
+**Required Output Structure:**
 
-**Format your response as actionable strategies the teacher can implement across different subjects and activities.**`;
+## **Student Learning Profile Summary**
+Provide a comprehensive analysis of ${req.studentFirstName}'s learning strengths, challenges, and optimal learning conditions based on the profile provided.
+
+## **1. Content Modifications**
+### **Adjusting Complexity**
+- Specific techniques for scaffolding content (include 3-5 concrete examples)
+- Grade-appropriate modifications while maintaining rigor
+- Multi-level materials and resources
+
+### **Multiple Representations** 
+- Visual supports (graphic organizers, concept maps, infographics)
+- Auditory options (recordings, verbal explanations, music integration)
+- Kinesthetic activities (hands-on manipulatives, movement-based learning)
+
+### **Interest-Based Adaptations**
+- Ways to connect content to student interests and cultural background
+- Choice menus for topics and project themes
+
+## **2. Process Modifications**
+### **Instructional Delivery**
+- Specific teaching strategies matched to learning style
+- Pacing adjustments and chunking methods
+- Collaborative vs. independent work balance
+
+### **Scaffolding Techniques**
+- Step-by-step process breakdowns
+- Think-aloud strategies
+- Peer support systems and buddy partnerships
+
+### **Technology Integration**
+- Assistive technology recommendations
+- Digital tools and apps specific to learning needs
+- Accessibility features and settings
+
+## **3. Product Alternatives**
+### **Assessment Options**
+- Multiple ways to demonstrate mastery (portfolios, presentations, projects)
+- Alternative assessment formats
+- Modified rubrics with clear success criteria
+
+### **Expression Methods**
+- Written, oral, visual, and digital product options
+- Creative alternatives to traditional assignments
+
+## **4. Learning Environment Optimization**
+### **Physical Space**
+- Seating arrangements and workspace modifications
+- Sensory considerations (lighting, noise, textures)
+- Organization systems and visual supports
+
+### **Social Environment**
+- Grouping strategies for optimal learning
+- Peer interaction structures
+- Communication supports
+
+## **5. Implementation Timeline**
+
+### **Week 1-2: Immediate Strategies**
+- Quick wins and essential accommodations
+- Initial data collection methods
+
+### **Weeks 3-6: Short-term Adaptations** 
+- Skill-building interventions
+- Progress monitoring systems
+
+### **Ongoing: Long-term Support**
+- Sustainable classroom modifications
+- Transition planning for future grades
+
+## **6. Progress Monitoring & Data Collection**
+- Specific metrics to track improvement
+- Data collection tools and schedules
+- When and how to adjust strategies
+
+## **7. Collaboration & Communication**
+- Parent/family engagement strategies
+- Coordination with support staff
+- Documentation requirements
+
+**Format Requirements:**
+- Use bullet points for easy scanning
+- Include specific examples for each strategy
+- Provide implementation timelines
+- List required materials and resources
+- Make all recommendations immediately actionable for classroom use`;
     }
   } else {
     prompt =
@@ -562,95 +647,115 @@ function generateMockRecommendations(req: GenerateRecommendationsRequest): strin
 function generateMockDifferentiationStrategies(req: GenerateRecommendationsRequest): string {
   return `# Differentiation Strategies for ${req.studentFirstName} ${req.studentLastInitial}
 
-## Student Learning Profile Summary
-Based on the provided information, this student requires differentiated instruction to address their individual learning needs and the concerns identified.
+## **Student Learning Profile Summary**
+Based on the provided learning profile information, ${req.studentFirstName} demonstrates unique learning strengths and needs that require targeted differentiation strategies. This student would benefit from multi-modal instruction, structured support systems, and flexible learning options to maximize academic success and engagement.
 
-## 1. Instructional Adaptations
+## **1. Content Modifications**
 
-### Content Modifications
-- **Adjusting Complexity**: Provide materials at appropriate reading level while maintaining grade-level concepts
-- **Multiple Representations**: Present information using visual, auditory, and kinesthetic modalities
-- **Choice in Topics**: Offer options for research projects or examples that connect to student interests
+### **Adjusting Complexity**
+- **Scaffolded Content Delivery**: Break lessons into 10-15 minute chunks with visual organizers
+- **Multi-Level Materials**: Provide same content at 3 different reading levels (below, at, above grade level)
+- **Concept Mapping**: Use graphic organizers to show relationships between ideas
+- **Vocabulary Pre-Teaching**: Introduce key terms with visual aids and real-world examples
+- **Concrete-Abstract Bridge**: Start with hands-on examples before moving to abstract concepts
 
-### Process Adjustments
-- **Flexible Grouping**: Use various grouping strategies (individual, pairs, small groups) based on task and student needs
-- **Scaffolded Instruction**: Break complex tasks into manageable chunks with clear steps
-- **Extended Time**: Provide additional time for processing and completion when needed
+### **Multiple Representations**
+- **Visual Supports**: Create infographics, charts, and color-coded materials for key concepts
+- **Auditory Options**: Provide recorded instructions, audiobooks, and verbal processing time
+- **Kinesthetic Activities**: Use manipulatives, role-playing, and movement-based learning
+- **Digital Integration**: Utilize interactive apps, virtual simulations, and multimedia presentations
 
-### Product Alternatives
-- **Multiple Formats**: Allow demonstrations of learning through projects, presentations, written work, or multimedia
-- **Tiered Assignments**: Offer tasks at varying levels of complexity while targeting same learning goals
-- **Student Choice**: Provide options for how students can show what they've learned
+### **Interest-Based Adaptations**
+- **Student Interest Surveys**: Connect curriculum to personal interests and hobbies
+- **Cultural Connections**: Incorporate culturally relevant examples and contexts
+- **Choice Menus**: Offer 3-4 topic options for research projects and presentations
 
-## 2. Learning Environment Accommodations
+## **2. Process Modifications**
 
-### Physical Space
-- **Flexible Seating**: Provide various seating options (standing desk, stability ball, traditional desk)
-- **Reduced Distractions**: Create quiet spaces or use noise-cancelling headphones when needed
-- **Visual Supports**: Use charts, graphic organizers, and visual schedules
+### **Instructional Delivery**
+- **Think-Aloud Modeling**: Demonstrate problem-solving processes step-by-step
+- **Chunked Instruction**: Present information in small, manageable segments
+- **Wait Time**: Provide 5-7 seconds for processing before expecting responses
+- **Multiple Exposures**: Review key concepts through different activities and formats
 
-### Social Arrangements
-- **Peer Partnerships**: Pair with supportive classmates for collaborative work
-- **Small Group Work**: Facilitate participation in structured small group activities
-- **Individual Workspace**: Provide option for independent work space when needed
+### **Scaffolding Techniques**
+- **Step-by-Step Guides**: Create visual process charts for complex tasks
+- **Peer Buddy System**: Pair with supportive classmate for collaboration and support
+- **Teacher Check-Ins**: Schedule brief 2-minute progress checks every 15 minutes
+- **Success Criteria**: Provide clear rubrics and examples of quality work
 
-## 3. Assessment Differentiation
+### **Technology Integration**
+- **Text-to-Speech**: Use assistive technology for reading support
+- **Speech-to-Text**: Allow voice recording for written responses
+- **Organization Apps**: Utilize digital planners and reminder systems
+- **Interactive Whiteboards**: Engage with touch-screen technology for kinesthetic learning
 
-### Alternative Formats
-- **Oral Assessments**: Allow students to demonstrate knowledge verbally
-- **Portfolio Assessment**: Collect work samples over time to show growth
-- **Performance-Based Tasks**: Use real-world applications and hands-on demonstrations
+## **3. Product Alternatives**
 
-### Modified Criteria
-- **Individual Growth**: Measure progress against student's own baseline rather than class average
-- **Process AND Product**: Evaluate both the learning process and final outcomes
-- **Multiple Attempts**: Allow revision and re-submission opportunities
+### **Assessment Options**
+- **Portfolio Collections**: Gather work samples showing progress over time
+- **Oral Presentations**: Allow verbal demonstration of knowledge
+- **Digital Projects**: Create multimedia presentations, videos, or interactive displays
+- **Performance Tasks**: Use real-world applications and hands-on demonstrations
+- **Choice Boards**: Offer 6-9 options for demonstrating learning
 
-## 4. Individual Support Strategies
+### **Expression Methods**
+- **Written Options**: Traditional essays, graphic organizers, annotated drawings
+- **Verbal Options**: Recorded explanations, debates, storytelling
+- **Visual Options**: Posters, infographics, comic strips, photo journals
+- **Digital Options**: Websites, presentations, video projects, interactive timelines
 
-### Scaffolding Techniques
-- **Graphic Organizers**: Provide structured templates for organizing thoughts and information
-- **Step-by-Step Guides**: Break complex processes into clear, sequential steps
-- **Models and Examples**: Show exemplars of expected work quality
+## **4. Learning Environment Optimization**
 
-### Communication Supports
-- **Visual Cues**: Use hand signals, pictures, or written prompts to guide behavior
-- **Clear Instructions**: Provide written and verbal directions in simple, concise language
-- **Check for Understanding**: Regularly verify comprehension through questioning
+### **Physical Space**
+- **Flexible Seating**: Standing desk, stability ball, floor cushions, traditional desk options
+- **Quiet Zones**: Designated low-stimulation areas with noise-reducing headphones
+- **Organization Systems**: Color-coded folders, labeled storage, visual schedules
+- **Lighting Options**: Natural light when possible, reduce fluorescent glare
+- **Movement Breaks**: Scheduled 2-minute movement opportunities every 20 minutes
 
-## 5. Implementation Timeline
+### **Social Environment**
+- **Strategic Grouping**: Rotate between individual, pair, and small group configurations
+- **Peer Support Networks**: Establish study buddies and collaboration partnerships
+- **Clear Communication**: Visual and verbal instructions, posted classroom expectations
+- **Positive Reinforcement**: Frequent specific praise and recognition systems
 
-### Immediate (Today)
-- Set up flexible seating options
-- Introduce visual schedule and supports
-- Establish clear routines and expectations
+## **5. Implementation Timeline**
 
-### This Week
-- Implement tiered assignments for current unit
-- Begin using graphic organizers for writing tasks
-- Establish peer partnership for collaborative work
+### **Week 1-2: Immediate Strategies**
+- Set up physical environment modifications (seating, organization systems)
+- Introduce visual supports and communication methods
+- Begin data collection on current performance levels
+- Establish peer buddy partnerships and support systems
 
-### Ongoing
-- Monitor student response and adjust strategies
-- Collect data on student engagement and progress
-- Maintain regular communication with student and family
+### **Weeks 3-6: Short-term Adaptations**
+- Implement scaffolded instruction techniques and chunked content delivery
+- Introduce technology tools and assistive supports
+- Develop and practice new assessment formats
+- Monitor progress and adjust strategies based on student response
 
-## Progress Monitoring
+### **Ongoing: Long-term Support**
+- Maintain consistent environmental modifications and support systems
+- Regularly update and refine differentiation strategies based on student growth
+- Prepare transition materials for next grade level or new teachers
+- Continue family communication and collaboration
 
-- **Daily Observations**: Note student engagement and response to accommodations
-- **Weekly Check-ins**: Brief conversations with student about what's working
-- **Bi-weekly Data Review**: Analyze work samples and assessment results
-- **Monthly Adjustments**: Modify strategies based on student progress and needs
+## **6. Progress Monitoring & Data Collection**
 
-## When to Escalate
+- **Weekly Academic Data**: Track completion rates, accuracy scores, and engagement levels
+- **Behavioral Observations**: Document on-task behavior, social interactions, and self-regulation
+- **Student Self-Assessment**: Weekly check-ins on learning preferences and challenges
+- **Work Sample Analysis**: Review quality and growth in student products monthly
+- **Adjustment Protocol**: Modify strategies if no progress seen after 2-3 weeks of consistent implementation
 
-Consider additional support if:
-- Student continues to struggle despite accommodations
-- Gaps in learning are widening over time
-- Student expresses frustration or stress about school work
-- Additional evaluation may be needed to identify learning differences
+## **7. Collaboration & Communication**
 
-Remember: Differentiation is about providing multiple pathways to success, not lowering expectations.`;
+- **Family Partnership**: Share strategies for home reinforcement, communicate progress weekly
+- **Support Staff Coordination**: Collaborate with special education team, counselors, and specialists
+- **Documentation**: Maintain detailed records of interventions tried and student responses
+- **Professional Development**: Seek additional training in differentiation strategies as needed
+
+**Note**: These are research-based strategies that should be implemented consistently and monitored for effectiveness. Regular communication with all stakeholders ensures the best possible outcomes for ${req.studentFirstName}.`;
 }
 
 function generateMockInterventionRecommendations(req: GenerateRecommendationsRequest): string {
