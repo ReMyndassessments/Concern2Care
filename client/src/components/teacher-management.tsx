@@ -70,6 +70,9 @@ export default function TeacherManagement() {
   const [selectedTeachers, setSelectedTeachers] = useState<string[]>([]);
   const [exportLoading, setExportLoading] = useState<string | null>(null);
   const [showBulkExport, setShowBulkExport] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [passwordTeacher, setPasswordTeacher] = useState<Teacher | null>(null);
+  const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
     loadTeachers();
@@ -196,6 +199,59 @@ export default function TeacherManagement() {
       toast({
         title: "Password Reset Failed",
         description: error.message || "Failed to send password reset email",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleChangePassword = (teacher: Teacher) => {
+    setPasswordTeacher(teacher);
+    setNewPassword("");
+    setShowPasswordDialog(true);
+  };
+
+  const handlePasswordChange = async () => {
+    if (!passwordTeacher) return;
+    
+    try {
+      if (!newPassword) {
+        toast({
+          title: "Error",
+          description: "Please enter a new password",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        toast({
+          title: "Error",
+          description: "Password must be at least 6 characters long",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const response = await apiRequest(`/api/admin/teachers/${passwordTeacher.id}/change-password`, {
+        method: "POST",
+        body: JSON.stringify({ newPassword }),
+        headers: { "Content-Type": "application/json" }
+      });
+      
+      if (response.success) {
+        toast({
+          title: "Password Changed",
+          description: `Password updated successfully for ${passwordTeacher.firstName} ${passwordTeacher.lastName}`,
+        });
+        setShowPasswordDialog(false);
+        setPasswordTeacher(null);
+        setNewPassword("");
+      }
+    } catch (error: any) {
+      console.error("Error changing password:", error);
+      toast({
+        title: "Password Change Failed",
+        description: error.message || "Failed to change password",
         variant: "destructive"
       });
     }
@@ -755,10 +811,10 @@ export default function TeacherManagement() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handlePasswordReset(teacher)}
+                          onClick={() => handleChangePassword(teacher)}
                           className="h-6 w-6 p-0 text-blue-600 hover:text-blue-700 hover:border-blue-300"
-                          data-testid={`button-password-reset-${teacher.id}`}
-                          title="Send password reset email"
+                          data-testid={`button-change-password-${teacher.id}`}
+                          title="Change password directly"
                         >
                           <Key className="h-3 w-3" />
                         </Button>
@@ -855,6 +911,49 @@ export default function TeacherManagement() {
                 </Button>
                 <Button onClick={handleEditTeacher} data-testid="button-save-edit">
                   Save Changes
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Password Change Dialog */}
+      {passwordTeacher && (
+        <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+          <DialogContent className="sm:max-w-[400px] mx-4 sm:mx-0">
+            <DialogHeader>
+              <DialogTitle>Change Password</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600">
+                Change password for <strong>{passwordTeacher.firstName} {passwordTeacher.lastName}</strong>
+              </p>
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">New Password</Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  placeholder="Enter new password (minimum 6 characters)"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  data-testid="input-new-password"
+                />
+              </div>
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowPasswordDialog(false)} 
+                  data-testid="button-cancel-password"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handlePasswordChange} 
+                  data-testid="button-save-password"
+                  disabled={!newPassword || newPassword.length < 6}
+                >
+                  Change Password
                 </Button>
               </div>
             </div>

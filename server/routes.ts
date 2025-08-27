@@ -1912,6 +1912,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Change teacher password directly (no email required)
+  app.post('/api/admin/teachers/:id/change-password', requireAdmin, async (req: any, res) => {
+    try {
+      const teacherId = req.params.id;
+      const { newPassword } = req.body;
+      
+      if (!newPassword) {
+        return res.status(400).json({ message: 'New password is required' });
+      }
+
+      if (newPassword.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+      }
+
+      const teacher = await storage.getUser(teacherId);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      
+      // Update teacher password
+      await storage.updateUser(teacherId, { 
+        password: hashedPassword,
+        updatedAt: new Date(),
+      });
+      
+      res.json({ 
+        success: true, 
+        message: `Password updated successfully for ${teacher.firstName} ${teacher.lastName}`
+      });
+    } catch (error) {
+      console.error('Error changing teacher password:', error);
+      res.status(500).json({ message: 'Failed to change teacher password' });
+    }
+  });
+
   // Admin: Grant additional requests to teacher
   app.post('/api/admin/teachers/:id/grant-requests', requireAdmin, async (req: any, res) => {
     try {
