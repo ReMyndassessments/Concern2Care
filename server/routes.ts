@@ -487,7 +487,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Generate AI recommendations directly (for testing)
-  app.post("/api/concerns/generate-recommendations", async (req: any, res) => {
+  app.post("/api/concerns/generate-recommendations", requireAuth, async (req: any, res) => {
     console.log("🤖 AI generation endpoint called");
     try {
       // Validate the request data matches GenerateRecommendationsRequest interface
