@@ -45,7 +45,7 @@ export default function Landing() {
           
           {/* Tagline - Mobile Responsive */}
           <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-2 font-medium px-2">
-            Stronger Tools for Teachers.<br className="sm:hidden" /> Smarter Support for Students.
+            A Teacher Tool for Differentiation and Classroom Interventions
           </p>
           
           {/* Attribution */}
