@@ -24,7 +24,9 @@ export interface BulkCSVUploadResult {
 }
 
 interface TeacherCSVRow {
-  name: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string; // Keep for backward compatibility
   email: string;
   password?: string;
   school?: string;
@@ -55,11 +57,17 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
     const headerRow = lines[0];
     const headers = parseCSVRow(headerRow).map(h => h.toLowerCase().trim());
     
-    // Validate required headers
-    const requiredHeaders = ['name', 'email'];
-    const missingHeaders = requiredHeaders.filter(header => !headers.includes(header));
-    if (missingHeaders.length > 0) {
-      throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+    // Validate required headers (either 'name' OR 'first name' & 'last name')
+    const hasName = headers.includes('name');
+    const hasFirstLastName = headers.includes('first name') && headers.includes('last name');
+    const hasEmail = headers.includes('email');
+    
+    if (!hasEmail) {
+      throw new Error(`Missing required header: email`);
+    }
+    
+    if (!hasName && !hasFirstLastName) {
+      throw new Error(`Missing required headers: either 'name' OR 'first name' and 'last name'`);
     }
 
     // Get existing emails to check for duplicates
@@ -87,8 +95,16 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
           if (index < rowData.length && rowData[index].trim()) {
             const value = rowData[index].trim();
             switch (header) {
+              case 'first name':
+              case 'firstname':
+                teacher.firstName = value;
+                break;
+              case 'last name':
+              case 'lastname':
+                teacher.lastName = value;
+                break;
               case 'name':
-                teacher.name = value;
+                teacher.name = value; // For backward compatibility
                 break;
               case 'email':
                 teacher.email = value.toLowerCase();
@@ -134,13 +150,30 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
           }
         });
 
+        // Handle name splitting for backward compatibility
+        if (teacher.name && !teacher.firstName && !teacher.lastName) {
+          const nameParts = teacher.name.split(' ');
+          teacher.firstName = nameParts[0];
+          teacher.lastName = nameParts.slice(1).join(' ') || nameParts[0];
+        }
+        
         // Validate required fields
-        if (!teacher.name || !teacher.email) {
+        if ((!teacher.firstName || !teacher.lastName) && !teacher.name) {
           errors.push({
             row: rowNumber,
             email: teacher.email,
-            name: teacher.name,
-            error: "Name and email are required"
+            name: teacher.firstName ? `${teacher.firstName} ${teacher.lastName}` : teacher.name,
+            error: "First name, last name, and email are required"
+          });
+          continue;
+        }
+        
+        if (!teacher.email) {
+          errors.push({
+            row: rowNumber,
+            email: teacher.email,
+            name: teacher.firstName ? `${teacher.firstName} ${teacher.lastName}` : teacher.name,
+            error: "Email is required"
           });
           continue;
         }
@@ -191,10 +224,9 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
         const saltRounds = 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
-        // Split name into first and last name
-        const nameParts = teacher.name.split(' ');
-        const firstName = nameParts[0];
-        const lastName = nameParts.slice(1).join(' ') || '';
+        // Use firstName/lastName if available, otherwise split name
+        const firstName = teacher.firstName || teacher.name?.split(' ')[0] || 'Unknown';
+        const lastName = teacher.lastName || teacher.name?.split(' ').slice(1).join(' ') || '';
 
         // Insert teacher into database
         await db.insert(users).values({
@@ -202,7 +234,11 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
           password: passwordHash, // Add the hashed password
           firstName: firstName,
           lastName: lastName,
-          school: teacher.schoolName || null,
+          school: teacher.schoolName || teacher.school || null,
+          schoolDistrict: teacher.schoolDistrict || null,
+          primaryGrade: teacher.primaryGrade || null,
+          primarySubject: teacher.primarySubject || null,
+          teacherType: teacher.teacherType || 'Classroom Teacher',
           supportRequestsLimit: supportRequestsLimit,
           isAdmin: false,
           role: 'teacher',
@@ -211,10 +247,10 @@ export async function processBulkCSVUpload(csvContent: string): Promise<BulkCSVU
 
         // Store the credential for PDF generation
         createdCredentials.push({
-          name: teacher.name,
+          name: teacher.firstName && teacher.lastName ? `${teacher.firstName} ${teacher.lastName}` : (teacher.name || `${firstName} ${lastName}`),
           email: teacher.email,
           password: password, // Store the plain password for the PDF
-          school: teacher.schoolName || 'Not specified'
+          school: teacher.schoolName || teacher.school || 'Not specified'
         });
 
         successfulImports++;

@@ -33,6 +33,10 @@ interface Teacher {
   lastName: string;
   email: string;
   school: string;
+  schoolDistrict?: string;
+  primaryGrade?: string;
+  primarySubject?: string;
+  teacherType?: string;
   supportRequestsLimit: number;
   supportRequestsUsed: number;
   additionalRequests: number;
@@ -47,6 +51,10 @@ interface NewTeacher {
   email: string;
   password: string;
   school: string;
+  schoolDistrict: string;
+  primaryGrade: string;
+  primarySubject: string;
+  teacherType: string;
   supportRequestsLimit: number;
   isActive: boolean;
 }
@@ -67,6 +75,10 @@ export default function TeacherManagement() {
     email: "",
     password: "",
     school: "",
+    schoolDistrict: "",
+    primaryGrade: "",
+    primarySubject: "",
+    teacherType: "Classroom Teacher",
     supportRequestsLimit: 20,
     isActive: true
   });
@@ -100,10 +112,12 @@ export default function TeacherManagement() {
 
   const handleAddTeacher = async () => {
     try {
-      if (!newTeacher.firstName || !newTeacher.lastName || !newTeacher.email || !newTeacher.password) {
+      if (!newTeacher.firstName || !newTeacher.lastName || !newTeacher.email || !newTeacher.password || 
+          !newTeacher.school || !newTeacher.schoolDistrict || !newTeacher.primaryGrade || 
+          !newTeacher.primarySubject || !newTeacher.teacherType) {
         toast({
           title: "Error",
-          description: "Please fill in all required fields",
+          description: "Please fill in all required fields marked with *",
           variant: "destructive"
         });
         return;
@@ -135,6 +149,10 @@ export default function TeacherManagement() {
           email: "",
           password: "",
           school: "",
+          schoolDistrict: "",
+          primaryGrade: "",
+          primarySubject: "",
+          teacherType: "Classroom Teacher",
           supportRequestsLimit: 20,
           isActive: true
         });
@@ -218,13 +236,13 @@ export default function TeacherManagement() {
   };
 
   const handleDownloadTemplate = () => {
-    // Create CSV template content
-    const csvTemplate = `name,email,password,school,school district,primary grade,primary subject,teacher type,support requests limit
-John Smith,john.smith@school.edu,,Lincoln Elementary,Springfield District,3rd Grade,Mathematics,Classroom Teacher,20
-Mary Johnson,mary.johnson@school.edu,TempPass123,Lincoln Elementary,Springfield District,5th Grade,English Language Arts,Classroom Teacher,25
-Robert Davis,robert.davis@school.edu,,Lincoln Elementary,Springfield District,K-5,Special Education,Special Education Teacher,30
-Sarah Wilson,sarah.wilson@school.edu,,Lincoln Elementary,Springfield District,4th Grade,Science,Classroom Teacher,20
-Michael Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,2nd Grade,Reading,Classroom Teacher,20`;
+    // Create CSV template content that matches database structure
+    const csvTemplate = `first name,last name,email,password,school,school district,primary grade,primary subject,teacher type,support requests limit
+John,Smith,john.smith@school.edu,,Lincoln Elementary,Springfield District,3rd Grade,Mathematics,Classroom Teacher,20
+Mary,Johnson,mary.johnson@school.edu,TempPass123,Lincoln Elementary,Springfield District,5th Grade,English Language Arts,Classroom Teacher,25
+Robert,Davis,robert.davis@school.edu,,Lincoln Elementary,Springfield District,K-5,Special Education,Special Education Teacher,30
+Sarah,Wilson,sarah.wilson@school.edu,,Lincoln Elementary,Springfield District,4th Grade,Science,Classroom Teacher,20
+Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,2nd Grade,Reading,Classroom Teacher,20`;
 
     // Create and download the file
     const blob = new Blob([csvTemplate], { type: 'text/csv' });
@@ -604,7 +622,7 @@ Michael Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="school">School</Label>
+                    <Label htmlFor="school">School *</Label>
                     <Input
                       id="school"
                       value={newTeacher.school}
@@ -612,6 +630,57 @@ Michael Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       placeholder="Enter school name"
                       data-testid="input-school"
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="schoolDistrict">School District *</Label>
+                    <Input
+                      id="schoolDistrict"
+                      value={newTeacher.schoolDistrict}
+                      onChange={(e) => setNewTeacher({...newTeacher, schoolDistrict: e.target.value})}
+                      placeholder="Enter school district"
+                      data-testid="input-school-district"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="primaryGrade">Primary Grade *</Label>
+                      <Input
+                        id="primaryGrade"
+                        value={newTeacher.primaryGrade}
+                        onChange={(e) => setNewTeacher({...newTeacher, primaryGrade: e.target.value})}
+                        placeholder="e.g., 3rd Grade, K-5"
+                        data-testid="input-primary-grade"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="primarySubject">Primary Subject *</Label>
+                      <Input
+                        id="primarySubject"
+                        value={newTeacher.primarySubject}
+                        onChange={(e) => setNewTeacher({...newTeacher, primarySubject: e.target.value})}
+                        placeholder="e.g., Mathematics, ELA"
+                        data-testid="input-primary-subject"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="teacherType">Teacher Type *</Label>
+                    <select
+                      id="teacherType"
+                      value={newTeacher.teacherType}
+                      onChange={(e) => setNewTeacher({...newTeacher, teacherType: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-blue"
+                      data-testid="select-teacher-type"
+                    >
+                      <option value="Classroom Teacher">Classroom Teacher</option>
+                      <option value="Special Education Teacher">Special Education Teacher</option>
+                      <option value="ESL Teacher">ESL Teacher</option>
+                      <option value="Reading Specialist">Reading Specialist</option>
+                      <option value="Math Specialist">Math Specialist</option>
+                      <option value="Counselor">Counselor</option>
+                      <option value="Administrator">Administrator</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="requestLimit">Request Limit</Label>

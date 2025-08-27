@@ -1794,7 +1794,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin: Create a new teacher
   app.post('/api/admin/teachers', requireAdmin, async (req: any, res) => {
     try {
-      const { firstName, lastName, email, password, school, supportRequestsLimit, isActive } = req.body;
+      const { firstName, lastName, email, password, school, schoolDistrict, primaryGrade, primarySubject, teacherType, supportRequestsLimit, isActive } = req.body;
       
       if (!firstName || !lastName || !email || !password) {
         return res.status(400).json({ message: 'First name, last name, email, and password are required' });
@@ -1821,6 +1821,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         email,
         password: hashedPassword,
         school: school || '',
+        schoolDistrict: schoolDistrict || '',
+        primaryGrade: primaryGrade || '',
+        primarySubject: primarySubject || '',
+        teacherType: teacherType || 'Classroom Teacher',
         supportRequestsLimit: parseInt(supportRequestsLimit) || 50,
         isActive: isActive !== false, // Default to true
         isAdmin: false,

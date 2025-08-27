@@ -49,6 +49,10 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   school: varchar("school"), // Keep for backward compatibility
   schoolId: varchar("school_id").references(() => schools.id), // New structured school reference
+  schoolDistrict: varchar("school_district"), // School district information
+  primaryGrade: varchar("primary_grade"), // Primary grade taught
+  primarySubject: varchar("primary_subject"), // Primary subject taught
+  teacherType: varchar("teacher_type"), // Teacher role type
   supportRequestsUsed: integer("support_requests_used").default(0),
   supportRequestsLimit: integer("support_requests_limit").default(20),
   additionalRequests: integer("additional_requests").default(0), // Bonus requests granted by admin

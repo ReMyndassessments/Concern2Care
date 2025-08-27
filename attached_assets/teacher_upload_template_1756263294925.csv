@@ -1,0 +1,6 @@
+name,email,password,school,school district,primary grade,primary subject,teacher type,support requests limit
+John Smith,john.smith@school.edu,,Lincoln Elementary,Springfield District,3rd Grade,Mathematics,Classroom Teacher,20
+Mary Johnson,mary.johnson@school.edu,TempPass123,Lincoln Elementary,Springfield District,5th Grade,English Language Arts,Classroom Teacher,25
+Robert Davis,robert.davis@school.edu,,Lincoln Elementary,Springfield District,K-5,Special Education,Special Education Teacher,30
+Sarah Wilson,sarah.wilson@school.edu,,Lincoln Elementary,Springfield District,4th Grade,Science,Classroom Teacher,20
+Michael Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,2nd Grade,Reading,Classroom Teacher,20
