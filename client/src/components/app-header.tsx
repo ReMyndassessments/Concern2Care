@@ -14,21 +14,16 @@ export default function AppHeader() {
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      // Clear React Query cache to ensure auth state is properly cleared
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
-      // Small delay to ensure cache is cleared before redirect
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 100);
     } catch (error) {
-      // Handle logout failure gracefully
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 100);
+      console.error('Logout failed:', error);
     }
+    
+    // Always clear cache and redirect, regardless of fetch success
+    queryClient.clear(); // Clear all cache
+    queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    
+    // Force immediate redirect to landing page
+    window.location.href = "/";
   };
 
   const getInitials = (firstName?: string, lastName?: string) => {

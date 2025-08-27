@@ -4,6 +4,9 @@ export function useAuth() {
   const { data: user, isLoading, error } = useQuery({
     queryKey: ["/api/auth/user"],
     retry: false,
+    staleTime: 0, // Always fetch fresh data
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await fetch("/api/auth/user");
       if (response.status === 401) {
@@ -16,9 +19,12 @@ export function useAuth() {
     },
   });
 
+  // Explicitly handle the loading state and null user
+  const isAuthenticated = !isLoading && !!user && !error;
+  
   return {
     user,
     isLoading,
-    isAuthenticated: !!user && !error,
+    isAuthenticated,
   };
 }
