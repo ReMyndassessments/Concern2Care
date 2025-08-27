@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Landing from "@/pages/landing";
 import Login from "@/pages/login";
+import Register from "@/pages/register";
 import Home from "@/pages/home";
 import MySupportRequests from "@/pages/my-support-requests";
 import ConcernDetail from "@/pages/concern-detail";
@@ -37,6 +38,7 @@ function Router() {
         <>
           <Route path="/" component={Landing} />
           <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
           {/* Redirect all authenticated routes to login */}
           <Route path="/admin" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/admin/*" component={() => { window.location.href = '/login'; return null; }} />
@@ -56,8 +58,9 @@ function Router() {
           <Route path="/meeting-prep" component={TeacherMeetingPrep} />
           <Route path="/settings" component={Settings} />
           <Route path="/concerns/:id" component={ConcernDetail} />
-          {/* Redirect login to home when authenticated */}
+          {/* Redirect login and register to home when authenticated */}
           <Route path="/login" component={() => { window.location.href = '/'; return null; }} />
+          <Route path="/register" component={() => { window.location.href = '/'; return null; }} />
         </>
       )}
       <Route component={NotFound} />
