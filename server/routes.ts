@@ -258,6 +258,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   };
 
+
   // Update user profile - PROTECTED
   app.put('/api/user/profile', requireAuth, async (req: any, res) => {
     try {
@@ -855,7 +856,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ===========================================
   
   // Admin Dashboard Stats
-  app.get("/api/admin/dashboard-stats", requireAuth, async (req: any, res) => {
+  app.get("/api/admin/dashboard-stats", requireAdmin, async (req: any, res) => {
     try {
       const stats = await storage.getDashboardStats();
       res.json(stats);

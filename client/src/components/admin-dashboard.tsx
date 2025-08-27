@@ -30,15 +30,16 @@ import FeatureFlagManagement from "@/components/feature-flag-management";
 
 interface DashboardStats {
   totalUsers: number;
+  totalSchools: number;
   totalConcerns: number;
   totalInterventions: number;
-  activeUsers: number;
-  recentActivity: ActivityItem[];
+  activeUsersThisMonth: number;
   usageStats: {
     thisMonth: number;
     lastMonth: number;
     percentChange: number;
   };
+  recentActivity?: ActivityItem[];
 }
 
 interface ActivityItem {
@@ -84,43 +85,24 @@ export default function AdminDashboard() {
   const loadDashboardStats = async () => {
     try {
       setLoading(true);
-      // Mock data for demo purposes since we don't have full admin API
-      const mockStats: DashboardStats = {
-        totalUsers: 45,
-        totalConcerns: 128,
-        totalInterventions: 384,
-        activeUsers: 23,
+      // Fetch real statistics from the admin API
+      const response = await apiRequest('/api/admin/dashboard-stats');
+      
+      // Add mock recent activity since backend doesn't provide it yet
+      const statsWithActivity = {
+        ...response,
         recentActivity: [
           {
             id: '1',
-            type: 'concern_created',
-            description: 'New concern submitted for student Sarah M.',
+            type: 'concern_created' as const,
+            description: 'Recent concern activity tracked in database',
             timestamp: new Date().toISOString(),
-            userId: 'teacher-123'
-          },
-          {
-            id: '2',
-            type: 'intervention_generated',
-            description: 'AI interventions generated for behavioral concern',
-            timestamp: new Date(Date.now() - 1800000).toISOString(),
-            userId: 'teacher-456'
-          },
-          {
-            id: '3',
-            type: 'user_registered',
-            description: 'New teacher account created',
-            timestamp: new Date(Date.now() - 3600000).toISOString(),
-            userId: 'teacher-789'
+            userId: 'system'
           }
-        ],
-        usageStats: {
-          thisMonth: 156,
-          lastMonth: 134,
-          percentChange: 16.4
-        }
+        ]
       };
       
-      setStats(mockStats);
+      setStats(statsWithActivity);
     } catch (error) {
       console.error('Error loading dashboard stats:', error);
       toast({
@@ -212,7 +194,7 @@ export default function AdminDashboard() {
               <Users className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
             </div>
             <p className="text-xs md:text-sm text-green-600 mt-2">
-              +{stats.activeUsers} active this month
+              +{stats.activeUsersThisMonth} active this month
             </p>
           </CardContent>
         </Card>
@@ -428,7 +410,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {stats.recentActivity.map((activity) => (
+                {(stats.recentActivity || []).map((activity) => (
                   <div key={activity.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                     {getActivityIcon(activity.type)}
                     <div className="flex-1">
