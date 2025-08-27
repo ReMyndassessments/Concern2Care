@@ -7,9 +7,6 @@ import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 export default function Landing() {
   const [showComparison, setShowComparison] = useState(false);
   const { isFeatureEnabled } = useFeatureFlags();
-  
-  // Debug logging
-  console.log('Individual teacher registration enabled:', isFeatureEnabled('individual_teacher_registration'));
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
