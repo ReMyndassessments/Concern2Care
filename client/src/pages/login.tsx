@@ -21,13 +21,19 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Ensure session cookies are handled
         body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
-        // Invalidate auth cache and reload to ensure fresh auth state
+        // Invalidate auth cache and wait for fresh data before redirect
         await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-        window.location.href = '/';
+        // Refetch auth data immediately to ensure state is updated
+        await queryClient.refetchQueries({ queryKey: ["/api/auth/user"] });
+        // Small delay to ensure state propagation
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 100);
       } else {
         alert('Login failed. Please check your credentials.');
       }

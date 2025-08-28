@@ -8,7 +8,9 @@ export function useAuth() {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     queryFn: async () => {
-      const response = await fetch("/api/auth/user");
+      const response = await fetch("/api/auth/user", {
+        credentials: 'include' // Ensure cookies are sent
+      });
       if (response.status === 401) {
         return null; // Not authenticated, return null instead of throwing
       }
