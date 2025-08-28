@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Shield } from "lucide-react";
+import { queryClient } from "@/lib/queryClient";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -24,6 +25,8 @@ export default function Login() {
       });
 
       if (response.ok) {
+        // Invalidate auth cache and reload to ensure fresh auth state
+        await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
         window.location.href = '/';
       } else {
         alert('Login failed. Please check your credentials.');
