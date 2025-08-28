@@ -16,6 +16,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
+      console.log('🔐 Attempting login with:', { email, password: '[HIDDEN]' });
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -25,7 +26,12 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
 
-      if (response.ok) {
+      console.log('🔐 Login response status:', response.status);
+      const responseData = await response.json();
+      console.log('🔐 Login response data:', responseData);
+
+      if (response.ok && responseData.success) {
+        console.log('✅ Login successful, redirecting...');
         // Invalidate auth cache and wait for fresh data before redirect
         await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
         // Refetch auth data immediately to ensure state is updated
@@ -35,9 +41,11 @@ export default function Login() {
           window.location.href = '/';
         }, 100);
       } else {
-        alert('Login failed. Please check your credentials.');
+        console.error('❌ Login failed:', responseData);
+        alert(responseData.message || 'Login failed. Please check your credentials.');
       }
     } catch (error) {
+      console.error('❌ Login error:', error);
       alert('Connection error. Please try again.');
     } finally {
       setIsLoading(false);
