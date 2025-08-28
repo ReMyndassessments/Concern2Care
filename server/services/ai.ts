@@ -64,6 +64,18 @@ export interface InterventionStrategy {
   timeline: string;
 }
 
+// Sanitize text to prevent database encoding errors
+function sanitizeForDatabase(text: string): string {
+  if (!text) return text;
+  
+  // Remove null bytes and other problematic characters
+  return text
+    .replace(/\0/g, '') // Remove null bytes
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Remove control characters except \t, \n, \r
+    .replace(/\uFFFD/g, '') // Remove replacement characters
+    .trim();
+}
+
 export async function generateRecommendations(
   req: GenerateRecommendationsRequest
 ): Promise<GenerateRecommendationsResponse> {
@@ -82,8 +94,18 @@ export async function generateRecommendations(
     try {
       const { ObjectStorageService } = await import("../objectStorage");
       const objectStorageService = new ObjectStorageService();
-      assessmentContent = await objectStorageService.readFileContent(req.studentAssessmentFile);
-      console.log("📄 Read student assessment file content:", assessmentContent.substring(0, 200) + "...");
+      const rawContent = await objectStorageService.readFileContent(req.studentAssessmentFile);
+      
+      // Truncate content to fit within AI token limits (approximately 50,000 characters = ~12,500 tokens)
+      // This leaves room for the rest of the prompt and response
+      assessmentContent = rawContent.substring(0, 50000);
+      
+      if (rawContent.length > 50000) {
+        assessmentContent += "\n\n[Document truncated due to length - showing first 50,000 characters]";
+        console.log(`📄 Truncated assessment file: ${rawContent.length} chars → ${assessmentContent.length} chars`);
+      } else {
+        console.log("📄 Read student assessment file content:", assessmentContent.substring(0, 200) + "...");
+      }
     } catch (error) {
       console.error("Error reading assessment file:", error);
     }
@@ -93,8 +115,17 @@ export async function generateRecommendations(
     try {
       const { ObjectStorageService } = await import("../objectStorage");
       const objectStorageService = new ObjectStorageService();
-      lessonPlanContent = await objectStorageService.readFileContent(req.lessonPlanFile);
-      console.log("📚 Read lesson plan file content:", lessonPlanContent.substring(0, 200) + "...");
+      const rawContent = await objectStorageService.readFileContent(req.lessonPlanFile);
+      
+      // Truncate content to fit within AI token limits
+      lessonPlanContent = rawContent.substring(0, 25000);
+      
+      if (rawContent.length > 25000) {
+        lessonPlanContent += "\n\n[Document truncated due to length - showing first 25,000 characters]";
+        console.log(`📚 Truncated lesson plan: ${rawContent.length} chars → ${lessonPlanContent.length} chars`);
+      } else {
+        console.log("📚 Read lesson plan file content:", lessonPlanContent.substring(0, 200) + "...");
+      }
     } catch (error) {
       console.error("Error reading lesson plan file:", error);
     }
@@ -103,6 +134,9 @@ export async function generateRecommendations(
   if (!apiClient) {
     console.log("No active API key found in database, returning enhanced mock data with file content.");
     let mockRecommendations = generateMockRecommendations(req, assessmentContent, lessonPlanContent);
+    
+    // Sanitize mock data too
+    mockRecommendations = sanitizeForDatabase(mockRecommendations);
     
     // Add urgent case message for mock data too
     if (req.severityLevel === 'urgent') {
@@ -439,6 +473,9 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
 
     const data = await response.json();
     let recommendations = data.choices[0]?.message?.content || 'Unable to generate recommendations at this time.';
+    
+    // Sanitize the response to prevent database encoding errors
+    recommendations = sanitizeForDatabase(recommendations);
 
     // Automatically add student support sharing message for urgent cases
     console.log('🚨 Checking severity level:', req.severityLevel, 'Type:', typeof req.severityLevel);
