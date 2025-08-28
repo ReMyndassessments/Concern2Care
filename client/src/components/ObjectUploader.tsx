@@ -69,19 +69,27 @@ export function ObjectUploader({
       setUploading(true);
 
       // Get upload URL from backend
+      console.log('📁 Requesting upload URL...');
       const uploadResponse = await apiRequest("POST", "/api/objects/upload");
+      console.log('✅ Got upload URL response:', uploadResponse);
+      
       const uploadUrl = uploadResponse.uploadURL;
+      if (!uploadUrl) {
+        throw new Error('No upload URL received from server');
+      }
 
       // Upload file directly to object storage
-      // Don't set Content-Type header - let the browser set it automatically
-      // This avoids CORS issues with signed URLs
+      console.log('📁 Uploading file to object storage...');
       const uploadFileResponse = await fetch(uploadUrl, {
         method: 'PUT',
         body: file,
       });
 
+      console.log('📁 Upload response status:', uploadFileResponse.status);
       if (!uploadFileResponse.ok) {
-        throw new Error('Upload failed');
+        const errorText = await uploadFileResponse.text();
+        console.error('❌ Upload failed with status:', uploadFileResponse.status, 'Error:', errorText);
+        throw new Error(`Upload failed with status ${uploadFileResponse.status}: ${errorText || 'Unknown error'}`);
       }
 
       // Extract the object path from the upload URL

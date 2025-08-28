@@ -487,15 +487,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Object storage upload endpoint
-  app.post("/api/objects/upload", async (req, res) => {
+  // Object storage upload endpoint - PROTECTED
+  app.post("/api/objects/upload", requireAuth, async (req: any, res) => {
     try {
+      console.log('🔧 Upload endpoint called by user:', req.user?.claims?.sub);
+      console.log('🔧 Environment check - PRIVATE_OBJECT_DIR:', process.env.PRIVATE_OBJECT_DIR ? '[SET]' : '[NOT SET]');
+      
       const objectStorageService = new ObjectStorageService();
       const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      console.log('✅ Generated upload URL successfully');
       res.json({ uploadURL });
     } catch (error) {
-      console.error("Error getting upload URL:", error);
-      res.status(500).json({ error: "Failed to get upload URL" });
+      console.error('❌ Error getting upload URL:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      console.error('❌ Error details:', {
+        message: errorMessage,
+        stack: errorStack,
+        privateObjectDir: process.env.PRIVATE_OBJECT_DIR
+      });
+      res.status(500).json({ 
+        error: "Failed to get upload URL", 
+        details: errorMessage,
+        envCheck: {
+          privateObjectDir: !!process.env.PRIVATE_OBJECT_DIR
+        }
+      });
     }
   });
 
