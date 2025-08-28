@@ -11,6 +11,7 @@ import { eq, and, sql } from "drizzle-orm";
 import path from "path";
 import fs from "fs";
 import session from "express-session";
+import MemoryStore from "memorystore";
 import multer from "multer";
 import * as bcrypt from "bcrypt";
 import PDFDocument from "pdfkit";
@@ -66,14 +67,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   });
 
-  // Enable sessions for professional authentication
+  // Enable sessions for professional authentication with persistence
+  const memoryStore = MemoryStore(session);
+  
   app.use(session({
     secret: process.env.SESSION_SECRET || 'concern2care-session-secret',
     resave: false,
     saveUninitialized: false,
+    store: new memoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    rolling: true, // Reset session timeout on activity
     cookie: {
       secure: false, // Set to true in production with HTTPS
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      maxAge: 4 * 60 * 60 * 1000, // 4 hours to handle long AI generation
+      httpOnly: true
     }
   }));
 

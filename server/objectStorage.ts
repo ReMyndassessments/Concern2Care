@@ -133,16 +133,36 @@ export class ObjectStorageService {
   // Read text content from an uploaded file
   async readFileContent(fileUrl: string): Promise<string> {
     try {
-      // Extract object path from the URL
+      // Extract bucket and object name directly from the signed URL
       const url = new URL(fileUrl);
-      const objectPath = url.pathname;
       
-      // Get the file from object storage
-      const file = await this.getObjectEntityFile(objectPath);
+      // Parse the bucket name from the domain (e.g., storage.googleapis.com/bucket-name)
+      const pathParts = url.pathname.split('/');
+      if (pathParts.length < 2) {
+        throw new Error('Invalid Google Cloud Storage URL format');
+      }
+      
+      const bucketName = pathParts[1];
+      const objectName = pathParts.slice(2).join('/');
+      
+      console.log(`📁 Reading file from bucket: ${bucketName}, object: ${objectName}`);
+      
+      // Access the file directly using bucket and object name
+      const bucket = objectStorageClient.bucket(bucketName);
+      const objectFile = bucket.file(objectName);
+      
+      // Check if file exists
+      const [exists] = await objectFile.exists();
+      if (!exists) {
+        console.error(`File not found: ${bucketName}/${objectName}`);
+        return '';
+      }
       
       // Download and read the content
-      const [content] = await file.download();
-      return content.toString('utf-8');
+      const [content] = await objectFile.download();
+      const textContent = content.toString('utf-8');
+      console.log(`✅ Successfully read ${textContent.length} characters from file`);
+      return textContent;
     } catch (error) {
       console.error('Error reading file content:', error);
       return '';
