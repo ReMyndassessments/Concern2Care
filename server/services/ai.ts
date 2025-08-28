@@ -75,8 +75,8 @@ export async function generateRecommendations(
   console.log("🔑 API client available:", !!apiClient);
   
   if (!apiClient) {
-    console.log("No active API key found in database, returning mock data.");
-    let mockRecommendations = generateMockRecommendations(req);
+    console.log("No active API key found in database, returning enhanced mock data with file content.");
+    let mockRecommendations = generateMockRecommendations(req, assessmentContent, lessonPlanContent);
     
     // Add urgent case message for mock data too
     if (req.severityLevel === 'urgent') {
@@ -473,7 +473,7 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
       if (error.message.includes('401')) {
         console.log('🚫 Authentication error - Invalid API key');
         // Fall back to mock data instead of throwing error
-        let mockRecommendations = generateMockRecommendations(req);
+        let mockRecommendations = generateMockRecommendations(req, assessmentContent, lessonPlanContent);
         
         // Add urgent case message for mock data too
         if (req.severityLevel === 'urgent') {
@@ -498,7 +498,7 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
     }
     
     console.log('🔄 API call failed, falling back to mock data');
-    let mockRecommendations = generateMockRecommendations(req);
+    let mockRecommendations = generateMockRecommendations(req, assessmentContent, lessonPlanContent);
     
     // Add urgent case message for mock data too
     if (req.severityLevel === 'urgent') {
@@ -634,13 +634,13 @@ Focus on actionable advice that a classroom teacher can realistically implement.
   }
 }
 
-function generateMockRecommendations(req: GenerateRecommendationsRequest): string {
+function generateMockRecommendations(req: GenerateRecommendationsRequest, assessmentContent: string = "", lessonPlanContent: string = ""): string {
   const isDifferentiationTask = req.taskType === 'differentiation';
   
   if (isDifferentiationTask) {
     return generateMockDifferentiationStrategies(req);
   } else {
-    return generateMockInterventionRecommendations(req);
+    return generateMockInterventionRecommendations(req, assessmentContent, lessonPlanContent);
   }
 }
 
@@ -758,12 +758,19 @@ Based on the provided learning profile information, ${req.studentFirstName} demo
 **Note**: These are research-based strategies that should be implemented consistently and monitored for effectiveness. Regular communication with all stakeholders ensures the best possible outcomes for ${req.studentFirstName}.`;
 }
 
-function generateMockInterventionRecommendations(req: GenerateRecommendationsRequest): string {
+function generateMockInterventionRecommendations(req: GenerateRecommendationsRequest, assessmentContent: string = "", lessonPlanContent: string = ""): string {
   const concernTypes = req.concernTypes.join(', ');
   
+  const assessmentSection = assessmentContent ? `
+
+**Based on uploaded assessment data, the following specific needs have been identified:**
+${assessmentContent.substring(0, 800)}${assessmentContent.length > 800 ? '...' : ''}
+
+` : '';
+
   return `# Assessment Summary
 
-Based on the ${req.severityLevel} level concerns related to ${concernTypes} for ${req.studentFirstName} ${req.studentLastInitial}. (Grade ${req.grade}), the following Tier 2 interventions are recommended to address the observed challenges in ${req.location}.
+Based on the ${req.severityLevel} level concerns related to ${concernTypes} for ${req.studentFirstName} ${req.studentLastInitial}. (Grade ${req.grade}), the following Tier 2 interventions are recommended to address the observed challenges in ${req.location}.${assessmentSection}
 
 ## Immediate Interventions (1-2 weeks)
 
