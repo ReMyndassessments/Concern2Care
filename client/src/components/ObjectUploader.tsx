@@ -73,12 +73,11 @@ export function ObjectUploader({
       const uploadUrl = uploadResponse.uploadURL;
 
       // Upload file directly to object storage
+      // Don't set Content-Type header - let the browser set it automatically
+      // This avoids CORS issues with signed URLs
       const uploadFileResponse = await fetch(uploadUrl, {
         method: 'PUT',
         body: file,
-        headers: {
-          'Content-Type': file.type || 'application/octet-stream',
-        },
       });
 
       if (!uploadFileResponse.ok) {
