@@ -79,10 +79,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }),
     rolling: true, // Reset session timeout on activity
     cookie: {
-      secure: process.env.NODE_ENV === 'production', // Auto-detect HTTPS in production
+      secure: false, // Keep false for now to ensure sessions work
       maxAge: 4 * 60 * 60 * 1000, // 4 hours to handle long AI generation
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // Allow cross-site in production
+      sameSite: 'lax' // Use lax for better compatibility
     }
   }));
 

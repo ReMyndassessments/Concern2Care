@@ -7,6 +7,18 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { env } from "./services/environment";
 
+// Smart environment detection - use production settings when needed
+const shouldUseProductionConfig = (
+  process.env.NODE_ENV === 'production' || 
+  process.env.REPL_SLUG !== 'workspace' ||
+  (process.env.REPLIT_DOMAINS && process.env.REPLIT_DOMAINS.includes('.replit.app'))
+);
+
+console.log('🌍 Original NODE_ENV:', process.env.NODE_ENV);
+console.log('🌍 Should use production config:', shouldUseProductionConfig);
+console.log('🌍 REPL_SLUG:', process.env.REPL_SLUG);
+console.log('🌍 REPLIT_DOMAINS:', process.env.REPLIT_DOMAINS);
+
 const app = express();
 
 // Trust proxy for accurate IP addresses behind reverse proxy
@@ -27,7 +39,7 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: env.NODE_ENV === 'production' 
+  origin: shouldUseProductionConfig 
     ? (origin, callback) => {
         // Allow requests with no origin (mobile apps, Postman, etc.)
         if (!origin) return callback(null, true);
@@ -42,7 +54,7 @@ app.use(cors({
           return callback(null, true);
         }
         
-        console.log('Blocked CORS origin:', origin);
+        console.log('🚫 Blocked CORS origin:', origin);
         return callback(new Error('Not allowed by CORS'), false);
       }
     : true,
