@@ -422,7 +422,7 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
             content: prompt
           }
         ],
-        max_tokens: 2000,
+        max_tokens: 4000,
         temperature: 0.7
       }),
       signal: controller.signal
@@ -601,7 +601,7 @@ Focus on actionable advice that a classroom teacher can realistically implement.
             content: prompt
           }
         ],
-        max_tokens: 2000,
+        max_tokens: 4000,
         temperature: 0.7
       }),
       signal: controller.signal
