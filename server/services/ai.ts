@@ -74,6 +74,32 @@ export async function generateRecommendations(
   const apiClient = await getApiClient();
   console.log("🔑 API client available:", !!apiClient);
   
+  // Read uploaded file contents for enhanced recommendations
+  let assessmentContent = "";
+  let lessonPlanContent = "";
+  
+  if (req.studentAssessmentFile) {
+    try {
+      const { ObjectStorageService } = await import("../objectStorage");
+      const objectStorageService = new ObjectStorageService();
+      assessmentContent = await objectStorageService.readFileContent(req.studentAssessmentFile);
+      console.log("📄 Read student assessment file content:", assessmentContent.substring(0, 200) + "...");
+    } catch (error) {
+      console.error("Error reading assessment file:", error);
+    }
+  }
+  
+  if (req.lessonPlanFile) {
+    try {
+      const { ObjectStorageService } = await import("../objectStorage");
+      const objectStorageService = new ObjectStorageService();
+      lessonPlanContent = await objectStorageService.readFileContent(req.lessonPlanFile);
+      console.log("📚 Read lesson plan file content:", lessonPlanContent.substring(0, 200) + "...");
+    } catch (error) {
+      console.error("Error reading lesson plan file:", error);
+    }
+  }
+
   if (!apiClient) {
     console.log("No active API key found in database, returning enhanced mock data with file content.");
     let mockRecommendations = generateMockRecommendations(req, assessmentContent, lessonPlanContent);
@@ -128,32 +154,6 @@ export async function generateRecommendations(
     : 'No specific learning needs documented';
     
   console.log("📝 Final differentiation text for AI:", differentiationText);
-
-  // Read uploaded file contents for enhanced recommendations
-  let assessmentContent = "";
-  let lessonPlanContent = "";
-  
-  if (req.studentAssessmentFile) {
-    try {
-      const { ObjectStorageService } = await import("../objectStorage");
-      const objectStorageService = new ObjectStorageService();
-      assessmentContent = await objectStorageService.readFileContent(req.studentAssessmentFile);
-      console.log("📄 Read student assessment file content:", assessmentContent.substring(0, 200) + "...");
-    } catch (error) {
-      console.error("Error reading assessment file:", error);
-    }
-  }
-  
-  if (req.lessonPlanFile) {
-    try {
-      const { ObjectStorageService } = await import("../objectStorage");
-      const objectStorageService = new ObjectStorageService();
-      lessonPlanContent = await objectStorageService.readFileContent(req.lessonPlanFile);
-      console.log("📚 Read lesson plan file content:", lessonPlanContent.substring(0, 200) + "...");
-    } catch (error) {
-      console.error("Error reading lesson plan file:", error);
-    }
-  }
 
   // Generate different prompts based on task type
   const isDifferentiationTask = req.taskType === 'differentiation';
