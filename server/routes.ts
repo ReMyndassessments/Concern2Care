@@ -71,7 +71,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const memoryStore = MemoryStore(session);
   
   app.use(session({
-    secret: process.env.SESSION_SECRET || 'concern2care-session-secret',
+    secret: process.env.SESSION_SECRET || 'concern2care-session-secret-development-key-very-long',
     resave: false,
     saveUninitialized: false,
     store: new memoryStore({
@@ -80,11 +80,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     rolling: true, // Reset session timeout on activity
     name: 'sessionId', // Explicit session name
     cookie: {
-      secure: false, // Set to false to ensure cookies work in all environments
+      secure: false, // Always false to ensure cookies work in all environments
       maxAge: 4 * 60 * 60 * 1000, // 4 hours
       httpOnly: true,
-      sameSite: 'lax', // Lax for cross-origin compatibility
-      domain: undefined // Let browser determine domain automatically
+      sameSite: 'lax', // Lax for broad compatibility
+      domain: undefined // Auto-determine domain
     }
   }));
 

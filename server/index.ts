@@ -14,6 +14,11 @@ const shouldUseProductionConfig = (
   (process.env.REPLIT_DOMAINS && process.env.REPLIT_DOMAINS.includes('.replit.app'))
 );
 
+// Force development mode for session compatibility
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = 'development';
+}
+
 console.log('🌍 Original NODE_ENV:', process.env.NODE_ENV);
 console.log('🌍 Should use production config:', shouldUseProductionConfig);
 console.log('🌍 REPL_SLUG:', process.env.REPL_SLUG);
@@ -141,19 +146,18 @@ app.use((req, res, next) => {
   // Enhanced error handling middleware
   app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
-    const message = process.env.NODE_ENV === 'production' 
-      ? (status < 500 ? err.message : "Internal Server Error")
-      : err.message || "Internal Server Error";
+    const message = err.message || "Internal Server Error";
 
-    // Log error details (but not in response)
+    // Always log error details for debugging
     console.error(`[ERROR] ${req.method} ${req.path} - ${status}: ${err.message}`);
-    if (err.stack && process.env.NODE_ENV !== 'production') {
+    console.error('Full error:', err);
+    if (err.stack) {
       console.error(err.stack);
     }
 
     res.status(status).json({ 
       message,
-      ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+      stack: err.stack // Include stack trace for debugging
     });
   });
 
