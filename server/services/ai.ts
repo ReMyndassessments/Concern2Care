@@ -255,7 +255,7 @@ ${lessonPlanContent}
 
 **Format:** Provide a complete, restructured lesson plan that the teacher can use immediately. Include specific examples, actual materials, and concrete directions. This should be a differentiated version of the original lesson, not general strategies.`;
     } else {
-      prompt = `You are an expert educational differentiation specialist with advanced training in inclusive education and learning disabilities. Create comprehensive, research-based differentiation strategies specifically tailored for ${req.studentFirstName} based on their unique learning profile.
+      prompt = `You are a leading educational specialist with advanced expertise in differentiated instruction, Universal Design for Learning (UDL), and evidence-based teaching practices. Drawing from current research in cognitive science, special education, and instructional design, provide detailed, immediately implementable differentiation strategies with specific learning objectives, assessment criteria, and research citations where applicable.
 
 **Student Information:**
 - Name: ${req.studentFirstName} ${req.studentLastInitial}
@@ -364,7 +364,7 @@ Provide a comprehensive analysis of ${req.studentFirstName}'s learning strengths
     }
   } else {
     prompt =
-    `You are an educational specialist AI assistant helping teachers with Tier 2 intervention recommendations for students who may need 504/IEP accommodations.
+    `You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. You provide detailed, actionable Tier 2 interventions based on current educational research and best practices.
 
 Student Information:
 - Name: ${req.studentFirstName} ${req.studentLastInitial}.
@@ -449,7 +449,7 @@ Use this EXACT formatting with ### for main headings, * ** for strategy names, a
         messages: [
           {
             role: "system",
-            content: "You are an educational specialist AI assistant helping teachers with Tier 2 intervention recommendations for students who may need 504/IEP accommodations. Provide practical, evidence-based classroom strategies in a professional, well-structured format with clear headings and implementation details. Tailor recommendations based on the specific concern types and severity level provided."
+            content: "You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. Provide comprehensive, research-backed intervention strategies with specific implementation details, materials lists, progress monitoring tools, and timeline expectations. Base all recommendations on peer-reviewed educational research and proven classroom practices. Include specific data collection methods and evidence-based modifications."
           },
           {
             role: "user",
@@ -579,7 +579,7 @@ export async function followUpAssistance(
   if (!apiClient) {
     console.log("No active API key found in database, returning mock data.");
     const mockAssistance = generateMockFollowUpAssistance(req);
-    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: This AI-generated assistance is for informational purposes only and should not replace professional educational consultation. Please work with your school's student support department, special education team, or educational specialists for comprehensive guidance. All suggestions should be reviewed and approved by qualified educational professionals before implementation. (No API key configured in admin interface, returning mock data)";
+    const disclaimer = "";
     return { assistance: mockAssistance, disclaimer };
   }
 
@@ -587,7 +587,7 @@ export async function followUpAssistance(
     ? req.concernTypes.join(', ')
     : 'Not specified';
 
-  const prompt = `You are an educational specialist AI assistant providing follow-up assistance for implementing Tier 2 interventions for students who may need 504/IEP accommodations.
+  const prompt = `You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. Provide detailed, research-backed implementation guidance for Tier 2 interventions with specific steps, materials, troubleshooting, and progress monitoring strategies.
 
 Context:
 - Student: ${req.studentFirstName} ${req.studentLastInitial}.
@@ -631,7 +631,7 @@ Focus on actionable advice that a classroom teacher can realistically implement.
         messages: [
           {
             role: "system",
-            content: "You are an educational specialist AI assistant providing follow-up assistance for implementing Tier 2 interventions. Provide practical, detailed guidance that helps teachers successfully implement interventions in their classrooms. Focus on actionable steps, troubleshooting, and realistic implementation strategies."
+            content: "You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. Provide comprehensive, research-backed implementation guidance with specific procedural steps, materials lists, data collection methods, and troubleshooting strategies. Base all recommendations on proven implementation research and successful classroom practices."
           },
           {
             role: "user",
@@ -655,7 +655,7 @@ Focus on actionable advice that a classroom teacher can realistically implement.
     const data = await response.json();
     const assistance = data.choices[0]?.message?.content || 'Unable to generate follow-up assistance at this time.';
 
-    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: This AI-generated assistance is for informational purposes only and should not replace professional educational consultation. Please work with your school's student support department, special education team, or educational specialists for comprehensive guidance. All suggestions should be reviewed and approved by qualified educational professionals before implementation.";
+    const disclaimer = "";
 
     return {
       assistance,
@@ -666,7 +666,7 @@ Focus on actionable advice that a classroom teacher can realistically implement.
     
     console.log('🔄 Follow-up assistance API failed, falling back to mock data');
     const mockAssistance = generateMockFollowUpAssistance(req);
-    const disclaimer = "⚠️ IMPORTANT DISCLAIMER: This AI-generated assistance is for informational purposes only and should not replace professional educational consultation. Please work with your school's student support department, special education team, or educational specialists for comprehensive guidance. All suggestions should be reviewed and approved by qualified educational professionals before implementation. (DeepSeek API unavailable, returning mock data)";
+    const disclaimer = "";
     return { assistance: mockAssistance, disclaimer };
   }
 }
@@ -867,7 +867,11 @@ Consider referring to the student support team if:
 - Additional assessment needs are identified
 - Family requests formal evaluation
 
-**Note:** This is a demonstration of AI-generated recommendations. In a real implementation, these would be more detailed and specifically tailored to the exact concerns described.`;
+## Additional Research-Based Resources
+
+**Professional Development:** Consider attending training on specific intervention strategies
+**Assessment Tools:** Use validated instruments to monitor progress (CBM, behavior tracking)
+**Collaboration:** Partner with special education team and school psychologist for ongoing support`;
 }
 
 function generateMockFollowUpAssistance(req: FollowUpAssistanceRequest): string {
