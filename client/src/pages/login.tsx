@@ -88,7 +88,7 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@school.edu"
+                  placeholder="your.email@school.edu"
                   required
                   disabled={isLoading}
                 />
@@ -101,7 +101,7 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="teacher123"
+                  placeholder="Enter your password"
                   required
                   disabled={isLoading}
                 />

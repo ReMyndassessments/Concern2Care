@@ -141,105 +141,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
             };
             req.session.isAuthenticated = true;
 
-            // Force session save before responding
+            // Force session save before responding with production timing fix
             req.session.save((err: any) => {
               if (err) {
                 console.error('❌ Session save error:', err);
                 return res.status(500).json({ message: "Session creation failed" });
               }
               console.log('✅ Session saved successfully for:', user.email, 'SessionID:', req.sessionID?.slice(0, 8));
-              return res.json({ 
-                success: true, 
-                user: req.session.user,
-                message: "Login successful"
+              console.log('✅ Session state:', {
+                isAuthenticated: req.session.isAuthenticated,
+                hasUser: !!req.session.user,
+                userEmail: req.session.user?.email
               });
+              
+              // Add small delay in production to ensure session persistence
+              const delay = process.env.NODE_ENV === 'production' ? 500 : 0;
+              setTimeout(() => {
+                return res.json({ 
+                  success: true, 
+                  user: req.session.user,
+                  message: "Login successful"
+                });
+              }, delay);
             });
+            return; // Exit after successful login
           }
         }
       } catch (dbError) {
         console.error("Database login check error:", dbError);
-        // Continue to demo authentication if database check fails
+        return res.status(500).json({ message: "Database connection error" });
       }
 
-      // Fall back to demo authentication for hardcoded accounts
-      const demoTeachers = [
-        { 
-          id: "admin-001", 
-          email: "admin@school.edu",
-          firstName: "Admin", 
-          lastName: "User",
-          school: "School District Admin",
-          isAdmin: true
-        },
-        { 
-          id: "teacher-001", 
-          email: "noel.roberts@school.edu",
-          firstName: "Noel", 
-          lastName: "Roberts",
-          school: "Demo Elementary School",
-          isAdmin: false
-        },
-        { 
-          id: "teacher-002", 
-          email: "demo@teacher.com",
-          firstName: "Demo", 
-          lastName: "Teacher",
-          school: "Sample Middle School",
-          isAdmin: false
-        }
-      ];
-
-      const teacher = demoTeachers.find(t => 
-        t.email.toLowerCase() === email.toLowerCase() && 
-        password === "teacher123"
-      );
-
-      if (!teacher) {
-        return res.status(401).json({ message: "Invalid email or password" });
-      }
-
-      // Ensure user exists in database
-      try {
-        await storage.upsertUser({
-          id: teacher.id,
-          email: teacher.email,
-          firstName: teacher.firstName,
-          lastName: teacher.lastName,
-          profileImageUrl: null,
-          isAdmin: teacher.isAdmin || false,
-        });
-        console.log("🔍 User created/updated in database:", teacher.id);
-      } catch (dbError) {
-        console.error("Error creating user in database:", dbError);
-      }
-
-      // Create session with explicit save
-      req.session.user = teacher;
-      req.session.isAuthenticated = true;
-
-      // Force session save before responding with production timing fix
-      req.session.save((err: any) => {
-        if (err) {
-          console.error('❌ Session save error:', err);
-          return res.status(500).json({ message: "Session creation failed" });
-        }
-        console.log('✅ Session saved successfully for:', teacher.email, 'SessionID:', req.sessionID?.slice(0, 8));
-        console.log('✅ Session state:', {
-          isAuthenticated: req.session.isAuthenticated,
-          hasUser: !!req.session.user,
-          userEmail: req.session.user?.email
-        });
-        
-        // Add small delay in production to ensure session persistence
-        const delay = process.env.NODE_ENV === 'production' ? 500 : 0;
-        setTimeout(() => {
-          return res.json({ 
-            success: true, 
-            user: teacher,
-            message: "Login successful"
-          });
-        }, delay);
-      });
+      // No user found in database
+      return res.status(401).json({ message: "Invalid email or password" });
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ message: "Login failed" });
