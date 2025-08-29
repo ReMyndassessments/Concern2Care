@@ -490,7 +490,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const objectStorageService = new ObjectStorageService();
       const uploadURL = await objectStorageService.getObjectEntityUploadURL();
       console.log('✅ Generated upload URL successfully');
-      res.json({ uploadURL });
+      
+      // Also provide the normalized path for the application to use
+      const normalizedPath = objectStorageService.normalizeObjectEntityPath(uploadURL);
+      
+      res.json({ 
+        uploadURL,
+        normalizedPath 
+      });
     } catch (error) {
       console.error('❌ Error getting upload URL:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';

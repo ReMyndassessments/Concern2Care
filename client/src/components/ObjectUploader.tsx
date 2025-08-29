@@ -5,6 +5,30 @@ import { Upload, FileText, CheckCircle, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
+// Convert object storage URL to application path
+function convertStorageUrlToObjectPath(storageUrl: string): string {
+  try {
+    // Extract the path from the URL
+    const url = new URL(storageUrl);
+    const bucketAndPath = url.pathname;
+    
+    // Extract object path from bucket path (format: /bucket-name/.private/uploads/uuid)
+    const pathParts = bucketAndPath.split('/');
+    if (pathParts.length >= 4 && pathParts[2] === '.private' && pathParts[3] === 'uploads') {
+      // Convert to /objects/uploads/uuid format for the application
+      const objectId = pathParts.slice(3).join('/'); // Get 'uploads/uuid'
+      return `/objects/${objectId}`;
+    }
+    
+    // Fallback - just use the storage URL as-is
+    console.warn('Could not parse object storage URL, using as-is:', storageUrl);
+    return storageUrl;
+  } catch (error) {
+    console.error('Error parsing storage URL:', error);
+    return storageUrl;
+  }
+}
+
 interface ObjectUploaderProps {
   maxFileSize?: number;
   acceptedFileTypes?: string[];
@@ -74,6 +98,7 @@ export function ObjectUploader({
       console.log('✅ Got upload URL response:', uploadResponse);
       
       const uploadUrl = uploadResponse.uploadURL;
+      const normalizedPath = uploadResponse.normalizedPath;
       if (!uploadUrl) {
         throw new Error('No upload URL received from server');
       }
@@ -92,8 +117,8 @@ export function ObjectUploader({
         throw new Error(`Upload failed with status ${uploadFileResponse.status}: ${errorText || 'Unknown error'}`);
       }
 
-      // Extract the object path from the upload URL
-      const fileUrl = uploadUrl.split('?')[0]; // Remove query parameters
+      // Use normalized path from server if available, otherwise convert URL
+      const fileUrl = normalizedPath || convertStorageUrlToObjectPath(uploadUrl);
       
       toast({
         title: "File uploaded successfully",
