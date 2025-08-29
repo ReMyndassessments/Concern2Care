@@ -108,6 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/auth/login', async (req: any, res) => {
     try {
       const { email, password } = req.body;
+      console.log('🔐 Login attempt - Email:', email, 'Password length:', password?.length);
       
       if (!email || !password) {
         return res.status(400).json({ message: "Email and password are required" });
@@ -116,10 +117,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // First, check for real database users with hashed passwords
       try {
         const dbUser = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1);
+        console.log('🔐 Database lookup - Found user:', !!dbUser.length, 'Has password:', !!dbUser[0]?.password);
         
         if (dbUser.length > 0 && dbUser[0].password) {
           // User exists in database with a password, check against hashed password
+          console.log('🔐 Comparing password...');
           const isValidPassword = await bcrypt.compare(password, dbUser[0].password);
+          console.log('🔐 Password validation result:', isValidPassword);
           
           if (isValidPassword) {
             // Valid database user login
