@@ -1,6 +1,7 @@
-// Get API client from database-managed keys only
+// Get API client from database-managed keys or environment variables
 async function getApiClient() {
   try {
+    // First, try to get from database
     const { getActiveApiKey } = await import('./admin');
     const activeDeepSeekKey = await getActiveApiKey('deepseek');
     
@@ -12,10 +13,29 @@ async function getApiClient() {
       };
     }
     
-    console.warn("No active DeepSeek API key found in database. Please add one through the admin interface.");
+    // Fallback to environment variable
+    const envApiKey = process.env.DEEPSEEK_API_KEY;
+    if (envApiKey) {
+      console.log("🔑 Using environment-managed DeepSeek API key");
+      return {
+        apiKey: envApiKey,
+        baseURL: 'https://api.deepseek.com/v1'
+      };
+    }
+    
+    console.warn("No DeepSeek API key found in database or environment variables.");
     return null;
   } catch (error) {
-    console.error("Error getting API client from database:", error);
+    console.error("Error getting API client:", error);
+    // Try environment variable as final fallback
+    const envApiKey = process.env.DEEPSEEK_API_KEY;
+    if (envApiKey) {
+      console.log("🔑 Using environment DeepSeek API key as fallback");
+      return {
+        apiKey: envApiKey,
+        baseURL: 'https://api.deepseek.com/v1'
+      };
+    }
     return null;
   }
 }
@@ -364,71 +384,113 @@ Provide a comprehensive analysis of ${req.studentFirstName}'s learning strengths
     }
   } else {
     prompt =
-    `You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. You provide detailed, actionable Tier 2 interventions based on current educational research and best practices.
+    `You are a highly trained educational intervention specialist and instructional coach with 15+ years of classroom experience, expertise in evidence-based practices, special education law, Universal Design for Learning (UDL), and research-backed classroom strategies. You provide comprehensive, detailed, actionable Tier 2 interventions based on current educational research and best practices from leading institutions.
 
-Student Information:
-- Name: ${req.studentFirstName} ${req.studentLastInitial}.
-- Grade: ${req.grade}
-- Teacher: ${req.teacherPosition}
-- Incident Date: ${req.incidentDate}
-- Location: ${req.location}
-- Type of Concern: ${concernTypesText}
-- Severity Level: ${req.severityLevel}
-- Actions Already Taken: ${actionsTakenText}
-- Student Learning Profile: ${differentiationText}
-- Detailed Description: ${req.concernDescription}${assessmentContent ? `\n- Student Assessment Data: ${assessmentContent}` : ''}${lessonPlanContent ? `\n- Lesson Plan to Differentiate: ${lessonPlanContent}` : ''}
+**CRITICAL ANALYSIS REQUIRED**: You MUST provide detailed analysis and evidence-based solutions that go beyond surface-level recommendations. Teachers need specific, practical strategies they can implement immediately.
 
-Based on the concern type(s) identified (${concernTypesText}), severity level (${req.severityLevel}), and the student's learning profile (${differentiationText}), please provide specific, actionable Tier 2 intervention recommendations that a teacher could implement in the classroom. 
+## Student Profile Analysis:
+- **Name**: ${req.studentFirstName} ${req.studentLastInitial}
+- **Grade Level**: ${req.grade}
+- **Teacher**: ${req.teacherPosition}
+- **Incident Date**: ${req.incidentDate}
+- **Location**: ${req.location}
+- **Primary Concerns**: ${concernTypesText}
+- **Severity Level**: ${req.severityLevel}
+- **Previous Interventions**: ${actionsTakenText}
+- **Learning Profile**: ${differentiationText}
+- **Detailed Description**: ${req.concernDescription}${assessmentContent ? `\n\n**UPLOADED ASSESSMENT DATA ANALYSIS REQUIRED**:\n${assessmentContent}` : ''}${lessonPlanContent ? `\n\n**LESSON PLAN DIFFERENTIATION REQUIRED**:\n${lessonPlanContent}` : ''}
 
-IMPORTANT: If the student has specific learning needs (IEP, diagnosis, EAL status, gifted, struggling, etc.), ensure ALL recommendations are differentiated to address these needs. For example:
-- If student has ADHD: Include movement breaks, visual cues, chunked instructions
-- If student is an EAL learner: Include visual supports, peer partnerships, modified language
-- If student is gifted: Include extension activities, higher-order thinking, independent projects
-- If student has anxiety: Include predictable routines, choice options, calming strategies
+## COMPREHENSIVE INTERVENTION REQUIREMENTS:
 
-${assessmentContent ? 'IMPORTANT: Use the student assessment data provided to create targeted interventions based on their specific strengths, weaknesses, and documented needs.' : ''}
+### Evidence-Based Foundation
+- Cite specific research studies and educational frameworks (e.g., RTI, PBIS, UDL, trauma-informed practices)
+- Reference proven intervention programs and methodologies
+- Include success metrics and expected outcomes
 
-${lessonPlanContent ? 'IMPORTANT: If a lesson plan was provided, suggest specific adaptations and modifications to make the lesson accessible and challenging for this student. Include concrete examples of how to differentiate content, process, product, and learning environment.' : ''}
+### Detailed Implementation Specifications
+- Provide step-by-step implementation guides with exact scripts and materials
+- Include timing, frequency, and duration for each strategy
+- Specify required materials, resources, and preparation time
+- Offer multiple differentiation options for varying ability levels
 
-Focus on evidence-based strategies that specifically address both the concern AND the student's learning profile.
+### Assessment Integration Analysis
+${assessmentContent ? `**CRITICAL**: Analyze the provided assessment data thoroughly. Identify specific strengths, weaknesses, learning patterns, and intervention targets. Use this data to create targeted interventions that address documented needs rather than generic strategies.` : ''}
 
-Format your response using this EXACT markdown structure for proper display:
+### Lesson Plan Adaptation Requirements
+${lessonPlanContent ? `**CRITICAL**: Provide specific, detailed adaptations to the uploaded lesson plan. Include modified objectives, alternative activities, assessment accommodations, and environmental considerations. Make the lesson accessible while maintaining academic rigor.` : ''}
 
-### **1. Assessment Summary**
-Brief analysis of the student's needs based on the concern type and severity
+### Differentiation Specifications
+For the identified learning profile (${differentiationText}), provide:
+- Sensory and cognitive processing accommodations
+- Language and communication supports
+- Social-emotional regulation strategies
+- Academic skill scaffolding techniques
+- Technology integration recommendations
 
-### **2. Immediate Interventions (1-2 weeks)**
-* **Strategy: [Strategy Name]**
-* **Implementation:**
-  * Step 1
-  * Step 2
-  * Step 3
+## REQUIRED RESPONSE FORMAT:
 
-### **3. Short-term Strategies (2-6 weeks)**
-* **Strategy: [Strategy Name]**
-* **Implementation:**
-  * Step 1
-  * Step 2
-  * Step 3
+### **1. Comprehensive Student Analysis**
+- Detailed analysis of concerns, learning profile, and contributing factors
+- Connection between assessment data and intervention targets
+- Risk factors and protective factors identification
 
-### **4. Long-term Support (6+ weeks)**
-* **Strategy: [Strategy Name]**
-* **Implementation:**
-  * Step 1
-  * Step 2
+### **2. Evidence-Based Intervention Framework**
+- Primary intervention approach with research citations
+- Theoretical foundation (behavioral, cognitive, academic)
+- Expected outcomes and success indicators
 
-### **5. Progress Monitoring**
-* **Data Collection:**
-  * Method 1
-  * Method 2
-* **Review Timeline:** Weekly/Bi-weekly
+### **3. Immediate Action Plan (Days 1-14)**
+**Strategy 1: [Specific Strategy Name]**
+- **Research Base**: [Citation/Framework]
+- **Materials Needed**: [Detailed list]
+- **Implementation Steps**:
+  1. [Detailed step with timing]
+  2. [Detailed step with timing]
+  3. [Detailed step with timing]
+- **Data Collection**: [Specific methods and tools]
+- **Success Criteria**: [Measurable outcomes]
 
-### **6. When to Escalate**
-* **Indicators:**
-  * Clear sign 1
-  * Clear sign 2
+**Strategy 2: [Additional Strategy if needed]**
+[Same detailed format]
 
-Use this EXACT formatting with ### for main headings, * ** for strategy names, and bullet points for implementation steps.`;
+### **4. Short-Term Intensive Support (Weeks 3-8)**
+**Primary Focus Area: [Specific skill/behavior]**
+- **Intervention Program**: [Specific program name if applicable]
+- **Frequency**: [Exact schedule]
+- **Progress Monitoring**: [Weekly data collection methods]
+- **Adaptation Protocol**: [When and how to modify]
+
+### **5. Long-Term Skill Development (Weeks 9-16)**
+**Maintenance and Generalization Strategies**
+- **Skill Transfer Plans**: [Cross-setting implementation]
+- **Independence Building**: [Scaffolding reduction plan]
+- **Family Engagement**: [Home-school collaboration strategies]
+
+### **6. Comprehensive Progress Monitoring System**
+- **Daily Data**: [Quick check methods]
+- **Weekly Assessment**: [Formal measurement tools]
+- **Monthly Review**: [Comprehensive evaluation criteria]
+- **Decision Points**: [When to continue, modify, or escalate]
+
+### **7. Collaboration and Communication Plan**
+- **Team Members**: [Who needs to be involved]
+- **Meeting Schedule**: [Regular check-in frequency]
+- **Documentation Requirements**: [Record-keeping protocols]
+- **Parent Communication**: [Update frequency and methods]
+
+### **8. Escalation and Support Protocols**
+- **Warning Signs**: [Specific behavioral/academic indicators]
+- **Immediate Response**: [Crisis intervention steps]
+- **Referral Criteria**: [When to involve specialists]
+- **Emergency Contacts**: [Who to call and when]
+
+### **9. Resource Recommendations**
+- **Professional Development**: [Suggested training for teacher]
+- **Educational Materials**: [Specific programs, books, websites]
+- **Technology Tools**: [Apps, software, assistive devices]
+- **Community Resources**: [External support services]
+
+**FORMATTING REQUIREMENTS**: Use detailed bullet points, include specific timeframes, provide exact implementation steps, and ensure all recommendations are immediately actionable for classroom teachers.`;
   }
 
   try {
