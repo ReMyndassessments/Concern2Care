@@ -626,7 +626,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           <FormItem>
                             <FormLabel className="flex items-center gap-2">
                               <FileText className="h-4 w-4" />
-                              Student Assessment Report
+                              Student I.E.P.
                             </FormLabel>
                             <div className="space-y-2">
                               <ObjectUploader
@@ -643,10 +643,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                 disabled={isAtLimit || studentAssessmentUploading}
                                 data-testid="upload-student-assessment"
                               >
-                                Upload Assessment
+                                Student I.E.P.
                               </ObjectUploader>
                               <p className="text-xs text-amber-600">
-                                Upload student reports, assessments, or evaluations (PDF, DOC, TXT)
+                                Upload student I.E.P. documents (PDF, DOC, TXT) - Max 10MB
                               </p>
                             </div>
                             <FormMessage />
