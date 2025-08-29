@@ -80,10 +80,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     rolling: true, // Reset session timeout on activity
     name: 'sessionId', // Explicit session name
     cookie: {
-      secure: true, // True since we're on HTTPS in production
+      secure: false, // Set to false to ensure cookies work in all environments
       maxAge: 4 * 60 * 60 * 1000, // 4 hours
       httpOnly: true,
-      sameSite: 'lax', // Lax instead of None for better compatibility
+      sameSite: 'lax', // Lax for cross-origin compatibility
       domain: undefined // Let browser determine domain automatically
     }
   }));
