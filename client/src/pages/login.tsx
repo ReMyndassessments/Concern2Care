@@ -35,8 +35,10 @@ export default function Login() {
         // Wait to ensure session persistence before redirect (longer in production)
         const redirectDelay = window.location.hostname.includes('replit.app') ? 1500 : 500;
         setTimeout(() => {
-          console.log('✅ Redirecting to dashboard...');
-          window.location.replace('/');
+          // Redirect admin users to admin dashboard, regular users to home
+          const redirectUrl = responseData.user?.isAdmin ? '/admin' : '/';
+          console.log('✅ Redirecting to:', redirectUrl, '(Admin:', responseData.user?.isAdmin, ')');
+          window.location.replace(redirectUrl);
         }, redirectDelay);
       } else {
         alert(responseData.message || 'Login failed. Please check your credentials.');
