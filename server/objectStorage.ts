@@ -131,20 +131,30 @@ export class ObjectStorageService {
   }
 
   // Read text content from an uploaded file
-  async readFileContent(fileUrl: string): Promise<string> {
+  async readFileContent(filePath: string): Promise<string> {
     try {
-      // Extract bucket and object name directly from the signed URL
-      const url = new URL(fileUrl);
+      console.log(`📖 Reading file content from path: ${filePath}`);
       
-      // Parse the bucket name from the domain (e.g., storage.googleapis.com/bucket-name)
-      const pathParts = url.pathname.split('/');
-      if (pathParts.length < 2) {
-        throw new Error('Invalid Google Cloud Storage URL format');
+      // Handle different path formats
+      let objectPath = filePath;
+      
+      // If it's a full URL, extract the path
+      if (filePath.startsWith('https://storage.googleapis.com/')) {
+        const url = new URL(filePath);
+        objectPath = url.pathname; // This gives us something like /bucket-name/path/to/file
       }
       
-      const bucketName = pathParts[1];
-      const objectName = pathParts.slice(2).join('/');
+      // If it's an application path like /objects/uploads/uuid, convert to storage path  
+      if (objectPath.startsWith('/objects/')) {
+        const entityId = objectPath.slice('/objects/'.length); // Remove /objects/ prefix
+        let entityDir = this.getPrivateObjectDir();
+        if (!entityDir.endsWith("/")) {
+          entityDir = `${entityDir}/`;
+        }
+        objectPath = `${entityDir}${entityId}`;
+      }
       
+      const { bucketName, objectName } = parseObjectPath(objectPath);
       console.log(`📁 Reading file from bucket: ${bucketName}, object: ${objectName}`);
       
       // Access the file directly using bucket and object name
