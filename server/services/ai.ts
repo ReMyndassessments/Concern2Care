@@ -1,7 +1,22 @@
-// Get API client from database-managed keys or environment variables
+// Get API client from environment variables or database-managed keys
 async function getApiClient() {
+  console.log("🔍 Getting API client...");
+  
+  // First, check environment variable (primary method)
+  const envApiKey = process.env.DEEPSEEK_API_KEY;
+  console.log("🔍 Environment API key exists:", !!envApiKey);
+  
+  if (envApiKey) {
+    console.log("🔑 Using environment-managed DeepSeek API key");
+    return {
+      apiKey: envApiKey,
+      baseURL: 'https://api.deepseek.com/v1'
+    };
+  }
+  
+  // Fallback to database-managed keys
   try {
-    // First, try to get from database
+    console.log("🔍 Trying database fallback...");
     const { getActiveApiKey } = await import('./admin');
     const activeDeepSeekKey = await getActiveApiKey('deepseek');
     
@@ -12,32 +27,12 @@ async function getApiClient() {
         baseURL: 'https://api.deepseek.com/v1'
       };
     }
-    
-    // Fallback to environment variable
-    const envApiKey = process.env.DEEPSEEK_API_KEY;
-    if (envApiKey) {
-      console.log("🔑 Using environment-managed DeepSeek API key");
-      return {
-        apiKey: envApiKey,
-        baseURL: 'https://api.deepseek.com/v1'
-      };
-    }
-    
-    console.warn("No DeepSeek API key found in database or environment variables.");
-    return null;
   } catch (error) {
-    console.error("Error getting API client:", error);
-    // Try environment variable as final fallback
-    const envApiKey = process.env.DEEPSEEK_API_KEY;
-    if (envApiKey) {
-      console.log("🔑 Using environment DeepSeek API key as fallback");
-      return {
-        apiKey: envApiKey,
-        baseURL: 'https://api.deepseek.com/v1'
-      };
-    }
-    return null;
+    console.error("❌ Error accessing database API keys:", error instanceof Error ? error.message : String(error));
   }
+  
+  console.warn("❌ No DeepSeek API key found in environment or database.");
+  return null;
 }
 
 export interface GenerateRecommendationsRequest {
@@ -102,6 +97,12 @@ export async function generateRecommendations(
   console.log("🚀 Starting recommendation generation...");
   console.log("📝 Student:", req.studentFirstName, req.studentLastInitial);
   console.log("📝 Concern types:", req.concernTypes);
+  
+  // Debug environment variable access
+  console.log("🔍 Environment Debug:");
+  console.log("  - DEEPSEEK_API_KEY exists:", !!process.env.DEEPSEEK_API_KEY);
+  console.log("  - DEEPSEEK_API_KEY length:", process.env.DEEPSEEK_API_KEY?.length || 0);
+  console.log("  - First 10 chars:", process.env.DEEPSEEK_API_KEY?.substring(0, 10) || 'none');
   
   const apiClient = await getApiClient();
   console.log("🔑 API client available:", !!apiClient);
