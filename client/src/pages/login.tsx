@@ -28,14 +28,16 @@ export default function Login() {
       const responseData = await response.json();
 
       if (response.ok && responseData.success) {
+        console.log('✅ Login successful, updating auth cache...');
         // Invalidate auth cache and wait for fresh data before redirect
         await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-        // Refetch auth data immediately to ensure state is updated
-        await queryClient.refetchQueries({ queryKey: ["/api/auth/user"] });
-        // Small delay to ensure state propagation
+        // Set user data directly in cache to prevent authentication loss
+        queryClient.setQueryData(["/api/auth/user"], responseData.user);
+        // Longer delay to ensure session cookies are properly set
         setTimeout(() => {
+          console.log('✅ Redirecting to dashboard...');
           window.location.href = '/';
-        }, 100);
+        }, 500);
       } else {
         alert(responseData.message || 'Login failed. Please check your credentials.');
       }
