@@ -565,11 +565,11 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
               />
             </div>
             <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-              <DialogContent className="sm:max-w-[500px] mx-4 sm:mx-0">
+              <DialogContent className="sm:max-w-[500px] mx-4 sm:mx-0 max-h-[90vh] flex flex-col">
                 <DialogHeader>
                   <DialogTitle>Add New Teacher</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4">
+                <div className="space-y-4 overflow-y-auto flex-1 pr-2">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name *</Label>
