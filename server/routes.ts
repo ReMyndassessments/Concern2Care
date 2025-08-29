@@ -81,10 +81,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     name: 'sessionId', // Explicit session name
     proxy: true, // Trust proxy for session handling
     cookie: {
-      secure: false, // Always false to ensure cookies work in all environments
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
       maxAge: 4 * 60 * 60 * 1000, // 4 hours
       httpOnly: true, // Keep httpOnly for security
-      sameSite: 'lax', // Lax works for same-site requests in development
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // Strict in production
       domain: undefined // Auto-determine domain
     }
   }));

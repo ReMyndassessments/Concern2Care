@@ -14,9 +14,11 @@ const shouldUseProductionConfig = (
   (process.env.REPLIT_DOMAINS && process.env.REPLIT_DOMAINS.includes('.replit.app'))
 );
 
-// Force development mode for session compatibility
+// Set default NODE_ENV only if not specified (don't override production deployments)
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';
+} else if (shouldUseProductionConfig && process.env.NODE_ENV !== 'production') {
+  process.env.NODE_ENV = 'production';
 }
 
 console.log('🌍 Original NODE_ENV:', process.env.NODE_ENV);
