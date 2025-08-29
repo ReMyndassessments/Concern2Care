@@ -61,43 +61,39 @@ async function ensureEssentialUsers() {
   
   // Admin user
   try {
-    await db.insert(users).values({
-      id: 'teacher-001',
-      email: 'noel.roberts43@gmail.com',
-      password: passwordHash,
-      firstName: 'Noel',
-      lastName: 'Roberts',
-      school: 'Production School District',
-      isAdmin: true,
-      role: 'admin',
-      isActive: true,
-      supportRequestsLimit: 100,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }).onConflictDoNothing();
-    console.log('✅ Admin user ensured');
+    const adminEmail = 'noel.roberts43@gmail.com';
+    const adminId = 'admin-prod-' + Date.now();
+    
+    await db.execute(sql`
+      INSERT INTO users (id, email, password, first_name, last_name, school, is_admin, role, is_active, support_requests_limit, created_at, updated_at) 
+      VALUES (${adminId}, ${adminEmail}, ${passwordHash}, ${'Noel'}, ${'Roberts'}, ${'Production School District'}, ${true}, ${'admin'}, ${true}, ${100}, ${new Date()}, ${new Date()})
+      ON CONFLICT (email) DO UPDATE SET
+        password = EXCLUDED.password,
+        is_admin = EXCLUDED.is_admin,
+        role = EXCLUDED.role,
+        updated_at = EXCLUDED.updated_at
+    `);
+    console.log('✅ Admin user ensured via SQL upsert');
   } catch (error) {
-    console.log('ℹ️ Admin user already exists or error occurred:', error instanceof Error ? error.message : String(error));
+    console.log('ℹ️ Admin user operation result:', error instanceof Error ? error.message : String(error));
   }
   
   // Teacher user
   try {
-    await db.insert(users).values({
-      id: 'teacher-1756432651127',
-      email: 'ameriasianjr@yahoo.com',
-      password: passwordHash,
-      firstName: 'Demo-Teacher',
-      lastName: 'ROBERTS',
-      school: 'Calabar High School',
-      isAdmin: false,
-      role: 'teacher',
-      isActive: true,
-      supportRequestsLimit: 20,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }).onConflictDoNothing();
-    console.log('✅ Teacher user ensured');
+    const teacherEmail = 'ameriasianjr@yahoo.com';
+    const teacherId = 'teacher-prod-' + Date.now();
+    
+    await db.execute(sql`
+      INSERT INTO users (id, email, password, first_name, last_name, school, is_admin, role, is_active, support_requests_limit, created_at, updated_at) 
+      VALUES (${teacherId}, ${teacherEmail}, ${passwordHash}, ${'Demo-Teacher'}, ${'ROBERTS'}, ${'Calabar High School'}, ${false}, ${'teacher'}, ${true}, ${20}, ${new Date()}, ${new Date()})
+      ON CONFLICT (email) DO UPDATE SET
+        password = EXCLUDED.password,
+        is_admin = EXCLUDED.is_admin,
+        role = EXCLUDED.role,
+        updated_at = EXCLUDED.updated_at
+    `);
+    console.log('✅ Teacher user ensured via SQL upsert');
   } catch (error) {
-    console.log('ℹ️ Teacher user already exists or error occurred:', error instanceof Error ? error.message : String(error));
+    console.log('ℹ️ Teacher user operation result:', error instanceof Error ? error.message : String(error));
   }
 }
