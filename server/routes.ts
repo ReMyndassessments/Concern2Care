@@ -107,7 +107,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Teacher login endpoint
   app.post('/api/auth/login', async (req: any, res) => {
     try {
-      const { email, password } = req.body;
+      const { email, password: rawPassword } = req.body;
+      const password = rawPassword?.trim(); // Remove any whitespace
       console.log('🔐 Login attempt - Email:', email, 'Password length:', password?.length);
       console.log('🔐 Password first/last chars:', password ? `"${password[0]}...${password[password.length-1]}"` : 'undefined');
       
