@@ -78,13 +78,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       checkPeriod: 86400000 // prune expired entries every 24h
     }),
     rolling: true, // Reset session timeout on activity
+    name: 'sessionId', // Explicit session name
     cookie: {
-      secure: false, // Keep false for now to ensure sessions work
-      maxAge: 4 * 60 * 60 * 1000, // 4 hours to handle long AI generation
+      secure: false, // Keep false - Replit handles HTTPS termination
+      maxAge: 4 * 60 * 60 * 1000, // 4 hours
       httpOnly: true,
-      sameSite: 'lax' // Use lax for better compatibility
+      sameSite: 'lax', // Lax for cross-domain compatibility
+      domain: undefined // Let browser determine domain automatically
     }
   }));
+
+  // Add session debugging middleware
+  app.use((req: any, res, next) => {
+    if (req.path.includes('/api/auth')) {
+      console.log('🍪 Session check - SessionID:', req.sessionID?.slice(0, 8), 'User:', req.session?.user?.email || 'none');
+      console.log('🍪 Session data:', {
+        hasSession: !!req.session,
+        isAuthenticated: req.session?.isAuthenticated,
+        userEmail: req.session?.user?.email
+      });
+    }
+    next();
+  });
 
   // Professional teacher authentication - no development modals
   
@@ -114,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               .set({ lastLoginAt: new Date() })
               .where(eq(users.id, user.id));
 
-            // Create session
+            // Create session with explicit save
             req.session.user = {
               id: user.id,
               email: user.email,
@@ -125,10 +140,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
             };
             req.session.isAuthenticated = true;
 
-            return res.json({ 
-              success: true, 
-              user: req.session.user,
-              message: "Login successful"
+            // Force session save before responding
+            req.session.save((err: any) => {
+              if (err) {
+                console.error('❌ Session save error:', err);
+                return res.status(500).json({ message: "Session creation failed" });
+              }
+              console.log('✅ Session saved successfully for:', user.email, 'SessionID:', req.sessionID?.slice(0, 8));
+              return res.json({ 
+                success: true, 
+                user: req.session.user,
+                message: "Login successful"
+              });
             });
           }
         }
@@ -189,14 +212,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Error creating user in database:", dbError);
       }
 
-      // Create session (simplified)
+      // Create session with explicit save
       req.session.user = teacher;
       req.session.isAuthenticated = true;
 
-      res.json({ 
-        success: true, 
-        user: teacher,
-        message: "Login successful"
+      // Force session save before responding
+      req.session.save((err: any) => {
+        if (err) {
+          console.error('❌ Session save error:', err);
+          return res.status(500).json({ message: "Session creation failed" });
+        }
+        console.log('✅ Session saved successfully for:', teacher.email, 'SessionID:', req.sessionID?.slice(0, 8));
+        return res.json({ 
+          success: true, 
+          user: teacher,
+          message: "Login successful"
+        });
       });
     } catch (error) {
       console.error("Login error:", error);
@@ -217,7 +248,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get current teacher with usage data
   app.get('/api/auth/user', async (req: any, res) => {
-    if (req.session.isAuthenticated && req.session.user) {
+    console.log('🔍 Auth check - SessionID:', req.sessionID?.slice(0, 8));
+    console.log('🔍 Session exists:', !!req.session);
+    console.log('🔍 Is authenticated:', req.session?.isAuthenticated);
+    console.log('🔍 Has user:', !!req.session?.user);
+    
+    if (req.session && req.session.isAuthenticated && req.session.user) {
+      console.log('✅ Authentication successful for:', req.session.user.email);
       try {
         // Get updated user data with usage statistics from database
         const userWithUsage = await storage.getUser(req.session.user.id);
@@ -247,6 +284,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
     } else {
+      console.log('❌ Authentication failed - no valid session');
       res.status(401).json({ message: "Not authenticated" });
     }
   });
