@@ -72,7 +72,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.use(session({
     secret: process.env.SESSION_SECRET || 'concern2care-session-secret-development-key-very-long',
-    resave: false,
+    resave: true, // Enable session resave to ensure persistence
     saveUninitialized: false,
     store: new memoryStore({
       checkPeriod: 86400000 // prune expired entries every 24h
@@ -84,7 +84,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
       maxAge: 4 * 60 * 60 * 1000, // 4 hours
       httpOnly: true, // Keep httpOnly for security
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // Strict in production
+      sameSite: 'lax', // Use lax for better compatibility in production
       domain: undefined // Auto-determine domain
     }
   }));
@@ -146,6 +146,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
               isAdmin: user.isAdmin || false
             };
             req.session.isAuthenticated = true;
+            
+            console.log('🔐 Session data after login:', {
+              isAuthenticated: req.session.isAuthenticated,
+              user: req.session.user ? 'present' : 'missing',
+              sessionId: req.sessionID?.slice(0, 8)
+            });
 
             // Force session save before responding with production timing fix
             req.session.save((err: any) => {
@@ -514,6 +520,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
           privateObjectDir: !!process.env.PRIVATE_OBJECT_DIR
         }
       });
+    }
+  });
+
+  // Serve uploaded objects - PROTECTED
+  app.get("/objects/:objectPath(*)", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const objectStorageService = new ObjectStorageService();
+      
+      console.log('📁 Serving object:', req.path, 'for user:', userId);
+      
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      
+      // Check if user can access this object (basic ownership check for now)
+      const canAccess = await objectStorageService.canAccessObjectEntity({
+        objectFile,
+        userId: userId,
+        requestedPermission: 'read' as any
+      });
+      
+      if (!canAccess) {
+        console.log('❌ Access denied for object:', req.path, 'user:', userId);
+        return res.status(403).json({ error: "Access denied" });
+      }
+      
+      // Serve the file
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error('❌ Error serving object:', error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      return res.status(500).json({ error: "Internal server error" });
     }
   });
 
