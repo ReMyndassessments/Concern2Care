@@ -6,6 +6,7 @@ import compression from "compression";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { env } from "./services/environment";
+import { initializeApp } from "./setup";
 
 // Smart environment detection - use production settings when needed
 const shouldUseProductionConfig = (
@@ -143,6 +144,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Initialize the application (create essential users, etc.)
+  await initializeApp();
+  
   const server = await registerRoutes(app);
 
   // Enhanced error handling middleware
