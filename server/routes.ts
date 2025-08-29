@@ -79,11 +79,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }),
     rolling: true, // Reset session timeout on activity
     name: 'sessionId', // Explicit session name
+    proxy: true, // Trust proxy for session handling
     cookie: {
       secure: false, // Always false to ensure cookies work in all environments
       maxAge: 4 * 60 * 60 * 1000, // 4 hours
-      httpOnly: true,
-      sameSite: 'lax', // Lax for broad compatibility
+      httpOnly: true, // Keep httpOnly for security
+      sameSite: 'lax', // Lax works for same-site requests in development
       domain: undefined // Auto-determine domain
     }
   }));
@@ -253,7 +254,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log('🔍 Is authenticated:', req.session?.isAuthenticated);
     console.log('🔍 Has user:', !!req.session?.user);
     
-    if (req.session && req.session.isAuthenticated && req.session.user) {
+    if (req.session && req.session.isAuthenticated === true && req.session.user) {
       console.log('✅ Authentication successful for:', req.session.user.email);
       try {
         // Get updated user data with usage statistics from database
@@ -284,7 +285,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
     } else {
-      console.log('❌ Authentication failed - no valid session');
+      console.log('❌ Authentication failed - Session state:');
+      console.log('  - Session exists:', !!req.session);
+      console.log('  - isAuthenticated value:', req.session?.isAuthenticated, 'type:', typeof req.session?.isAuthenticated);
+      console.log('  - User exists:', !!req.session?.user);
+      console.log('  - User data:', req.session?.user ? 'present' : 'missing');
       res.status(401).json({ message: "Not authenticated" });
     }
   });
