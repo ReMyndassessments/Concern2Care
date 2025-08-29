@@ -31,36 +31,18 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false,
 }));
 
-// CORS configuration - Allow production domain
-const allowedOrigins = [
-  'https://biz-connect-noelroberts43.replit.app',
-  'http://localhost:5000',
-  'http://127.0.0.1:5000'
-];
-
+// CORS configuration - Allow ALL origins for now to fix connection issues
 app.use(cors({
-  origin: shouldUseProductionConfig 
-    ? (origin, callback) => {
-        // Allow requests with no origin (mobile apps, Postman, etc.)
-        if (!origin) return callback(null, true);
-        
-        // Check if origin is in allowed list
-        if (allowedOrigins.includes(origin)) {
-          return callback(null, true);
-        }
-        
-        // Allow any replit.app domain
-        if (origin.endsWith('.replit.app')) {
-          return callback(null, true);
-        }
-        
-        console.log('🚫 Blocked CORS origin:', origin);
-        return callback(new Error('Not allowed by CORS'), false);
-      }
-    : true,
+  origin: true, // Allow all origins temporarily to fix connection issues
   credentials: true,
   optionsSuccessStatus: 200
 }));
+
+// Log all incoming requests to debug connection issues
+app.use((req, res, next) => {
+  console.log(`🔍 ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'none'} - Host: ${req.get('Host')}`);
+  next();
+});
 
 // Compression middleware
 app.use(compression());
