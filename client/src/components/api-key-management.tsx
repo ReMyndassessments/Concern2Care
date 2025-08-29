@@ -283,8 +283,6 @@ export default function ApiKeyManagement() {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="deepseek">DeepSeek</SelectItem>
-                            <SelectItem value="openai">OpenAI</SelectItem>
-                            <SelectItem value="anthropic">Anthropic</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
