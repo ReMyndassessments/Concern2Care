@@ -769,7 +769,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Send email
       const baseUrl = req.protocol + '://' + req.get('host');
-      const reportLink = generateSecureReportLink(report.id, baseUrl);
+      const reportLink = generateSecureReportLink(concernId, baseUrl);
       
       const emailSuccess = await sendReportEmail({
         recipients,

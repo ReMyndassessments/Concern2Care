@@ -172,6 +172,6 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
   }
 }
 
-export function generateSecureReportLink(reportId: string, baseUrl: string): string {
-  return `${baseUrl}/reports/${reportId}`;
+export function generateSecureReportLink(concernId: string, baseUrl: string): string {
+  return `${baseUrl}/concerns/${concernId}`;
 }
