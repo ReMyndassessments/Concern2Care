@@ -32,9 +32,12 @@ export default function Login() {
         // Clear old auth cache and set new data
         queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
         queryClient.setQueryData(["/api/auth/user"], responseData.user);
-        // Use location replace for clean navigation
-        console.log('✅ Redirecting to dashboard...');
-        window.location.replace('/');
+        // Wait to ensure session persistence before redirect (longer in production)
+        const redirectDelay = window.location.hostname.includes('replit.app') ? 1500 : 500;
+        setTimeout(() => {
+          console.log('✅ Redirecting to dashboard...');
+          window.location.replace('/');
+        }, redirectDelay);
       } else {
         alert(responseData.message || 'Login failed. Please check your credentials.');
       }

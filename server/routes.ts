@@ -217,18 +217,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       req.session.user = teacher;
       req.session.isAuthenticated = true;
 
-      // Force session save before responding
+      // Force session save before responding with production timing fix
       req.session.save((err: any) => {
         if (err) {
           console.error('❌ Session save error:', err);
           return res.status(500).json({ message: "Session creation failed" });
         }
         console.log('✅ Session saved successfully for:', teacher.email, 'SessionID:', req.sessionID?.slice(0, 8));
-        return res.json({ 
-          success: true, 
-          user: teacher,
-          message: "Login successful"
+        console.log('✅ Session state:', {
+          isAuthenticated: req.session.isAuthenticated,
+          hasUser: !!req.session.user,
+          userEmail: req.session.user?.email
         });
+        
+        // Add small delay in production to ensure session persistence
+        const delay = process.env.NODE_ENV === 'production' ? 500 : 0;
+        setTimeout(() => {
+          return res.json({ 
+            success: true, 
+            user: teacher,
+            message: "Login successful"
+          });
+        }, delay);
       });
     } catch (error) {
       console.error("Login error:", error);
