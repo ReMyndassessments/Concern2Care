@@ -1017,7 +1017,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 {createConcernMutation.isPending ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Generating AI Recommendations...
+                    Generating Research-Based Recommendations
                   </>
                 ) : isAtLimit ? (
                   <>
