@@ -109,6 +109,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, password } = req.body;
       console.log('🔐 Login attempt - Email:', email, 'Password length:', password?.length);
+      console.log('🔐 Password first/last chars:', password ? `"${password[0]}...${password[password.length-1]}"` : 'undefined');
       
       if (!email || !password) {
         return res.status(400).json({ message: "Email and password are required" });
