@@ -138,6 +138,20 @@ export async function generateConcernReport(
 
         doc.fontSize(14).fillColor('#000000').text('Follow-up Questions & Responses', 50, yPosition);
         yPosition += 25;
+        
+        // Check if any follow-up questions contain Chinese characters and add a notice
+        const hasChineseContent = concern.followUpQuestions.some(qa => 
+          /[^\u0000-\u024F\u1E00-\u1EFF]/.test(qa.question) || 
+          /[^\u0000-\u024F\u1E00-\u1EFF]/.test(qa.response)
+        );
+        
+        if (hasChineseContent) {
+          doc.fontSize(10).fillColor('#1e40af');
+          const noticeText = '📌 Note: Some content in this section contains Chinese characters. For complete text, please view this report online in your web browser.';
+          const noticeHeight = doc.heightOfString(noticeText, { width: 495 });
+          doc.text(noticeText, 50, yPosition, { width: 495, align: 'left' });
+          yPosition += noticeHeight + 15;
+        }
 
         concern.followUpQuestions.forEach((qa, index) => {
           if (yPosition > 650) {
@@ -150,8 +164,8 @@ export async function generateConcernReport(
           const hasNonLatinChars = /[^\u0000-\u024F\u1E00-\u1EFF]/.test(questionText);
           
           if (hasNonLatinChars) {
-            const fallbackText = `Q${index + 1}: [Question contains non-Latin characters - please view online]`;
-            doc.fontSize(11).fillColor('#dc2626').text(fallbackText, 50, yPosition);
+            const fallbackText = `Q${index + 1}: 📝 Question contains Chinese characters - please view online for full text`;
+            doc.fontSize(11).fillColor('#1e40af').text(fallbackText, 50, yPosition);
           } else {
             doc.fontSize(11).fillColor('#2563eb').text(questionText, 50, yPosition);
           }
@@ -218,13 +232,18 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     doc.fontSize(fontSize).fillColor(color);
     
     if (hasNonLatinChars) {
-      // For content with non-Latin characters, provide a clear message
-      const fallbackText = '[Content contains non-Latin characters - please view online for full text]';
-      const height = doc.heightOfString(fallbackText, { width, ...options });
-      doc.fillColor('#dc2626'); // Red color to make it noticeable
-      doc.text(fallbackText, x, yPosition, { width, ...options });
+      // For content with non-Latin characters, show a helpful notice
+      const noticeText = '📝 This response contains Chinese characters. Please view the full text in your web browser for complete content.';
+      
+      // Add some spacing before the notice
+      yPosition += 5;
+      ensureSpace(30);
+      
+      const height = doc.heightOfString(noticeText, { width, ...options });
+      doc.fillColor('#1e40af'); // Blue color for information
+      doc.text(noticeText, x, yPosition, { width, ...options });
       doc.fillColor(color); // Reset color
-      return Math.max(height, fontSize * 1.2);
+      return Math.max(height + 10, fontSize * 1.2); // Add extra spacing
     } else {
       // Regular Latin text - process normally
       const height = doc.heightOfString(content, { width, ...options });
