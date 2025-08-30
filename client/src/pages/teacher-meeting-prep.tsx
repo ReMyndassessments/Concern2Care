@@ -28,6 +28,7 @@ import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { Link } from "wouter";
 import AppHeader from '@/components/app-header';
+import { useTranslation } from 'react-i18next';
 
 interface Concern {
   id: string;
@@ -54,6 +55,7 @@ interface MeetingPreparationData {
 }
 
 export default function TeacherMeetingPrep() {
+  const { t } = useTranslation();
   const [concerns, setConcerns] = useState<Concern[]>([]);
   const [loading, setLoading] = useState(true);
   const [generatingPDF, setGeneratingPDF] = useState(false);
@@ -87,8 +89,8 @@ export default function TeacherMeetingPrep() {
     } catch (error) {
       // Error loading concerns - handled by user feedback
       toast({
-        title: "Error",
-        description: "Failed to load your concerns for meeting preparation.",
+        title: t('common.error', 'Error'),
+        description: t('meeting.errorLoading', 'Failed to load your concerns for meeting preparation.'),
         variant: "destructive",
       });
     } finally {
@@ -255,8 +257,8 @@ export default function TeacherMeetingPrep() {
         window.URL.revokeObjectURL(url);
 
         toast({
-          title: "Success",
-          description: "Meeting preparation document has been generated and downloaded.",
+          title: t('common.success', 'Success'),
+          description: t('meeting.successGenerated', 'Meeting preparation document has been generated and downloaded.'),
         });
       } else {
         throw new Error('Failed to generate document');
@@ -264,8 +266,8 @@ export default function TeacherMeetingPrep() {
     } catch (error) {
       // Error generating meeting preparation document
       toast({
-        title: "Error",
-        description: "Failed to generate meeting preparation document. Please try again.",
+        title: t('common.error', 'Error'),
+        description: t('meeting.errorGenerating', 'Failed to generate meeting preparation document. Please try again.'),
         variant: "destructive",
       });
     } finally {
@@ -281,11 +283,11 @@ export default function TeacherMeetingPrep() {
   };
 
   const getMeetingTypeOptions = () => [
-    { value: 'Parent Conference', label: 'Parent Conference' },
-    { value: 'IEP', label: 'IEP Team Meeting' },
-    { value: '504', label: '504 Plan Meeting' },
-    { value: 'SST', label: 'Student Study Team' },
-    { value: 'Other', label: 'Other Meeting' }
+    { value: 'Parent Conference', label: t('meeting.parentConference', 'Parent Conference') },
+    { value: 'IEP', label: t('meeting.iepTeam', 'IEP Team Meeting') },
+    { value: '504', label: t('meeting.plan504', '504 Plan Meeting') },
+    { value: 'SST', label: t('meeting.studentStudyTeam', 'Student Study Team') },
+    { value: 'Other', label: t('meeting.otherMeeting', 'Other Meeting') }
   ];
 
   return (
@@ -298,7 +300,7 @@ export default function TeacherMeetingPrep() {
           <Link href="/">
             <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
+              {t('meeting.backToHome', 'Back to Home')}
             </Button>
           </Link>
         </div>
@@ -306,10 +308,10 @@ export default function TeacherMeetingPrep() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
-            Meeting Preparation
+            {t('meeting.title', 'Meeting Preparation')}
           </h1>
           <p className="text-lg text-gray-600">
-            Prepare comprehensive meeting documents with student concerns
+            {t('meeting.subtitle', 'Prepare comprehensive meeting documents with student concerns')}
           </p>
         </div>
 
@@ -318,26 +320,26 @@ export default function TeacherMeetingPrep() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
-              Meeting Details
+              {t('meeting.meetingDetails', 'Meeting Details')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="meetingTitle">Meeting Title *</Label>
+                <Label htmlFor="meetingTitle">{t('meeting.meetingTitle', 'Meeting Title')} *</Label>
                 <Input
                   id="meetingTitle"
-                  placeholder="e.g., IEP Team Meeting"
+                  placeholder={t('meeting.meetingTitlePlaceholder', 'e.g., IEP Team Meeting')}
                   value={meetingData.meetingTitle}
                   onChange={(e) => setMeetingData({...meetingData, meetingTitle: e.target.value})}
                   data-testid="input-meeting-title"
                 />
               </div>
               <div>
-                <Label htmlFor="meetingType">Meeting Type *</Label>
+                <Label htmlFor="meetingType">{t('meeting.meetingType', 'Meeting Type')} *</Label>
                 <Select value={meetingData.meetingType} onValueChange={(value: any) => setMeetingData({...meetingData, meetingType: value})}>
                   <SelectTrigger data-testid="select-meeting-type">
-                    <SelectValue placeholder="Select meeting type" />
+                    <SelectValue placeholder={t('meeting.selectMeetingType', 'Select meeting type')} />
                   </SelectTrigger>
                   <SelectContent>
                     {getMeetingTypeOptions().map((option) => (
@@ -352,7 +354,7 @@ export default function TeacherMeetingPrep() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="meetingDate">Date *</Label>
+                <Label htmlFor="meetingDate">{t('meeting.date', 'Date')} *</Label>
                 <Input
                   id="meetingDate"
                   type="date"
@@ -362,7 +364,7 @@ export default function TeacherMeetingPrep() {
                 />
               </div>
               <div>
-                <Label htmlFor="meetingTime">Time *</Label>
+                <Label htmlFor="meetingTime">{t('meeting.time', 'Time')} *</Label>
                 <Input
                   id="meetingTime"
                   type="time"
@@ -375,10 +377,10 @@ export default function TeacherMeetingPrep() {
 
             {/* Attendees Section */}
             <div>
-              <Label>Attendees</Label>
+              <Label>{t('meeting.attendees', 'Attendees')}</Label>
               <div className="flex gap-2 mt-2">
                 <Input
-                  placeholder="Add attendee name"
+                  placeholder={t('meeting.addAttendeePlaceholder', 'Add attendee name')}
                   value={newAttendee}
                   onChange={(e) => setNewAttendee(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleAddAttendee()}
@@ -415,23 +417,23 @@ export default function TeacherMeetingPrep() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              Select Students & Concerns to Discuss
+              {t('meeting.selectStudents', 'Select Students & Concerns to Discuss')}
             </CardTitle>
             <p className="text-sm text-gray-600 mt-2">
-              Choose entire students (all their concerns) or individual concerns to include in your meeting preparation.
+              {t('meeting.selectStudentsDesc', 'Choose entire students (all their concerns) or individual concerns to include in your meeting preparation.')}
             </p>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <p className="text-center py-8 text-gray-500">Loading your concerns...</p>
+              <p className="text-center py-8 text-gray-500">{t('meeting.loadingConcerns', 'Loading your concerns...')}</p>
             ) : concerns.length === 0 ? (
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  You haven't documented any student concerns yet. 
+                  {t('meeting.noConcernsAlert', "You haven't documented any student concerns yet.")} 
                   <Link href="/" className="text-blue-600 hover:underline ml-1">
-                    Create your first concern
-                  </Link> to include in meeting preparation.
+                    {t('meeting.createFirstConcern', 'Create your first concern')}
+                  </Link> {t('meeting.toIncludeInMeeting', 'to include in meeting preparation.')}
                 </AlertDescription>
               </Alert>
             ) : (
@@ -475,19 +477,22 @@ export default function TeacherMeetingPrep() {
                             <span className="font-semibold text-lg text-gray-900">
                               {studentKey}.
                             </span>
-                            <Badge variant="outline">Grade {firstConcern.grade}</Badge>
+                            <Badge variant="outline">{t('meeting.grade', 'Grade {{grade}}', { grade: firstConcern.grade })}</Badge>
                             <Badge variant="secondary" className="text-xs">
-                              {studentConcerns.length} concern{studentConcerns.length !== 1 ? 's' : ''}
+                              {t('meeting.concernCount', '{{count}} concern{{plural}}', { count: studentConcerns.length, plural: studentConcerns.length !== 1 ? 's' : '' })}
                             </Badge>
                             {!expandedStudents.has(studentKey) && (
                               <span className="text-xs text-gray-500">
-                                {meetingData.selectedConcerns.filter(id => studentConcerns.map(c => c.id).includes(id)).length} of {studentConcerns.length} selected
+                                {t('meeting.selectedCount', '{{selected}} of {{total}} selected', { 
+                                  selected: meetingData.selectedConcerns.filter(id => studentConcerns.map(c => c.id).includes(id)).length, 
+                                  total: studentConcerns.length 
+                                })}
                               </span>
                             )}
                           </div>
                           {expandedStudents.has(studentKey) && (
                             <p className="text-sm text-gray-600">
-                              Select all concerns for this student to include in meeting
+                              {t('meeting.selectAllForStudent', 'Select all concerns for this student to include in meeting')}
                             </p>
                           )}
                         </div>
@@ -536,15 +541,15 @@ export default function TeacherMeetingPrep() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              Meeting Agenda & Notes
+              {t('meeting.agendaAndNotes', 'Meeting Agenda & Notes')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="agenda">Meeting Agenda</Label>
+              <Label htmlFor="agenda">{t('meeting.agenda', 'Meeting Agenda')}</Label>
               <Textarea
                 id="agenda"
-                placeholder="Outline the meeting agenda and discussion points..."
+                placeholder={t('meeting.agendaPlaceholder', 'Outline the meeting agenda and discussion points...')}
                 value={meetingData.agenda}
                 onChange={(e) => setMeetingData({...meetingData, agenda: e.target.value})}
                 rows={4}
@@ -552,10 +557,10 @@ export default function TeacherMeetingPrep() {
               />
             </div>
             <div>
-              <Label htmlFor="notes">Additional Notes</Label>
+              <Label htmlFor="notes">{t('meeting.additionalNotes', 'Additional Notes')}</Label>
               <Textarea
                 id="notes"
-                placeholder="Add any additional notes or important information..."
+                placeholder={t('meeting.notesPlaceholder', 'Add any additional notes or important information...')}
                 value={meetingData.notes}
                 onChange={(e) => setMeetingData({...meetingData, notes: e.target.value})}
                 rows={4}
@@ -564,7 +569,7 @@ export default function TeacherMeetingPrep() {
             </div>
 
             <div className="space-y-3">
-              <Label>Document Options</Label>
+              <Label>{t('meeting.documentOptions', 'Document Options')}</Label>
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -572,7 +577,7 @@ export default function TeacherMeetingPrep() {
                     onCheckedChange={(checked) => setMeetingData({...meetingData, includeRecommendations: Boolean(checked)})}
                     data-testid="checkbox-include-recommendations"
                   />
-                  <Label className="text-sm">Include intervention recommendations</Label>
+                  <Label className="text-sm">{t('meeting.includeRecommendations', 'Include intervention recommendations')}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -580,7 +585,7 @@ export default function TeacherMeetingPrep() {
                     onCheckedChange={(checked) => setMeetingData({...meetingData, includeProgressNotes: Boolean(checked)})}
                     data-testid="checkbox-include-progress"
                   />
-                  <Label className="text-sm">Include progress notes section</Label>
+                  <Label className="text-sm">{t('meeting.includeProgressNotes', 'Include progress notes section')}</Label>
                 </div>
                 
               </div>
@@ -597,7 +602,7 @@ export default function TeacherMeetingPrep() {
             data-testid="button-preview"
           >
             <Eye className="h-4 w-4 mr-2" />
-            Preview Document
+            {t('meeting.previewDocument', 'Preview Document')}
           </Button>
           <Button
             onClick={generateMeetingDocument}
@@ -609,7 +614,7 @@ export default function TeacherMeetingPrep() {
             ) : (
               <Download className="h-4 w-4 mr-2" />
             )}
-            Generate Document
+            {t('meeting.generateDocument', 'Generate Document')}
           </Button>
         </div>
       </div>
@@ -618,7 +623,7 @@ export default function TeacherMeetingPrep() {
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Meeting Preparation Preview</DialogTitle>
+            <DialogTitle>{t('meeting.previewDocument', 'Meeting Preparation Preview')}</DialogTitle>
           </DialogHeader>
           <div className="mt-4">
             <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-lg border">
