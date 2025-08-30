@@ -1,6 +1,7 @@
 import { useState, useMemo, memo } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 // Helper function for checking unauthorized errors
 const isUnauthorizedError = (error: Error): boolean => {
   return /^401: .*Unauthorized/.test(error.message);
@@ -247,6 +248,7 @@ export default function InterventionResults({
     return new Set(savedIds);
   });
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   // Fetch existing follow-up questions
   const { data: existingQuestions, refetch: refetchQuestions } = useQuery<FollowUpQuestion[]>({
@@ -303,8 +305,8 @@ export default function InterventionResults({
     },
     onSuccess: (data: { viewUrl: string; downloadUrl: string }) => {
       toast({
-        title: "Report Generated",
-        description: "Your HTML report is ready to view or download",
+        title: t('results.reportGenerated'),
+        description: t('results.htmlReportReady'),
       });
       
       // Open report in new tab first for viewing

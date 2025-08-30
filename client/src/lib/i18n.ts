@@ -268,6 +268,8 @@ const resources = {
       'results.followUpPlaceholder': 'Ask a question about these interventions...',
       'results.askQuestion': 'Ask Question',
       'results.asking': 'Getting answer...',
+      'results.reportGenerated': 'Report Generated',
+      'results.htmlReportReady': 'Your HTML report is ready to view or download',
       
       // Reports
       'reports.title': 'Generated Reports',
@@ -852,6 +854,8 @@ const resources = {
       'results.followUpPlaceholder': '询问关于这些干预策略的问题...',
       'results.askQuestion': '提问',
       'results.asking': '获取答案中...',
+      'results.reportGenerated': '报告已生成',
+      'results.htmlReportReady': '您的HTML报告已准备就绪，可查看或下载',
       
       // Reports
       'reports.title': '生成的报告',
