@@ -38,11 +38,13 @@ import {
 import { Concern } from "@shared/schema";
 import { Link } from "wouter";
 import InterventionsDisplay from "@/components/InterventionsDisplay";
+import { useTranslation } from "react-i18next";
 
 export default function MySupportRequests() {
   const { isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [studentFilter, setStudentFilter] = useState("");
   const [expandedRequest, setExpandedRequest] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
@@ -88,7 +90,7 @@ export default function MySupportRequests() {
     },
     onSuccess: () => {
       toast({
-        title: "Report Shared Successfully!",
+        title: t('supportRequests.shareSuccess', 'Report Shared Successfully!'),
         description: "The intervention report has been sent to student support staff.",
       });
       setShowEmailModal(false);
@@ -110,8 +112,8 @@ export default function MySupportRequests() {
       }
       
       toast({
-        title: "Failed to Share Report",
-        description: error.message || "There was an error sending the email. Please try again.",
+        title: t('supportRequests.shareError', 'Failed to Share Report'),
+        description: error.message || t('supportRequests.shareErrorMessage', 'There was an issue sending the report. Please check the email address and try again.'),
         variant: "destructive",
       });
     },
@@ -280,7 +282,7 @@ export default function MySupportRequests() {
           <Link href="/">
             <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
+              {t('supportRequests.backToHome', 'Back to Home')}
             </Button>
           </Link>
         </div>
@@ -288,10 +290,10 @@ export default function MySupportRequests() {
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8 lg:mb-12">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-            Student Support Requests
+            {t('supportRequests.title', 'Student Support Requests')}
           </h1>
           <p className="text-sm sm:text-base lg:text-lg text-gray-600">
-            View and manage submitted student support requests
+            {t('supportRequests.subtitle', 'View and manage submitted student support requests')}
           </p>
         </div>
 
@@ -301,7 +303,7 @@ export default function MySupportRequests() {
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center mr-2 sm:mr-3">
               <History className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Recent Activity</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">{t('supportRequests.recentActivity', 'Recent Activity')}</h2>
           </div>
           
           <div className="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-6">
@@ -310,7 +312,7 @@ export default function MySupportRequests() {
                 <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-100 rounded-md sm:rounded-lg flex items-center justify-center mr-2 sm:mr-3">
                   <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Recent Concerns</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{t('supportRequests.recentConcerns', 'Recent Concerns')}</h3>
               </div>
               <div className="flex items-center justify-center w-8 h-8 bg-green-600 text-white rounded-full font-bold text-lg">
                 {concerns?.length || 0}
@@ -319,16 +321,19 @@ export default function MySupportRequests() {
             
             {concerns && concerns.length > 0 ? (
               <p className="text-gray-600 text-sm">
-                You have {concerns.length} concern{concerns.length !== 1 ? 's' : ''} documented. View details below.
+                {t('supportRequests.concernsDocumented', 'You have {{count}} concern{{plural}} documented. View details below.', {
+                  count: concerns.length,
+                  plural: concerns.length !== 1 ? 's' : ''
+                })}
               </p>
             ) : (
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Clock className="h-8 w-8 text-gray-400" />
                 </div>
-                <h4 className="text-lg font-medium text-gray-900 mb-2">No concerns documented yet</h4>
+                <h4 className="text-lg font-medium text-gray-900 mb-2">{t('supportRequests.noConcernsYet', 'No concerns documented yet')}</h4>
                 <p className="text-gray-500 text-sm">
-                  Your recent concerns will appear here after you submit your first concern.
+                  {t('supportRequests.noConcernsDescription', 'Your recent concerns will appear here after you submit your first concern.')}
                 </p>
               </div>
             )}
@@ -341,26 +346,26 @@ export default function MySupportRequests() {
             <div className="flex flex-col space-y-4">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="all" className="text-xs sm:text-sm">
-                  All Requests ({concerns?.length || 0})
+                  {t('supportRequests.allRequests', 'All Requests')} ({concerns?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="differentiation" className="text-xs sm:text-sm">
                   <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                  Differentiation ({differentiationCount})
+                  {t('supportRequests.differentiation', 'Differentiation')} ({differentiationCount})
                 </TabsTrigger>
                 <TabsTrigger value="intervention" className="text-xs sm:text-sm">
                   <Target className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                  Interventions ({interventionCount})
+                  {t('supportRequests.interventions', 'Interventions')} ({interventionCount})
                 </TabsTrigger>
               </TabsList>
 
               {/* Filter Section */}
               <div className="max-w-full sm:max-w-md">
                 <label htmlFor="student-filter" className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                  Filter by Student Name
+                  {t('supportRequests.filter', 'Filter by Student Name')}
                 </label>
                 <Input
                   id="student-filter"
-                  placeholder="Enter student name to filter..."
+                  placeholder={t('supportRequests.searchPlaceholder', 'Enter student name to filter...')}
                   value={studentFilter}
                   onChange={(e) => setStudentFilter(e.target.value)}
                   className="w-full text-sm sm:text-base"
@@ -488,14 +493,14 @@ export default function MySupportRequests() {
                           {expandedRequest === concern.id ? (
                             <>
                               <ChevronUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                              <span className="hidden sm:inline">Hide Details</span>
-                              <span className="sm:hidden">Hide</span>
+                              <span className="hidden sm:inline">{t('supportRequests.hideDetails', 'Hide Details')}</span>
+                              <span className="sm:hidden">{t('supportRequests.hideDetailsShort', 'Hide')}</span>
                             </>
                           ) : (
                             <>
                               <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                              <span className="hidden sm:inline">View Details</span>
-                              <span className="sm:hidden">View</span>
+                              <span className="hidden sm:inline">{t('supportRequests.viewDetails', 'View Details')}</span>
+                              <span className="sm:hidden">{t('supportRequests.viewDetailsShort', 'View')}</span>
                             </>
                           )}
                         </Button>
@@ -507,8 +512,8 @@ export default function MySupportRequests() {
                           data-testid={`button-share-concern-${concern.id}`}
                         >
                           <Share2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                          <span className="hidden sm:inline">Share</span>
-                          <span className="sm:hidden">Share</span>
+                          <span className="hidden sm:inline">{t('supportRequests.share', 'Share')}</span>
+                          <span className="sm:hidden">{t('supportRequests.share', 'Share')}</span>
                         </Button>
                         <AlertDialog open={deleteDialogOpen === concern.id} onOpenChange={(open) => setDeleteDialogOpen(open ? concern.id : null)}>
                           <AlertDialogTrigger asChild>
@@ -519,27 +524,28 @@ export default function MySupportRequests() {
                               data-testid={`button-delete-concern-${concern.id}`}
                             >
                               <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                              <span className="hidden sm:inline">Delete</span>
+                              <span className="hidden sm:inline">{t('supportRequests.delete', 'Delete')}</span>
                               <span className="sm:hidden">Del</span>
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Concern</AlertDialogTitle>
+                              <AlertDialogTitle>{t('supportRequests.deleteConfirm', 'Delete Concern')}</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete this concern for {concern.studentFirstName} {concern.studentLastInitial}.? 
-                                This action cannot be undone and will permanently delete all related interventions and follow-up questions.
+                                {t('supportRequests.deleteMessageDetailed', 'Are you sure you want to delete this concern for {{studentName}}? This action cannot be undone and will permanently delete all related interventions and follow-up questions.', {
+                                  studentName: `${concern.studentFirstName} ${concern.studentLastInitial}.`
+                                })}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel data-testid="button-cancel-delete">Cancel</AlertDialogCancel>
+                              <AlertDialogCancel data-testid="button-cancel-delete">{t('supportRequests.cancel', 'Cancel')}</AlertDialogCancel>
                               <AlertDialogAction 
                                 onClick={() => handleDelete(concern.id)}
                                 disabled={deleteMutation.isPending}
                                 className="bg-red-600 hover:bg-red-700"
                                 data-testid="button-confirm-delete"
                               >
-                                {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                                {deleteMutation.isPending ? t('supportRequests.deleting', 'Deleting...') : t('supportRequests.delete', 'Delete')}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -556,7 +562,7 @@ export default function MySupportRequests() {
                       <div className="bg-gray-50 rounded-lg p-4">
                         <h4 className="font-medium text-gray-900 mb-2 flex items-center">
                           <FileText className="h-4 w-4 mr-2 text-purple-500" />
-                          Concern Description
+                          {t('supportRequests.concernDescription', 'Concern Description')}
                         </h4>
                         <p className="text-gray-700 leading-relaxed">{concern.description}</p>
                       </div>
@@ -578,11 +584,11 @@ export default function MySupportRequests() {
       <Dialog open={showEmailModal} onOpenChange={setShowEmailModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Share Report with Student Support</DialogTitle>
+            <DialogTitle>{t('supportRequests.shareReport', 'Share Report with Student Support')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="text-sm text-gray-600">
-              Sharing report for: <strong>{shareTargetConcern?.studentFirstName} {shareTargetConcern?.studentLastInitial}.</strong>
+              {t('supportRequests.sharingFor', 'Sharing report for:')} <strong>{shareTargetConcern?.studentFirstName} {shareTargetConcern?.studentLastInitial}.</strong>
             </div>
             
             {/* Email Recipients */}
@@ -592,13 +598,13 @@ export default function MySupportRequests() {
                 <div key={index} className="flex gap-2 items-start">
                   <div className="flex-1 space-y-2">
                     <Input
-                      placeholder="Name (optional)"
+                      placeholder={t('supportRequests.namePlaceholder', 'Name (optional)')}
                       value={recipient.name}
                       onChange={(e) => updateRecipient(index, "name", e.target.value)}
                       className="text-sm"
                     />
                     <Input
-                      placeholder="Email address"
+                      placeholder={t('supportRequests.emailPlaceholder', 'Email address')}
                       type="email"
                       value={recipient.email}
                       onChange={(e) => updateRecipient(index, "email", e.target.value)}
@@ -626,15 +632,15 @@ export default function MySupportRequests() {
                 className="w-full text-blue-600 border-blue-200 hover:bg-blue-50"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Add Another Recipient
+                {t('supportRequests.addRecipient', 'Add Another Recipient')}
               </Button>
             </div>
 
             {/* Email Message */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Message (optional)</label>
+              <label className="text-sm font-medium text-gray-700">{t('supportRequests.messageLabel', 'Message (optional)')}</label>
               <Textarea
-                placeholder="Add a personal message to include with the report..."
+                placeholder={t('supportRequests.messagePlaceholder', 'Add a personal message to include with the report...')}
                 value={emailMessage}
                 onChange={(e) => setEmailMessage(e.target.value)}
                 rows={3}
@@ -648,7 +654,7 @@ export default function MySupportRequests() {
                 variant="outline"
                 onClick={() => setShowEmailModal(false)}
               >
-                Cancel
+                {t('supportRequests.cancel', 'Cancel')}
               </Button>
               <Button
                 onClick={handleSendEmail}
@@ -658,12 +664,12 @@ export default function MySupportRequests() {
                 {emailMutation.isPending ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Sending...
+                    {t('supportRequests.sending', 'Sending...')}
                   </>
                 ) : (
                   <>
                     <Share2 className="h-4 w-4 mr-2" />
-                    Send Report
+                    {t('supportRequests.sendReport', 'Send Report')}
                   </>
                 )}
               </Button>
