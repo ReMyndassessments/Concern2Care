@@ -148,6 +148,20 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
     };
     return typeMap[type] || type;
   };
+
+  // Helper function to get translated severity levels
+  const getTranslatedSeverityLevels = (t: any) => [
+    { value: 'mild', label: t('form.mildClassroom', 'Mild – Needs classroom support') },
+    { value: 'moderate', label: t('form.moderateTier2', 'Moderate – Needs Tier 2 intervention') },
+    { value: 'urgent', label: t('form.urgentImmediate', 'Urgent – Immediate follow-up needed') }
+  ];
+
+  // Helper function to get translated actions taken
+  const getTranslatedActionsTaken = (t: any) => [
+    t('form.talkedWithStudent', 'Talked with student'),
+    t('form.contactedParent', 'Contacted parent'),
+    t('form.documentedOnly', 'Documented only')
+  ];
   const [showOtherConcern, setShowOtherConcern] = useState(false);
   const [showOtherAction, setShowOtherAction] = useState(false);
   const [showDifferentiation, setShowDifferentiation] = useState(false);
@@ -800,7 +814,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   render={({ field }) => (
                     <FormItem className="space-y-3">
                       <FormLabel className="text-base">
-                        Severity Level <span className="text-red-500">*</span>
+                        {t('form.severityLevel', 'Severity Level')} <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <RadioGroup
@@ -809,7 +823,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           className="flex flex-col space-y-3"
                           disabled={isAtLimit}
                         >
-                          {SEVERITY_LEVELS.map((level) => (
+                          {getTranslatedSeverityLevels(t).map((level) => (
                             <div key={level.value} className="flex items-center space-x-3 py-2 min-h-[44px]">
                               <RadioGroupItem value={level.value} id={level.value} disabled={isAtLimit} />
                               <label
@@ -835,13 +849,13 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel className="text-base">
-                      Actions Already Taken
+                      {t('form.actionsAlreadyTaken', 'Actions Already Taken')}
                     </FormLabel>
-                    <p className="text-sm text-gray-600">Select all that apply</p>
+                    <p className="text-sm text-gray-600">{t('form.selectAllThatApply', 'Select all that apply')}</p>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-                    {ACTIONS_TAKEN.map((item) => (
+                    {getTranslatedActionsTaken(t).map((item) => (
                       <FormField
                         key={item}
                         control={form.control}
@@ -868,7 +882,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                 />
                               </FormControl>
                               <FormLabel className="text-sm font-normal leading-normal cursor-pointer flex-1">
-                                {getTranslatedConcernType(item, t)}
+                                {item}
                               </FormLabel>
                             </FormItem>
                           );
@@ -884,7 +898,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         disabled={isAtLimit}
                         onCheckedChange={(checked) => setShowOtherAction(checked === true)}
                       />
-                      <label className={`text-sm font-normal ${isAtLimit ? 'text-gray-400' : ''}`}>Other action taken (please specify)</label>
+                      <label className={`text-sm font-normal ${isAtLimit ? 'text-gray-400' : ''}`}>{t('form.otherActionTaken', 'Other action taken (please specify)')}</label>
                     </div>
                     
                     {showOtherAction && (
@@ -894,7 +908,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         render={({ field }) => (
                           <FormItem className="mt-2">
                             <FormControl>
-                              <Input placeholder="Describe other action taken" {...field} disabled={isAtLimit} />
+                              <Input placeholder={t('form.describeOtherAction', 'Describe other action taken')} {...field} disabled={isAtLimit} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
