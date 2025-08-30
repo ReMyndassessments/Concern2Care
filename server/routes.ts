@@ -2631,79 +2631,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       doc.moveDown(1.2);
       
-      // Create info box with subtle background
-      const infoY = doc.y;
-      doc.rect(40, infoY, 520, 100)
-         .fillColor('#f8fafc')
-         .strokeColor('#e5e7eb')
-         .lineWidth(1)
-         .fillAndStroke();
+      // Create clean table-style layout
+      const startY = doc.y;
+      
+      // Title Row
+      doc.fontSize(13).font('Helvetica-Bold');
+      doc.fillColor('#1f2937');
+      doc.text('Title:', 50, startY);
+      doc.fontSize(12).font('Helvetica');
+      doc.fillColor('#374151');
+      doc.text(meetingData.meetingTitle || 'Not specified', 150, startY);
+      
+      // Type Row  
+      const typeY = startY + 25;
+      doc.fontSize(13).font('Helvetica-Bold');
+      doc.fillColor('#1f2937');
+      doc.text('Type:', 50, typeY);
+      doc.fontSize(12).font('Helvetica');
+      doc.fillColor('#374151');
+      doc.text(meetingData.meetingType || 'Not specified', 150, typeY);
+      
+      // Date Row
+      const dateY = startY + 50;
+      doc.fontSize(13).font('Helvetica-Bold');
+      doc.fillColor('#1f2937');
+      doc.text('Date:', 50, dateY);
+      doc.fontSize(12).font('Helvetica');
+      doc.fillColor('#374151');
+      doc.text(meetingData.meetingDate || 'Not specified', 150, dateY);
+      
+      // Time Row
+      const timeY = startY + 75;
+      doc.fontSize(13).font('Helvetica-Bold');
+      doc.fillColor('#1f2937');
+      doc.text('Time:', 50, timeY);
+      doc.fontSize(12).font('Helvetica');
+      doc.fillColor('#374151');
+      doc.text(meetingData.meetingTime || 'Not specified', 150, timeY);
+      
+      // Reset colors and position cursor properly
       doc.fillColor('#000000');
-      
-      // Position content inside the box with proper spacing
-      doc.y = infoY + 15;
-      doc.x = 60;
-      
-      doc.fontSize(12).font('Helvetica-Bold');
-      doc.text('Title:', 60, doc.y);
-      doc.font('Helvetica').text(meetingData.meetingTitle || 'Not specified', 120, doc.y);
-      doc.y += 18;
-      
-      doc.font('Helvetica-Bold').text('Type:', 60, doc.y);
-      doc.font('Helvetica').text(meetingData.meetingType || 'Not specified', 120, doc.y);
-      doc.y += 18;
-      
-      doc.font('Helvetica-Bold').text('Date:', 60, doc.y);
-      doc.font('Helvetica').text(meetingData.meetingDate || 'Not specified', 120, doc.y);
-      doc.y += 18;
-      
-      doc.font('Helvetica-Bold').text('Time:', 60, doc.y);
-      doc.font('Helvetica').text(meetingData.meetingTime || 'Not specified', 120, doc.y);
-      
-      doc.x = 50; // Reset margin
-      doc.y = infoY + 110;
-      doc.moveDown(1);
+      doc.y = timeY + 35;
 
       // Attendees Section with improved formatting
       if (meetingData.attendees && meetingData.attendees.length > 0) {
-        doc.fontSize(18).font('Helvetica-Bold');
-        doc.fillColor('#374151');
-        doc.text('Meeting Attendees');
+        doc.moveDown(1);
+        
+        doc.fontSize(16).font('Helvetica-Bold');
+        doc.fillColor('#1f2937');
+        doc.text('MEETING ATTENDEES');
         doc.fillColor('#000000');
-        doc.moveDown(0.5);
+        
+        // Add line under attendees header
+        doc.moveTo(50, doc.y + 5)
+           .lineTo(350, doc.y + 5)
+           .strokeColor('#d1d5db')
+           .lineWidth(1)
+           .stroke();
+           
+        doc.moveDown(1);
         
         doc.fontSize(12).font('Helvetica');
         meetingData.attendees.forEach((attendee: string, index: number) => {
-          doc.text(`${index + 1}. ${attendee}`, { indent: 20 });
+          doc.text(`${index + 1}. ${attendee}`, 60, doc.y);
+          doc.moveDown(0.5);
         });
-        doc.moveDown(2);
+        doc.moveDown(1);
       }
 
       // Agenda Section with better formatting
       if (meetingData.agenda) {
-        doc.fontSize(18).font('Helvetica-Bold');
-        doc.fillColor('#374151');
-        doc.text('Meeting Agenda');
-        doc.fillColor('#000000');
-        doc.moveDown(0.5);
+        // Add space before agenda
+        doc.moveDown(1);
         
-        // Agenda content box
-        const agendaY = doc.y;
-        const agendaHeight = doc.heightOfString(meetingData.agenda, { width: 480 }) + 20;
-        doc.rect(40, agendaY, 520, agendaHeight)
-           .fillColor('#fefefe')
+        doc.fontSize(16).font('Helvetica-Bold');
+        doc.fillColor('#1f2937');
+        doc.text('MEETING AGENDA');
+        doc.fillColor('#000000');
+        
+        // Add line under agenda header
+        doc.moveTo(50, doc.y + 5)
+           .lineTo(300, doc.y + 5)
            .strokeColor('#d1d5db')
            .lineWidth(1)
-           .fillAndStroke();
-        doc.fillColor('#000000');
-        
-        doc.y = agendaY + 10;
-        doc.x = 60;
-        doc.fontSize(12).font('Helvetica');
-        doc.text(meetingData.agenda, { width: 480, align: 'left' });
-        doc.x = 50;
-        doc.y = agendaY + agendaHeight + 10;
+           .stroke();
+           
         doc.moveDown(1);
+        
+        // Simple agenda content without complex positioning
+        doc.fontSize(12).font('Helvetica');
+        doc.fillColor('#374151');
+        doc.text(meetingData.agenda, 60, doc.y, { 
+          width: 480, 
+          align: 'left',
+          lineGap: 2
+        });
+        doc.fillColor('#000000');
+        doc.moveDown(2);
       }
 
       // Selected Concerns (if any)
@@ -2715,7 +2739,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         doc.fontSize(20).font('Helvetica-Bold');
         doc.fillColor('#1f2937');
-        doc.text('STUDENT CONCERNS TO DISCUSS', { align: 'center' });
+        doc.text('STUDENT CONCERNS TO DISCUSS');
         doc.fillColor('#000000');
         
         // Add horizontal line under header
@@ -2725,7 +2749,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
            .lineWidth(2)
            .stroke();
         
-        doc.moveDown(1.2);
+        doc.moveDown(1.5);
         
         // Add separator line
         doc.moveTo(50, doc.y + 10)
