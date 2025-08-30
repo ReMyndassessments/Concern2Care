@@ -175,7 +175,7 @@ export default function Landing() {
                 <p className="text-sm text-gray-600">{t('pricing.smallSchoolRange', '1-20 Teachers')}</p>
                 <div className="mt-4">
                   <span className="text-3xl font-bold text-purple-600">$10</span>
-                  <span className="text-gray-600">/teacher/month</span>
+                  <span className="text-gray-600">{t('pricing.perTeacherMonth', '/teacher/month')}</span>
                   <p className="text-sm text-gray-500 mt-1">
                     {t('pricing.annual', 'Annual: $108/teacher/year')}<br />
                     <span className="text-green-600 font-medium">{t('pricing.save10', 'Save 10% annually')}</span>
@@ -204,10 +204,10 @@ export default function Landing() {
                 <p className="text-sm text-gray-600">{t('pricing.mediumSchoolRange', '21-50 Teachers')}</p>
                 <div className="mt-4">
                   <span className="text-3xl font-bold text-blue-600">$10</span>
-                  <span className="text-gray-600">/teacher/month</span>
+                  <span className="text-gray-600">{t('pricing.perTeacherMonth', '/teacher/month')}</span>
                   <p className="text-sm text-gray-500 mt-1">
-                    Annual: $108/teacher/year<br />
-                    <span className="text-green-600 font-medium">Save 10% annually</span>
+                    {t('pricing.annual', 'Annual: $108/teacher/year')}<br />
+                    <span className="text-green-600 font-medium">{t('pricing.save10', 'Save 10% annually')}</span>
                   </p>
                 </div>
               </CardHeader>
@@ -230,10 +230,10 @@ export default function Landing() {
                 <p className="text-sm text-gray-600">{t('pricing.largeSchoolRange', '51-200 Teachers')}</p>
                 <div className="mt-4">
                   <span className="text-3xl font-bold text-emerald-600">$10</span>
-                  <span className="text-gray-600">/teacher/month</span>
+                  <span className="text-gray-600">{t('pricing.perTeacherMonth', '/teacher/month')}</span>
                   <p className="text-sm text-gray-500 mt-1">
-                    Annual: $108/teacher/year<br />
-                    <span className="text-green-600 font-medium">Save 10% annually</span>
+                    {t('pricing.annual', 'Annual: $108/teacher/year')}<br />
+                    <span className="text-green-600 font-medium">{t('pricing.save10', 'Save 10% annually')}</span>
                   </p>
                 </div>
               </CardHeader>
