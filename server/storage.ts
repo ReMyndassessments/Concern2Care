@@ -294,7 +294,11 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async getAllUsers(): Promise<UserWithSchool[]> {
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users).orderBy(users.createdAt);
+  }
+
+  async getUsersWithSchool(): Promise<UserWithSchool[]> {
     const result = await db
       .select({
         user: users,
@@ -308,10 +312,6 @@ export class DatabaseStorage implements IStorage {
       ...row.user,
       school: row.schoolData
     }));
-  }
-
-  async getUsersWithSchool(): Promise<UserWithSchool[]> {
-    return this.getAllUsers();
   }
 
   async getUsersBySchool(schoolId: string): Promise<User[]> {
