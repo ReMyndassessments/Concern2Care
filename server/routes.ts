@@ -70,27 +70,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Enable sessions for professional authentication with PostgreSQL persistence
   const pgSession = connectPgSimple(session);
   
+  // Detect production environment
+  const isProduction = process.env.NODE_ENV === 'production' || 
+                      process.env.REPLIT_DOMAINS?.includes('.replit.app');
+  
   app.use(session({
     secret: process.env.SESSION_SECRET || 'concern2care-session-secret-development-key-very-long',
-    resave: false, // Don't save session if unmodified
+    resave: true, // Force save session even if unmodified (fixes production issues)
     saveUninitialized: false, // Don't create session until something stored
     store: new pgSession({
       conString: process.env.DATABASE_URL,
       tableName: 'session', // Will be created automatically
       createTableIfMissing: true,
-      ttl: 4 * 60 * 60 // 4 hours in seconds
+      ttl: 8 * 60 * 60, // 8 hours in seconds (longer for production)
+      pruneSessionInterval: 60 * 15 // Clean up expired sessions every 15 minutes
     }),
     rolling: true, // Reset session timeout on activity
     name: 'connect.sid',
     cookie: {
-      secure: false, // Set to true in production with HTTPS
-      maxAge: 4 * 60 * 60 * 1000, // 4 hours
+      secure: false, // Keep false for now since replit.app may not be fully HTTPS
+      maxAge: 8 * 60 * 60 * 1000, // 8 hours - longer for production
       httpOnly: true, // Prevent XSS attacks
-      sameSite: 'lax'
+      sameSite: 'lax', // Required for cross-origin requests
+      domain: isProduction ? undefined : undefined // Let browser handle domain
     }
   }));
 
-  // Add session debugging middleware
+  // Add session debugging and cleanup middleware
   app.use((req: any, res, next) => {
     if (req.path.includes('/api/auth')) {
       console.log('🍪 Session check - SessionID:', req.sessionID?.slice(0, 8), 'User:', req.session?.user?.email || 'none');
@@ -99,6 +105,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isAuthenticated: req.session?.isAuthenticated,
         userEmail: req.session?.user?.email
       });
+      
+      // Clean up broken sessions with undefined authentication state
+      if (req.session && req.session.isAuthenticated === undefined && req.session.user) {
+        console.log('🧹 Cleaning up broken session with undefined auth state');
+        req.session.destroy((err: any) => {
+          if (err) console.error('Error destroying broken session:', err);
+        });
+      }
     }
     next();
   });
@@ -154,29 +168,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
               sessionId: req.sessionID?.slice(0, 8)
             });
 
-            // Force session save before responding with production timing fix
-            req.session.save((err: any) => {
-              if (err) {
-                console.error('❌ Session save error:', err);
-                return res.status(500).json({ message: "Session creation failed" });
-              }
-              console.log('✅ Session saved successfully for:', user.email, 'SessionID:', req.sessionID?.slice(0, 8));
-              console.log('✅ Session state:', {
-                isAuthenticated: req.session.isAuthenticated,
-                hasUser: !!req.session.user,
-                userEmail: req.session.user?.email
-              });
-              
-              // Add small delay in production to ensure session persistence
-              const delay = process.env.NODE_ENV === 'production' ? 500 : 0;
-              setTimeout(() => {
-                return res.json({ 
-                  success: true, 
-                  user: req.session.user,
-                  message: "Login successful"
+            // Force session save with enhanced error handling and retries
+            const saveSessionWithRetry = (attempt = 1) => {
+              req.session.save((err: any) => {
+                if (err) {
+                  console.error(`❌ Session save error (attempt ${attempt}):`, err);
+                  if (attempt < 3) {
+                    console.log(`🔄 Retrying session save (attempt ${attempt + 1})...`);
+                    setTimeout(() => saveSessionWithRetry(attempt + 1), 200);
+                    return;
+                  } else {
+                    return res.status(500).json({ message: "Session creation failed after retries" });
+                  }
+                }
+                
+                console.log('✅ Session saved successfully for:', user.email, 'SessionID:', req.sessionID?.slice(0, 8));
+                console.log('✅ Session state after save:', {
+                  isAuthenticated: req.session.isAuthenticated,
+                  hasUser: !!req.session.user,
+                  userEmail: req.session.user?.email,
+                  sessionId: req.sessionID?.slice(0, 8)
                 });
-              }, delay);
-            });
+                
+                // Verify session state before responding
+                if (req.session.isAuthenticated !== true || !req.session.user) {
+                  console.error('❌ Session state verification failed after save');
+                  return res.status(500).json({ message: "Session state verification failed" });
+                }
+                
+                // Add production delay to ensure session persistence across load balancers
+                const delay = (process.env.NODE_ENV === 'production' || process.env.REPLIT_DOMAINS?.includes('.replit.app')) ? 750 : 100;
+                setTimeout(() => {
+                  return res.json({ 
+                    success: true, 
+                    user: req.session.user,
+                    message: "Login successful",
+                    sessionId: req.sessionID?.slice(0, 8) // For debugging
+                  });
+                }, delay);
+              });
+            };
+            
+            saveSessionWithRetry();
             return; // Exit after successful login
           }
         }
