@@ -31,8 +31,13 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
     flag.flagName === 'chinese_localization' && flag.isGloballyEnabled
   );
 
+  // Debug logging
+  console.log('LanguageSwitcher - enabledFlags:', enabledFlags);
+  console.log('LanguageSwitcher - isChineseEnabled:', isChineseEnabled);
+
   // Don't render if Chinese localization is not enabled
   if (!isChineseEnabled) {
+    console.log('LanguageSwitcher not rendering - Chinese not enabled');
     return null;
   }
 
