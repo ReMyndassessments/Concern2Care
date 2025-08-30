@@ -642,6 +642,7 @@ export interface FollowUpAssistanceRequest {
   grade: string;
   concernTypes: string[];
   severityLevel: string;
+  language?: string;
 }
 
 export interface FollowUpAssistanceResponse {
@@ -665,7 +666,18 @@ export async function followUpAssistance(
     ? req.concernTypes.join(', ')
     : 'Not specified';
 
-  const prompt = `You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. Provide detailed, research-backed implementation guidance for Tier 2 interventions with specific steps, materials, troubleshooting, and progress monitoring strategies.
+  // Detect if Chinese translation is requested
+  const hasChinese = /chinese|中文|中国|翻译|中国人|中国话|中文版|chinese|translate.*chinese|write.*chinese|explain.*chinese/i.test(req.specificQuestion);
+  const targetLanguage = hasChinese ? 'Chinese' : req.language;
+  
+  let prompt = `You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. Provide detailed, research-backed implementation guidance for Tier 2 interventions with specific steps, materials, troubleshooting, and progress monitoring strategies.`;
+
+  // Add language instruction if Chinese is requested
+  if (targetLanguage === 'Chinese' || hasChinese) {
+    prompt += `\n\n**IMPORTANT LANGUAGE REQUIREMENT: The user is requesting a Chinese translation or explanation. Please provide your entire response in simplified Chinese (中文). All text, headers, implementation steps, and materials should be written in Chinese. Use culturally appropriate examples for Chinese-speaking communities.**\n\n`;
+  }
+
+  prompt += `
 
 Context:
 - Student: ${req.studentFirstName} ${req.studentLastInitial}.
@@ -709,7 +721,9 @@ Focus on actionable advice that a classroom teacher can realistically implement.
         messages: [
           {
             role: "system",
-            content: "You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. Provide comprehensive, research-backed implementation guidance with specific procedural steps, materials lists, data collection methods, and troubleshooting strategies. Base all recommendations on proven implementation research and successful classroom practices."
+            content: targetLanguage === 'Chinese' || hasChinese 
+              ? "You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. You are fluent in Chinese and will provide all responses in simplified Chinese (中文). Provide comprehensive, research-backed implementation guidance with specific procedural steps, materials lists, data collection methods, and troubleshooting strategies. Base all recommendations on proven implementation research and successful classroom practices. All content must be in Chinese."
+              : "You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. Provide comprehensive, research-backed implementation guidance with specific procedural steps, materials lists, data collection methods, and troubleshooting strategies. Base all recommendations on proven implementation research and successful classroom practices."
           },
           {
             role: "user",

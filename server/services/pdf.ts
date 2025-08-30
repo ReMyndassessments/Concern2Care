@@ -141,8 +141,8 @@ export async function generateConcernReport(
         
         // Check if any follow-up questions contain Chinese characters and add a notice
         const hasChineseContent = concern.followUpQuestions.some(qa => 
-          /[^\u0000-\u024F\u1E00-\u1EFF]/.test(qa.question) || 
-          /[^\u0000-\u024F\u1E00-\u1EFF]/.test(qa.response)
+          /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/.test(qa.question) || 
+          /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/.test(qa.response)
         );
         
         if (hasChineseContent) {
@@ -159,11 +159,11 @@ export async function generateConcernReport(
             yPosition = 50;
           }
 
-          // Handle question text with non-Latin character detection
+          // Handle question text with Chinese character detection
           const questionText = `Q${index + 1}: ${qa.question}`;
-          const hasNonLatinChars = /[^\u0000-\u024F\u1E00-\u1EFF]/.test(questionText);
+          const hasCJKChars = /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/.test(questionText);
           
-          if (hasNonLatinChars) {
+          if (hasCJKChars) {
             const fallbackText = `Q${index + 1}: 📝 Question contains Chinese characters - please view online for full text`;
             doc.fontSize(11).fillColor('#1e40af').text(fallbackText, 50, yPosition);
           } else {
@@ -224,26 +224,25 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
   // Helper function to add text with proper height calculation and non-Latin character detection
   const addText = (content: string, x: number, fontSize: number, color: string, options: any = {}): number => {
     const width = options.width || (pageWidth - x);
-    ensureSpace(Math.max(fontSize * 2, 25)); // Ensure minimum space
+    ensureSpace(Math.max(fontSize * 1.5, 20)); // Reduce minimum space requirement
     
-    // Check if content contains non-Latin characters (like Chinese, Arabic, etc.)
-    const hasNonLatinChars = /[^\u0000-\u024F\u1E00-\u1EFF]/.test(content);
+    // Check if content contains Chinese characters specifically
+    const hasCJKChars = /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/.test(content);
     
     doc.fontSize(fontSize).fillColor(color);
     
-    if (hasNonLatinChars) {
+    if (hasCJKChars) {
       // For content with non-Latin characters, show a helpful notice
       const noticeText = '📝 This response contains Chinese characters. Please view the full text in your web browser for complete content.';
       
-      // Add some spacing before the notice
-      yPosition += 5;
-      ensureSpace(30);
+      // Add minimal spacing before the notice
+      ensureSpace(25);
       
       const height = doc.heightOfString(noticeText, { width, ...options });
       doc.fillColor('#1e40af'); // Blue color for information
       doc.text(noticeText, x, yPosition, { width, ...options });
       doc.fillColor(color); // Reset color
-      return Math.max(height + 10, fontSize * 1.2); // Add extra spacing
+      return Math.max(height + 5, fontSize * 1.2); // Reduce extra spacing
     } else {
       // Regular Latin text - process normally
       const height = doc.heightOfString(content, { width, ...options });
@@ -256,14 +255,14 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     const trimmedLine = lines[i].trim();
     if (!trimmedLine) {
       // Add minimal spacing for empty lines
-      yPosition += 8;
+      yPosition += 4;
       continue;
     }
     
     // Main headings (### **Title**) - Large, prominent headings
     if (trimmedLine.match(/^###\s*\*\*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
-      yPosition += 15; // Space before heading
+      yPosition += 8; // Reduce space before heading
       
       // Draw separator line
       ensureSpace(30);
@@ -271,7 +270,7 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       yPosition += 8;
       
       const height = addText(title, leftMargin, 14, '#2563eb', { align: 'left' });
-      yPosition += height + 12;
+      yPosition += height + 6;
       inBulletList = false;
       continue;
     }
@@ -279,9 +278,9 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     // Strategy headings with proper spacing
     if (trimmedLine.match(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/, '$1');
-      yPosition += 10;
+      yPosition += 6;
       const height = addText(`Strategy: ${title}`, leftMargin + 10, 11, '#1e40af', { align: 'left' });
-      yPosition += height + 8;
+      yPosition += height + 5;
       inBulletList = false;
       continue;
     }
@@ -298,9 +297,9 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     // Step headings with proper numbering
     if (trimmedLine.match(/^Step\s*\d+:|^-\s*\*\*Step\s*\d+:\*\*/)) {
       let cleanText = trimmedLine.replace(/\*\*/g, '').replace(/^-\s*/, '');
-      yPosition += 6;
+      yPosition += 4;
       const height = addText(cleanText, leftMargin + 20, 10, '#059669', { align: 'left' });
-      yPosition += height + 5;
+      yPosition += height + 3;
       inBulletList = true;
       continue;
     }
@@ -308,9 +307,9 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     // Numbered headings (1. **Title** or 1. Title:)
     if (trimmedLine.match(/^\d+\./)) {
       const cleanText = trimmedLine.replace(/\*\*/g, '');
-      yPosition += 10;
+      yPosition += 6;
       const height = addText(cleanText, leftMargin + 10, 11, '#1e40af', { align: 'left' });
-      yPosition += height + 8;
+      yPosition += height + 5;
       inBulletList = false;
       continue;
     }
@@ -318,9 +317,9 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     // Other bold headings (* **Title:**)
     if (trimmedLine.match(/^\*\s*\*\*(.*?):\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*(.*?):\*\*/, '$1');
-      yPosition += 6;
+      yPosition += 4;
       const height = addText(`${title}:`, leftMargin + 10, 10, '#7c3aed', { align: 'left' });
-      yPosition += height + 5;
+      yPosition += height + 3;
       inBulletList = true;
       continue;
     }

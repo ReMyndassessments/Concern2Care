@@ -667,7 +667,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;
       const concernId = req.params.id;
-      const { question } = req.body;
+      const { question, language } = req.body;
 
       if (!question || typeof question !== 'string') {
         return res.status(400).json({ message: "Question is required" });
@@ -689,6 +689,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         grade: concern.grade || "Elementary",
         concernTypes: Array.isArray(concern.concernTypes) ? concern.concernTypes : [concern.concernType || "Academic"],
         severityLevel: concern.severityLevel || "moderate",
+        language: language,
       };
 
       const assistanceResponse = await followUpAssistance(followUpRequest);
