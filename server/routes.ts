@@ -76,23 +76,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.use(session({
     secret: process.env.SESSION_SECRET || 'concern2care-session-secret-development-key-very-long',
-    resave: true, // Force save session even if unmodified (fixes production issues)
+    resave: false, // Don't save session if unmodified
     saveUninitialized: false, // Don't create session until something stored
     store: new pgSession({
       conString: process.env.DATABASE_URL,
       tableName: 'session', // Will be created automatically
       createTableIfMissing: true,
-      ttl: 8 * 60 * 60, // 8 hours in seconds (longer for production)
-      pruneSessionInterval: 60 * 15 // Clean up expired sessions every 15 minutes
+      ttl: 4 * 60 * 60 // 4 hours in seconds
     }),
     rolling: true, // Reset session timeout on activity
     name: 'connect.sid',
     cookie: {
-      secure: false, // Keep false for now since replit.app may not be fully HTTPS
-      maxAge: 8 * 60 * 60 * 1000, // 8 hours - longer for production
+      secure: false, // Keep false for Replit environment
+      maxAge: 4 * 60 * 60 * 1000, // 4 hours
       httpOnly: true, // Prevent XSS attacks
-      sameSite: 'lax', // Required for cross-origin requests
-      domain: isProduction ? undefined : undefined // Let browser handle domain
+      sameSite: 'lax' // Required for cross-origin requests
     }
   }));
 
@@ -143,8 +141,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               .set({ lastLoginAt: new Date() })
               .where(eq(users.id, user.id));
 
-            // Create session with explicit save
-            req.session.user = {
+            // Create session data first
+            const sessionUser = {
               id: user.id,
               email: user.email,
               firstName: user.firstName,
@@ -152,6 +150,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               school: user.school,
               isAdmin: user.isAdmin || false
             };
+            
+            // Set session data directly (simpler approach)
+            req.session.user = sessionUser;
             req.session.isAuthenticated = true;
             
             console.log('🔐 Session data after login:', {
