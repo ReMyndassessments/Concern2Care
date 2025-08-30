@@ -51,6 +51,7 @@ interface MeetingPreparationData {
   includeRecommendations: boolean;
   includeProgressNotes: boolean;
   meetingType: 'IEP' | '504' | 'SST' | 'Parent Conference' | 'Other';
+  language: string;
 }
 
 export default function TeacherMeetingPrep() {
@@ -67,7 +68,8 @@ export default function TeacherMeetingPrep() {
     notes: '',
     includeRecommendations: true,
     includeProgressNotes: false,
-    meetingType: 'Parent Conference'
+    meetingType: 'Parent Conference',
+    language: 'English'
   });
   const [newAttendee, setNewAttendee] = useState('');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -565,7 +567,7 @@ export default function TeacherMeetingPrep() {
 
             <div className="space-y-3">
               <Label>Document Options</Label>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     checked={meetingData.includeRecommendations}
@@ -581,6 +583,32 @@ export default function TeacherMeetingPrep() {
                     data-testid="checkbox-include-progress"
                   />
                   <Label className="text-sm">Include progress notes section</Label>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="language">Document Language</Label>
+                  <Select
+                    value={meetingData.language}
+                    onValueChange={(value) => setMeetingData({...meetingData, language: value})}
+                  >
+                    <SelectTrigger data-testid="select-language">
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="English">English</SelectItem>
+                      <SelectItem value="Spanish">Spanish</SelectItem>
+                      <SelectItem value="French">French</SelectItem>
+                      <SelectItem value="German">German</SelectItem>
+                      <SelectItem value="Italian">Italian</SelectItem>
+                      <SelectItem value="Portuguese">Portuguese</SelectItem>
+                      <SelectItem value="Chinese">Chinese</SelectItem>
+                      <SelectItem value="Japanese">Japanese</SelectItem>
+                      <SelectItem value="Korean">Korean</SelectItem>
+                      <SelectItem value="Arabic">Arabic</SelectItem>
+                      <SelectItem value="Russian">Russian</SelectItem>
+                      <SelectItem value="Dutch">Dutch</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>

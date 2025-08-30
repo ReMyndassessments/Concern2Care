@@ -2607,6 +2607,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       doc.text('MEETING PREPARATION DOCUMENT', { align: 'center' });
       doc.fillColor('#000000');
       
+      // Add language indicator if not English
+      if (meetingData.language && meetingData.language !== 'English') {
+        doc.fontSize(12).font('Helvetica');
+        doc.fillColor('#6b7280');
+        doc.text(`Document Language: ${meetingData.language}`, { align: 'center' });
+        doc.fillColor('#000000');
+      }
+      
       // Add decorative line under title
       doc.moveTo(50, doc.y + 10)
          .lineTo(550, doc.y + 10)

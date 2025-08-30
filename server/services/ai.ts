@@ -65,6 +65,9 @@ export interface GenerateRecommendationsRequest {
   
   // Task type for focused AI responses
   taskType?: string;
+  
+  // Language preference for AI-generated content
+  language?: string;
 }
 
 export interface GenerateRecommendationsResponse {
@@ -494,12 +497,24 @@ For the identified learning profile (${differentiationText}), provide:
 **FORMATTING REQUIREMENTS**: Use detailed bullet points, include specific timeframes, provide exact implementation steps, and ensure all recommendations are immediately actionable for classroom teachers.`;
   }
 
+  // Add language instruction to the prompt if specified
+  const targetLanguage = req.language && req.language !== 'English' ? req.language : null;
+  
+  if (targetLanguage) {
+    prompt += `\n\n**IMPORTANT LANGUAGE REQUIREMENT: Please provide all recommendations, strategies, and content in ${targetLanguage}. Ensure all text, headers, implementation steps, and materials are written in ${targetLanguage}. Use culturally appropriate examples and references for ${targetLanguage}-speaking communities when applicable.**`;
+  }
+
   try {
     console.log(`🌐 Making DeepSeek API call to: ${apiClient.baseURL}/chat/completions`);
     console.log(`🔑 Using API key: ${apiClient.apiKey.substring(0, 10)}...`);
+    console.log(`🌍 Target language: ${targetLanguage || 'English (default)'}`);
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
+    const systemPrompt = targetLanguage 
+      ? `You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. You are fluent in ${targetLanguage} and will provide all responses in ${targetLanguage}. Provide comprehensive, research-backed intervention strategies with specific implementation details, materials lists, progress monitoring tools, and timeline expectations. Base all recommendations on peer-reviewed educational research and proven classroom practices. Include specific data collection methods and evidence-based modifications. All content must be in ${targetLanguage}.`
+      : "You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. Provide comprehensive, research-backed intervention strategies with specific implementation details, materials lists, progress monitoring tools, and timeline expectations. Base all recommendations on peer-reviewed educational research and proven classroom practices. Include specific data collection methods and evidence-based modifications.";
     
     const response = await fetch(`${apiClient.baseURL}/chat/completions`, {
       method: 'POST',
@@ -512,7 +527,7 @@ For the identified learning profile (${differentiationText}), provide:
         messages: [
           {
             role: "system",
-            content: "You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. Provide comprehensive, research-backed intervention strategies with specific implementation details, materials lists, progress monitoring tools, and timeline expectations. Base all recommendations on peer-reviewed educational research and proven classroom practices. Include specific data collection methods and evidence-based modifications."
+            content: systemPrompt
           },
           {
             role: "user",
