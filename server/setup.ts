@@ -4,8 +4,9 @@
 
 import bcrypt from 'bcrypt';
 import { db } from './db.js';
-import { users } from '../shared/schema.js';
-import { sql } from 'drizzle-orm';
+import { users, featureFlags } from '../shared/schema.js';
+import { sql, eq } from 'drizzle-orm';
+import crypto from 'crypto';
 
 /**
  * Initialize the application on startup
@@ -21,6 +22,7 @@ export async function initializeApp() {
   
   try {
     await ensureEssentialUsers();
+    await ensureEssentialFeatureFlags();
     console.log('✅ Application initialization complete');
   } catch (error) {
     console.error('❌ Application initialization failed:', error);
@@ -95,5 +97,41 @@ async function ensureEssentialUsers() {
     console.log('✅ Teacher user ensured via SQL upsert');
   } catch (error) {
     console.log('ℹ️ Teacher user operation result:', error instanceof Error ? error.message : String(error));
+  }
+}
+
+/**
+ * Ensure essential feature flags exist
+ */
+async function ensureEssentialFeatureFlags() {
+  console.log('🚩 Checking essential feature flags...');
+  
+  try {
+    // Check if Chinese localization feature flag exists
+    const existingFlag = await db.select()
+      .from(featureFlags)
+      .where(eq(featureFlags.flagName, 'chinese_localization'))
+      .limit(1);
+    
+    if (existingFlag.length === 0) {
+      // Create the Chinese localization feature flag
+      await db.insert(featureFlags).values({
+        id: crypto.randomUUID(),
+        flagName: 'chinese_localization',
+        description: 'Enable complete Chinese interface localization including forms, buttons, navigation, and all UI text. Allows users to switch between English and Chinese languages.',
+        isGloballyEnabled: false, // Start disabled for safety
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      console.log('✅ Chinese localization feature flag created');
+    } else {
+      console.log('✅ Chinese localization feature flag already exists');
+    }
+  } catch (error) {
+    console.error('❌ Error initializing feature flags:', error);
+    // Don\'t throw in production to avoid breaking the app startup
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
   }
 }

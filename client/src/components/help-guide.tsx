@@ -20,7 +20,10 @@ import {
   BarChart3,
   Shield,
   Globe,
-  Smartphone
+  Smartphone,
+  Copy,
+  Download,
+  Languages
 } from "lucide-react";
 
 export default function HelpGuide() {
@@ -210,6 +213,33 @@ export default function HelpGuide() {
               "Use the search function to find specific interventions later"
             ]} />
           </SubSection>
+
+          <SubSection title="New: Action Buttons for AI Outputs">
+            <p>Each AI-generated intervention now includes convenient action buttons at the bottom:</p>
+            <div className="space-y-3 mt-3">
+              <div className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
+                <Copy className="h-5 w-5 text-gray-600" />
+                <div>
+                  <p className="font-medium text-sm text-gray-800">Copy to Clipboard</p>
+                  <p className="text-xs text-gray-600">Instantly copy the intervention text for use in other documents</p>
+                </div>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
+                <Download className="h-5 w-5 text-gray-600" />
+                <div>
+                  <p className="font-medium text-sm text-gray-800">Download as Text File</p>
+                  <p className="text-xs text-gray-600">Save individual interventions as .txt files to your device</p>
+                </div>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
+                <Upload className="h-5 w-5 text-gray-600" />
+                <div>
+                  <p className="font-medium text-sm text-gray-800">Share Individual Intervention</p>
+                  <p className="text-xs text-gray-600">Share specific interventions via email without creating full reports</p>
+                </div>
+              </div>
+            </div>
+          </SubSection>
         </Section>
 
         {/* Follow-up Questions */}
@@ -278,7 +308,20 @@ export default function HelpGuide() {
               "AI-generated support strategies (differentiation or intervention)",
               "Implementation timelines and steps", 
               "Professional formatting suitable for school records",
-              "Date stamps and teacher information"
+              "Date stamps and teacher information",
+              "Proper Chinese character support for bilingual reports",
+              "Clean, professional table formatting for structured content"
+            ]} />
+          </SubSection>
+
+          <SubSection title="Enhanced PDF Quality">
+            <p>Recent improvements to PDF report generation:</p>
+            <FeatureList features={[
+              "Fixed character encoding issues - no more garbled text (Ø=ÜÝ)",
+              "Native Chinese character display without placeholder messages",
+              "Professional table formatting with proper borders and spacing",
+              "Optimized spacing for cleaner, more compact documents",
+              "Better formatting for structured AI responses and lesson plans"
             ]} />
           </SubSection>
         </Section>
@@ -477,6 +520,40 @@ export default function HelpGuide() {
           </Alert>
         </Section>
 
+        {/* Language and International Support */}
+        <Section icon={Languages} title="Language and International Support">
+          <SubSection title="Multi-Language Capabilities">
+            <FeatureList features={[
+              "AI can understand and respond to questions in multiple languages",
+              "Chinese language support for parent communication materials",
+              "Proper character encoding for international text in PDF reports",
+              "Cross-cultural educational strategies when appropriate"
+            ]} />
+          </SubSection>
+
+          {isFeatureEnabled('chinese_localization') && (
+            <SubSection title="Chinese Interface (Beta)">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-300">New Feature</Badge>
+                  <p className="font-medium text-blue-800">完整中文界面支持</p>
+                </div>
+                <FeatureList features={[
+                  "Complete Chinese translation of the user interface",
+                  "Language switching between English and Chinese",
+                  "Localized form labels, buttons, and navigation",
+                  "Chinese educational terminology and context",
+                  "Seamless language preference storage"
+                ]} />
+                <p className="text-sm text-blue-700 mt-3">
+                  Use the language selector in the header to switch between English and Chinese. 
+                  Your preference will be saved automatically.
+                </p>
+              </div>
+            </SubSection>
+          )}
+        </Section>
+
         {/* Mobile Usage */}
         <Section icon={Smartphone} title="Mobile and Accessibility">
           <SubSection title="Mobile Device Usage">
@@ -484,7 +561,8 @@ export default function HelpGuide() {
               "Fully responsive design works on phones and tablets",
               "Touch-friendly interface for mobile interactions",
               "All features available on mobile devices",
-              "Optimized forms for mobile data entry"
+              "Optimized forms for mobile data entry",
+              "Action buttons work seamlessly on touch devices"
             ]} />
           </SubSection>
 
@@ -493,7 +571,8 @@ export default function HelpGuide() {
               "Keyboard navigation support",
               "Screen reader compatibility",
               "High contrast color schemes",
-              "Scalable text and interface elements"
+              "Scalable text and interface elements",
+              "Proper ARIA labels on all interactive elements"
             ]} />
           </SubSection>
         </Section>
@@ -517,12 +596,47 @@ export default function HelpGuide() {
             </div>
           </SubSection>
 
-          <SubSection title="Usage Limit Issues">
+          <SubSection title="PDF and Report Issues">
+            <div className="space-y-3">
+              <div className="bg-red-50 p-3 rounded-lg">
+                <p className="font-medium text-red-800 text-sm">Problem: PDF shows garbled characters or symbols</p>
+                <p className="text-red-700 text-sm mt-1">
+                  <strong>Solution:</strong> This has been fixed in recent updates. If you still see issues, try refreshing the page and generating a new report.
+                </p>
+              </div>
+              <div className="bg-red-50 p-3 rounded-lg">
+                <p className="font-medium text-red-800 text-sm">Problem: Chinese text not displaying properly</p>
+                <p className="text-red-700 text-sm mt-1">
+                  <strong>Solution:</strong> Chinese characters now display natively in PDFs. Clear your browser cache and try again.
+                </p>
+              </div>
+              <div className="bg-red-50 p-3 rounded-lg">
+                <p className="font-medium text-red-800 text-sm">Problem: Copy button not working</p>
+                <p className="text-red-700 text-sm mt-1">
+                  <strong>Solution:</strong> Ensure your browser allows clipboard access. Most modern browsers support this feature automatically.
+                </p>
+              </div>
+            </div>
+          </SubSection>
+
+          <SubSection title="Usage and Performance Issues">
             <div className="space-y-3">
               <div className="bg-yellow-50 p-3 rounded-lg">
                 <p className="font-medium text-yellow-800 text-sm">Problem: Reached monthly limit</p>
                 <p className="text-yellow-700 text-sm mt-1">
                   <strong>Solution:</strong> Contact your administrator for additional requests, or wait for the monthly reset.
+                </p>
+              </div>
+              <div className="bg-red-50 p-3 rounded-lg">
+                <p className="font-medium text-red-800 text-sm">Problem: Login issues or session timeouts</p>
+                <p className="text-red-700 text-sm mt-1">
+                  <strong>Solution:</strong> Clear browser cookies and cache, then log in again. Contact your administrator if problems persist.
+                </p>
+              </div>
+              <div className="bg-red-50 p-3 rounded-lg">
+                <p className="font-medium text-red-800 text-sm">Problem: Action buttons not responding</p>
+                <p className="text-red-700 text-sm mt-1">
+                  <strong>Solution:</strong> Refresh the page. If using mobile, ensure you're tapping directly on the button area.
                 </p>
               </div>
             </div>
@@ -622,6 +736,20 @@ export default function HelpGuide() {
               "Usage questions: Refer to this help guide or ask colleagues",
               "Feature requests: Submit through your school's feedback channels"
             ]} />
+          </SubSection>
+
+          <SubSection title="Recent Updates and Improvements">
+            <div className="bg-green-50 p-4 rounded-lg">
+              <p className="font-medium text-green-800 mb-2">Latest Enhancements:</p>
+              <FeatureList features={[
+                "Action buttons added to all AI-generated content",
+                "Fixed PDF character encoding and formatting issues",
+                "Improved Chinese language support throughout the system",
+                "Enhanced mobile responsiveness for action buttons",
+                "Better table formatting in PDF reports",
+                "Streamlined copy, download, and share workflows"
+              ]} />
+            </div>
           </SubSection>
 
           <SubSection title="Before Contacting Support">

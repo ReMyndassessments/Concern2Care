@@ -5,6 +5,7 @@ import { User } from "@shared/schema";
 import { Link } from "wouter";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export default function AppHeader() {
   const { user } = useAuth() as { user: User | undefined };
@@ -114,6 +115,9 @@ export default function AppHeader() {
               </div>
             )}
             
+            {/* Language Switcher */}
+            <LanguageSwitcher className="" />
+            
             {/* User Profile - Responsive */}
             {user && (
               <div className="text-right hidden md:block">
@@ -207,6 +211,11 @@ export default function AppHeader() {
                   </div>
                 </div>
               )}
+              
+              {/* Mobile Language Switcher */}
+              <div className="mx-4 mt-4">
+                <LanguageSwitcher className="w-full justify-start" />
+              </div>
               
               {/* Mobile Sign Out */}
               <Button
