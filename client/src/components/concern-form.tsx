@@ -616,44 +616,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         </FormItem>
                       )}
                     />
-                    
-                    {/* File Uploads */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-amber-200">
-                      <FormField
-                        control={form.control}
-                        name="studentAssessmentFile"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center gap-2">
-                              <FileText className="h-4 w-4" />
-                              Student I.E.P.
-                            </FormLabel>
-                            <div className="space-y-2">
-                              <ObjectUploader
-                                acceptedFileTypes={['.pdf', '.doc', '.docx', '.txt']}
-                                onFileUploaded={(fileUrl, fileName) => {
-                                  field.onChange(fileUrl);
-                                  toast({
-                                    title: "Assessment uploaded",
-                                    description: `${fileName} will help generate better recommendations`,
-                                  });
-                                }}
-                                onFileRemoved={() => field.onChange("")}
-                                currentFile={field.value}
-                                disabled={isAtLimit || studentAssessmentUploading}
-                                data-testid="upload-student-assessment"
-                              >
-                                Student I.E.P.
-                              </ObjectUploader>
-                              <p className="text-xs text-amber-600">
-                                Upload student I.E.P. documents (PDF, DOC, TXT) - Max 10MB
-                              </p>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
                   </div>
                 )}
               </div>
