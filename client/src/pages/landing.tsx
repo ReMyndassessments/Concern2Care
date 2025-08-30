@@ -281,51 +281,51 @@ export default function Landing() {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center p-6 bg-gray-50 rounded-xl">
-                <h4 className="text-xl font-bold mb-4">25 Teachers</h4>
+                <h4 className="text-xl font-bold mb-4">{t('pricing.examples.teachers25', '25 Teachers')}</h4>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <p className="text-sm text-gray-600">{t('pricing.monthly', 'Monthly')}</p>
                     <p className="text-2xl font-bold text-gray-900">$250</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">{t('pricing.annual', 'Annual')}</p>
+                    <p className="text-sm text-gray-600">{t('pricing.annualLabel', 'Annual')}</p>
                     <p className="text-2xl font-bold text-green-600">$2,700</p>
                   </div>
                 </div>
-                <p className="text-green-600 font-semibold">{t('pricing.annualSavings', 'Annual Savings: $300')}</p>
-                <p className="text-sm text-gray-600 mt-2">{t('pricing.supportRequests', 'Monthly Support Requests: 500 total')}</p>
+                <p className="text-green-600 font-semibold">{t('pricing.annualSavings300', 'Annual Savings: $300')}</p>
+                <p className="text-sm text-gray-600 mt-2">{t('pricing.supportRequests500', 'Monthly Support Requests: 500 total')}</p>
               </div>
 
               <div className="text-center p-6 bg-blue-50 rounded-xl border-2 border-blue-200">
-                <h4 className="text-xl font-bold mb-4">75 Teachers</h4>
+                <h4 className="text-xl font-bold mb-4">{t('pricing.examples.teachers75', '75 Teachers')}</h4>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-gray-600">Monthly</p>
+                    <p className="text-sm text-gray-600">{t('pricing.monthly', 'Monthly')}</p>
                     <p className="text-2xl font-bold text-gray-900">$750</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Annual</p>
+                    <p className="text-sm text-gray-600">{t('pricing.annualLabel', 'Annual')}</p>
                     <p className="text-2xl font-bold text-green-600">$8,100</p>
                   </div>
                 </div>
-                <p className="text-green-600 font-semibold">Annual Savings: $900</p>
-                <p className="text-sm text-gray-600 mt-2">Monthly Support Requests: 1,500 total</p>
+                <p className="text-green-600 font-semibold">{t('pricing.annualSavings900', 'Annual Savings: $900')}</p>
+                <p className="text-sm text-gray-600 mt-2">{t('pricing.supportRequests1500', 'Monthly Support Requests: 1,500 total')}</p>
               </div>
 
               <div className="text-center p-6 bg-gray-50 rounded-xl">
-                <h4 className="text-xl font-bold mb-4">150 Teachers</h4>
+                <h4 className="text-xl font-bold mb-4">{t('pricing.examples.teachers150', '150 Teachers')}</h4>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-gray-600">Monthly</p>
+                    <p className="text-sm text-gray-600">{t('pricing.monthly', 'Monthly')}</p>
                     <p className="text-2xl font-bold text-gray-900">$1,500</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Annual</p>
+                    <p className="text-sm text-gray-600">{t('pricing.annualLabel', 'Annual')}</p>
                     <p className="text-2xl font-bold text-green-600">$16,200</p>
                   </div>
                 </div>
-                <p className="text-green-600 font-semibold">Annual Savings: $1,800</p>
-                <p className="text-sm text-gray-600 mt-2">Monthly Support Requests: 3,000 total</p>
+                <p className="text-green-600 font-semibold">{t('pricing.annualSavings1800', 'Annual Savings: $1,800')}</p>
+                <p className="text-sm text-gray-600 mt-2">{t('pricing.supportRequests3000', 'Monthly Support Requests: 3,000 total')}</p>
               </div>
             </div>
           </div>
