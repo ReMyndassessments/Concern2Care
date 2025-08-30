@@ -401,15 +401,15 @@ export default function Landing() {
                       <h4 className="font-semibold text-gray-900 mb-3 text-sm">{t('comparison.perStudentCost', 'Per Student Cost (Annual)')}</h4>
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div className="text-center p-2 bg-gray-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.magicSchool', 'Magic School')}</div>
                           <div className="font-medium text-gray-600">$12.00</div>
                         </div>
                         <div className="text-center p-2 bg-green-50 rounded border border-green-200">
-                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.concern2care', 'Concern2Care')}</div>
                           <div className="font-semibold text-green-600">$4.80</div>
                         </div>
                         <div className="text-center p-2 bg-blue-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.betterTogether', 'Better Together')}</div>
                           <div className="font-semibold text-blue-600">$16.80</div>
                         </div>
                       </div>
@@ -420,15 +420,15 @@ export default function Landing() {
                       <h4 className="font-semibold text-gray-900 mb-3 text-sm">{t('comparison.perTeacherCost', 'Per Teacher Cost (Annual)')}</h4>
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div className="text-center p-2 bg-gray-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.magicSchool', 'Magic School')}</div>
                           <div className="font-medium text-gray-600">$300</div>
                         </div>
                         <div className="text-center p-2 bg-green-50 rounded border border-green-200">
-                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.concern2care', 'Concern2Care')}</div>
                           <div className="font-semibold text-green-600">$120</div>
                         </div>
                         <div className="text-center p-2 bg-blue-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.betterTogether', 'Better Together')}</div>
                           <div className="font-semibold text-blue-600">$420</div>
                         </div>
                       </div>
@@ -439,54 +439,54 @@ export default function Landing() {
                       <h4 className="font-semibold text-gray-900 mb-3 text-sm">{t('comparison.pricingModel', 'Pricing Model')}</h4>
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div className="text-center p-2 bg-gray-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
-                          <div className="font-medium text-gray-600">Enrollment-based</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.magicSchool', 'Magic School')}</div>
+                          <div className="font-medium text-gray-600">{t('comparison.enrollmentBased', 'Enrollment-based')}</div>
                         </div>
                         <div className="text-center p-2 bg-green-50 rounded border border-green-200">
-                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
-                          <div className="font-semibold text-green-600">Staff-based</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.concern2care', 'Concern2Care')}</div>
+                          <div className="font-semibold text-green-600">{t('comparison.staffBased', 'Staff-based')}</div>
                         </div>
                         <div className="text-center p-2 bg-blue-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
-                          <div className="font-semibold text-blue-600">Balanced</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.betterTogether', 'Better Together')}</div>
+                          <div className="font-semibold text-blue-600">{t('comparison.balanced', 'Balanced')}</div>
                         </div>
                       </div>
                     </div>
                     
                     {/* Predictability */}
                     <div className="bg-white rounded-lg p-4 border border-gray-200">
-                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Predictability</h4>
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">{t('comparison.predictability', 'Predictability')}</h4>
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div className="text-center p-2 bg-gray-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
-                          <div className="font-medium text-gray-600">Medium</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.magicSchool', 'Magic School')}</div>
+                          <div className="font-medium text-gray-600">{t('comparison.medium', 'Medium')}</div>
                         </div>
                         <div className="text-center p-2 bg-green-50 rounded border border-green-200">
-                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
-                          <div className="font-semibold text-green-600">High</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.concern2care', 'Concern2Care')}</div>
+                          <div className="font-semibold text-green-600">{t('comparison.high', 'High')}</div>
                         </div>
                         <div className="text-center p-2 bg-blue-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
-                          <div className="font-semibold text-blue-600">Medium-High</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.betterTogether', 'Better Together')}</div>
+                          <div className="font-semibold text-blue-600">{t('comparison.mediumHigh', 'Medium-High')}</div>
                         </div>
                       </div>
                     </div>
                     
                     {/* Primary Benefit */}
                     <div className="bg-white rounded-lg p-4 border border-gray-200">
-                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Primary Benefit</h4>
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">{t('comparison.primaryBenefit', 'Primary Benefit')}</h4>
                       <div className="space-y-2 text-xs">
                         <div className="p-2 bg-gray-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Magic School</div>
-                          <div className="font-medium text-gray-600">Teacher efficiency</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.magicSchool', 'Magic School')}</div>
+                          <div className="font-medium text-gray-600">{t('comparison.teacherEfficiency', 'Teacher efficiency')}</div>
                         </div>
                         <div className="p-2 bg-green-50 rounded border border-green-200">
-                          <div className="text-xs text-gray-500 mb-1">Concern2Care</div>
-                          <div className="font-semibold text-green-600">Student wellbeing & retention</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.concern2care', 'Concern2Care')}</div>
+                          <div className="font-semibold text-green-600">{t('comparison.studentWellbeing', 'Student wellbeing & retention')}</div>
                         </div>
                         <div className="p-2 bg-blue-50 rounded">
-                          <div className="text-xs text-gray-500 mb-1">Better Together</div>
-                          <div className="font-semibold text-blue-600">Complete staff + student impact</div>
+                          <div className="text-xs text-gray-500 mb-1">{t('comparison.betterTogether', 'Better Together')}</div>
+                          <div className="font-semibold text-blue-600">{t('comparison.completeImpact', 'Complete staff + student impact')}</div>
                         </div>
                       </div>
                     </div>
@@ -498,10 +498,10 @@ export default function Landing() {
                   <table className="w-full border-collapse bg-gray-50 rounded-lg">
                     <thead>
                       <tr className="bg-gradient-to-r from-purple-500 to-blue-600 text-white">
-                        <th className="px-3 py-3 text-left font-semibold rounded-tl-lg text-sm">Metric</th>
-                        <th className="px-3 py-3 text-center font-semibold text-sm">Magic School</th>
-                        <th className="px-3 py-3 text-center font-semibold text-sm">Concern2Care</th>
-                        <th className="px-3 py-3 text-center font-semibold rounded-tr-lg text-sm">Better Together</th>
+                        <th className="px-3 py-3 text-left font-semibold rounded-tl-lg text-sm">{t('comparison.metric', 'Metric')}</th>
+                        <th className="px-3 py-3 text-center font-semibold text-sm">{t('comparison.magicSchool', 'Magic School')}</th>
+                        <th className="px-3 py-3 text-center font-semibold text-sm">{t('comparison.concern2care', 'Concern2Care')}</th>
+                        <th className="px-3 py-3 text-center font-semibold rounded-tr-lg text-sm">{t('comparison.betterTogether', 'Better Together')}</th>
                       </tr>
                     </thead>
                     <tbody className="text-sm">
@@ -519,21 +519,21 @@ export default function Landing() {
                       </tr>
                       <tr className="border-b border-gray-200">
                         <td className="px-3 py-3 font-medium">{t('comparison.pricingModel', 'Pricing Model')}</td>
-                        <td className="px-3 py-3 text-center text-gray-600">Enrollment-based</td>
-                        <td className="px-3 py-3 text-center text-green-600">Staff-based</td>
-                        <td className="px-3 py-3 text-center text-blue-600">Balanced</td>
+                        <td className="px-3 py-3 text-center text-gray-600">{t('comparison.enrollmentBased', 'Enrollment-based')}</td>
+                        <td className="px-3 py-3 text-center text-green-600">{t('comparison.staffBased', 'Staff-based')}</td>
+                        <td className="px-3 py-3 text-center text-blue-600">{t('comparison.balanced', 'Balanced')}</td>
                       </tr>
                       <tr className="border-b border-gray-200 bg-white">
                         <td className="px-3 py-3 font-medium">{t('comparison.predictability', 'Predictability')}</td>
-                        <td className="px-3 py-3 text-center text-gray-600">Medium</td>
-                        <td className="px-3 py-3 text-center text-green-600">High</td>
-                        <td className="px-3 py-3 text-center text-blue-600">Medium-High</td>
+                        <td className="px-3 py-3 text-center text-gray-600">{t('comparison.medium', 'Medium')}</td>
+                        <td className="px-3 py-3 text-center text-green-600">{t('comparison.high', 'High')}</td>
+                        <td className="px-3 py-3 text-center text-blue-600">{t('comparison.mediumHigh', 'Medium-High')}</td>
                       </tr>
                       <tr>
                         <td className="px-3 py-3 font-medium">{t('comparison.primaryBenefit', 'Primary Benefit')}</td>
-                        <td className="px-3 py-3 text-center text-gray-600">Teacher efficiency</td>
-                        <td className="px-3 py-3 text-center text-green-600">Student wellbeing & retention</td>
-                        <td className="px-3 py-3 text-center text-blue-600">Complete staff + student impact</td>
+                        <td className="px-3 py-3 text-center text-gray-600">{t('comparison.teacherEfficiency', 'Teacher efficiency')}</td>
+                        <td className="px-3 py-3 text-center text-green-600">{t('comparison.studentWellbeing', 'Student wellbeing & retention')}</td>
+                        <td className="px-3 py-3 text-center text-blue-600">{t('comparison.completeImpact', 'Complete staff + student impact')}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -551,20 +551,20 @@ export default function Landing() {
                     <CardContent>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span>Annual Cost (1,200 students):</span>
+                          <span>{t('comparison.annualCost1200', 'Annual Cost (1,200 students):')}</span>
                           <span className="font-semibold">$14,400</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Student Retention Impact:</span>
-                          <span className="text-gray-500">Not impacted</span>
+                          <span>{t('comparison.studentRetentionImpact', 'Student Retention Impact:')}</span>
+                          <span className="text-gray-500">{t('comparison.notImpacted', 'Not impacted')}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Teacher Efficiency:</span>
-                          <span className="font-semibold text-gray-600">Strong</span>
+                          <span>{t('comparison.teacherEfficiencyLabel', 'Teacher Efficiency:')}</span>
+                          <span className="font-semibold text-gray-600">{t('comparison.strong', 'Strong')}</span>
                         </div>
                         <div className="flex justify-between border-t pt-2">
-                          <span className="font-semibold">Net ROI:</span>
-                          <span className="font-bold text-gray-600">Low</span>
+                          <span className="font-semibold">{t('comparison.netRoi', 'Net ROI:')}</span>
+                          <span className="font-bold text-gray-600">{t('comparison.low', 'Low')}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -580,20 +580,20 @@ export default function Landing() {
                     <CardContent>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span>Annual Cost (50 teachers):</span>
+                          <span>{t('comparison.annualCost50', 'Annual Cost (50 teachers):')}</span>
                           <span className="font-semibold text-green-600">$6,000</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>If 5 students retained:</span>
+                          <span>{t('comparison.if5Students', 'If 5 students retained:')}</span>
                           <span className="font-semibold text-green-600">$50,000</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Counselor Caseload:</span>
-                          <span className="font-semibold text-green-600">10-15% reduction</span>
+                          <span>{t('comparison.counselorCaseload', 'Counselor Caseload:')}</span>
+                          <span className="font-semibold text-green-600">{t('comparison.reduction1015', '10-15% reduction')}</span>
                         </div>
                         <div className="flex justify-between border-t pt-2">
-                          <span className="font-semibold">Net ROI:</span>
-                          <span className="font-bold text-green-600">≈ 10× Return</span>
+                          <span className="font-semibold">{t('comparison.netRoi', 'Net ROI:')}</span>
+                          <span className="font-bold text-green-600">{t('comparison.return10x', '≈ 10× Return')}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -603,26 +603,26 @@ export default function Landing() {
                     <CardHeader>
                       <CardTitle className="flex items-center text-blue-700 text-base">
                         <Star className="w-4 h-4 mr-2" />
-                        Better Together
+                        {t('comparison.betterTogether', 'Better Together')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span>Combined Annual Cost:</span>
+                          <span>{t('comparison.combinedAnnualCost', 'Combined Annual Cost:')}</span>
                           <span className="font-semibold text-blue-600">$20,160</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Student Retention Value:</span>
+                          <span>{t('comparison.studentRetentionValue', 'Student Retention Value:')}</span>
                           <span className="font-semibold text-blue-600">$50,000</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Complete Coverage:</span>
-                          <span className="font-semibold text-blue-600">Staff + Students</span>
+                          <span>{t('comparison.completeCoverage', 'Complete Coverage:')}</span>
+                          <span className="font-semibold text-blue-600">{t('comparison.staffStudents', 'Staff + Students')}</span>
                         </div>
                         <div className="flex justify-between border-t pt-2">
-                          <span className="font-semibold">Net ROI:</span>
-                          <span className="font-bold text-blue-600">≈ 7-8× Return</span>
+                          <span className="font-semibold">{t('comparison.netRoi', 'Net ROI:')}</span>
+                          <span className="font-bold text-blue-600">{t('comparison.return78x', '≈ 7-8× Return')}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -631,24 +631,24 @@ export default function Landing() {
 
                 {/* Value Beyond Cost */}
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
-                  <h4 className="font-semibold text-gray-900 mb-4">Value Beyond Cost Savings</h4>
+                  <h4 className="font-semibold text-gray-900 mb-4">{t('comparison.valueBeyondCost', 'Value Beyond Cost Savings')}</h4>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h5 className="font-medium text-green-700 mb-3">✅ Concern2Care Impact</h5>
+                      <h5 className="font-medium text-green-700 mb-3">{t('comparison.concern2careImpact', '✅ Concern2Care Impact')}</h5>
                       <ul className="space-y-2 text-sm text-gray-700">
-                        <li>• Research-based Tier 2 intervention strategies</li>
-                        <li>• Reduces counselor caseloads & prevents burnout</li>
-                        <li>• Improves student retention & graduation rates</li>
-                        <li>• Comprehensive: academic, behavioral, social-emotional</li>
+                        <li>{t('comparison.impact.researchBased', '• Research-based Tier 2 intervention strategies')}</li>
+                        <li>{t('comparison.impact.reducesCaseloads', '• Reduces counselor caseloads & prevents burnout')}</li>
+                        <li>{t('comparison.impact.improvesRetention', '• Improves student retention & graduation rates')}</li>
+                        <li>{t('comparison.impact.comprehensive', '• Comprehensive: academic, behavioral, social-emotional')}</li>
                       </ul>
                     </div>
                     <div>
-                      <h5 className="font-medium text-gray-600 mb-3">📝 Magic School Scope</h5>
+                      <h5 className="font-medium text-gray-600 mb-3">{t('comparison.magicSchoolScope', '📝 Magic School Scope')}</h5>
                       <ul className="space-y-2 text-sm text-gray-600">
-                        <li>• Teacher productivity tools</li>
-                        <li>• Lesson planning & grading assistance</li>
-                        <li>• Limited student support capabilities</li>
-                        <li>• Does not address Tier 2/3 intervention needs</li>
+                        <li>{t('comparison.scope.productivity', '• Teacher productivity tools')}</li>
+                        <li>{t('comparison.scope.lessonPlanning', '• Lesson planning & grading assistance')}</li>
+                        <li>{t('comparison.scope.limitedSupport', '• Limited student support capabilities')}</li>
+                        <li>{t('comparison.scope.noIntervention', '• Does not address Tier 2/3 intervention needs')}</li>
                       </ul>
                     </div>
                   </div>
@@ -656,26 +656,25 @@ export default function Landing() {
 
                 {/* Better Together Highlight */}
                 <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-6">
-                  <h4 className="font-semibold mb-4 text-center">🤝 Better Together: Complete AI Ecosystem</h4>
+                  <h4 className="font-semibold mb-4 text-center">{t('comparison.betterTogetherEcosystem', '🤝 Better Together: Complete AI Ecosystem')}</h4>
                   <div className="grid md:grid-cols-3 gap-4 mb-4">
                     <div className="text-center">
-                      <div className="font-semibold">Magic School Alone</div>
-                      <div className="text-sm text-blue-100">Great for teacher productivity, but doesn't impact student outcomes or retention</div>
+                      <div className="font-semibold">{t('comparison.magicSchoolAlone', 'Magic School Alone')}</div>
+                      <div className="text-sm text-blue-100">{t('comparison.magicSchoolDesc', 'Great for teacher productivity, but doesn\'t impact student outcomes or retention')}</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-semibold">Concern2Care Alone</div>
-                      <div className="text-sm text-blue-100">Lower cost, high systemic ROI via retention, SEL, and reduced counselor burnout</div>
+                      <div className="font-semibold">{t('comparison.concern2careAlone', 'Concern2Care Alone')}</div>
+                      <div className="text-sm text-blue-100">{t('comparison.concern2careDesc', 'Lower cost, high systemic ROI via retention, SEL, and reduced counselor burnout')}</div>
                     </div>
                     <div className="text-center bg-white/10 rounded-lg p-3">
-                      <div className="font-semibold text-yellow-200">Both Together</div>
-                      <div className="text-sm text-blue-100">Complete coverage: teacher efficiency + student wellbeing for under $17/student/year</div>
+                      <div className="font-semibold text-yellow-200">{t('comparison.bothTogether', 'Both Together')}</div>
+                      <div className="text-sm text-blue-100">{t('comparison.bothDesc', 'Complete coverage: teacher efficiency + student wellbeing for under $17/student/year')}</div>
                     </div>
                   </div>
                   <div className="text-center border-t border-white/20 pt-4">
-                    <h5 className="font-semibold mb-2">Leadership Pitch</h5>
+                    <h5 className="font-semibold mb-2">{t('comparison.leadershipPitch', 'Leadership Pitch')}</h5>
                     <p className="text-blue-100">
-                      For under <strong>$17 per student per year</strong>, you can cover both teacher efficiency AND student wellbeing. 
-                      That's a complete AI ecosystem supporting staff and students — without breaking your budget.
+                      {t('comparison.leadershipDesc', 'For under $17 per student per year, you can cover both teacher efficiency AND student wellbeing. That\'s a complete AI ecosystem supporting staff and students — without breaking your budget.')}
                     </p>
                   </div>
                 </div>
