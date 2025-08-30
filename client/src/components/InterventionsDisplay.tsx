@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, CheckCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Function to format markdown-like text to HTML
 function formatMarkdownText(text: string): string {
@@ -38,6 +39,7 @@ interface InterventionsDisplayProps {
 }
 
 export default function InterventionsDisplay({ concernId }: InterventionsDisplayProps) {
+  const { t } = useTranslation();
   const { data: concern, isLoading, error } = useQuery<any>({
     queryKey: ['/api/concerns', concernId],
   });
@@ -47,9 +49,9 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-medium text-blue-900 mb-2 flex items-center">
           <Sparkles className="h-4 w-4 mr-2 text-blue-600" />
-          AI-Generated Interventions
+          {t('interventions.title', 'AI-Generated Interventions')}
         </h4>
-        <p className="text-blue-700 text-sm">Loading interventions...</p>
+        <p className="text-blue-700 text-sm">{t('interventions.loading', 'Loading interventions...')}</p>
       </div>
     );
   }
@@ -59,10 +61,10 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-medium text-blue-900 mb-2 flex items-center">
           <Sparkles className="h-4 w-4 mr-2 text-blue-600" />
-          AI-Generated Interventions
+          {t('interventions.title', 'AI-Generated Interventions')}
         </h4>
         <p className="text-blue-700 text-sm">
-          Unable to load interventions. Please try again.
+          {t('interventions.error', 'Unable to load interventions. Please try again.')}
         </p>
       </div>
     );
@@ -73,10 +75,10 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-medium text-blue-900 mb-2 flex items-center">
           <Sparkles className="h-4 w-4 mr-2 text-blue-600" />
-          AI-Generated Interventions
+          {t('interventions.title', 'AI-Generated Interventions')}
         </h4>
         <p className="text-blue-700 text-sm">
-          No interventions have been generated for this concern yet.
+          {t('interventions.none', 'No interventions have been generated for this concern yet.')}
         </p>
       </div>
     );

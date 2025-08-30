@@ -134,6 +134,97 @@ const resources = {
       'language.english': 'English',
       'language.chinese': '中文',
       
+      // App Header
+      'header.newRequest': 'New Request',
+      'header.myRequests': 'My Requests', 
+      'header.settings': 'Settings',
+      'header.adminDashboard': 'Admin Dashboard',
+      'header.signOut': 'Sign Out',
+      'header.smartSupportTools': 'Smart Support Tools',
+      
+      // Login Page
+      'login.title': 'Teacher Sign In',
+      'login.secureAccess': 'Secure Access',
+      'login.secureDescription': 'Sign in with your school-provided credentials.',
+      'login.email': 'Email',
+      'login.emailPlaceholder': 'your.email@school.edu',
+      'login.password': 'Password',
+      'login.passwordPlaceholder': 'Enter your password',
+      'login.signingIn': 'Signing In...',
+      'login.signIn': 'Sign In',
+      'login.backToHome': '← Back to Home',
+      
+      // Register Page
+      'register.title': 'Individual Teacher Subscription',
+      'register.subtitle': 'Join Concern2Care for $10/month/teacher',
+      'register.whatYouGet': 'What You Get',
+      'register.aiDifferentiation': 'AI-Generated Differentiation Strategies',
+      'register.aiDifferentiationDesc': 'Get personalized teaching adjustments for student needs',
+      'register.aiInterventions': 'AI-Generated Tier 2 Interventions',
+      'register.aiInterventionsDesc': 'Evidence-based intervention strategies for student concerns',
+      'register.pdfReports': 'PDF Report Generation',
+      'register.pdfReportsDesc': 'Professional documentation for meetings',
+      'register.emailSharing': 'Email Sharing & Collaboration',
+      'register.emailSharingDesc': 'Share reports with administrators and support staff',
+      'register.monthlyRequests': '20 Monthly Requests',
+      'register.monthlyRequestsDesc': 'Perfect for individual classroom needs',
+      'register.secureData': 'Secure, FERPA-Compliant Data',
+      'register.secureDataDesc': 'Your student information stays protected',
+      'register.alreadyHaveAccount': 'Already have an account? Sign In',
+      
+      // Error Boundary
+      'error.somethingWrong': 'Something went wrong',
+      'error.unexpectedError': 'We encountered an unexpected error. Please try refreshing the page or contact support if the problem persists.',
+      'error.tryAgain': 'Try Again',
+      'error.refreshPage': 'Refresh Page',
+      'error.errorDetails': 'Error Details',
+      
+      // 404 Page
+      'notFound.title': '404 Page Not Found',
+      'notFound.description': 'Did you forget to add the page to the router?',
+      
+      // Analytics Dashboard
+      'analytics.monthlyTrends': 'Monthly Usage Trends',
+      'analytics.thisMonth': 'This Month',
+      'analytics.lastMonth': 'Last Month',
+      'analytics.change': 'Change',
+      'analytics.activeTeachers': 'Active Teachers',
+      'analytics.activeThisMonth': 'Active This Month',
+      'analytics.engagementRate': 'Engagement Rate',
+      'analytics.recentActivity': 'Recent Activity',
+      'analytics.noRecentActivity': 'No recent activity to display',
+      
+      // Help Guide
+      'help.welcome': 'Welcome to Concern2Care',
+      'help.welcomeDesc': 'Concern2Care is your AI-powered teaching assistant designed to help K-12 educators document student concerns and receive evidence-based intervention strategies. This comprehensive guide will help you make the most of all features.',
+      'help.gettingStarted': 'Getting Started',
+      'help.documentingConcerns': 'Documenting Concerns',
+      'help.aiInterventions': 'AI Interventions',
+      'help.reports': 'Reports',
+      'help.emailConfig': 'Email Configuration',
+      'help.profileManagement': 'Profile Management',
+      'help.troubleshooting': 'Troubleshooting',
+      'help.bestPractices': 'Best Practices',
+      'help.dataPrivacy': 'Data Privacy',
+      'help.contactSupport': 'Contact Support',
+      
+      // Interventions Display
+      'interventions.title': 'AI-Generated Interventions',
+      'interventions.loading': 'Loading interventions...',
+      'interventions.error': 'Unable to load interventions. Please try again.',
+      'interventions.none': 'No interventions have been generated for this concern yet.',
+      
+      // Object Uploader
+      'upload.button': 'Upload File',
+      'upload.uploading': 'Uploading...',
+      'upload.success': 'File uploaded successfully',
+      'upload.fileTooLarge': 'File too large',
+      'upload.fileTooLargeDesc': 'Please select a file smaller than',
+      'upload.invalidFileType': 'Invalid file type',
+      'upload.invalidFileTypeDesc': 'Please select a file with one of these extensions:',
+      'upload.remove': 'Remove',
+      'upload.noFile': 'No file selected',
+      
       // Common
       'common.loading': 'Loading...',
       'common.error': 'An error occurred',
@@ -280,6 +371,97 @@ const resources = {
       'language.switch': '切换语言',
       'language.english': 'English',
       'language.chinese': '中文',
+      
+      // App Header
+      'header.newRequest': '新请求',
+      'header.myRequests': '我的请求', 
+      'header.settings': '设置',
+      'header.adminDashboard': '管理仪表盘',
+      'header.signOut': '退出登录',
+      'header.smartSupportTools': '智能支持工具',
+      
+      // Login Page
+      'login.title': '教师登录',
+      'login.secureAccess': '安全访问',
+      'login.secureDescription': '使用学校提供的凭据登录。',
+      'login.email': '邮箱',
+      'login.emailPlaceholder': 'your.email@school.edu',
+      'login.password': '密码',
+      'login.passwordPlaceholder': '输入您的密码',
+      'login.signingIn': '登录中...',
+      'login.signIn': '登录',
+      'login.backToHome': '← 返回主页',
+      
+      // Register Page
+      'register.title': '个人教师订阅',
+      'register.subtitle': '加入Concern2Care，每位教师每月$10',
+      'register.whatYouGet': '您将获得',
+      'register.aiDifferentiation': 'AI生成的差异化策略',
+      'register.aiDifferentiationDesc': '获得针对学生需求的个性化教学调整',
+      'register.aiInterventions': 'AI生成的二级干预',
+      'register.aiInterventionsDesc': '基于证据的学生关注干预策略',
+      'register.pdfReports': 'PDF报告生成',
+      'register.pdfReportsDesc': '会议专业文档',
+      'register.emailSharing': '邮件共享和协作',
+      'register.emailSharingDesc': '与管理员和支持人员共享报告',
+      'register.monthlyRequests': '每月 20 次请求',
+      'register.monthlyRequestsDesc': '非常适合个人课堂需求',
+      'register.secureData': '安全、FERPA符合数据',
+      'register.secureDataDesc': '您的学生信息得到保护',
+      'register.alreadyHaveAccount': '已有账户？登录',
+      
+      // Error Boundary
+      'error.somethingWrong': '出现错误',
+      'error.unexpectedError': '我们遇到了意外错误。请尝试刷新页面，如果问题仍然存在，请联系支持。',
+      'error.tryAgain': '重试',
+      'error.refreshPage': '刷新页面',
+      'error.errorDetails': '错误详情',
+      
+      // 404 Page
+      'notFound.title': '404 页面未找到',
+      'notFound.description': '您是否忘记将页面添加到路由器？',
+      
+      // Analytics Dashboard
+      'analytics.monthlyTrends': '月度使用趋势',
+      'analytics.thisMonth': '本月',
+      'analytics.lastMonth': '上月',
+      'analytics.change': '变化',
+      'analytics.activeTeachers': '活跃教师',
+      'analytics.activeThisMonth': '本月活跃',
+      'analytics.engagementRate': '参与率',
+      'analytics.recentActivity': '近期活动',
+      'analytics.noRecentActivity': '暂无近期活动可显示',
+      
+      // Help Guide
+      'help.welcome': '欢迎使用 Concern2Care',
+      'help.welcomeDesc': 'Concern2Care是您的AI驱动教学助手，旨在帮助K-12教育工作者记录学生关注并获得基于证据的干预策略。这个全面指南将帮助您充分利用所有功能。',
+      'help.gettingStarted': '入门指南',
+      'help.documentingConcerns': '记录关注事项',
+      'help.aiInterventions': 'AI干预措施',
+      'help.reports': '报告',
+      'help.emailConfig': '邮件配置',
+      'help.profileManagement': '个人资料管理',
+      'help.troubleshooting': '故障排除',
+      'help.bestPractices': '最佳实践',
+      'help.dataPrivacy': '数据隐私',
+      'help.contactSupport': '联系支持',
+      
+      // Interventions Display
+      'interventions.title': 'AI生成的干预措施',
+      'interventions.loading': '加载干预措施中...',
+      'interventions.error': '无法加载干预措施。请重试。',
+      'interventions.none': '此关注事项尚未生成干预措施。',
+      
+      // Object Uploader
+      'upload.button': '上传文件',
+      'upload.uploading': '上传中...',
+      'upload.success': '文件上传成功',
+      'upload.fileTooLarge': '文件太大',
+      'upload.fileTooLargeDesc': '请选择小于',
+      'upload.invalidFileType': '无效文件类型',
+      'upload.invalidFileTypeDesc': '请选择具有以下扩展名的文件：',
+      'upload.remove': '删除',
+      'upload.noFile': '未选择文件',
       
       // Common
       'common.loading': '加载中...',

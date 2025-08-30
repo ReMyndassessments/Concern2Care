@@ -5,11 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Shield } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +65,7 @@ export default function Login() {
               Concern2Care
             </CardTitle>
             <p className="text-gray-600 mt-2">
-              Teacher Sign In
+              {t('login.title', 'Teacher Sign In')}
             </p>
           </CardHeader>
           
@@ -73,10 +75,10 @@ export default function Login() {
                 <Shield className="h-5 w-5 text-blue-600 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-blue-800 mb-1">
-                    🔐 Secure Access
+                    🔐 {t('login.secureAccess', 'Secure Access')}
                   </p>
                   <p className="text-xs text-blue-700">
-                    Sign in with your school-provided credentials.
+                    {t('login.secureDescription', 'Sign in with your school-provided credentials.')}
                   </p>
                 </div>
               </div>
@@ -84,26 +86,26 @@ export default function Login() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('login.email', 'Email')}</Label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@school.edu"
+                  placeholder={t('login.emailPlaceholder', 'your.email@school.edu')}
                   required
                   disabled={isLoading}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('login.password', 'Password')}</Label>
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder={t('login.passwordPlaceholder', 'Enter your password')}
                   required
                   disabled={isLoading}
                 />
@@ -114,7 +116,7 @@ export default function Login() {
                 disabled={isLoading}
                 className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold py-3 text-lg"
               >
-                {isLoading ? "Signing In..." : "Sign In"}
+                {isLoading ? t('login.signingIn', 'Signing In...') : t('login.signIn', 'Sign In')}
               </Button>
             </form>
 
@@ -124,7 +126,7 @@ export default function Login() {
                 onClick={() => window.location.href = '/'}
                 className="text-gray-600 hover:text-purple-600"
               >
-                ← Back to Home
+                {t('login.backToHome', '← Back to Home')}
               </Button>
             </div>
           </CardContent>

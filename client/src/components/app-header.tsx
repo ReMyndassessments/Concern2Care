@@ -6,11 +6,13 @@ import { Link } from "wouter";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { useTranslation } from "react-i18next";
 
 export default function AppHeader() {
   const { user } = useAuth() as { user: User | undefined };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     try {
@@ -50,7 +52,7 @@ export default function AppHeader() {
                   <h1 className="text-base sm:text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent truncate">
                     Concern2Care
                   </h1>
-                  <p className="text-xs text-gray-500 -mt-1 hidden sm:block">Smart Support Tools</p>
+                  <p className="text-xs text-gray-500 -mt-1 hidden sm:block">{t('header.smartSupportTools', 'Smart Support Tools')}</p>
                 </div>
               </div>
             </Link>
@@ -63,19 +65,19 @@ export default function AppHeader() {
                 <Link href="/">
                   <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
                     <BarChart3 className="h-4 w-4 mr-2" />
-                    New Request
+                    {t('header.newRequest', 'New Request')}
                   </Button>
                 </Link>
                 <Link href="/my-support-requests">
                   <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
                     <History className="h-4 w-4 mr-2" />
-                    My Requests
+                    {t('header.myRequests', 'My Requests')}
                   </Button>
                 </Link>
                 <Link href="/settings">
                   <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
                     <Settings className="h-4 w-4 mr-2" />
-                    Settings
+                    {t('header.settings', 'Settings')}
                   </Button>
                 </Link>
               </>
@@ -84,7 +86,7 @@ export default function AppHeader() {
               <Link href="/admin">
                 <Button variant="ghost" size="sm" className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-3 py-2">
                   <Shield className="h-4 w-4 mr-2" />
-                  Admin Dashboard
+                  {t('header.adminDashboard', 'Admin Dashboard')}
                 </Button>
               </Link>
             )}
@@ -197,7 +199,7 @@ export default function AppHeader() {
               {/* Mobile Usage Stats - Hidden for admins */}
               {user && !user.isAdmin && (
                 <div className="px-4 py-2 mt-4 border-t border-gray-200">
-                  <div className="text-sm font-medium text-gray-700 mb-2">Usage This Month</div>
+                  <div className="text-sm font-medium text-gray-700 mb-2">{t('dashboard.usage', 'Usage This Month')}</div>
                   <div className="flex items-center space-x-3">
                     <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
                       <div 
@@ -225,7 +227,7 @@ export default function AppHeader() {
                 className="mx-4 mt-4 text-gray-600 hover:text-red-600 hover:border-red-300 border-gray-300 justify-start"
               >
                 <LogOut className="h-4 w-4 mr-3" />
-                Sign Out
+                {t('header.signOut', 'Sign Out')}
               </Button>
             </nav>
           </div>
