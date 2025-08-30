@@ -178,7 +178,7 @@ export async function generateConcernReport(
 }
 
 // Improved PDF formatting with proper text height calculation
-function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
+export function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
   const lines = text.split('\n');
   let yPosition = startY;
   let inBulletList = false;

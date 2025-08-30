@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateInterventions, answerFollowUpQuestion, generateRecommendations, followUpAssistance, GenerateRecommendationsRequest, FollowUpAssistanceRequest } from "./services/ai";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
-import { generateConcernReport, ensureReportsDirectory } from "./services/pdf";
+import { generateConcernReport, ensureReportsDirectory, parseMarkdownToPDF } from "./services/pdf";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
 import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports, schools, featureFlags, schoolFeatureOverrides } from "@shared/schema";
 import { db } from "./db";
@@ -2603,9 +2603,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Professional Header with styling
       doc.fontSize(24).font('Helvetica-Bold');
-      doc.fillColor('#1f2937'); // Professional dark gray
+      doc.fillColor('#1f2937');
       doc.text('MEETING PREPARATION DOCUMENT', { align: 'center' });
-      doc.fillColor('#000000'); // Reset to black
+      doc.fillColor('#000000');
       
       // Add decorative line under title
       doc.moveTo(50, doc.y + 10)
@@ -2619,47 +2619,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Meeting Information Section with professional formatting
       doc.fontSize(18).font('Helvetica-Bold');
       doc.fillColor('#374151');
-      doc.text('📅 Meeting Information');
+      doc.text('Meeting Information');
       doc.fillColor('#000000');
       doc.moveDown(0.5);
       
       // Create info box with subtle background
       const infoY = doc.y;
-      doc.rect(40, infoY, 520, 85)
+      doc.rect(40, infoY, 520, 100)
          .fillColor('#f8fafc')
          .strokeColor('#e5e7eb')
          .lineWidth(1)
          .fillAndStroke();
       doc.fillColor('#000000');
       
-      // Position content inside the box
+      // Position content inside the box with proper spacing
       doc.y = infoY + 15;
       doc.x = 60;
       
       doc.fontSize(12).font('Helvetica-Bold');
-      doc.text('Title:', { continued: true, width: 80 });
-      doc.font('Helvetica').text(`${meetingData.meetingTitle}`, { indent: 85 });
+      doc.text('Title:', 60, doc.y);
+      doc.font('Helvetica').text(meetingData.meetingTitle || 'Not specified', 120, doc.y);
+      doc.y += 18;
       
-      doc.x = 60;
-      doc.font('Helvetica-Bold').text('Type:', { continued: true, width: 80 });
-      doc.font('Helvetica').text(`${meetingData.meetingType}`, { indent: 85 });
+      doc.font('Helvetica-Bold').text('Type:', 60, doc.y);
+      doc.font('Helvetica').text(meetingData.meetingType || 'Not specified', 120, doc.y);
+      doc.y += 18;
       
-      doc.x = 60;
-      doc.font('Helvetica-Bold').text('Date:', { continued: true, width: 80 });
-      doc.font('Helvetica').text(`${meetingData.meetingDate}`, { indent: 85 });
+      doc.font('Helvetica-Bold').text('Date:', 60, doc.y);
+      doc.font('Helvetica').text(meetingData.meetingDate || 'Not specified', 120, doc.y);
+      doc.y += 18;
       
-      doc.x = 60;
-      doc.font('Helvetica-Bold').text('Time:', { continued: true, width: 80 });
-      doc.font('Helvetica').text(`${meetingData.meetingTime}`, { indent: 85 });
+      doc.font('Helvetica-Bold').text('Time:', 60, doc.y);
+      doc.font('Helvetica').text(meetingData.meetingTime || 'Not specified', 120, doc.y);
       
       doc.x = 50; // Reset margin
-      doc.moveDown(2.5);
+      doc.y = infoY + 110;
+      doc.moveDown(1);
 
       // Attendees Section with improved formatting
       if (meetingData.attendees && meetingData.attendees.length > 0) {
         doc.fontSize(18).font('Helvetica-Bold');
         doc.fillColor('#374151');
-        doc.text('👥 Meeting Attendees');
+        doc.text('Meeting Attendees');
         doc.fillColor('#000000');
         doc.moveDown(0.5);
         
@@ -2674,13 +2675,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (meetingData.agenda) {
         doc.fontSize(18).font('Helvetica-Bold');
         doc.fillColor('#374151');
-        doc.text('📋 Meeting Agenda');
+        doc.text('Meeting Agenda');
         doc.fillColor('#000000');
         doc.moveDown(0.5);
         
         // Agenda content box
         const agendaY = doc.y;
-        doc.rect(40, agendaY, 520, doc.heightOfString(meetingData.agenda, { width: 480 }) + 20)
+        const agendaHeight = doc.heightOfString(meetingData.agenda, { width: 480 }) + 20;
+        doc.rect(40, agendaY, 520, agendaHeight)
            .fillColor('#fefefe')
            .strokeColor('#d1d5db')
            .lineWidth(1)
@@ -2692,7 +2694,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         doc.fontSize(12).font('Helvetica');
         doc.text(meetingData.agenda, { width: 480, align: 'left' });
         doc.x = 50;
-        doc.moveDown(2);
+        doc.y = agendaY + agendaHeight + 10;
+        doc.moveDown(1);
       }
 
       // Selected Concerns (if any)
@@ -2704,7 +2707,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         doc.fontSize(20).font('Helvetica-Bold');
         doc.fillColor('#1f2937');
-        doc.text('📚 STUDENT CONCERNS TO DISCUSS', { align: 'center' });
+        doc.text('STUDENT CONCERNS TO DISCUSS', { align: 'center' });
         doc.fillColor('#000000');
         
         // Add separator line
@@ -2749,10 +2752,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         doc.x = 60;
         doc.fontSize(12).font('Helvetica-Bold');
         doc.fillColor('#1e40af');
-        doc.text(`📊 Total concerns selected: ${selectedConcernDetails.length}`);
+        doc.text(`Total concerns selected: ${selectedConcernDetails.length}`);
         doc.fillColor('#000000');
         doc.x = 50;
-        doc.moveDown(2);
+        doc.y = summaryY + 40;
+        doc.moveDown(1);
 
         // Display each student's concerns with professional formatting
         let concernCounter = 1;
@@ -2775,10 +2779,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           doc.x = 60;
           doc.fontSize(16).font('Helvetica-Bold');
           doc.fillColor('#0f172a');
-          doc.text(`🎓 ${studentName} (Grade ${concerns[0].grade})`);
+          doc.text(`${studentName} (Grade ${concerns[0].grade})`);
           doc.fillColor('#000000');
           doc.x = 50;
-          doc.moveDown(1.5);
+          doc.y = studentY + 45;
+          doc.moveDown(1);
 
           concerns.forEach((concern: any, index: number) => {
             // Check page break for each concern
@@ -2819,7 +2824,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Description section with subtle background
             doc.fontSize(11).font('Helvetica-Bold');
             doc.fillColor('#374151');
-            doc.text('📝 Description:', { indent: 20 });
+            doc.text('Description:', { indent: 20 });
             doc.fillColor('#000000');
             doc.moveDown(0.3);
             
@@ -2837,7 +2842,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             if (concern.actionsTaken && Array.isArray(concern.actionsTaken) && concern.actionsTaken.length > 0) {
               doc.fontSize(11).font('Helvetica-Bold');
               doc.fillColor('#059669');
-              doc.text('✅ Actions Already Taken:', { indent: 20 });
+              doc.text('Actions Already Taken:', { indent: 20 });
               doc.fillColor('#000000');
               doc.moveDown(0.3);
               
@@ -2860,7 +2865,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               
               doc.fontSize(12).font('Helvetica-Bold');
               doc.fillColor('#7c3aed');
-              doc.text('🤖 AI-Generated Interventions', { indent: 20 });
+              doc.text('AI-Generated Interventions', { indent: 20 });
               doc.fillColor('#000000');
               doc.moveDown(0.5);
 
@@ -2884,17 +2889,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 doc.moveDown(0.8);
 
                 if (intervention.description) {
-                  doc.fontSize(10).font('Helvetica');
-                  // Clean up markdown formatting for professional PDF display
-                  const cleanDescription = intervention.description
-                    .replace(/\*\*\*(.*?)\*\*\*/g, '$1')
-                    .replace(/\*\*(.*?)\*\*/g, '$1')
-                    .replace(/\*(.*?)\*/g, '$1')
-                    .replace(/#{1,4}\s*(.*?)$/gm, '$1')
-                    .replace(/[-*]\s/g, '• ')
-                    .replace(/\n{3,}/g, '\n\n'); // Clean up excessive line breaks
-                  
-                  doc.text(cleanDescription, { width: 460, align: 'left', indent: 40 });
+                  // Use the enhanced markdown parser with table support
+                  const currentY = doc.y;
+                  doc.y = parseMarkdownToPDF(doc, intervention.description, currentY + 10);
                   doc.moveDown(0.5);
                 }
 
@@ -2916,7 +2913,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 if (intervention.timeline) {
                   doc.fontSize(10).font('Helvetica-Bold');
                   doc.fillColor('#b45309');
-                  doc.text(`⏱️ Timeline: ${intervention.timeline}`, { indent: 40 });
+                  doc.text(`Timeline: ${intervention.timeline}`, { indent: 40 });
                   doc.fillColor('#000000');
                   doc.moveDown(0.3);
                 }
@@ -2939,18 +2936,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
               doc.x = 80;
               doc.fontSize(11).font('Helvetica-Bold');
               doc.fillColor('#047857');
-              doc.text('📄 Student Learning Profile');
+              doc.text('Student Learning Profile');
               doc.fillColor('#000000');
               doc.x = 50;
               doc.moveDown(0.8);
 
               const profileItems = [];
-              if (concern.hasIep) profileItems.push('📋 Has IEP/504 Plan');
-              if (concern.hasDisability) profileItems.push(`🧠 Diagnosed with: ${concern.disabilityType || 'Not specified'}`);
-              if (concern.isEalLearner) profileItems.push(`🌍 EAL Learner (${concern.ealProficiency || 'Unspecified'} English proficiency)`);
-              if (concern.isGifted) profileItems.push('✨ Gifted/Talented');
-              if (concern.isStruggling) profileItems.push('📚 Currently struggling academically');
-              if (concern.otherNeeds) profileItems.push(`📝 Other needs: ${concern.otherNeeds}`);
+              if (concern.hasIep) profileItems.push('Has IEP/504 Plan');
+              if (concern.hasDisability) profileItems.push(`Diagnosed with: ${concern.disabilityType || 'Not specified'}`);
+              if (concern.isEalLearner) profileItems.push(`EAL Learner (${concern.ealProficiency || 'Unspecified'} English proficiency)`);
+              if (concern.isGifted) profileItems.push('Gifted/Talented');
+              if (concern.isStruggling) profileItems.push('Currently struggling academically');
+              if (concern.otherNeeds) profileItems.push(`Other needs: ${concern.otherNeeds}`);
 
               doc.fontSize(10).font('Helvetica');
               profileItems.forEach(item => {
@@ -2982,7 +2979,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         doc.fontSize(18).font('Helvetica-Bold');
         doc.fillColor('#374151');
-        doc.text('📝 Additional Notes');
+        doc.text('Additional Notes');
         doc.fillColor('#000000');
         doc.moveDown(0.5);
         
@@ -3008,18 +3005,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (meetingData.includeRecommendations || meetingData.includeProgressNotes) {
         doc.fontSize(16).font('Helvetica-Bold');
         doc.fillColor('#374151');
-        doc.text('📋 Document Includes');
+        doc.text('Document Includes');
         doc.fillColor('#000000');
         doc.moveDown(0.5);
         
         doc.fontSize(12).font('Helvetica');
         if (meetingData.includeRecommendations) {
           doc.fillColor('#059669');
-          doc.text('✅ AI-generated intervention recommendations', { indent: 20 });
+          doc.text('✓ AI-generated intervention recommendations', { indent: 20 });
         }
         if (meetingData.includeProgressNotes) {
           doc.fillColor('#059669');
-          doc.text('✅ Progress tracking section', { indent: 20 });
+          doc.text('✓ Progress tracking section', { indent: 20 });
         }
         doc.fillColor('#000000');
         doc.moveDown(2);
