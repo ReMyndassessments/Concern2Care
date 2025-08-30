@@ -536,7 +536,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               />
                             </FormControl>
                             <FormLabel className="text-sm font-normal">
-                              Struggling Academically
+                              {t('form.strugglingAcademically', 'Struggling Academically')}
                             </FormLabel>
                           </FormItem>
                         )}
@@ -604,10 +604,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       name="otherNeeds"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Other Learning Needs or Notes</FormLabel>
+                          <FormLabel>{t('form.otherLearningNeeds', 'Other Learning Needs or Notes')}</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="e.g., visual learner, needs frequent breaks, anxiety..."
+                              placeholder={t('form.learningNeedsPlaceholder', 'e.g., visual learner, needs frequent breaks, anxiety...')}
                               {...field} 
                               disabled={isAtLimit}
                               data-testid="input-other-needs"
