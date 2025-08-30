@@ -980,19 +980,19 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 {createConcernMutation.isPending ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Generating Research-Based Recommendations
+                    {t('form.generatingRecommendations', 'Generating Research-Based Recommendations')}
                   </>
                 ) : isAtLimit ? (
                   <>
                     <AlertTriangle className="h-5 w-5 mr-2" />
-                    Request Limit Reached
+                    {t('form.requestLimitReached', 'Request Limit Reached')}
                   </>
                 ) : (
                   <>
                     <Wand2 className="h-5 w-5 mr-2" />
                     {form.watch('taskType') === 'differentiation' 
-                      ? 'Generate Differentiation Strategies' 
-                      : 'Generate Tier 2 Intervention Strategies'}
+                      ? t('form.generateDifferentiationStrategies', 'Generate Differentiation Strategies')
+                      : t('form.generateTier2Strategies', 'Generate Tier 2 Intervention Strategies')}
                   </>
                 )}
               </Button>
