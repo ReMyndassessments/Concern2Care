@@ -171,37 +171,37 @@ export default function Landing() {
             {/* Small School */}
             <Card className="relative border-2 border-gray-200 hover:border-purple-300 transition-all">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-lg font-semibold">Small School</CardTitle>
-                <p className="text-sm text-gray-600">1-20 Teachers</p>
+                <CardTitle className="text-lg font-semibold">{t('pricing.smallSchool', 'Small School')}</CardTitle>
+                <p className="text-sm text-gray-600">{t('pricing.smallSchoolRange', '1-20 Teachers')}</p>
                 <div className="mt-4">
                   <span className="text-3xl font-bold text-purple-600">$10</span>
                   <span className="text-gray-600">/teacher/month</span>
                   <p className="text-sm text-gray-500 mt-1">
-                    Annual: $108/teacher/year<br />
-                    <span className="text-green-600 font-medium">Save 10% annually</span>
+                    {t('pricing.annual', 'Annual: $108/teacher/year')}<br />
+                    <span className="text-green-600 font-medium">{t('pricing.save10', 'Save 10% annually')}</span>
                   </p>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Full AI-powered recommendations</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />20 support requests per teacher/month</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />PDF report generation</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Email sharing capabilities</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Basic onboarding support</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />{t('pricing.features.aiRecommendations', 'Full AI-powered recommendations')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />{t('pricing.features.supportRequests', '20 support requests per teacher/month')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />{t('pricing.features.pdfGeneration', 'PDF report generation')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />{t('pricing.features.emailSharing', 'Email sharing capabilities')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />{t('pricing.features.basicSupport', 'Basic onboarding support')}</li>
                 </ul>
-                <Button className="w-full mt-6 bg-purple-600 hover:bg-purple-700">Get Started</Button>
+                <Button className="w-full mt-6 bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted', 'Get Started')}</Button>
               </CardContent>
             </Card>
 
             {/* Medium School */}
             <Card className="relative border-2 border-blue-300 hover:border-blue-400 transition-all">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">Popular</span>
+                <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">{t('pricing.popular', 'Popular')}</span>
               </div>
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-lg font-semibold">Medium School</CardTitle>
-                <p className="text-sm text-gray-600">21-50 Teachers</p>
+                <CardTitle className="text-lg font-semibold">{t('pricing.mediumSchool', 'Medium School')}</CardTitle>
+                <p className="text-sm text-gray-600">{t('pricing.mediumSchoolRange', '21-50 Teachers')}</p>
                 <div className="mt-4">
                   <span className="text-3xl font-bold text-blue-600">$10</span>
                   <span className="text-gray-600">/teacher/month</span>
@@ -213,21 +213,21 @@ export default function Landing() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Everything in Small School</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-blue-500 mr-2" />Priority customer support</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-blue-500 mr-2" />Advanced analytics dashboard</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-blue-500 mr-2" />Bulk teacher management</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-blue-500 mr-2" />Custom training sessions</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />{t('pricing.features.everythingInSmall', 'Everything in Small School')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-blue-500 mr-2" />{t('pricing.features.prioritySupport', 'Priority customer support')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-blue-500 mr-2" />{t('pricing.features.analytics', 'Advanced analytics dashboard')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-blue-500 mr-2" />{t('pricing.features.bulkManagement', 'Bulk teacher management')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-blue-500 mr-2" />{t('pricing.features.training', 'Custom training sessions')}</li>
                 </ul>
-                <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700">Get Started</Button>
+                <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700">{t('pricing.getStarted', 'Get Started')}</Button>
               </CardContent>
             </Card>
 
             {/* Large School */}
             <Card className="relative border-2 border-emerald-300 hover:border-emerald-400 transition-all">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-lg font-semibold">Large School</CardTitle>
-                <p className="text-sm text-gray-600">51-200 Teachers</p>
+                <CardTitle className="text-lg font-semibold">{t('pricing.largeSchool', 'Large School')}</CardTitle>
+                <p className="text-sm text-gray-600">{t('pricing.largeSchoolRange', '51-200 Teachers')}</p>
                 <div className="mt-4">
                   <span className="text-3xl font-bold text-emerald-600">$10</span>
                   <span className="text-gray-600">/teacher/month</span>
@@ -239,37 +239,37 @@ export default function Landing() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Everything in Medium School</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-emerald-500 mr-2" />Dedicated account manager</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-emerald-500 mr-2" />Custom integrations</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-emerald-500 mr-2" />Advanced reporting suite</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-emerald-500 mr-2" />24/7 priority support</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />{t('pricing.features.everythingInMedium', 'Everything in Medium School')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-emerald-500 mr-2" />{t('pricing.features.accountManager', 'Dedicated account manager')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-emerald-500 mr-2" />{t('pricing.features.integrations', 'Custom integrations')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-emerald-500 mr-2" />{t('pricing.features.reporting', 'Advanced reporting suite')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-emerald-500 mr-2" />{t('pricing.features.support24', '24/7 priority support')}</li>
                 </ul>
-                <Button className="w-full mt-6 bg-emerald-600 hover:bg-emerald-700">Get Started</Button>
+                <Button className="w-full mt-6 bg-emerald-600 hover:bg-emerald-700">{t('pricing.getStarted', 'Get Started')}</Button>
               </CardContent>
             </Card>
 
             {/* Enterprise */}
             <Card className="relative border-2 border-gray-300 hover:border-gray-400 transition-all">
               <CardHeader className="text-center pb-4">
-                <CardTitle className="text-lg font-semibold">Enterprise</CardTitle>
-                <p className="text-sm text-gray-600">200+ Teachers</p>
+                <CardTitle className="text-lg font-semibold">{t('pricing.enterprise', 'Enterprise')}</CardTitle>
+                <p className="text-sm text-gray-600">{t('pricing.enterpriseRange', '200+ Teachers')}</p>
                 <div className="mt-4">
-                  <span className="text-3xl font-bold text-gray-600">Custom</span>
+                  <span className="text-3xl font-bold text-gray-600">{t('pricing.custom', 'Custom')}</span>
                   <p className="text-sm text-gray-500 mt-1">
-                    Annual: Custom pricing
+                    {t('pricing.customPricing', 'Annual: Custom pricing')}
                   </p>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />Everything in Large School</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-gray-500 mr-2" />White-label solutions</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-gray-500 mr-2" />API access</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-gray-500 mr-2" />Custom feature development</li>
-                  <li className="flex items-center"><Star className="w-4 h-4 text-gray-500 mr-2" />On-site training & support</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" />{t('pricing.features.everythingInLarge', 'Everything in Large School')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-gray-500 mr-2" />{t('pricing.features.whiteLabel', 'White-label solutions')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-gray-500 mr-2" />{t('pricing.features.apiAccess', 'API access')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-gray-500 mr-2" />{t('pricing.features.customDevelopment', 'Custom feature development')}</li>
+                  <li className="flex items-center"><Star className="w-4 h-4 text-gray-500 mr-2" />{t('pricing.features.onsiteSupport', 'On-site training & support')}</li>
                 </ul>
-                <Button className="w-full mt-6 bg-gray-600 hover:bg-gray-700">Get Started</Button>
+                <Button className="w-full mt-6 bg-gray-600 hover:bg-gray-700">{t('pricing.getStarted', 'Get Started')}</Button>
               </CardContent>
             </Card>
           </div>
