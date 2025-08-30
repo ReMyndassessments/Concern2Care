@@ -46,9 +46,13 @@ app.use(cors({
   optionsSuccessStatus: 200
 }));
 
-// Log all incoming requests to debug connection issues
+// Optimized request logging - only log API requests and errors, not static assets
 app.use((req, res, next) => {
-  console.log(`🔍 ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'none'} - Host: ${req.get('Host')}`);
+  // Only log API requests, not static assets or Vite dev files
+  if (req.path.startsWith('/api/') || req.path.startsWith('/auth/') || 
+      (req.method !== 'GET' && !req.path.includes('/@'))) {
+    console.log(`🔍 ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'none'} - Host: ${req.get('Host')}`);
+  }
   next();
 });
 

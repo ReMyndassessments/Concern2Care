@@ -366,52 +366,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getAdminLogs(limit: number = 50): Promise<AdminLogWithDetails[]> {
-    // Simplified query to avoid alias conflicts - get basic admin logs first
-    const logs = await db
-      .select()
-      .from(adminLogs)
-      .orderBy(desc(adminLogs.createdAt))
-      .limit(limit);
+    // Use Drizzle's with() method for optimized joins
+    const logsWithDetails = await db.query.adminLogs.findMany({
+      limit,
+      orderBy: desc(adminLogs.createdAt),
+      with: {
+        admin: true,
+        targetUser: true,
+        targetSchool: true,
+      },
+    });
 
-    // Fetch admin and target user details separately to avoid alias conflicts
-    const result: AdminLogWithDetails[] = [];
-    
-    for (const log of logs) {
-      // Get admin user
-      const [admin] = await db
-        .select()
-        .from(users)
-        .where(eq(users.id, log.adminId));
-
-      // Get target user if exists
-      let targetUser = null;
-      if (log.targetUserId) {
-        const [target] = await db
-          .select()
-          .from(users)
-          .where(eq(users.id, log.targetUserId));
-        targetUser = target || null;
-      }
-
-      // Get target school if exists
-      let targetSchool = null;
-      if (log.targetSchoolId) {
-        const [school] = await db
-          .select()
-          .from(schools)
-          .where(eq(schools.id, log.targetSchoolId));
-        targetSchool = school || null;
-      }
-
-      result.push({
-        ...log,
-        admin: admin!,
-        targetUser,
-        targetSchool
-      });
-    }
-
-    return result;
+    return logsWithDetails as AdminLogWithDetails[];
   }
 
   async getDashboardStats(): Promise<{
