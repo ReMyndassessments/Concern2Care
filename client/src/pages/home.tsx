@@ -8,10 +8,12 @@ import AppHeader from "@/components/app-header";
 import ConcernForm from "@/components/concern-form";
 import InterventionResults from "@/components/intervention-results";
 import { useLocation, Link } from "wouter";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const { user } = useAuth() as { user: User | undefined };
   const [, navigate] = useLocation();
+  const { t } = useTranslation();
 
   // Redirect admins to admin dashboard
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function Home() {
         <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="text-center mb-4">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
-              Welcome back, {user?.firstName || 'Teacher'}!
+              {t('dashboard.welcome', 'Welcome back, {{name}}!', { name: user?.firstName || t('dashboard.teacher', 'Teacher') })}
             </h1>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -54,13 +56,13 @@ export default function Home() {
               <div className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 {user?.supportRequestsUsed || 0}
               </div>
-              <p className="text-gray-600 text-xs sm:text-sm">Requests Used This Month</p>
+              <p className="text-gray-600 text-xs sm:text-sm">{t('dashboard.requestsUsedThisMonth', 'Requests Used This Month')}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 {(user?.supportRequestsLimit || 20) - (user?.supportRequestsUsed || 0)}
               </div>
-              <p className="text-gray-600 text-sm">Requests Remaining</p>
+              <p className="text-gray-600 text-sm">{t('dashboard.requestsRemaining', 'Requests Remaining')}</p>
             </div>
             <div className="text-center">
               <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
@@ -69,7 +71,7 @@ export default function Home() {
                   style={{ width: `${Math.min(usagePercentage, 100)}%` }}
                 ></div>
               </div>
-              <p className="text-gray-600 text-sm">{Math.round(usagePercentage)}% Used</p>
+              <p className="text-gray-600 text-sm">{t('dashboard.percentUsed', '{{percent}}% Used', { percent: Math.round(usagePercentage) })}</p>
             </div>
           </div>
         </div>
@@ -83,29 +85,28 @@ export default function Home() {
                   <Sparkles className="h-5 w-5 text-red-600" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-red-800 mb-2">Monthly Request Limit Reached</h3>
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">{t('dashboard.limitReached', 'Monthly Request Limit Reached')}</h3>
                   <p className="text-red-700 mb-3">
-                    You've used all {user.supportRequestsLimit || 20} of your monthly support requests. 
-                    The form below has been temporarily disabled.
+                    {t('dashboard.limitReachedDesc', 'You\'ve used all {{count}} of your monthly support requests. The form below has been temporarily disabled.', { count: user.supportRequestsLimit || 20 })}
                   </p>
                   <div className="bg-white/70 rounded-lg p-4 mb-4">
-                    <h4 className="font-semibold text-red-800 mb-2">Need More Requests? Here Are Your Options:</h4>
+                    <h4 className="font-semibold text-red-800 mb-2">{t('dashboard.needMoreRequests', 'Need More Requests? Here Are Your Options:')}</h4>
                     <div className="text-sm text-red-700 space-y-2">
                       <div className="flex items-start space-x-2">
-                        <span className="font-semibold">📧 Email:</span>
-                        <span>Contact your school administrator or IT support for additional requests</span>
+                        <span className="font-semibold">{t('dashboard.optionEmail', '📧 Email:')}</span>
+                        <span>{t('dashboard.optionEmailDesc', 'Contact your school administrator or IT support for additional requests')}</span>
                       </div>
                       <div className="flex items-start space-x-2">
-                        <span className="font-semibold">🚨 Urgent:</span>
-                        <span>For immediate student safety concerns, contact your principal directly</span>
+                        <span className="font-semibold">{t('dashboard.optionUrgent', '🚨 Urgent:')}</span>
+                        <span>{t('dashboard.optionUrgentDesc', 'For immediate student safety concerns, contact your principal directly')}</span>
                       </div>
                       <div className="flex items-start space-x-2">
-                        <span className="font-semibold">📅 Wait:</span>
-                        <span>Your requests automatically reset at the beginning of next month</span>
+                        <span className="font-semibold">{t('dashboard.optionWait', '📅 Wait:')}</span>
+                        <span>{t('dashboard.optionWaitDesc', 'Your requests automatically reset at the beginning of next month')}</span>
                       </div>
                       <div className="flex items-start space-x-2">
-                        <span className="font-semibold">💾 Review:</span>
-                        <span>You can still view and manage all your existing support requests</span>
+                        <span className="font-semibold">{t('dashboard.optionReview', '💾 Review:')}</span>
+                        <span>{t('dashboard.optionReviewDesc', 'You can still view and manage all your existing support requests')}</span>
                       </div>
                     </div>
                   </div>
@@ -115,7 +116,7 @@ export default function Home() {
                       className="bg-red-600 hover:bg-red-700 text-white"
                       size="sm"
                     >
-                      📧 Email Administrator
+                      {t('dashboard.emailAdministrator', '📧 Email Administrator')}
                     </Button>
                     <Button 
                       onClick={() => window.location.href = '/my-support-requests'}
@@ -123,11 +124,11 @@ export default function Home() {
                       className="border-red-200 text-red-700 hover:bg-red-50"
                       size="sm"
                     >
-                      📋 View My Requests
+                      {t('dashboard.viewMyRequests', '📋 View My Requests')}
                     </Button>
                     <Button asChild variant="outline" className="border-red-200 text-red-700 hover:bg-red-50" size="sm">
                       <Link href="/meeting-prep">
-                        📅 Meeting Prep
+                        {t('dashboard.meetingPrep', '📅 Meeting Prep')}
                       </Link>
                     </Button>
                   </div>
@@ -145,10 +146,10 @@ export default function Home() {
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg md:rounded-xl flex items-center justify-center flex-shrink-0">
                   <FileText className="h-4 w-4 md:h-5 md:w-5 text-purple-600" />
                 </div>
-                <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">Document New Concern</h2>
+                <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">{t('dashboard.documentNewConcern', 'Document New Concern')}</h2>
                 {user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20) && (
                   <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
-                    Form Disabled - Limit Reached
+                    {t('dashboard.formDisabled', 'Form Disabled - Limit Reached')}
                   </div>
                 )}
               </div>
@@ -156,13 +157,13 @@ export default function Home() {
                 <Button asChild variant="outline" size="sm" className="hidden md:flex border-purple-200 hover:bg-purple-50">
                   <Link href="/my-support-requests">
                     <FileText className="mr-2 h-4 w-4" />
-                    View My Requests
+                    {t('dashboard.viewMyRequestsBtn', 'View My Requests')}
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="sm" className="border-purple-200 hover:bg-purple-50">
                   <Link href="/meeting-prep">
                     <Calendar className="mr-2 h-4 w-4" />
-                    Meeting Prep
+                    {t('dashboard.meetingPrepBtn', 'Meeting Prep')}
                   </Link>
                 </Button>
               </div>
