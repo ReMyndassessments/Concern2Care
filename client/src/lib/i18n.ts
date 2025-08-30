@@ -130,6 +130,8 @@ const resources = {
       'form.requestLimitReached': 'Request Limit Reached',
       'form.differentiationStrategies': 'differentiation strategies',
       'form.interventionRecommendations': 'intervention recommendations',
+      'form.yourSubjectArea': 'Your Subject Area',
+      'form.yourPositionTitle': 'Your Position/Title',
       
       // Categories
       'category.academic': 'Academic Performance',
@@ -612,6 +614,8 @@ const resources = {
       'form.requestLimitReached': '已达请求限额',
       'form.differentiationStrategies': '差异化策略',
       'form.interventionRecommendations': '干预建议',
+      'form.yourSubjectArea': '您的学科领域',
+      'form.yourPositionTitle': '您的职位/头衔',
       
       // Categories
       'category.academic': '学业表现',

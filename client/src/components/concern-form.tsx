@@ -627,7 +627,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
               <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                 <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-brand-blue flex-shrink-0" />
                 <h3 className="text-base sm:text-lg font-medium text-gray-900">
-                  {form.watch('taskType') === 'differentiation' ? 'Lesson Details' : 'Incident Details'}
+                  {form.watch('taskType') === 'differentiation' ? t('form.lessonDetails', 'Lesson Details') : t('form.incidentDetails', 'Incident Details')}
                 </h3>
               </div>
               
@@ -638,10 +638,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {form.watch('taskType') === 'differentiation' ? 'Your Subject Area' : 'Your Position/Title'} <span className="text-red-500">*</span>
+                        {form.watch('taskType') === 'differentiation' ? t('form.yourSubjectArea', 'Your Subject Area') : t('form.yourPositionTitle', 'Your Position/Title')} <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder={form.watch('taskType') === 'differentiation' ? "e.g., Mathematics, English Language Arts" : "e.g., 3rd Grade Teacher"} {...field} disabled={isAtLimit} />
+                        <Input placeholder={form.watch('taskType') === 'differentiation' ? t('form.subjectAreaPlaceholder', 'e.g., Mathematics, English Language Arts') : t('form.positionPlaceholder', 'e.g., 3rd Grade Teacher')} {...field} disabled={isAtLimit} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -654,10 +654,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {form.watch('taskType') === 'differentiation' ? 'Class Details' : 'Location'} <span className="text-red-500">*</span>
+                        {form.watch('taskType') === 'differentiation' ? t('form.classDetails', 'Class Details') : t('form.location', 'Location')} <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder={form.watch('taskType') === 'differentiation' ? "e.g., Grade 3, 25 students, mixed abilities" : "e.g., Classroom, Playground"} {...field} disabled={isAtLimit} />
+                        <Input placeholder={form.watch('taskType') === 'differentiation' ? t('form.classDetailsPlaceholder', 'e.g., Grade 3, 25 students, mixed abilities') : t('form.locationPlaceholder', 'e.g., Classroom, Playground')} {...field} disabled={isAtLimit} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -908,7 +908,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                       <FileText className="h-4 w-4 text-white" />
                     </div>
-                    <h3 className="text-base sm:text-lg font-medium text-gray-900">Lesson Plan to Adapt</h3>
+                    <h3 className="text-base sm:text-lg font-medium text-gray-900">{t('form.lessonPlanToAdapt', 'Lesson Plan to Adapt')}</h3>
                   </div>
                   
                   <FormField
@@ -918,7 +918,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       <FormItem>
                         <FormLabel className="flex items-center gap-2">
                           <BookOpen className="h-4 w-4" />
-                          Upload Lesson Plan
+                          {t('form.uploadLessonPlan', 'Upload Lesson Plan')}
                         </FormLabel>
                         <div className="space-y-2">
                           <ObjectUploader
@@ -935,10 +935,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                             disabled={isAtLimit || lessonPlanUploading}
                             data-testid="upload-lesson-plan"
                           >
-                            Upload Lesson Plan
+                            {t('form.uploadLessonPlan', 'Upload Lesson Plan')}
                           </ObjectUploader>
                           <p className="text-xs text-green-600">
-                            Upload a lesson plan that needs differentiation for this student (PDF, DOC, TXT)
+                            {t('form.uploadLessonPlanDesc', 'Upload a lesson plan that needs differentiation for this student (PDF, DOC, TXT)')}
                           </p>
                         </div>
                         <FormMessage />
