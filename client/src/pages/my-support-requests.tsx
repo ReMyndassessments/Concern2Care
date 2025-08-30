@@ -212,18 +212,35 @@ export default function MySupportRequests() {
   };
 
   const formatTimeAgo = (date: string | Date | null | undefined) => {
-    if (!date) return 'Unknown';
+    if (!date) return t('supportRequests.unknown', 'Unknown');
     
     const now = new Date();
     const concernDate = new Date(date);
     const diffInMs = now.getTime() - concernDate.getTime();
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
     const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
     const diffInDays = Math.floor(diffInHours / 24);
     
-    if (diffInHours < 1) return 'Less than 1 hour ago';
-    if (diffInHours < 24) return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
-    if (diffInDays === 1) return '1 day ago';
-    if (diffInDays < 7) return `${diffInDays} days ago`;
+    if (diffInMinutes < 60) {
+      return t('supportRequests.minutesAgo', '{{count}} minute{{plural}} ago', {
+        count: diffInMinutes || 1,
+        plural: (diffInMinutes === 1) ? '' : 's'
+      });
+    }
+    
+    if (diffInHours < 24) {
+      return t('supportRequests.hoursAgo', '{{count}} hour{{plural}} ago', {
+        count: diffInHours,
+        plural: (diffInHours === 1) ? '' : 's'
+      });
+    }
+    
+    if (diffInDays < 7) {
+      return t('supportRequests.daysAgo', '{{count}} day{{plural}} ago', {
+        count: diffInDays,
+        plural: (diffInDays === 1) ? '' : 's'
+      });
+    }
     
     return concernDate.toLocaleDateString();
   };
@@ -425,7 +442,7 @@ export default function MySupportRequests() {
                           <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
                             {concern.studentFirstName} {concern.studentLastInitial}.
                           </h3>
-                          <span className="text-xs sm:text-sm text-gray-500">Grade {concern.grade}</span>
+                          <span className="text-xs sm:text-sm text-gray-500">{t('supportRequests.grade', 'Grade {{grade}}', { grade: concern.grade })}</span>
                         </div>
                         
                         {/* Task Type and Concern Types */}
@@ -440,12 +457,12 @@ export default function MySupportRequests() {
                             {concern.taskType === "differentiation" ? (
                               <>
                                 <BookOpen className="h-3 w-3 mr-1" />
-                                Differentiation
+                                {t('supportRequests.differentiation', 'Differentiation')}
                               </>
                             ) : (
                               <>
                                 <Target className="h-3 w-3 mr-1" />
-                                Intervention
+                                {t('supportRequests.intervention', 'Intervention')}
                               </>
                             )}
                           </Badge>
@@ -456,7 +473,7 @@ export default function MySupportRequests() {
                               key={type}
                               className={concernTypeColors[type.toLowerCase() as keyof typeof concernTypeColors] || concernTypeColors.academic}
                             >
-                              {type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ')}
+                              {t(`category.${type}`, type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' '))}
                             </Badge>
                           ))}
                         </div>
