@@ -135,6 +135,19 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+
+  // Helper function to translate concern types
+  const getTranslatedConcernType = (type: string, t: any) => {
+    const typeMap: { [key: string]: string } = {
+      'Academic': t('form.academic', 'Academic'),
+      'Attendance': t('form.attendance', 'Attendance'),
+      'Behavior': t('form.behavior', 'Behavior'),
+      'Social/Emotional': t('form.socialEmotional', 'Social/Emotional'),
+      'Peer Relationships': t('form.peerRelationships', 'Peer Relationships'),
+      'Family/Home': t('form.familyHome', 'Family/Home')
+    };
+    return typeMap[type] || type;
+  };
   const [showOtherConcern, setShowOtherConcern] = useState(false);
   const [showOtherAction, setShowOtherAction] = useState(false);
   const [showDifferentiation, setShowDifferentiation] = useState(false);
@@ -675,9 +688,9 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 <FormItem>
                   <div className="mb-4">
                     <FormLabel className="text-base">
-                      Type of Concern <span className="text-red-500">*</span>
+                      {t('form.typeOfConcern', 'Type of Concern')} <span className="text-red-500">*</span>
                     </FormLabel>
-                    <p className="text-sm text-gray-600">Select all that apply</p>
+                    <p className="text-sm text-gray-600">{t('form.selectAllThatApply', 'Select all that apply')}</p>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -708,7 +721,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                 />
                               </FormControl>
                               <FormLabel className="text-sm font-normal leading-normal cursor-pointer flex-1">
-                                {item}
+                                {getTranslatedConcernType(item, t)}
                               </FormLabel>
                             </FormItem>
                           );
@@ -724,7 +737,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         disabled={isAtLimit}
                         onCheckedChange={(checked) => setShowOtherConcern(checked === true)}
                       />
-                      <label className={`text-sm font-normal ${isAtLimit ? 'text-gray-400' : ''}`}>Other (please specify)</label>
+                      <label className={`text-sm font-normal ${isAtLimit ? 'text-gray-400' : ''}`}>{t('form.otherSpecify', 'Other (please specify)')}</label>
                     </div>
                     
                     {showOtherConcern && (
@@ -734,7 +747,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         render={({ field }) => (
                           <FormItem className="mt-2">
                             <FormControl>
-                              <Input placeholder="Specify other concern type" {...field} disabled={isAtLimit} />
+                              <Input placeholder={t('form.specifyOtherConcern', 'Specify other concern type')} {...field} disabled={isAtLimit} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -757,19 +770,19 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base">
-                    Detailed Description of Concern <span className="text-red-500">*</span>
+                    {t('form.detailedDescription', 'Detailed Description of Concern')} <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Textarea 
                       rows={6}
-                      placeholder="Please provide specific details about the observed behavior or concern. Include frequency, duration, context, and any patterns you've noticed..."
+                      placeholder={t('form.descriptionPlaceholder', 'Please provide specific details about the observed behavior or concern. Include frequency, duration, context, and any patterns you\'ve noticed...')}
                       className="resize-none min-h-[120px] text-base"
                       {...field}
                       disabled={isAtLimit}
                     />
                   </FormControl>
                   <p className="text-xs text-gray-600">
-                    Be specific and objective. This information helps generate more targeted intervention strategies.
+                    {t('form.specificObjectiveNote', 'Be specific and objective. This information helps generate more targeted intervention strategies.')}
                   </p>
                   <FormMessage />
                 </FormItem>
@@ -855,7 +868,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                 />
                               </FormControl>
                               <FormLabel className="text-sm font-normal leading-normal cursor-pointer flex-1">
-                                {item}
+                                {getTranslatedConcernType(item, t)}
                               </FormLabel>
                             </FormItem>
                           );
