@@ -3038,80 +3038,110 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         
         doc.fontSize(18).font('Helvetica-Bold');
-        doc.fillColor('#374151');
-        doc.text('Additional Notes');
+        doc.fillColor('#1f2937');
+        doc.text('ADDITIONAL NOTES');
         doc.fillColor('#000000');
-        doc.moveDown(0.5);
         
-        // Notes content box
+        // Add horizontal line under header
+        doc.moveTo(50, doc.y + 8)
+           .lineTo(545, doc.y + 8)
+           .strokeColor('#d1d5db')
+           .lineWidth(2)
+           .stroke();
+        
+        doc.moveDown(1.5);
+        
+        // Clean notes content with subtle background
         const notesY = doc.y;
-        const notesHeight = doc.heightOfString(meetingData.notes, { width: 480 }) + 20;
-        doc.rect(40, notesY, 520, notesHeight)
-           .fillColor('#fffbeb')
-           .strokeColor('#f59e0b')
+        const notesHeight = doc.heightOfString(meetingData.notes, { width: 480 }) + 25;
+        doc.rect(45, notesY - 5, 510, notesHeight)
+           .fillColor('#fefefe')
+           .strokeColor('#e5e7eb')
            .lineWidth(1)
            .fillAndStroke();
-        doc.fillColor('#000000');
         
-        doc.y = notesY + 10;
-        doc.x = 60;
         doc.fontSize(12).font('Helvetica');
-        doc.text(meetingData.notes, { width: 480, align: 'left' });
-        doc.x = 50;
+        doc.fillColor('#374151');
+        doc.text(meetingData.notes, 60, notesY + 10, { 
+          width: 480, 
+          align: 'left',
+          lineGap: 2
+        });
+        
+        doc.fillColor('#000000');
+        doc.y = notesY + notesHeight + 15;
         doc.moveDown(2);
       }
 
       // Document Options with professional styling
       if (meetingData.includeRecommendations || meetingData.includeProgressNotes) {
         doc.fontSize(16).font('Helvetica-Bold');
-        doc.fillColor('#374151');
-        doc.text('Document Includes');
+        doc.fillColor('#1f2937');
+        doc.text('DOCUMENT INCLUDES');
         doc.fillColor('#000000');
-        doc.moveDown(0.5);
         
-        doc.fontSize(12).font('Helvetica');
+        // Add horizontal line under header
+        doc.moveTo(50, doc.y + 8)
+           .lineTo(400, doc.y + 8)
+           .strokeColor('#d1d5db')
+           .lineWidth(1)
+           .stroke();
+        
+        doc.moveDown(1.2);
+        
         if (meetingData.includeRecommendations) {
+          doc.fontSize(12).font('Helvetica');
           doc.fillColor('#059669');
-          doc.text('✓ AI-generated intervention recommendations', { indent: 20 });
+          doc.text('• AI-generated intervention recommendations', 70, doc.y);
+          doc.moveDown(0.7);
         }
         if (meetingData.includeProgressNotes) {
+          doc.fontSize(12).font('Helvetica');
           doc.fillColor('#059669');
-          doc.text('✓ Progress tracking section', { indent: 20 });
+          doc.text('• Progress tracking section', 70, doc.y);
+          doc.moveDown(0.7);
         }
         doc.fillColor('#000000');
         doc.moveDown(2);
       }
 
       // Professional footer with styling
-      if (doc.y > 720) {
+      if (doc.y > 710) {
         doc.addPage();
       }
       
+      // Add space before footer
+      doc.moveDown(2);
+      
       // Footer separator line
-      doc.moveTo(50, doc.y + 20)
-         .lineTo(550, doc.y + 20)
-         .strokeColor('#e5e7eb')
+      doc.moveTo(50, doc.y + 10)
+         .lineTo(545, doc.y + 10)
+         .strokeColor('#d1d5db')
          .lineWidth(1)
          .stroke();
       
+      doc.moveDown(1.5);
+      
+      // Footer content with improved styling and spacing
+      doc.fontSize(12).font('Helvetica-Bold');
+      doc.fillColor('#374151');
+      doc.text('DOCUMENT INFORMATION', { align: 'center' });
+      
       doc.moveDown(1);
       
-      // Footer content with professional styling
-      doc.fontSize(11).font('Helvetica');
-      doc.fillColor('#6b7280');
-      doc.text('Document Information', { align: 'center' });
-      doc.moveDown(0.3);
-      
       doc.fontSize(10).font('Helvetica');
-      doc.text(`Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, {
-        align: 'center'
-      });
-      doc.text(`Prepared by: ${session.user.firstName} ${session.user.lastName}`, {
-        align: 'center'
-      });
-      doc.text('Concern2Care - AI-Powered Educational Support Platform', {
-        align: 'center'
-      });
+      doc.fillColor('#6b7280');
+      
+      const footerY = doc.y;
+      
+      // Left-aligned info
+      doc.text(`Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, 60, footerY);
+      doc.text(`Prepared by: ${session.user.firstName} ${session.user.lastName}`, 60, footerY + 15);
+      
+      // Right-aligned branding
+      doc.text('Concern2Care', 545, footerY, { align: 'right' });
+      doc.text('AI-Powered Educational Support Platform', 545, footerY + 15, { align: 'right' });
+      
       doc.fillColor('#000000');
 
       // Finalize PDF
