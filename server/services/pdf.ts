@@ -139,19 +139,7 @@ export async function generateConcernReport(
         doc.fontSize(14).fillColor('#000000').text('Follow-up Questions & Responses', 50, yPosition);
         yPosition += 25;
         
-        // Check if any follow-up questions contain Chinese characters and add a notice
-        const hasChineseContent = concern.followUpQuestions.some(qa => 
-          /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/.test(qa.question) || 
-          /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/.test(qa.response)
-        );
-        
-        if (hasChineseContent) {
-          doc.fontSize(10).fillColor('#1e40af');
-          const noticeText = '📌 Note: Some content in this section contains Chinese characters. For complete text, please view this report online in your web browser.';
-          const noticeHeight = doc.heightOfString(noticeText, { width: 495 });
-          doc.text(noticeText, 50, yPosition, { width: 495, align: 'left' });
-          yPosition += noticeHeight + 15;
-        }
+        // No special handling needed - Chinese characters will be rendered directly
 
         concern.followUpQuestions.forEach((qa, index) => {
           if (yPosition > 650) {
@@ -159,16 +147,9 @@ export async function generateConcernReport(
             yPosition = 50;
           }
 
-          // Handle question text with Chinese character detection
+            // Render question text directly
           const questionText = `Q${index + 1}: ${qa.question}`;
-          const hasCJKChars = /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/.test(questionText);
-          
-          if (hasCJKChars) {
-            const fallbackText = `Q${index + 1}: 📝 Question contains Chinese characters - please view online for full text`;
-            doc.fontSize(11).fillColor('#1e40af').text(fallbackText, 50, yPosition);
-          } else {
-            doc.fontSize(11).fillColor('#2563eb').text(questionText, 50, yPosition);
-          }
+          doc.fontSize(11).fillColor('#2563eb').text(questionText, 50, yPosition);
           yPosition += 20;
           
           doc.fontSize(10).fillColor('#000000').text('A: ', 50, yPosition);
@@ -226,27 +207,26 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     const width = options.width || (pageWidth - x);
     ensureSpace(Math.max(fontSize * 1.5, 20)); // Reduce minimum space requirement
     
-    // Check if content contains Chinese characters specifically
-    const hasCJKChars = /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/.test(content);
-    
     doc.fontSize(fontSize).fillColor(color);
     
-    if (hasCJKChars) {
-      // For content with non-Latin characters, show a helpful notice
-      const noticeText = '📝 This response contains Chinese characters. Please view the full text in your web browser for complete content.';
-      
-      // Add minimal spacing before the notice
-      ensureSpace(25);
-      
-      const height = doc.heightOfString(noticeText, { width, ...options });
-      doc.fillColor('#1e40af'); // Blue color for information
-      doc.text(noticeText, x, yPosition, { width, ...options });
-      doc.fillColor(color); // Reset color
-      return Math.max(height + 5, fontSize * 1.2); // Reduce extra spacing
-    } else {
-      // Regular Latin text - process normally
-      const height = doc.heightOfString(content, { width, ...options });
-      doc.text(content, x, yPosition, { width, ...options });
+    // Clean and sanitize the content to prevent encoding issues
+    const cleanContent = content
+      .replace(/\0/g, '') // Remove null bytes
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Remove control characters
+      .replace(/\uFFFD/g, '') // Remove replacement characters
+      .trim();
+    
+    try {
+      // Try to render the text directly (including Chinese characters)
+      const height = doc.heightOfString(cleanContent, { width, ...options });
+      doc.text(cleanContent, x, yPosition, { width, ...options });
+      return Math.max(height, fontSize * 1.2);
+    } catch (error) {
+      console.warn('PDF text rendering error:', error);
+      // Fallback to safe ASCII characters only if there's an error
+      const safeContent = cleanContent.replace(/[^\x20-\x7E]/g, '?');
+      const height = doc.heightOfString(safeContent, { width, ...options });
+      doc.text(safeContent, x, yPosition, { width, ...options });
       return Math.max(height, fontSize * 1.2);
     }
   };
@@ -254,15 +234,14 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
   for (let i = 0; i < lines.length; i++) {
     const trimmedLine = lines[i].trim();
     if (!trimmedLine) {
-      // Add minimal spacing for empty lines
-      yPosition += 4;
+      // Skip empty lines completely
       continue;
     }
     
     // Main headings (### **Title**) - Large, prominent headings
     if (trimmedLine.match(/^###\s*\*\*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
-      yPosition += 8; // Reduce space before heading
+      yPosition += 3; // Minimal space before heading
       
       // Draw separator line
       ensureSpace(30);
@@ -370,8 +349,9 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       continue;
     }
     
-    // Table handling - detect table rows
-    if (trimmedLine.includes('|') && trimmedLine.split('|').length > 2) {
+    // Enhanced table handling - detect table rows (including markdown table format)
+    if ((trimmedLine.includes('|') && trimmedLine.split('|').length > 2) || 
+        trimmedLine.match(/^\*\*.*\*\*\s*\|\s*\*\*.*\*\*\s*\|\s*\*\*.*\*\*$/)) {
       // Look ahead to collect all table rows
       const tableRows = [];
       let j = i;
@@ -379,8 +359,10 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       while (j < lines.length) {
         const line = lines[j].trim();
         if (line.includes('|') && line.split('|').length > 2) {
-          // Clean up the row data
-          const cells = line.split('|').map(cell => cell.trim()).filter(cell => cell.length > 0);
+          // Clean up the row data and remove markdown formatting
+          const cells = line.split('|')
+            .map(cell => cell.trim().replace(/\*\*/g, '')) // Remove markdown bold
+            .filter(cell => cell.length > 0);
           if (cells.length > 0) {
             tableRows.push(cells);
           }
@@ -394,9 +376,10 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       }
       
       if (tableRows.length > 0) {
-        yPosition += 15; // More space before table
+        console.log('Rendering table with rows:', tableRows.length);
+        yPosition += 10; // Reduce space before table
         yPosition = drawTable(doc, tableRows, leftMargin, yPosition, pageWidth - leftMargin);
-        yPosition += 20; // More space after table
+        yPosition += 15; // Reduce space after table
         i = j - 1; // Skip processed lines
         inBulletList = false;
         continue;
