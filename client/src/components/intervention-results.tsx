@@ -301,19 +301,24 @@ export default function InterventionResults({
       const response = await apiRequest("POST", `/api/concerns/${concern.id}/report`);
       return response;
     },
-    onSuccess: (data: { downloadUrl: string }) => {
+    onSuccess: (data: { viewUrl: string; downloadUrl: string }) => {
       toast({
         title: "Report Generated",
-        description: "Your PDF report is ready for download",
+        description: "Your HTML report is ready to view or download",
       });
       
-      // Trigger download
-      const link = document.createElement('a');
-      link.href = data.downloadUrl;
-      link.download = `concern-report-${concern.studentFirstName}-${concern.studentLastInitial}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Open report in new tab first for viewing
+      window.open(data.viewUrl, '_blank');
+      
+      // Also provide download option
+      setTimeout(() => {
+        const link = document.createElement('a');
+        link.href = data.downloadUrl;
+        link.download = `concern-report-${concern.studentFirstName}-${concern.studentLastInitial}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }, 1000);
     },
     onError: (error: Error) => {
       if (isUnauthorizedError(error)) {
@@ -571,7 +576,7 @@ export default function InterventionResults({
                             Implementation Steps
                           </h4>
                           <ul className="space-y-3">
-                            {intervention.steps.map((step: unknown, stepIndex: number) => (
+                            {intervention.steps.map((step: string, stepIndex: number) => (
                               <li key={stepIndex} className="flex items-start space-x-4">
                                 <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                                   {stepIndex + 1}

@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { generateInterventions, answerFollowUpQuestion, generateRecommendations, followUpAssistance, GenerateRecommendationsRequest, FollowUpAssistanceRequest } from "./services/ai";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { generateConcernReport, ensureReportsDirectory, parseMarkdownToPDF } from "./services/pdf";
+import { generateConcernHTMLReport } from "./services/htmlReport";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
 import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports, schools, featureFlags, schoolFeatureOverrides } from "@shared/schema";
 import { db } from "./db";
@@ -738,7 +739,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate PDF report - PROTECTED
+  // Generate HTML report - PROTECTED
   app.post("/api/concerns/:id/report", requireAuth, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
@@ -757,20 +758,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Ensure reports directory exists
       const reportsDir = ensureReportsDirectory();
-      const filename = `concern-${concernId}-${Date.now()}.pdf`;
+      const filename = `concern-${concernId}-${Date.now()}.html`;
       const filePath = path.join(reportsDir, filename);
 
-      // Generate PDF
-      await generateConcernReport(concern, concern.interventions, filePath);
+      // Generate HTML report
+      await generateConcernHTMLReport(concern, concern.interventions, filePath);
 
-      // Create report record
+      // Create report record (update field name to htmlPath)
       const report = await storage.createReport({
         concernId,
-        pdfPath: filePath,
+        pdfPath: filePath, // We'll keep this field name for now to avoid schema changes
       });
 
       res.json({
         reportId: report.id,
+        viewUrl: `/api/reports/${report.id}/view`,
         downloadUrl: `/api/reports/${report.id}/download`,
       });
     } catch (error) {
@@ -779,7 +781,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Download PDF report - PROTECTED
+  // View HTML report - PROTECTED
+  app.get("/api/reports/:id/view", requireAuth, async (req: any, res) => {
+    try {
+      const reportId = req.params.id;
+      const report = await storage.getReportById(reportId);
+      
+      if (!report || !report.pdfPath) {
+        return res.status(404).json({ message: "Report not found" });
+      }
+
+      if (!fs.existsSync(report.pdfPath)) {
+        return res.status(404).json({ message: "Report file not found" });
+      }
+
+      // Serve HTML file directly
+      res.setHeader('Content-Type', 'text/html');
+      const htmlContent = await fs.promises.readFile(report.pdfPath, 'utf8');
+      res.send(htmlContent);
+    } catch (error) {
+      console.error("Error viewing report:", error);
+      res.status(500).json({ message: "Failed to view report" });
+    }
+  });
+
+  // Download HTML report - PROTECTED
   app.get("/api/reports/:id/download", requireAuth, async (req: any, res) => {
     try {
       const reportId = req.params.id;
@@ -793,8 +819,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Report file not found" });
       }
 
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename="concern-report.pdf"');
+      // Serve as downloadable HTML file
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Content-Disposition', 'attachment; filename="concern-report.html"');
       
       const fileStream = fs.createReadStream(report.pdfPath);
       fileStream.pipe(res);
@@ -830,16 +857,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let report = await storage.getReportByConcernId(concernId);
       
       if (!report) {
-        // Generate PDF if it doesn't exist
+        // Generate HTML report if it doesn't exist
         const reportsDir = ensureReportsDirectory();
-        const filename = `concern-${concernId}-${Date.now()}.pdf`;
+        const filename = `concern-${concernId}-${Date.now()}.html`;
         const filePath = path.join(reportsDir, filename);
 
-        await generateConcernReport(concern, concern.interventions, filePath);
+        await generateConcernHTMLReport(concern, concern.interventions, filePath);
         
         report = await storage.createReport({
           concernId,
-          pdfPath: filePath,
+          pdfPath: filePath, // Keep field name for compatibility
           sharedWith: recipients.map((r: any) => r.email),
         });
       }
