@@ -22,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ObjectUploader } from "@/components/ObjectUploader";
 import { Edit3, Wand2, GraduationCap, AlertTriangle, Users, CalendarX, User, Calendar, MapPin, AlertCircle, ChevronDown, ChevronUp, Lightbulb, Upload, FileText, BookOpen } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const enhancedConcernFormSchema = z.object({
   studentFirstName: z.string().min(1, "First name is required"),
@@ -133,6 +134,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const { user } = useAuth() as { user: UserType | undefined };
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const [showOtherConcern, setShowOtherConcern] = useState(false);
   const [showOtherAction, setShowOtherAction] = useState(false);
   const [showDifferentiation, setShowDifferentiation] = useState(false);
@@ -254,10 +256,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                   <span className="text-white text-lg">🎯</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Choose Your Task Type</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{t('form.chooseTaskType', 'Choose Your Task Type')}</h3>
               </div>
               <p className="text-sm text-gray-600 mb-4">
-                Select the type of AI-powered support you need - this will determine what information to collect:
+                {t('form.taskTypeDescription', 'Select the type of AI-powered support you need - this will determine what information to collect:')}
               </p>
               
               <FormField
@@ -282,10 +284,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                 htmlFor={taskType.value}
                                 className="text-base font-medium text-gray-900 cursor-pointer block mb-1"
                               >
-                                {taskType.label}
+                                {taskType.value === 'differentiation' ? t('form.differentiationTask', 'Differentiation Task') : t('form.tier2InterventionTask', 'Tier 2 Intervention Task')}
                               </label>
                               <p className="text-sm text-gray-600 leading-relaxed">
-                                {taskType.description}
+                                {taskType.value === 'differentiation' ? t('form.differentiationDesc', 'Get specific strategies to adapt instruction for different learning styles, abilities, and needs. Focus on instructional modifications and learning accommodations.') : t('form.tier2InterventionDesc', 'Generate evidence-based behavioral and academic intervention strategies for concerning behaviors. Focus on targeted interventions for specific behavioral or academic issues.')}
                               </p>
                             </div>
                           </div>
@@ -305,10 +307,9 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   <div className="flex items-start space-x-3">
                     <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-sm font-medium text-blue-900 mb-1">Task Selected: {TASK_TYPES.find(t => t.value === form.watch('taskType'))?.label}</h4>
+                      <h4 className="text-sm font-medium text-blue-900 mb-1">{t('form.taskSelected', 'Task Selected: {{taskType}}', { taskType: TASK_TYPES.find(t => t.value === form.watch('taskType'))?.value === 'differentiation' ? t('form.differentiationTask', 'Differentiation Task') : t('form.tier2InterventionTask', 'Tier 2 Intervention Task') })}</h4>
                       <p className="text-sm text-blue-700">
-                        If you need both differentiation strategies AND Tier 2 intervention recommendations for the same student, 
-                        please submit separate requests. This helps ensure each task receives focused, specialized attention.
+                        {t('form.taskSelectionNote', 'If you need both differentiation strategies AND Tier 2 intervention recommendations for the same student, please submit separate requests. This helps ensure each task receives focused, specialized attention.')}
                       </p>
                     </div>
                   </div>
@@ -327,7 +328,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     className="text-blue-600 border-blue-300 hover:bg-blue-100 flex-shrink-0"
                     data-testid="button-change-task-type"
                   >
-                    Change Task
+                    {t('form.changeTask', 'Change Task')}
                   </Button>
                 </div>
               </div>
@@ -340,7 +341,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
             <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
               <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                 <User className="h-4 w-4 sm:h-5 sm:w-5 text-brand-blue flex-shrink-0" />
-                <h3 className="text-base sm:text-lg font-medium text-gray-900">Student Information</h3>
+                <h3 className="text-base sm:text-lg font-medium text-gray-900">{t('form.studentInformation', 'Student Information')}</h3>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -350,10 +351,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        First Name <span className="text-red-500">*</span>
+                        {t('form.firstName', 'First Name')} <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter first name" {...field} disabled={isAtLimit} />
+                        <Input placeholder={t('form.firstNamePlaceholder', 'Enter first name')} {...field} disabled={isAtLimit} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -366,11 +367,11 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Last Initial <span className="text-red-500">*</span>
+                        {t('form.lastInitial', 'Last Initial')} <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="X"
+                          placeholder={t('form.lastInitialPlaceholder', 'X')}
                           maxLength={1}
                           className="uppercase"
                           onChange={(e) => field.onChange(e.target.value.toUpperCase())}
@@ -389,12 +390,12 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Grade <span className="text-red-500">*</span>
+                        {t('form.grade', 'Grade')} <span className="text-red-500">*</span>
                       </FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isAtLimit}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select grade" />
+                            <SelectValue placeholder={t('form.gradePlaceholder', 'Select grade')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -418,7 +419,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
                     <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 flex-shrink-0" />
-                    <h3 className="text-base sm:text-lg font-medium text-gray-900">Student Learning Profile</h3>
+                    <h3 className="text-base sm:text-lg font-medium text-gray-900">{t('form.studentLearningProfile', 'Student Learning Profile')}</h3>
                   </div>
                   <Button
                     type="button"
@@ -434,7 +435,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 
                 <p className="text-sm text-amber-700 mb-4">
                   <Lightbulb className="h-4 w-4 inline mr-1" />
-                  Optional: Add details about the student's learning needs for more personalized {form.watch('taskType') === 'differentiation' ? 'differentiation strategies' : 'intervention recommendations'}
+                  {t('form.learningProfileNote', 'Optional: Add details about the student\'s learning needs for more personalized {{strategyType}}', { strategyType: form.watch('taskType') === 'differentiation' ? t('form.differentiationStrategies', 'differentiation strategies') : t('form.interventionRecommendations', 'intervention recommendations') })}
                 </p>
                 
                 {showDifferentiation && (
@@ -455,7 +456,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               />
                             </FormControl>
                             <FormLabel className="text-sm font-normal">
-                              Has IEP/504 Plan
+                              {t('form.hasIepPlan', 'Has IEP/504 Plan')}
                             </FormLabel>
                           </FormItem>
                         )}
@@ -475,7 +476,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               />
                             </FormControl>
                             <FormLabel className="text-sm font-normal">
-                              Has Diagnosed Disability
+                              {t('form.hasDiagnosedDisability', 'Has Diagnosed Disability')}
                             </FormLabel>
                           </FormItem>
                         )}
@@ -495,7 +496,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               />
                             </FormControl>
                             <FormLabel className="text-sm font-normal">
-                              English as Additional Language
+                              {t('form.englishAdditionalLanguage', 'English as Additional Language')}
                             </FormLabel>
                           </FormItem>
                         )}
@@ -515,7 +516,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               />
                             </FormControl>
                             <FormLabel className="text-sm font-normal">
-                              Gifted/Talented
+                              {t('form.giftedTalented', 'Gifted/Talented')}
                             </FormLabel>
                           </FormItem>
                         )}
