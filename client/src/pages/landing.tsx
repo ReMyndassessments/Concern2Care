@@ -3,10 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, FileText, Users, Clock, Shield, CheckCircle, Star, Mail, TrendingUp, DollarSign, BarChart3 } from "lucide-react";
 import { useState } from "react";
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useTranslation } from "react-i18next";
 
 export default function Landing() {
   const [showComparison, setShowComparison] = useState(false);
   const { isFeatureEnabled } = useFeatureFlags();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
@@ -21,14 +24,18 @@ export default function Landing() {
 
       {/* Header - Mobile Responsive */}
       <header className="relative z-10 py-4 md:py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-end">
-          <Button 
-            onClick={() => window.location.href = '/login'}
-            size="sm"
-            className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold text-sm md:text-base px-4 py-2 md:px-6 md:py-3"
-          >
-            Teacher Sign In
-          </Button>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <div className="flex-1"></div>
+          <div className="flex items-center space-x-3">
+            <LanguageSwitcher className="" />
+            <Button 
+              onClick={() => window.location.href = '/login'}
+              size="sm"
+              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold text-sm md:text-base px-4 py-2 md:px-6 md:py-3"
+            >
+              {t('auth.teacherSignIn', 'Teacher Sign In')}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -47,7 +54,7 @@ export default function Landing() {
           
           {/* Tagline - Mobile Responsive */}
           <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-2 font-medium px-2">
-            A Teacher Tool for Differentiation and Classroom Interventions
+            {t('landing.tagline', 'A Teacher Tool for Differentiation and Classroom Interventions')}
           </p>
           
         </div>
@@ -58,13 +65,11 @@ export default function Landing() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-2xl md:rounded-3xl shadow-lg p-6 md:p-12 text-center">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight px-2">
-              Adapt Any Lesson. Support Every Learner.
+              {t('landing.mainHeading', 'Adapt Any Lesson. Support Every Learner.')}
             </h2>
             
             <p className="text-base sm:text-lg text-gray-700 mb-6 md:mb-8 leading-relaxed px-2 max-w-3xl mx-auto">
-              Trusted, AI-powered, strategies for academic, behavioral, and social-emotional needs. 
-              Teachers get practical tools to adapt instruction in the moment. Administrators get stronger 
-              capacity, consistent support, and better outcomes for every student.
+              {t('landing.description', 'Trusted, AI-powered, strategies for academic, behavioral, and social-emotional needs. Teachers get practical tools to adapt instruction in the moment. Administrators get stronger capacity, consistent support, and better outcomes for every student.')}
             </p>
             
             <div className="space-y-4">
