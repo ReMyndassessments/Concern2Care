@@ -111,6 +111,23 @@ const resources = {
       'landing.tagline': 'A Teacher Tool for Differentiation and Classroom Interventions',
       'landing.mainHeading': 'Adapt Any Lesson. Support Every Learner.',
       'landing.description': 'Trusted, AI-powered, strategies for academic, behavioral, and social-emotional needs. Teachers get practical tools to adapt instruction in the moment. Administrators get stronger capacity, consistent support, and better outcomes for every student.',
+      'landing.secureLogin': 'Secure Teacher Login',
+      'landing.ferpaCompliant': 'FERPA compliant • Evidence-based strategies • Trusted by educators',
+      
+      // Features
+      'features.instantAI': 'Instant AI Recommendations',
+      'features.instantAIDesc': 'Get research-based intervention strategies in seconds',
+      'features.documentation': 'Professional Documentation',
+      'features.documentationDesc': 'Generate comprehensive PDF reports for meetings',
+      'features.collaboration': 'Seamless Collaboration',
+      'features.collaborationDesc': 'Share support requests with your team effortlessly',
+      'features.saveTime': 'Save Time Daily',
+      'features.saveTimeDesc': 'Reduce documentation time by up to 75%',
+      
+      // Pricing
+      'pricing.title': 'Simple, Transparent Pricing',
+      'pricing.subtitle': 'Just $10 per teacher per month',
+      'pricing.description': 'Empower your entire teaching staff with AI-powered student support tools. No hidden fees, no complicated tiers.',
       
       // Language Switcher
       'language.switch': 'Switch Language',
@@ -241,6 +258,23 @@ const resources = {
       'landing.tagline': '教师差异化教学和课堂干预工具',
       'landing.mainHeading': '适应任何课程。支持每个学习者。',
       'landing.description': '值得信赖的AI驱动策略，用于学业、行为和社交情感需求。教师可获得在关键时刻调整教学的实用工具。管理者可获得更强的能力、一致的支持，以及为每个学生带来更好的结果。',
+      'landing.secureLogin': '安全教师登录',
+      'landing.ferpaCompliant': 'FERPA符合性 • 基于证据的策略 • 教育者信赖',
+      
+      // Features
+      'features.instantAI': '即时AI推荐',
+      'features.instantAIDesc': '在几秒钟内获得基于研究的干预策略',
+      'features.documentation': '专业文档',
+      'features.documentationDesc': '为会议生成全面的PDF报告',
+      'features.collaboration': '无缝协作',
+      'features.collaborationDesc': '轻松与您的团队共享支持请求',
+      'features.saveTime': '每日节省时间',
+      'features.saveTimeDesc': '将文档时间缩短多达75%',
+      
+      // Pricing
+      'pricing.title': '简单、透明的定价',
+      'pricing.subtitle': '每位教师每月仅10美元',
+      'pricing.description': '使您的整个教学团队获得AI驱动的学生支持工具。无隐藏费用，无复杂分层。',
       
       // Language Switcher
       'language.switch': '切换语言',

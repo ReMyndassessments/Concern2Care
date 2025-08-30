@@ -78,7 +78,7 @@ export default function Landing() {
                 onClick={() => window.location.href = '/login'}
                 className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-base md:text-lg px-8 md:px-12 py-3 md:py-4 rounded-xl font-medium shadow-lg w-full sm:w-auto"
               >
-                🔐 Secure Teacher Login
+                🔐 {t('landing.secureLogin', 'Secure Teacher Login')}
               </Button>
 
               {/* Individual Teacher Registration - Feature Flag */}
@@ -98,7 +98,7 @@ export default function Landing() {
             </div>
             
             <p className="text-xs md:text-sm text-gray-500 mt-4 md:mt-6 px-2">
-              FERPA compliant • Evidence-based strategies • Trusted by educators
+              {t('landing.ferpaCompliant', 'FERPA compliant • Evidence-based strategies • Trusted by educators')}
             </p>
           </div>
         </div>
@@ -112,9 +112,9 @@ export default function Landing() {
               <div className="w-14 h-14 md:w-16 md:h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
                 <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-purple-600" />
               </div>
-              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Instant AI Recommendations</h3>
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">{t('features.instantAI', 'Instant AI Recommendations')}</h3>
               <p className="text-sm md:text-base text-gray-600">
-                Get research-based intervention strategies in seconds
+                {t('features.instantAIDesc', 'Get research-based intervention strategies in seconds')}
               </p>
             </div>
 
@@ -122,9 +122,9 @@ export default function Landing() {
               <div className="w-14 h-14 md:w-16 md:h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
                 <FileText className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
               </div>
-              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Professional Documentation</h3>
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">{t('features.documentation', 'Professional Documentation')}</h3>
               <p className="text-sm md:text-base text-gray-600">
-                Generate comprehensive PDF reports for meetings
+                {t('features.documentationDesc', 'Generate comprehensive PDF reports for meetings')}
               </p>
             </div>
 
@@ -132,9 +132,9 @@ export default function Landing() {
               <div className="w-14 h-14 md:w-16 md:h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
                 <Users className="w-6 h-6 md:w-8 md:h-8 text-emerald-600" />
               </div>
-              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Seamless Collaboration</h3>
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">{t('features.collaboration', 'Seamless Collaboration')}</h3>
               <p className="text-sm md:text-base text-gray-600">
-                Share support requests with your team effortlessly
+                {t('features.collaborationDesc', 'Share support requests with your team effortlessly')}
               </p>
             </div>
 
@@ -142,9 +142,9 @@ export default function Landing() {
               <div className="w-14 h-14 md:w-16 md:h-16 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
                 <Clock className="w-6 h-6 md:w-8 md:h-8 text-pink-600" />
               </div>
-              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Save Time Daily</h3>
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">{t('features.saveTime', 'Save Time Daily')}</h3>
               <p className="text-sm md:text-base text-gray-600">
-                Reduce documentation time by up to 75%
+                {t('features.saveTimeDesc', 'Reduce documentation time by up to 75%')}
               </p>
             </div>
           </div>
@@ -156,13 +156,13 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 px-2">
-              Simple, Transparent Pricing
+              {t('pricing.title', 'Simple, Transparent Pricing')}
             </h2>
             <p className="text-xl md:text-2xl text-purple-600 font-semibold mb-4">
-              Just $10 per teacher per month
+              {t('pricing.subtitle', 'Just $10 per teacher per month')}
             </p>
             <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto px-4">
-              Empower your entire teaching staff with AI-powered student support tools. No hidden fees, no complicated tiers.
+              {t('pricing.description', 'Empower your entire teaching staff with AI-powered student support tools. No hidden fees, no complicated tiers.')}
             </p>
           </div>
 
