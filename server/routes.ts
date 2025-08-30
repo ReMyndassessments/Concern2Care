@@ -2617,11 +2617,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       doc.moveDown(2.5);
 
       // Meeting Information Section with professional formatting
-      doc.fontSize(18).font('Helvetica-Bold');
-      doc.fillColor('#374151');
-      doc.text('Meeting Information');
+      doc.fontSize(20).font('Helvetica-Bold');
+      doc.fillColor('#1f2937');
+      doc.text('MEETING INFORMATION');
       doc.fillColor('#000000');
-      doc.moveDown(0.5);
+      
+      // Add horizontal line under header
+      doc.moveTo(50, doc.y + 8)
+         .lineTo(545, doc.y + 8)
+         .strokeColor('#d1d5db')
+         .lineWidth(2)
+         .stroke();
+      
+      doc.moveDown(1.2);
       
       // Create info box with subtle background
       const infoY = doc.y;
@@ -2710,6 +2718,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         doc.text('STUDENT CONCERNS TO DISCUSS', { align: 'center' });
         doc.fillColor('#000000');
         
+        // Add horizontal line under header
+        doc.moveTo(50, doc.y + 8)
+           .lineTo(545, doc.y + 8)
+           .strokeColor('#d1d5db')
+           .lineWidth(2)
+           .stroke();
+        
+        doc.moveDown(1.2);
+        
         // Add separator line
         doc.moveTo(50, doc.y + 10)
            .lineTo(550, doc.y + 10)
@@ -2776,13 +2793,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           doc.fillColor('#000000');
           
           doc.y = studentY + 10;
-          doc.x = 60;
-          doc.fontSize(16).font('Helvetica-Bold');
-          doc.fillColor('#0f172a');
-          doc.text(`${studentName} (Grade ${concerns[0].grade})`);
+          // Add subtle background box for student header
+          doc.rect(50, studentY + 5, 495, 35)
+             .fillColor('#f8fafc')
+             .fill()
+             .strokeColor('#e2e8f0')
+             .lineWidth(1)
+             .stroke();
+             
+          doc.x = 65;
+          doc.fontSize(18).font('Helvetica-Bold');
+          doc.fillColor('#1f2937');
+          doc.text(`${studentName} (Grade ${concerns[0].grade})`, 65, studentY + 18);
           doc.fillColor('#000000');
           doc.x = 50;
-          doc.y = studentY + 45;
+          doc.y = studentY + 50;
           doc.moveDown(1);
 
           concerns.forEach((concern: any, index: number) => {
@@ -2829,7 +2854,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             doc.moveDown(0.3);
             
             doc.fontSize(11).font('Helvetica');
-            doc.text(concern.description || 'No description provided', { 
+            const description = concern.description && concern.description.trim() && concern.description !== 'undefined' 
+              ? concern.description 
+              : 'No specific description provided - please refer to concern category and severity level for context.';
+            doc.text(description, { 
               width: 460, 
               align: 'left',
               indent: 40
@@ -2863,11 +2891,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 doc.addPage();
               }
               
-              doc.fontSize(12).font('Helvetica-Bold');
+              doc.fontSize(14).font('Helvetica-Bold');
               doc.fillColor('#7c3aed');
               doc.text('AI-Generated Interventions', { indent: 20 });
               doc.fillColor('#000000');
-              doc.moveDown(0.5);
+              
+              // Add subtle line under interventions header
+              doc.moveTo(70, doc.y + 3)
+                 .lineTo(520, doc.y + 3)
+                 .strokeColor('#c4b5fd')
+                 .lineWidth(1)
+                 .stroke();
+              
+              doc.moveDown(0.8);
 
               concern.interventions.forEach((intervention: any, intIndex: number) => {
                 // Intervention header with colored background
