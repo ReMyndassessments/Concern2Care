@@ -394,9 +394,9 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       }
       
       if (tableRows.length > 0) {
-        yPosition += 10;
+        yPosition += 15; // More space before table
         yPosition = drawTable(doc, tableRows, leftMargin, yPosition, pageWidth - leftMargin);
-        yPosition += 15;
+        yPosition += 20; // More space after table
         i = j - 1; // Skip processed lines
         inBulletList = false;
         continue;
@@ -427,42 +427,44 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
   return yPosition + 15;
 }
 
-// Helper function to draw tables in PDF
+// Helper function to draw professional tables in PDF
 function drawTable(doc: any, rows: string[][], x: number, y: number, maxWidth: number): number {
   if (rows.length === 0) return y;
   
-  const cellPadding = 4;
-  const rowHeight = 20;
+  const cellPadding = 8; // Increased padding for better appearance
+  const headerRowHeight = 28; // Taller header row
+  const regularRowHeight = 24; // Taller regular rows
   const numCols = Math.max(...rows.map(row => row.length));
-  const colWidth = (maxWidth - (numCols + 1) * 2) / numCols; // Account for border width
+  const colWidth = (maxWidth - 2) / numCols; // Distribute width evenly
   
   let currentY = y;
   
-  // Ensure space for table
-  const tableHeight = rows.length * rowHeight + 10;
-  if (currentY + tableHeight > 750) {
+  // Ensure space for table (estimate with max row height)
+  const estimatedTableHeight = (headerRowHeight + (rows.length - 1) * regularRowHeight) + 10;
+  if (currentY + estimatedTableHeight > 750) {
     doc.addPage();
     currentY = 50;
   }
   
   rows.forEach((row, rowIndex) => {
     const isHeader = rowIndex === 0;
-    const bgColor = isHeader ? '#f8fafc' : '#ffffff';
-    const textColor = isHeader ? '#1e293b' : '#374151';
-    const fontSize = isHeader ? 9 : 8;
+    const bgColor = isHeader ? '#f1f5f9' : '#ffffff'; // Better contrast for header
+    const textColor = isHeader ? '#0f172a' : '#475569'; // Darker text for better readability
+    const fontSize = isHeader ? 10 : 9; // Larger font sizes
+    const rowHeight = isHeader ? headerRowHeight : regularRowHeight;
     
-    // Draw row background
-    if (isHeader) {
-      doc.rect(x, currentY, maxWidth, rowHeight).fill(bgColor);
-    }
+    // Draw row background for all rows
+    doc.rect(x, currentY, maxWidth, rowHeight).fill(bgColor).stroke('#cbd5e1');
     
     // Draw cell borders and content
     row.forEach((cell, colIndex) => {
       const cellX = x + colIndex * colWidth;
       const cellY = currentY;
       
-      // Draw cell border
-      doc.rect(cellX, cellY, colWidth, rowHeight).stroke('#e2e8f0');
+      // Draw cell border with professional styling
+      doc.lineWidth(0.5)
+         .rect(cellX, cellY, colWidth, rowHeight)
+         .stroke(isHeader ? '#94a3b8' : '#e2e8f0');
       
       // Add cell text
       const textX = cellX + cellPadding;
@@ -474,7 +476,7 @@ function drawTable(doc: any, rows: string[][], x: number, y: number, maxWidth: n
          .text(cell, textX, textY, {
            width: textWidth,
            height: rowHeight - 2 * cellPadding,
-           align: 'left',
+           align: isHeader ? 'center' : 'left', // Center headers, left-align content
            ellipsis: true
          });
     });
