@@ -11,7 +11,7 @@ import { eq, and, sql } from "drizzle-orm";
 import path from "path";
 import fs from "fs";
 import session from "express-session";
-import MemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
 import multer from "multer";
 import * as bcrypt from "bcrypt";
 import PDFDocument from "pdfkit";
@@ -67,25 +67,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   });
 
-  // Enable sessions for professional authentication with persistence
-  const memoryStore = MemoryStore(session);
+  // Enable sessions for professional authentication with PostgreSQL persistence
+  const pgSession = connectPgSimple(session);
   
   app.use(session({
     secret: process.env.SESSION_SECRET || 'concern2care-session-secret-development-key-very-long',
-    resave: true, // Enable session resave to ensure persistence
-    saveUninitialized: true, // Enable saving uninitialized sessions
-    store: new memoryStore({
-      checkPeriod: 86400000 // prune expired entries every 24h
+    resave: false, // Don't save session if unmodified
+    saveUninitialized: false, // Don't create session until something stored
+    store: new pgSession({
+      conString: process.env.DATABASE_URL,
+      tableName: 'session', // Will be created automatically
+      createTableIfMissing: true,
+      ttl: 4 * 60 * 60 // 4 hours in seconds
     }),
     rolling: true, // Reset session timeout on activity
-    name: 'connect.sid', // Use default session name for compatibility
-    proxy: false, // Disable proxy trust to simplify
+    name: 'connect.sid',
     cookie: {
-      secure: false, // Disable secure cookies temporarily for debugging
+      secure: false, // Set to true in production with HTTPS
       maxAge: 4 * 60 * 60 * 1000, // 4 hours
-      httpOnly: false, // Disable httpOnly temporarily for debugging
-      sameSite: 'lax', // Use lax for better compatibility
-      domain: undefined // Auto-determine domain
+      httpOnly: true, // Prevent XSS attacks
+      sameSite: 'lax'
     }
   }));
 
