@@ -270,11 +270,19 @@ ${lessonPlanContent}
    - What to prepare in advance
    - Timing considerations
 
+7. **Ongoing Differentiation Strategies:**
+   - Long-term content modifications
+   - Process adaptations for future lessons
+   - Assessment alternatives
+   - Environment optimizations
+   - Progress monitoring systems
+   - Collaboration and communication plans
+
 **Format:** 
 1. **FIRST**: Provide a COMPLETE, restructured lesson plan with specific activities, modified materials, timing, and assessment methods
-2. **THEN**: Include additional general differentiation strategies for ongoing support
+2. **THEN**: Include comprehensive research-based differentiation strategies with citations, implementation timelines, and progress monitoring systems (use the same detailed format as provided for general differentiation tasks)
 
-This should be an actual differentiated lesson plan the teacher can implement immediately, not just general recommendations.`;
+This should include BOTH an actual differentiated lesson plan the teacher can implement immediately AND comprehensive ongoing support strategies.`;
     } else {
       prompt = `You are a leading educational specialist with advanced expertise in differentiated instruction, Universal Design for Learning (UDL), and evidence-based teaching practices. Drawing from current research in cognitive science, special education, and instructional design, provide detailed, immediately implementable differentiation strategies with specific learning objectives, assessment criteria, and research citations where applicable.
 

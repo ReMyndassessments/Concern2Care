@@ -244,12 +244,12 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       yPosition += 3; // Minimal space before heading
       
       // Draw separator line
-      ensureSpace(30);
+      ensureSpace(20);
       doc.moveTo(leftMargin, yPosition).lineTo(pageWidth, yPosition).stroke('#e2e8f0');
-      yPosition += 8;
+      yPosition += 4;
       
       const height = addText(title, leftMargin, 14, '#2563eb', { align: 'left' });
-      yPosition += height + 6;
+      yPosition += height + 3;
       inBulletList = false;
       continue;
     }
@@ -257,9 +257,9 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     // Strategy headings with proper spacing
     if (trimmedLine.match(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^\*\s*\*\*Strategy:\s*(.*?)\*\*/, '$1');
-      yPosition += 6;
+      yPosition += 3;
       const height = addText(`Strategy: ${title}`, leftMargin + 10, 11, '#1e40af', { align: 'left' });
-      yPosition += height + 5;
+      yPosition += height + 2;
       inBulletList = false;
       continue;
     }
@@ -327,7 +327,7 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     if (trimmedLine.match(/^\s{2,}\*\s/) || trimmedLine.match(/^\s{2,}-\s/)) {
       const content = trimmedLine.replace(/^\s*[\*-]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1');
       const height = addText(`- ${content}`, leftMargin + 40, 9, '#6b7280', { width: 455 });
-      yPosition += height + 3;
+      yPosition += height + 2;
       inBulletList = true;
       continue;
     }
@@ -336,7 +336,7 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     if (trimmedLine.match(/^[-\*]\s/)) {
       const content = trimmedLine.replace(/^[-\*]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1');
       const height = addText(`- ${content}`, leftMargin + 20, 9, '#374151', { width: 475 });
-      yPosition += height + 4;
+      yPosition += height + 2;
       inBulletList = true;
       continue;
     }
@@ -345,7 +345,7 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     if (trimmedLine.match(/^\*\*Timeline:\*\*|^\*\*Resources.*:\*\*/)) {
       const content = trimmedLine.replace(/\*\*/g, '');
       const height = addText(content, leftMargin + 25, 9, '#059669', { width: 460 });
-      yPosition += height + 5;
+      yPosition += height + 3;
       continue;
     }
     
@@ -377,9 +377,9 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       
       if (tableRows.length > 0) {
         console.log('Rendering table with rows:', tableRows.length);
-        yPosition += 10; // Reduce space before table
+        yPosition += 5; // Reduce space before table
         yPosition = drawTable(doc, tableRows, leftMargin, yPosition, pageWidth - leftMargin);
-        yPosition += 15; // Reduce space after table
+        yPosition += 8; // Reduce space after table
         i = j - 1; // Skip processed lines
         inBulletList = false;
         continue;
@@ -388,10 +388,10 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     
     // Separators
     if (trimmedLine === '---') {
-      yPosition += 12;
-      ensureSpace(20);
+      yPosition += 6;
+      ensureSpace(15);
       doc.moveTo(leftMargin, yPosition).lineTo(pageWidth, yPosition).stroke('#d1d5db');
-      yPosition += 12;
+      yPosition += 6;
       inBulletList = false;
       continue;
     }
@@ -403,20 +403,20 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       const cleanText = trimmedLine.replace(/\*\*(.*?)\*\*/g, '$1');
       
       const height = addText(cleanText, indent, 9, '#374151', { width, align: 'justify' });
-      yPosition += height + 5;
+      yPosition += height + 3;
     }
   }
   
-  return yPosition + 15;
+  return yPosition + 8;
 }
 
 // Helper function to draw professional tables in PDF
 function drawTable(doc: any, rows: string[][], x: number, y: number, maxWidth: number): number {
   if (rows.length === 0) return y;
   
-  const cellPadding = 8; // Increased padding for better appearance
-  const headerRowHeight = 28; // Taller header row
-  const regularRowHeight = 24; // Taller regular rows
+  const cellPadding = 6; // Reduced padding for more compact layout
+  const headerRowHeight = 22; // Smaller header row
+  const regularRowHeight = 18; // Smaller regular rows
   const numCols = Math.max(...rows.map(row => row.length));
   const colWidth = (maxWidth - 2) / numCols; // Distribute width evenly
   
