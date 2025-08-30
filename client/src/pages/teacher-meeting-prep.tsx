@@ -591,22 +591,22 @@ export default function TeacherMeetingPrep() {
                     value={meetingData.language}
                     onValueChange={(value) => setMeetingData({...meetingData, language: value})}
                   >
-                    <SelectTrigger data-testid="select-language">
+                    <SelectTrigger data-testid="select-language" className="w-full">
                       <SelectValue placeholder="Select language" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="English">English</SelectItem>
-                      <SelectItem value="Spanish">Spanish</SelectItem>
-                      <SelectItem value="French">French</SelectItem>
-                      <SelectItem value="German">German</SelectItem>
-                      <SelectItem value="Italian">Italian</SelectItem>
-                      <SelectItem value="Portuguese">Portuguese</SelectItem>
-                      <SelectItem value="Chinese">Chinese</SelectItem>
-                      <SelectItem value="Japanese">Japanese</SelectItem>
-                      <SelectItem value="Korean">Korean</SelectItem>
-                      <SelectItem value="Arabic">Arabic</SelectItem>
-                      <SelectItem value="Russian">Russian</SelectItem>
-                      <SelectItem value="Dutch">Dutch</SelectItem>
+                    <SelectContent className="max-h-60 overflow-y-auto z-50">
+                      <SelectItem value="English">🇺🇸 English</SelectItem>
+                      <SelectItem value="Spanish">🇪🇸 Spanish</SelectItem>
+                      <SelectItem value="French">🇫🇷 French</SelectItem>
+                      <SelectItem value="German">🇩🇪 German</SelectItem>
+                      <SelectItem value="Italian">🇮🇹 Italian</SelectItem>
+                      <SelectItem value="Portuguese">🇵🇹 Portuguese</SelectItem>
+                      <SelectItem value="Chinese">🇨🇳 Chinese</SelectItem>
+                      <SelectItem value="Japanese">🇯🇵 Japanese</SelectItem>
+                      <SelectItem value="Korean">🇰🇷 Korean</SelectItem>
+                      <SelectItem value="Arabic">🇸🇦 Arabic</SelectItem>
+                      <SelectItem value="Russian">🇷🇺 Russian</SelectItem>
+                      <SelectItem value="Dutch">🇳🇱 Dutch</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
