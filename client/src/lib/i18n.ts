@@ -104,7 +104,13 @@ const resources = {
       'auth.password': 'Password',
       'auth.signingin': 'Signing in...',
       'auth.signin': 'Sign In',
+      'auth.teacherSignIn': 'Teacher Sign In',
       'auth.error': 'Login failed. Please check your credentials.',
+      
+      // Landing Page
+      'landing.tagline': 'A Teacher Tool for Differentiation and Classroom Interventions',
+      'landing.mainHeading': 'Adapt Any Lesson. Support Every Learner.',
+      'landing.description': 'Trusted, AI-powered, strategies for academic, behavioral, and social-emotional needs. Teachers get practical tools to adapt instruction in the moment. Administrators get stronger capacity, consistent support, and better outcomes for every student.',
       
       // Language Switcher
       'language.switch': 'Switch Language',
@@ -228,7 +234,13 @@ const resources = {
       'auth.password': '密码',
       'auth.signingin': '登录中...',
       'auth.signin': '登录',
+      'auth.teacherSignIn': '教师登录',
       'auth.error': '登录失败，请检查您的凭据。',
+      
+      // Landing Page
+      'landing.tagline': '教师差异化教学和课堂干预工具',
+      'landing.mainHeading': '适应任何课程。支持每个学习者。',
+      'landing.description': '值得信赖的AI驱动策略，用于学业、行为和社交情感需求。教师可获得在关键时刻调整教学的实用工具。管理者可获得更强的能力、一致的支持，以及为每个学生带来更好的结果。',
       
       // Language Switcher
       'language.switch': '切换语言',
