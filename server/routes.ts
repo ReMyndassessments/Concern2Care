@@ -96,7 +96,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   }));
 
-  // Add session debugging and cleanup middleware
+  // Add session debugging middleware (removed destructive cleanup)
   app.use((req: any, res, next) => {
     if (req.path.includes('/api/auth')) {
       console.log('🍪 Session check - SessionID:', req.sessionID?.slice(0, 8), 'User:', req.session?.user?.email || 'none');
@@ -105,14 +105,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isAuthenticated: req.session?.isAuthenticated,
         userEmail: req.session?.user?.email
       });
-      
-      // Clean up broken sessions with undefined authentication state
-      if (req.session && req.session.isAuthenticated === undefined && req.session.user) {
-        console.log('🧹 Cleaning up broken session with undefined auth state');
-        req.session.destroy((err: any) => {
-          if (err) console.error('Error destroying broken session:', err);
-        });
-      }
     }
     next();
   });
