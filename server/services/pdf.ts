@@ -10,7 +10,10 @@ export async function generateConcernReport(
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
-      const doc = new PDFDocument({ margin: 50 });
+      const doc = new PDFDocument({ 
+        margin: 50,
+        bufferPages: true
+      });
       const stream = fs.createWriteStream(outputPath);
       doc.pipe(stream);
 
@@ -142,7 +145,16 @@ export async function generateConcernReport(
             yPosition = 50;
           }
 
-          doc.fontSize(11).fillColor('#2563eb').text(`Q${index + 1}: ${qa.question}`, 50, yPosition);
+          // Handle question text with non-Latin character detection
+          const questionText = `Q${index + 1}: ${qa.question}`;
+          const hasNonLatinChars = /[^\u0000-\u024F\u1E00-\u1EFF]/.test(questionText);
+          
+          if (hasNonLatinChars) {
+            const fallbackText = `Q${index + 1}: [Question contains non-Latin characters - please view online]`;
+            doc.fontSize(11).fillColor('#dc2626').text(fallbackText, 50, yPosition);
+          } else {
+            doc.fontSize(11).fillColor('#2563eb').text(questionText, 50, yPosition);
+          }
           yPosition += 20;
           
           doc.fontSize(10).fillColor('#000000').text('A: ', 50, yPosition);
@@ -195,16 +207,30 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     }
   };
   
-  // Helper function to add text with proper height calculation
+  // Helper function to add text with proper height calculation and non-Latin character detection
   const addText = (content: string, x: number, fontSize: number, color: string, options: any = {}): number => {
     const width = options.width || (pageWidth - x);
     ensureSpace(Math.max(fontSize * 2, 25)); // Ensure minimum space
     
-    doc.fontSize(fontSize).fillColor(color);
-    const height = doc.heightOfString(content, { width, ...options });
-    doc.text(content, x, yPosition, { width, ...options });
+    // Check if content contains non-Latin characters (like Chinese, Arabic, etc.)
+    const hasNonLatinChars = /[^\u0000-\u024F\u1E00-\u1EFF]/.test(content);
     
-    return Math.max(height, fontSize * 1.2); // Minimum line height
+    doc.fontSize(fontSize).fillColor(color);
+    
+    if (hasNonLatinChars) {
+      // For content with non-Latin characters, provide a clear message
+      const fallbackText = '[Content contains non-Latin characters - please view online for full text]';
+      const height = doc.heightOfString(fallbackText, { width, ...options });
+      doc.fillColor('#dc2626'); // Red color to make it noticeable
+      doc.text(fallbackText, x, yPosition, { width, ...options });
+      doc.fillColor(color); // Reset color
+      return Math.max(height, fontSize * 1.2);
+    } else {
+      // Regular Latin text - process normally
+      const height = doc.heightOfString(content, { width, ...options });
+      doc.text(content, x, yPosition, { width, ...options });
+      return Math.max(height, fontSize * 1.2);
+    }
   };
   
   for (let i = 0; i < lines.length; i++) {
