@@ -326,6 +326,39 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
       continue;
     }
     
+    // Table handling - detect table rows
+    if (trimmedLine.includes('|') && trimmedLine.split('|').length > 2) {
+      // Look ahead to collect all table rows
+      const tableRows = [];
+      let j = i;
+      
+      while (j < lines.length) {
+        const line = lines[j].trim();
+        if (line.includes('|') && line.split('|').length > 2) {
+          // Clean up the row data
+          const cells = line.split('|').map(cell => cell.trim()).filter(cell => cell.length > 0);
+          if (cells.length > 0) {
+            tableRows.push(cells);
+          }
+          j++;
+        } else if (line.match(/^[\-:|\s]+$/)) {
+          // Skip separator rows (like :--- | :--- |)
+          j++;
+        } else {
+          break;
+        }
+      }
+      
+      if (tableRows.length > 0) {
+        yPosition += 10;
+        yPosition = drawTable(doc, tableRows, leftMargin, yPosition, pageWidth - leftMargin);
+        yPosition += 15;
+        i = j - 1; // Skip processed lines
+        inBulletList = false;
+        continue;
+      }
+    }
+    
     // Separators
     if (trimmedLine === '---') {
       yPosition += 12;
@@ -348,6 +381,64 @@ function parseMarkdownToPDF(doc: any, text: string, startY: number): number {
   }
   
   return yPosition + 15;
+}
+
+// Helper function to draw tables in PDF
+function drawTable(doc: any, rows: string[][], x: number, y: number, maxWidth: number): number {
+  if (rows.length === 0) return y;
+  
+  const cellPadding = 4;
+  const rowHeight = 20;
+  const numCols = Math.max(...rows.map(row => row.length));
+  const colWidth = (maxWidth - (numCols + 1) * 2) / numCols; // Account for border width
+  
+  let currentY = y;
+  
+  // Ensure space for table
+  const tableHeight = rows.length * rowHeight + 10;
+  if (currentY + tableHeight > 750) {
+    doc.addPage();
+    currentY = 50;
+  }
+  
+  rows.forEach((row, rowIndex) => {
+    const isHeader = rowIndex === 0;
+    const bgColor = isHeader ? '#f8fafc' : '#ffffff';
+    const textColor = isHeader ? '#1e293b' : '#374151';
+    const fontSize = isHeader ? 9 : 8;
+    
+    // Draw row background
+    if (isHeader) {
+      doc.rect(x, currentY, maxWidth, rowHeight).fill(bgColor);
+    }
+    
+    // Draw cell borders and content
+    row.forEach((cell, colIndex) => {
+      const cellX = x + colIndex * colWidth;
+      const cellY = currentY;
+      
+      // Draw cell border
+      doc.rect(cellX, cellY, colWidth, rowHeight).stroke('#e2e8f0');
+      
+      // Add cell text
+      const textX = cellX + cellPadding;
+      const textY = cellY + (rowHeight - fontSize) / 2 + 2;
+      const textWidth = colWidth - 2 * cellPadding;
+      
+      doc.fontSize(fontSize)
+         .fillColor(textColor)
+         .text(cell, textX, textY, {
+           width: textWidth,
+           height: rowHeight - 2 * cellPadding,
+           align: 'left',
+           ellipsis: true
+         });
+    });
+    
+    currentY += rowHeight;
+  });
+  
+  return currentY;
 }
 
 export function ensureReportsDirectory(): string {
