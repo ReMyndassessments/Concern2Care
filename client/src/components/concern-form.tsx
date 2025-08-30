@@ -20,7 +20,6 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ObjectUploader } from "@/components/ObjectUploader";
 import { Edit3, Wand2, GraduationCap, AlertTriangle, Users, CalendarX, User, Calendar, MapPin, AlertCircle, ChevronDown, ChevronUp, Lightbulb, Upload, FileText, BookOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -47,9 +46,9 @@ const enhancedConcernFormSchema = z.object({
   isStruggling: z.boolean().default(false),
   otherNeeds: z.string().optional(),
   
-  // File uploads for better AI recommendations
+  // Text content for better AI recommendations
   studentAssessmentFile: z.string().optional(),
-  lessonPlanFile: z.string().optional(),
+  lessonPlanContent: z.string().optional(),
   
   // Task type selection for focused AI responses
   taskType: z.string().min(1, "Task type is required"),
@@ -165,8 +164,6 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const [showOtherConcern, setShowOtherConcern] = useState(false);
   const [showOtherAction, setShowOtherAction] = useState(false);
   const [showDifferentiation, setShowDifferentiation] = useState(false);
-  const [studentAssessmentUploading, setStudentAssessmentUploading] = useState(false);
-  const [lessonPlanUploading, setLessonPlanUploading] = useState(false);
 
   const form = useForm<EnhancedConcernFormData>({
     resolver: zodResolver(enhancedConcernFormSchema),
@@ -193,7 +190,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       isStruggling: false,
       otherNeeds: "",
       studentAssessmentFile: "",
-      lessonPlanFile: "",
+      lessonPlanContent: "",
       taskType: "",
     },
   });
@@ -940,32 +937,23 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   
                   <FormField
                     control={form.control}
-                    name="lessonPlanFile"
+                    name="lessonPlanContent"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2">
                           <BookOpen className="h-4 w-4" />
-                          {t('form.uploadLessonPlan', 'Upload Lesson Plan')}
+                          {t('form.pasteLessonPlan', 'Copy & Paste Lesson Plan')}
                         </FormLabel>
                         <div className="space-y-2">
-                          <ObjectUploader
-                            acceptedFileTypes={['.pdf', '.doc', '.docx', '.txt']}
-                            onFileUploaded={(fileUrl, fileName) => {
-                              field.onChange(fileUrl);
-                              toast({
-                                title: "Lesson plan uploaded",
-                                description: `${fileName} will help generate better differentiation strategies`,
-                              });
-                            }}
-                            onFileRemoved={() => field.onChange("")}
-                            currentFile={field.value}
-                            disabled={isAtLimit || lessonPlanUploading}
-                            data-testid="upload-lesson-plan"
-                          >
-                            {t('form.uploadLessonPlan', 'Upload Lesson Plan')}
-                          </ObjectUploader>
+                          <textarea
+                            {...field}
+                            placeholder={t('form.lessonPlanPlaceholder', 'Copy and paste your lesson plan content here. Include learning objectives, activities, materials, and any specific areas you want differentiated for this student...')}
+                            className="w-full min-h-[200px] p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-y"
+                            disabled={isAtLimit}
+                            data-testid="textarea-lesson-plan"
+                          />
                           <p className="text-xs text-green-600">
-                            {t('form.uploadLessonPlanDesc', 'Upload a lesson plan that needs differentiation for this student (PDF, DOC, TXT)')}
+                            {t('form.pasteLessonPlanDesc', 'Copy and paste your lesson plan content above. The more details you provide, the better the AI can generate differentiation strategies tailored to this student.')}
                           </p>
                         </div>
                         <FormMessage />

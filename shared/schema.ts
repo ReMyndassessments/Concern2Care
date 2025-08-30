@@ -105,9 +105,9 @@ export const concerns = pgTable("concerns", {
   isStruggling: boolean("is_struggling").default(false),
   otherNeeds: varchar("other_needs"), // Free text for anything else
   
-  // File uploads for enhanced AI recommendations
+  // Text content for enhanced AI recommendations
   studentAssessmentFile: varchar("student_assessment_file"), // URL to uploaded assessment
-  lessonPlanFile: varchar("lesson_plan_file"), // URL to uploaded lesson plan
+  lessonPlanContent: text("lesson_plan_content"), // Text content of lesson plan
   
   // Task type selection for focused AI responses
   taskType: varchar("task_type").default("tier2_intervention"), // "differentiation" | "tier2_intervention"

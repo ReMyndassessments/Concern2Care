@@ -381,7 +381,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // File uploads
         studentAssessmentFile: req.body.studentAssessmentFile || null,
-        lessonPlanFile: req.body.lessonPlanFile || null,
+        lessonPlanContent: req.body.lessonPlanContent || null,
         
         // Task type selection
         taskType: req.body.taskType || "tier2_intervention",
@@ -426,7 +426,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // File uploads for enhanced AI recommendations
         studentAssessmentFile: newConcern.studentAssessmentFile || undefined,
-        lessonPlanFile: newConcern.lessonPlanFile || undefined,
+        lessonPlanContent: newConcern.lessonPlanContent || undefined,
         
         // Task type for focused AI responses
         taskType: newConcern.taskType || "tier2_intervention",

@@ -59,9 +59,9 @@ export interface GenerateRecommendationsRequest {
   isStruggling?: boolean;
   otherNeeds?: string;
   
-  // File uploads for enhanced recommendations
+  // Content for enhanced recommendations
   studentAssessmentFile?: string;
-  lessonPlanFile?: string;
+  lessonPlanContent?: string;
   
   // Task type for focused AI responses
   taskType?: string;
@@ -135,23 +135,16 @@ export async function generateRecommendations(
     }
   }
   
-  if (req.lessonPlanFile) {
-    try {
-      const { ObjectStorageService } = await import("../objectStorage");
-      const objectStorageService = new ObjectStorageService();
-      const rawContent = await objectStorageService.readFileContent(req.lessonPlanFile);
-      
-      // Truncate content to fit within AI token limits
-      lessonPlanContent = rawContent.substring(0, 25000);
-      
-      if (rawContent.length > 25000) {
-        lessonPlanContent += "\n\n[Document truncated due to length - showing first 25,000 characters]";
-        console.log(`📚 Truncated lesson plan: ${rawContent.length} chars → ${lessonPlanContent.length} chars`);
-      } else {
-        console.log("📚 Read lesson plan file content:", lessonPlanContent.substring(0, 200) + "...");
-      }
-    } catch (error) {
-      console.error("Error reading lesson plan file:", error);
+  if (req.lessonPlanContent) {
+    // Use text content directly - truncate if needed for AI token limits
+    const rawContent = req.lessonPlanContent;
+    lessonPlanContent = rawContent.substring(0, 25000);
+    
+    if (rawContent.length > 25000) {
+      lessonPlanContent += "\n\n[Content truncated due to length - showing first 25,000 characters]";
+      console.log(`📚 Truncated lesson plan: ${rawContent.length} chars → ${lessonPlanContent.length} chars`);
+    } else {
+      console.log("📚 Using lesson plan content:", lessonPlanContent.substring(0, 200) + "...");
     }
   }
 
