@@ -902,14 +902,13 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   <TableHead className="min-w-[100px] text-xs lg:text-sm">School</TableHead>
                   <TableHead className="min-w-[80px] text-xs lg:text-sm">Requests</TableHead>
                   <TableHead className="min-w-[60px] text-xs lg:text-sm">Status</TableHead>
-                  <TableHead className="min-w-[80px] text-xs lg:text-sm">Joined</TableHead>
-                  <TableHead className="min-w-[120px] sticky right-0 bg-white text-xs lg:text-sm">Actions</TableHead>
+                  <TableHead className="min-w-[120px] text-xs lg:text-sm">Actions</TableHead>
                 </TableRow>
               </TableHeader>
             <TableBody>
               {filteredTeachers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={showBulkExport ? 8 : 7} className="text-center py-8">
+                  <TableCell colSpan={showBulkExport ? 7 : 6} className="text-center py-8">
                     <div className="flex flex-col items-center space-y-2">
                       <Users className="h-8 w-8 text-gray-400" />
                       <p className="text-gray-500">No teachers found</p>
@@ -960,12 +959,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs lg:text-sm">{formatDate(teacher.createdAt)}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="sticky right-0 bg-white">
                       <div className="flex items-center space-x-1">
                         <Button
                           variant="outline"
