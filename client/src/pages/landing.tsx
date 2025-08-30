@@ -84,14 +84,14 @@ export default function Landing() {
               {/* Individual Teacher Registration - Feature Flag */}
               {isFeatureEnabled('individual_teacher_registration') && (
                 <div className="pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-3">Individual teacher? Try Concern2Care for $10/month:</p>
+                  <p className="text-sm text-gray-600 mb-3">{t('landing.individualTeacher', 'Individual teacher? Try Concern2Care for $10/month:')}</p>
                   <Button 
                     size="sm"
                     variant="outline"
                     onClick={() => window.location.href = '/register'}
                     className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 font-medium px-6 py-2 rounded-lg"
                   >
-                    ☕ Start Your Individual Subscription
+                    ☕ {t('landing.startSubscription', 'Start Your Individual Subscription')}
                   </Button>
                 </div>
               )}
@@ -276,24 +276,24 @@ export default function Landing() {
 
           {/* Real School Examples */}
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-16">
-            <h3 className="text-2xl font-bold text-center mb-8">Real School Examples</h3>
-            <p className="text-center text-gray-600 mb-8">See how much your school could save with annual billing</p>
+            <h3 className="text-2xl font-bold text-center mb-8">{t('pricing.realExamples', 'Real School Examples')}</h3>
+            <p className="text-center text-gray-600 mb-8">{t('pricing.savingsDescription', 'See how much your school could save with annual billing')}</p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center p-6 bg-gray-50 rounded-xl">
                 <h4 className="text-xl font-bold mb-4">25 Teachers</h4>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-gray-600">Monthly</p>
+                    <p className="text-sm text-gray-600">{t('pricing.monthly', 'Monthly')}</p>
                     <p className="text-2xl font-bold text-gray-900">$250</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Annual</p>
+                    <p className="text-sm text-gray-600">{t('pricing.annual', 'Annual')}</p>
                     <p className="text-2xl font-bold text-green-600">$2,700</p>
                   </div>
                 </div>
-                <p className="text-green-600 font-semibold">Annual Savings: $300</p>
-                <p className="text-sm text-gray-600 mt-2">Monthly Support Requests: 500 total</p>
+                <p className="text-green-600 font-semibold">{t('pricing.annualSavings', 'Annual Savings: $300')}</p>
+                <p className="text-sm text-gray-600 mt-2">{t('pricing.supportRequests', 'Monthly Support Requests: 500 total')}</p>
               </div>
 
               <div className="text-center p-6 bg-blue-50 rounded-xl border-2 border-blue-200">
@@ -336,18 +336,18 @@ export default function Landing() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <CheckCircle className="w-6 h-6 text-green-500 mr-2" />
-                  What's Included
+                  {t('pricing.whatsIncluded', 'What\'s Included')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />AI-powered intervention recommendations</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />Professional PDF report generation</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />Email sharing and collaboration tools</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />20 support requests per teacher per month</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />Secure data storage and privacy protection</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />Regular feature updates and improvements</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />Customer support and training resources</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />{t('pricing.included.aiRecommendations', 'AI-powered intervention recommendations')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />{t('pricing.included.pdfReports', 'Professional PDF report generation')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />{t('pricing.included.emailSharing', 'Email sharing and collaboration tools')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />{t('pricing.included.supportRequests', '20 support requests per teacher per month')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />{t('pricing.included.secureStorage', 'Secure data storage and privacy protection')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />{t('pricing.included.updates', 'Regular feature updates and improvements')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-3" />{t('pricing.included.support', 'Customer support and training resources')}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -356,18 +356,18 @@ export default function Landing() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Shield className="w-6 h-6 text-blue-500 mr-2" />
-                  Flexible Terms
+                  {t('pricing.flexibleTerms', 'Flexible Terms')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3">
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />Monthly or annual billing options</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />10% discount for annual subscriptions</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />Add or remove teachers anytime</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />Cancel with 30-day notice</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />Prorated billing for mid-cycle changes</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />Volume discounts for 100+ teachers</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />Custom enterprise solutions available</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />{t('pricing.terms.billing', 'Monthly or annual billing options')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />{t('pricing.terms.discount', '10% discount for annual subscriptions')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />{t('pricing.terms.addRemove', 'Add or remove teachers anytime')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />{t('pricing.terms.cancel', 'Cancel with 30-day notice')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />{t('pricing.terms.prorated', 'Prorated billing for mid-cycle changes')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />{t('pricing.terms.volume', 'Volume discounts for 100+ teachers')}</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-blue-500 mr-3" />{t('pricing.terms.enterprise', 'Custom enterprise solutions available')}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -376,9 +376,9 @@ export default function Landing() {
           {/* ROI Comparison Section */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-gray-200">
             <div className="text-center mb-4 sm:mb-6">
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 px-2">Why Schools Choose Concern2Care</h3>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 px-2">{t('comparison.title', 'Why Schools Choose Concern2Care')}</h3>
               <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 px-2">
-                Better outcomes, better value than other education technology solutions
+                {t('comparison.subtitle', 'Better outcomes, better value than other education technology solutions')}
               </p>
               <Button
                 variant="outline"
@@ -386,7 +386,7 @@ export default function Landing() {
                 className="bg-gradient-to-r from-purple-500 to-blue-600 text-white border-0 hover:from-purple-600 hover:to-blue-700 text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3"
               >
                 <BarChart3 className="w-3 w-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                {showComparison ? 'Hide' : 'View'} ROI Comparison
+                {showComparison ? t('comparison.hide', 'Hide') : t('comparison.view', 'View')} {t('comparison.roiComparison', 'ROI Comparison')}
               </Button>
             </div>
 
@@ -398,7 +398,7 @@ export default function Landing() {
                   <div className="grid gap-4">
                     {/* Per Student Cost */}
                     <div className="bg-white rounded-lg p-4 border border-gray-200">
-                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Per Student Cost (Annual)</h4>
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">{t('comparison.perStudentCost', 'Per Student Cost (Annual)')}</h4>
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div className="text-center p-2 bg-gray-50 rounded">
                           <div className="text-xs text-gray-500 mb-1">Magic School</div>
@@ -417,7 +417,7 @@ export default function Landing() {
                     
                     {/* Per Teacher Cost */}
                     <div className="bg-white rounded-lg p-4 border border-gray-200">
-                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Per Teacher Cost (Annual)</h4>
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">{t('comparison.perTeacherCost', 'Per Teacher Cost (Annual)')}</h4>
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div className="text-center p-2 bg-gray-50 rounded">
                           <div className="text-xs text-gray-500 mb-1">Magic School</div>
@@ -436,7 +436,7 @@ export default function Landing() {
                     
                     {/* Pricing Model */}
                     <div className="bg-white rounded-lg p-4 border border-gray-200">
-                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">Pricing Model</h4>
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm">{t('comparison.pricingModel', 'Pricing Model')}</h4>
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div className="text-center p-2 bg-gray-50 rounded">
                           <div className="text-xs text-gray-500 mb-1">Magic School</div>
@@ -506,31 +506,31 @@ export default function Landing() {
                     </thead>
                     <tbody className="text-sm">
                       <tr className="border-b border-gray-200">
-                        <td className="px-3 py-3 font-medium">Per Student Cost (Annual)</td>
+                        <td className="px-3 py-3 font-medium">{t('comparison.perStudentCost', 'Per Student Cost (Annual)')}</td>
                         <td className="px-3 py-3 text-center text-gray-600">$12.00</td>
                         <td className="px-3 py-3 text-center text-green-600 font-semibold">$4.80</td>
                         <td className="px-3 py-3 text-center text-blue-600 font-semibold">$16.80</td>
                       </tr>
                       <tr className="border-b border-gray-200 bg-white">
-                        <td className="px-3 py-3 font-medium">Per Teacher Cost (Annual)</td>
+                        <td className="px-3 py-3 font-medium">{t('comparison.perTeacherCost', 'Per Teacher Cost (Annual)')}</td>
                         <td className="px-3 py-3 text-center text-gray-600">$300</td>
                         <td className="px-3 py-3 text-center text-green-600 font-semibold">$120</td>
                         <td className="px-3 py-3 text-center text-blue-600 font-semibold">$420</td>
                       </tr>
                       <tr className="border-b border-gray-200">
-                        <td className="px-3 py-3 font-medium">Pricing Model</td>
+                        <td className="px-3 py-3 font-medium">{t('comparison.pricingModel', 'Pricing Model')}</td>
                         <td className="px-3 py-3 text-center text-gray-600">Enrollment-based</td>
                         <td className="px-3 py-3 text-center text-green-600">Staff-based</td>
                         <td className="px-3 py-3 text-center text-blue-600">Balanced</td>
                       </tr>
                       <tr className="border-b border-gray-200 bg-white">
-                        <td className="px-3 py-3 font-medium">Predictability</td>
+                        <td className="px-3 py-3 font-medium">{t('comparison.predictability', 'Predictability')}</td>
                         <td className="px-3 py-3 text-center text-gray-600">Medium</td>
                         <td className="px-3 py-3 text-center text-green-600">High</td>
                         <td className="px-3 py-3 text-center text-blue-600">Medium-High</td>
                       </tr>
                       <tr>
-                        <td className="px-3 py-3 font-medium">Primary Benefit</td>
+                        <td className="px-3 py-3 font-medium">{t('comparison.primaryBenefit', 'Primary Benefit')}</td>
                         <td className="px-3 py-3 text-center text-gray-600">Teacher efficiency</td>
                         <td className="px-3 py-3 text-center text-green-600">Student wellbeing & retention</td>
                         <td className="px-3 py-3 text-center text-blue-600">Complete staff + student impact</td>
@@ -545,7 +545,7 @@ export default function Landing() {
                     <CardHeader>
                       <CardTitle className="flex items-center text-gray-700 text-base">
                         <DollarSign className="w-4 h-4 mr-2" />
-                        Magic School Only
+                        {t('comparison.magicSchoolOnly', 'Magic School Only')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -574,7 +574,7 @@ export default function Landing() {
                     <CardHeader>
                       <CardTitle className="flex items-center text-green-700 text-base">
                         <TrendingUp className="w-4 h-4 mr-2" />
-                        Concern2Care Only
+                        {t('comparison.concern2careOnly', 'Concern2Care Only')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -685,9 +685,9 @@ export default function Landing() {
 
           {/* CTA Section */}
           <div className="bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl p-8 text-center text-white">
-            <h3 className="text-3xl font-bold mb-4">Ready to Transform Student Support?</h3>
+            <h3 className="text-3xl font-bold mb-4">{t('cta.title', 'Ready to Transform Student Support?')}</h3>
             <p className="text-xl mb-6 opacity-90">
-              Join thousands of educators using AI-powered tools to better support their students. Get a personalized quote for your school today.
+              {t('cta.subtitle', 'Join thousands of educators using AI-powered tools to better support their students. Get a personalized quote for your school today.')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
@@ -695,11 +695,11 @@ export default function Landing() {
                 className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-3"
                 onClick={() => window.location.href = 'mailto:sales@remynd.online?subject=Concern2Care Quote Request'}
               >
-                Get Your Quote
+                {t('cta.getQuote', 'Get Your Quote')}
               </Button>
               <div className="flex items-center text-white/90">
                 <Mail className="w-5 h-5 mr-2" />
-                <span>Questions? Email us at sales@remynd.online</span>
+                <span>{t('cta.questions', 'Questions? Email us at sales@remynd.online')}</span>
               </div>
             </div>
           </div>
@@ -710,10 +710,10 @@ export default function Landing() {
       <footer className="relative z-10 bg-gray-50 py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-600">
-            © 2025 Concern2Care. Built for educators, by educators.
+            {t('footer.copyright', '© 2025 Concern2Care. Built for educators, by educators.')}
           </p>
           <p className="text-gray-500 text-sm mt-2">
-            Powered by ReMynd Student Services
+            {t('footer.poweredBy', 'Powered by ReMynd Student Services')}
           </p>
         </div>
       </footer>

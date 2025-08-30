@@ -113,6 +113,8 @@ const resources = {
       'landing.description': 'Trusted, AI-powered, strategies for academic, behavioral, and social-emotional needs. Teachers get practical tools to adapt instruction in the moment. Administrators get stronger capacity, consistent support, and better outcomes for every student.',
       'landing.secureLogin': 'Secure Teacher Login',
       'landing.ferpaCompliant': 'FERPA compliant • Evidence-based strategies • Trusted by educators',
+      'landing.individualTeacher': 'Individual teacher? Try Concern2Care for $10/month:',
+      'landing.startSubscription': 'Start Your Individual Subscription',
       
       // Features
       'features.instantAI': 'Instant AI Recommendations',
@@ -162,6 +164,57 @@ const resources = {
       'pricing.features.apiAccess': 'API access',
       'pricing.features.customDevelopment': 'Custom feature development',
       'pricing.features.onsiteSupport': 'On-site training & support',
+      
+      // Real School Examples
+      'pricing.realExamples': 'Real School Examples',
+      'pricing.savingsDescription': 'See how much your school could save with annual billing',
+      'pricing.monthly': 'Monthly',
+      'pricing.annualSavings': 'Annual Savings: $300',
+      'pricing.supportRequests': 'Monthly Support Requests: 500 total',
+      
+      // What's Included
+      'pricing.whatsIncluded': 'What\'s Included',
+      'pricing.included.aiRecommendations': 'AI-powered intervention recommendations',
+      'pricing.included.pdfReports': 'Professional PDF report generation',
+      'pricing.included.emailSharing': 'Email sharing and collaboration tools',
+      'pricing.included.supportRequests': '20 support requests per teacher per month',
+      'pricing.included.secureStorage': 'Secure data storage and privacy protection',
+      'pricing.included.updates': 'Regular feature updates and improvements',
+      'pricing.included.support': 'Customer support and training resources',
+      
+      // Flexible Terms
+      'pricing.flexibleTerms': 'Flexible Terms',
+      'pricing.terms.billing': 'Monthly or annual billing options',
+      'pricing.terms.discount': '10% discount for annual subscriptions',
+      'pricing.terms.addRemove': 'Add or remove teachers anytime',
+      'pricing.terms.cancel': 'Cancel with 30-day notice',
+      'pricing.terms.prorated': 'Prorated billing for mid-cycle changes',
+      'pricing.terms.volume': 'Volume discounts for 100+ teachers',
+      'pricing.terms.enterprise': 'Custom enterprise solutions available',
+      
+      // ROI Comparison
+      'comparison.title': 'Why Schools Choose Concern2Care',
+      'comparison.subtitle': 'Better outcomes, better value than other education technology solutions',
+      'comparison.view': 'View',
+      'comparison.hide': 'Hide',
+      'comparison.roiComparison': 'ROI Comparison',
+      'comparison.perStudentCost': 'Per Student Cost (Annual)',
+      'comparison.perTeacherCost': 'Per Teacher Cost (Annual)',
+      'comparison.pricingModel': 'Pricing Model',
+      'comparison.predictability': 'Predictability',
+      'comparison.primaryBenefit': 'Primary Benefit',
+      'comparison.magicSchoolOnly': 'Magic School Only',
+      'comparison.concern2careOnly': 'Concern2Care Only',
+      
+      // CTA Section
+      'cta.title': 'Ready to Transform Student Support?',
+      'cta.subtitle': 'Join thousands of educators using AI-powered tools to better support their students. Get a personalized quote for your school today.',
+      'cta.getQuote': 'Get Your Quote',
+      'cta.questions': 'Questions? Email us at sales@remynd.online',
+      
+      // Footer
+      'footer.copyright': '© 2025 Concern2Care. Built for educators, by educators.',
+      'footer.poweredBy': 'Powered by ReMynd Student Services',
       
       // Language Switcher
       'language.switch': 'Switch Language',
@@ -385,6 +438,8 @@ const resources = {
       'landing.description': '值得信赖的AI驱动策略，用于学业、行为和社交情感需求。教师可获得在关键时刻调整教学的实用工具。管理者可获得更强的能力、一致的支持，以及为每个学生带来更好的结果。',
       'landing.secureLogin': '安全教师登录',
       'landing.ferpaCompliant': 'FERPA符合性 • 基于证据的策略 • 教育者信赖',
+      'landing.individualTeacher': '个人教师？试用Concern2Care，每月10美元：',
+      'landing.startSubscription': '开始您的个人订阅',
       
       // Features
       'features.instantAI': '即时AI推荐',
@@ -434,6 +489,57 @@ const resources = {
       'pricing.features.apiAccess': 'API访问',
       'pricing.features.customDevelopment': '定制功能开发',
       'pricing.features.onsiteSupport': '现场培训和支持',
+      
+      // Real School Examples
+      'pricing.realExamples': '真实学校案例',
+      'pricing.savingsDescription': '查看您的学校通过年付可以节省多少费用',
+      'pricing.monthly': '月付',
+      'pricing.annualSavings': '年付节省：$300',
+      'pricing.supportRequests': '每月支持请求：共500次',
+      
+      // What's Included
+      'pricing.whatsIncluded': '包含内容',
+      'pricing.included.aiRecommendations': 'AI驱动的干预推荐',
+      'pricing.included.pdfReports': '专业PDF报告生成',
+      'pricing.included.emailSharing': '邮件分享和协作工具',
+      'pricing.included.supportRequests': '每位教师每月20次支持请求',
+      'pricing.included.secureStorage': '安全数据存储和隐私保护',
+      'pricing.included.updates': '定期功能更新和改进',
+      'pricing.included.support': '客户支持和培训资源',
+      
+      // Flexible Terms
+      'pricing.flexibleTerms': '灵活条款',
+      'pricing.terms.billing': '月付或年付选项',
+      'pricing.terms.discount': '年付享受10%折扣',
+      'pricing.terms.addRemove': '随时添加或删除教师',
+      'pricing.terms.cancel': '提前30天通知取消',
+      'pricing.terms.prorated': '周期中变更按比例计费',
+      'pricing.terms.volume': '100+教师享批量折扣',
+      'pricing.terms.enterprise': '提供定制企业解决方案',
+      
+      // ROI Comparison
+      'comparison.title': '为什么学校选择Concern2Care',
+      'comparison.subtitle': '比其他教育技术解决方案更好的结果和价值',
+      'comparison.view': '查看',
+      'comparison.hide': '隐藏',
+      'comparison.roiComparison': 'ROI比较',
+      'comparison.perStudentCost': '每学生成本（年付）',
+      'comparison.perTeacherCost': '每教师成本（年付）',
+      'comparison.pricingModel': '定价模式',
+      'comparison.predictability': '可预测性',
+      'comparison.primaryBenefit': '主要优势',
+      'comparison.magicSchoolOnly': '仅Magic School',
+      'comparison.concern2careOnly': '仅Concern2Care',
+      
+      // CTA Section
+      'cta.title': '准备好变革学生支持了吗？',
+      'cta.subtitle': '加入数千名使用AI驱动工具更好支持学生的教育工作者。立即为您的学校获取个性化报价。',
+      'cta.getQuote': '获取报价',
+      'cta.questions': '有问题？请发送邮件至 sales@remynd.online',
+      
+      // Footer
+      'footer.copyright': '© 2025 Concern2Care. 为教育工作者而打造，由教育工作者开发。',
+      'footer.poweredBy': '由ReMynd Student Services提供支持',
       
       // Language Switcher
       'language.switch': '切换语言',
