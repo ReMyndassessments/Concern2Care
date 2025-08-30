@@ -2601,110 +2601,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.send(pdfBuffer);
       });
 
-      // Language translations
-      const translations = {
-        English: {
-          title: 'MEETING PREPARATION DOCUMENT',
-          meetingInfo: 'MEETING INFORMATION',
-          attendees: 'MEETING ATTENDEES',
-          agenda: 'MEETING AGENDA',
-          studentConcerns: 'STUDENT CONCERNS',
-          interventions: 'INTERVENTION STRATEGIES',
-          progressNotes: 'PROGRESS TRACKING',
-          title_field: 'Title:',
-          type_field: 'Type:',
-          date_field: 'Date:',
-          time_field: 'Time:',
-          student_field: 'Student:',
-          grade_field: 'Grade:',
-          concern_types: 'Concern Types:',
-          description: 'Description:',
-          severity: 'Severity Level:',
-          actions_taken: 'Actions Taken:',
-          not_specified: 'Not specified',
-          none_specified: 'None specified'
-        },
-        Spanish: {
-          title: 'DOCUMENTO DE PREPARACIÓN DE REUNIÓN',
-          meetingInfo: 'INFORMACIÓN DE LA REUNIÓN',
-          attendees: 'ASISTENTES A LA REUNIÓN',
-          agenda: 'AGENDA DE LA REUNIÓN',
-          studentConcerns: 'PREOCUPACIONES DEL ESTUDIANTE',
-          interventions: 'ESTRATEGIAS DE INTERVENCIÓN',
-          progressNotes: 'SEGUIMIENTO DEL PROGRESO',
-          title_field: 'Título:',
-          type_field: 'Tipo:',
-          date_field: 'Fecha:',
-          time_field: 'Hora:',
-          student_field: 'Estudiante:',
-          grade_field: 'Grado:',
-          concern_types: 'Tipos de Preocupación:',
-          description: 'Descripción:',
-          severity: 'Nivel de Gravedad:',
-          actions_taken: 'Acciones Tomadas:',
-          not_specified: 'No especificado',
-          none_specified: 'Ninguno especificado'
-        },
-        French: {
-          title: 'DOCUMENT DE PRÉPARATION DE RÉUNION',
-          meetingInfo: 'INFORMATIONS DE LA RÉUNION',
-          attendees: 'PARTICIPANTS À LA RÉUNION',
-          agenda: 'ORDRE DU JOUR',
-          studentConcerns: 'PRÉOCCUPATIONS DE L\'ÉLÈVE',
-          interventions: 'STRATÉGIES D\'INTERVENTION',
-          progressNotes: 'SUIVI DES PROGRÈS',
-          title_field: 'Titre:',
-          type_field: 'Type:',
-          date_field: 'Date:',
-          time_field: 'Heure:',
-          student_field: 'Élève:',
-          grade_field: 'Niveau:',
-          concern_types: 'Types de Préoccupations:',
-          description: 'Description:',
-          severity: 'Niveau de Gravité:',
-          actions_taken: 'Actions Prises:',
-          not_specified: 'Non spécifié',
-          none_specified: 'Aucun spécifié'
-        },
-        German: {
-          title: 'BESPRECHUNGSVORBEREITUNGSDOKUMENT',
-          meetingInfo: 'BESPRECHUNGSINFORMATIONEN',
-          attendees: 'BESPRECHUNGSTEILNEHMER',
-          agenda: 'TAGESORDNUNG',
-          studentConcerns: 'SCHÜLERPROBLEME',
-          interventions: 'INTERVENTIONSSTRATEGIEN',
-          progressNotes: 'FORTSCHRITTSVERFOLGUNG',
-          title_field: 'Titel:',
-          type_field: 'Typ:',
-          date_field: 'Datum:',
-          time_field: 'Uhrzeit:',
-          student_field: 'Schüler:',
-          grade_field: 'Klasse:',
-          concern_types: 'Problemtypen:',
-          description: 'Beschreibung:',
-          severity: 'Schweregrad:',
-          actions_taken: 'Maßnahmen Ergriffen:',
-          not_specified: 'Nicht angegeben',
-          none_specified: 'Keine angegeben'
-        }
-      };
-
-      const lang = meetingData.language || 'English';
-      const t = translations[lang as keyof typeof translations] || translations.English;
-
       // Professional Header with styling
       doc.fontSize(24).font('Helvetica-Bold');
       doc.fillColor('#1f2937');
-      doc.text(t.title, { align: 'center' });
+      doc.text('MEETING PREPARATION DOCUMENT', { align: 'center' });
       doc.fillColor('#000000');
-      
-      // Add language indicator if not English
-      if (meetingData.language && meetingData.language !== 'English') {
-        doc.fontSize(12).font('Helvetica');
-        doc.fillColor('#6b7280');
-        doc.text(`Document Language: ${meetingData.language}`, { align: 'center' });
-        doc.fillColor('#000000');
-      }
       
       // Add decorative line under title
       doc.moveTo(50, doc.y + 10)
@@ -2718,7 +2619,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Meeting Information Section with professional formatting
       doc.fontSize(20).font('Helvetica-Bold');
       doc.fillColor('#1f2937');
-      doc.text(t.meetingInfo);
+      doc.text('MEETING INFORMATION');
       doc.fillColor('#000000');
       
       // Add horizontal line under header
@@ -2736,37 +2637,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Title Row
       doc.fontSize(13).font('Helvetica-Bold');
       doc.fillColor('#1f2937');
-      doc.text(t.title_field, 50, startY);
+      doc.text('Title:', 50, startY);
       doc.fontSize(12).font('Helvetica');
       doc.fillColor('#374151');
-      doc.text(meetingData.meetingTitle || t.not_specified, 150, startY);
+      doc.text(meetingData.meetingTitle || 'Not specified', 150, startY);
       
       // Type Row  
       const typeY = startY + 25;
       doc.fontSize(13).font('Helvetica-Bold');
       doc.fillColor('#1f2937');
-      doc.text(t.type_field, 50, typeY);
+      doc.text('Type:', 50, typeY);
       doc.fontSize(12).font('Helvetica');
       doc.fillColor('#374151');
-      doc.text(meetingData.meetingType || t.not_specified, 150, typeY);
+      doc.text(meetingData.meetingType || 'Not specified', 150, typeY);
       
       // Date Row
       const dateY = startY + 50;
       doc.fontSize(13).font('Helvetica-Bold');
       doc.fillColor('#1f2937');
-      doc.text(t.date_field, 50, dateY);
+      doc.text('Date:', 50, dateY);
       doc.fontSize(12).font('Helvetica');
       doc.fillColor('#374151');
-      doc.text(meetingData.meetingDate || t.not_specified, 150, dateY);
+      doc.text(meetingData.meetingDate || 'Not specified', 150, dateY);
       
       // Time Row
       const timeY = startY + 75;
       doc.fontSize(13).font('Helvetica-Bold');
       doc.fillColor('#1f2937');
-      doc.text(t.time_field, 50, timeY);
+      doc.text('Time:', 50, timeY);
       doc.fontSize(12).font('Helvetica');
       doc.fillColor('#374151');
-      doc.text(meetingData.meetingTime || t.not_specified, 150, timeY);
+      doc.text(meetingData.meetingTime || 'Not specified', 150, timeY);
       
       // Reset colors and position cursor properly
       doc.fillColor('#000000');
@@ -2778,7 +2679,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         doc.fontSize(16).font('Helvetica-Bold');
         doc.fillColor('#1f2937');
-        doc.text(t.attendees);
+        doc.text('MEETING ATTENDEES');
         doc.fillColor('#000000');
         
         // Add line under attendees header

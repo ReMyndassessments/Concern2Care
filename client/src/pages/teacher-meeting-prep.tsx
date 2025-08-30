@@ -51,7 +51,6 @@ interface MeetingPreparationData {
   includeRecommendations: boolean;
   includeProgressNotes: boolean;
   meetingType: 'IEP' | '504' | 'SST' | 'Parent Conference' | 'Other';
-  language: string;
 }
 
 export default function TeacherMeetingPrep() {
@@ -68,8 +67,7 @@ export default function TeacherMeetingPrep() {
     notes: '',
     includeRecommendations: true,
     includeProgressNotes: false,
-    meetingType: 'Parent Conference',
-    language: 'English'
+    meetingType: 'Parent Conference'
   });
   const [newAttendee, setNewAttendee] = useState('');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -585,31 +583,6 @@ export default function TeacherMeetingPrep() {
                   <Label className="text-sm">Include progress notes section</Label>
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="language">Document Language</Label>
-                  <Select
-                    value={meetingData.language}
-                    onValueChange={(value) => setMeetingData({...meetingData, language: value})}
-                  >
-                    <SelectTrigger data-testid="select-language" className="w-full">
-                      <SelectValue placeholder="Select language" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60 overflow-y-auto z-50">
-                      <SelectItem value="English">🇺🇸 English</SelectItem>
-                      <SelectItem value="Spanish">🇪🇸 Spanish</SelectItem>
-                      <SelectItem value="French">🇫🇷 French</SelectItem>
-                      <SelectItem value="German">🇩🇪 German</SelectItem>
-                      <SelectItem value="Italian">🇮🇹 Italian</SelectItem>
-                      <SelectItem value="Portuguese">🇵🇹 Portuguese</SelectItem>
-                      <SelectItem value="Chinese">🇨🇳 Chinese</SelectItem>
-                      <SelectItem value="Japanese">🇯🇵 Japanese</SelectItem>
-                      <SelectItem value="Korean">🇰🇷 Korean</SelectItem>
-                      <SelectItem value="Arabic">🇸🇦 Arabic</SelectItem>
-                      <SelectItem value="Russian">🇷🇺 Russian</SelectItem>
-                      <SelectItem value="Dutch">🇳🇱 Dutch</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
             </div>
           </CardContent>
