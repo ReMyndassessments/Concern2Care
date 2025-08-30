@@ -236,7 +236,7 @@ ${differentiationInfo.join('\n')}
 **ORIGINAL LESSON PLAN TO DIFFERENTIATE:**
 ${lessonPlanContent}
 
-**YOUR TASK:** Create a differentiated version of the above lesson plan specifically adapted for ${req.studentFirstName}'s learning needs. Provide a complete, ready-to-use lesson plan that includes:
+**YOUR TASK:** Create a COMPLETE differentiated version of the above lesson plan specifically adapted for ${req.studentFirstName}'s learning needs. This must be a fully developed, ready-to-use lesson plan with all activities, materials, and assessments modified. Include BOTH the modified lesson plan AND general strategies:
 
 1. **Differentiated Learning Objectives:**
    - Modified or tiered objectives that match the student's ability level
@@ -270,7 +270,11 @@ ${lessonPlanContent}
    - What to prepare in advance
    - Timing considerations
 
-**Format:** Provide a complete, restructured lesson plan that the teacher can use immediately. Include specific examples, actual materials, and concrete directions. This should be a differentiated version of the original lesson, not general strategies.`;
+**Format:** 
+1. **FIRST**: Provide a COMPLETE, restructured lesson plan with specific activities, modified materials, timing, and assessment methods
+2. **THEN**: Include additional general differentiation strategies for ongoing support
+
+This should be an actual differentiated lesson plan the teacher can implement immediately, not just general recommendations.`;
     } else {
       prompt = `You are a leading educational specialist with advanced expertise in differentiated instruction, Universal Design for Learning (UDL), and evidence-based teaching practices. Drawing from current research in cognitive science, special education, and instructional design, provide detailed, immediately implementable differentiation strategies with specific learning objectives, assessment criteria, and research citations where applicable.
 
