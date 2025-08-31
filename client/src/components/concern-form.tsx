@@ -622,21 +622,28 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       />
                     )}
                     
-                    {/* Additional Notes */}
+                    {/* Additional Notes - Expanded Format */}
                     <FormField
                       control={form.control}
                       name="otherNeeds"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('form.otherLearningNeeds', 'Other Learning Needs or Notes')}</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder={t('form.learningNeedsPlaceholder', 'e.g., visual learner, needs frequent breaks, anxiety...')}
-                              {...field} 
+                          <FormLabel className="flex items-center gap-2">
+                            <BookOpen className="h-4 w-4" />
+                            {t('form.otherLearningNeeds', 'Other Learning Needs or Notes')}
+                          </FormLabel>
+                          <div className="space-y-2">
+                            <textarea
+                              {...field}
+                              placeholder={t('form.otherLearningNeedsPlaceholder', 'Copy and paste relevant parts of assessments, IEP accommodations, 504 plan details, evaluation reports, or other learning support information. Include specific needs like visual learning preferences, frequent breaks, anxiety management, sensory accommodations, etc...')}
+                              className="w-full min-h-[200px] p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
                               disabled={isAtLimit}
-                              data-testid="input-other-needs"
+                              data-testid="textarea-other-needs"
                             />
-                          </FormControl>
+                            <p className="text-xs text-blue-600">
+                              {t('form.otherLearningNeedsDesc', 'Paste relevant assessment data, IEP goals, accommodation details, or evaluation findings above. The more specific information you provide, the better the AI can tailor strategies to this student\'s documented needs.')}
+                            </p>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
