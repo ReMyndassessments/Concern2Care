@@ -269,13 +269,13 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const isAtLimit = user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20);
 
   return (
-    <Card className="w-full">
-      <CardContent className="px-4 sm:px-6 pt-6">
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardContent className="px-3 sm:px-4 lg:px-6 pt-4 sm:pt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-6 sm:space-y-8 ${isAtLimit ? 'opacity-60' : ''}`}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-4 sm:space-y-6 lg:space-y-8 ${isAtLimit ? 'opacity-60' : ''}`}>
             
             {/* Task Type Selection - FIRST */}
-            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6">
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 sm:p-6">
               <div className="flex items-center space-x-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                   <span className="text-white text-lg">🎯</span>
@@ -301,16 +301,16 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         {TASK_TYPES.filter(taskType => 
                           !field.value || field.value === taskType.value
                         ).map((taskType) => (
-                          <div key={taskType.value} className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
+                          <div key={taskType.value} className="flex items-start space-x-2 sm:space-x-3 p-3 sm:p-4 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
                             <RadioGroupItem value={taskType.value} id={taskType.value} disabled={isAtLimit} className="mt-1" />
                             <div className="flex-1">
                               <label
                                 htmlFor={taskType.value}
-                                className="text-base font-medium text-gray-900 cursor-pointer block mb-1"
+                                className="text-sm sm:text-base font-medium text-gray-900 cursor-pointer block mb-1"
                               >
                                 {taskType.value === 'differentiation' ? t('form.differentiationTask', 'Differentiation Task') : t('form.tier2InterventionTask', 'Tier 2 Intervention Task')}
                               </label>
-                              <p className="text-sm text-gray-600 leading-relaxed">
+                              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                                 {taskType.value === 'differentiation' ? t('form.differentiationDesc', 'Get specific strategies to adapt instruction for different learning styles, abilities, and needs. Focus on instructional modifications and learning accommodations.') : t('form.tier2InterventionDesc', 'Generate evidence-based behavioral and academic intervention strategies for concerning behaviors. Focus on targeted interventions for specific behavioral or academic issues.')}
                               </p>
                             </div>
@@ -326,13 +326,13 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
 
             {/* Task confirmation and change option */}
             {form.watch('taskType') && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <div className="flex items-start justify-between">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-3 sm:space-y-0">
                   <div className="flex items-start space-x-3">
                     <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-sm font-medium text-blue-900 mb-1">{t('form.taskSelected', 'Task Selected: {{taskType}}', { taskType: TASK_TYPES.find(t => t.value === form.watch('taskType'))?.value === 'differentiation' ? t('form.differentiationTask', 'Differentiation Task') : t('form.tier2InterventionTask', 'Tier 2 Intervention Task') })}</h4>
-                      <p className="text-sm text-blue-700">
+                      <h4 className="text-xs sm:text-sm font-medium text-blue-900 mb-1">{t('form.taskSelected', 'Task Selected: {{taskType}}', { taskType: TASK_TYPES.find(t => t.value === form.watch('taskType'))?.value === 'differentiation' ? t('form.differentiationTask', 'Differentiation Task') : t('form.tier2InterventionTask', 'Tier 2 Intervention Task') })}</h4>
+                      <p className="text-xs sm:text-sm text-blue-700">
                         {t('form.taskSelectionNote', 'If you need both differentiation strategies AND Tier 2 intervention recommendations for the same student, please submit separate requests. This helps ensure each task receives focused, specialized attention.')}
                       </p>
                     </div>
@@ -349,7 +349,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       form.setValue('severityLevel', '');
                       form.setValue('actionsTaken', []);
                     }}
-                    className="text-blue-600 border-blue-300 hover:bg-blue-100 flex-shrink-0"
+                    className="text-blue-600 border-blue-300 hover:bg-blue-100 flex-shrink-0 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
                     data-testid="button-change-task-type"
                   >
                     {t('form.changeTask', 'Change Task')}
