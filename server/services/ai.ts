@@ -395,6 +395,8 @@ Provide a comprehensive analysis of ${req.studentFirstName}'s learning strengths
     prompt =
     `You are a highly trained educational intervention specialist and instructional coach with 15+ years of classroom experience, expertise in evidence-based practices, special education law, Universal Design for Learning (UDL), and research-backed classroom strategies. You provide comprehensive, detailed, actionable Tier 2 interventions based on current educational research and best practices from leading institutions.
 
+**IMPORTANT: Provide direct, professional recommendations without conversational phrases like "Of course" or "I will create". Start immediately with the content headings and recommendations.**
+
 **CRITICAL ANALYSIS REQUIRED**: You MUST provide detailed analysis and evidence-based solutions that go beyond surface-level recommendations. Teachers need specific, practical strategies they can implement immediately.
 
 ## Student Profile Analysis:
@@ -518,8 +520,8 @@ For the identified learning profile (${differentiationText}), provide:
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
     
     const systemPrompt = targetLanguage 
-      ? `You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. You are fluent in ${targetLanguage} and will provide all responses in ${targetLanguage}. Provide comprehensive, research-backed intervention strategies with specific implementation details, materials lists, progress monitoring tools, and timeline expectations. Base all recommendations on peer-reviewed educational research and proven classroom practices. Include specific data collection methods and evidence-based modifications. All content must be in ${targetLanguage}.`
-      : "You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. Provide comprehensive, research-backed intervention strategies with specific implementation details, materials lists, progress monitoring tools, and timeline expectations. Base all recommendations on peer-reviewed educational research and proven classroom practices. Include specific data collection methods and evidence-based modifications.";
+      ? `You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. You are fluent in ${targetLanguage} and will provide all responses in ${targetLanguage}. **IMPORTANT: Provide direct, professional recommendations without conversational phrases. Start immediately with content headings and recommendations.** Provide comprehensive, research-backed intervention strategies with specific implementation details, materials lists, progress monitoring tools, and timeline expectations. Base all recommendations on peer-reviewed educational research and proven classroom practices. Include specific data collection methods and evidence-based modifications. All content must be in ${targetLanguage}.`
+      : "You are a highly trained educational intervention specialist with expertise in evidence-based practices, special education law, and research-backed classroom strategies. **IMPORTANT: Provide direct, professional recommendations without conversational phrases like 'Of course' or 'I will create'. Start immediately with content headings and recommendations.** Provide comprehensive, research-backed intervention strategies with specific implementation details, materials lists, progress monitoring tools, and timeline expectations. Base all recommendations on peer-reviewed educational research and proven classroom practices. Include specific data collection methods and evidence-based modifications.";
     
     const response = await fetch(`${apiClient.baseURL}/chat/completions`, {
       method: 'POST',
@@ -675,7 +677,7 @@ export async function followUpAssistance(
   const hasChinese = /chinese|中文|中国|翻译|中国人|中国话|中文版|chinese|translate.*chinese|write.*chinese|explain.*chinese/i.test(req.specificQuestion);
   const targetLanguage = hasChinese ? 'Chinese' : req.language;
   
-  let prompt = `You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. Provide detailed, research-backed implementation guidance for Tier 2 interventions with specific steps, materials, troubleshooting, and progress monitoring strategies.`;
+  let prompt = `You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. **IMPORTANT: Provide direct, professional guidance without conversational phrases. Start immediately with implementation guidance.** Provide detailed, research-backed implementation guidance for Tier 2 interventions with specific steps, materials, troubleshooting, and progress monitoring strategies.`;
 
   // Add language instruction if Chinese is requested
   if (targetLanguage === 'Chinese' || hasChinese) {
@@ -727,8 +729,8 @@ Focus on actionable advice that a classroom teacher can realistically implement.
           {
             role: "system",
             content: targetLanguage === 'Chinese' || hasChinese 
-              ? "You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. You are fluent in Chinese and will provide all responses in simplified Chinese (中文). Provide comprehensive, research-backed implementation guidance with specific procedural steps, materials lists, data collection methods, and troubleshooting strategies. Base all recommendations on proven implementation research and successful classroom practices. All content must be in Chinese."
-              : "You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. Provide comprehensive, research-backed implementation guidance with specific procedural steps, materials lists, data collection methods, and troubleshooting strategies. Base all recommendations on proven implementation research and successful classroom practices."
+              ? "You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. You are fluent in Chinese and will provide all responses in simplified Chinese (中文). **IMPORTANT: Provide direct, professional guidance without conversational phrases. Start immediately with implementation guidance.** Provide comprehensive, research-backed implementation guidance with specific procedural steps, materials lists, data collection methods, and troubleshooting strategies. Base all recommendations on proven implementation research and successful classroom practices. All content must be in Chinese."
+              : "You are a highly trained educational intervention specialist with expertise in implementation science and evidence-based classroom practices. **IMPORTANT: Provide direct, professional guidance without conversational phrases like 'Of course' or 'I will help'. Start immediately with implementation guidance.** Provide comprehensive, research-backed implementation guidance with specific procedural steps, materials lists, data collection methods, and troubleshooting strategies. Base all recommendations on proven implementation research and successful classroom practices."
           },
           {
             role: "user",
