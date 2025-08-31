@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Concern Report - Crystal R</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f8fafc;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-height: 297mm;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .app-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .report-title {
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+
+    .report-date {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item, .concern-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label, .concern-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value, .concern-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .description-section {
+        margin-top: 1.5rem;
+    }
+
+    .description-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+
+    .description-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+    }
+
+    .interventions-content {
+        background: #fefefe;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Student Concern Report</h2>
+                <p class="report-date">Generated on August 31, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Print Controls (hidden during print) -->
+        <div class="print-controls no-print">
+            <button 
+                onclick="window.print()" 
+                class="print-button"
+                data-testid="button-print-report"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <polyline points="6,14 18,14"></polyline>
+                </svg>
+                Print Report
+            </button>
+        </div>
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Crystal R.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Behavior, Peer Relationships</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">8/31/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    Allen has been extremely violent in three fights this week with his peers.
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><h4 class="bold-heading">Primary Concerns Analysis</h4><br><ul class="intervention-list"><li class="main-bullet">Three violent physical altercations within one week indicate escalating behavioral crisis requiring immediate safety intervention</li></ul><br><ul class="intervention-list"><li class="main-bullet">Social-emotional assessment scores (Parent-17, Teacher-17, Self-report-19) confirm significant peer relationship difficulties</li></ul><br><ul class="intervention-list"><li class="main-bullet">ADHD symptoms (inattention/hyperactivity) combined with EAL beginner proficiency create perfect storm for frustration and aggression</li></ul><br><ul class="intervention-list"><li class="main-bullet">Developmental delays in executive functioning impair impulse control and social judgment</li></ul></p><p><h4 class="bold-heading">Contributing Factors</h4><br><ul class="intervention-list"><li class="main-bullet">Fragmented educational history (limited kindergarten, homeschooling) has deprived Allen of typical social development opportunities</li></ul><br><ul class="intervention-list"><li class="main-bullet">Cognitive assessments showing Very Low range functioning across memory, processing speed, and psychomotor domains indicate significant neurological challenges</li></ul><br><ul class="intervention-list"><li class="main-bullet">Possible undiagnosed autism spectrum features (social naivety, repetitive behaviors, preference for younger peers) complicate social interactions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Language barrier exacerbates misunderstanding and frustration in social situations</li></ul></p><p><h4 class="bold-heading">Risk and Protective Factors</h4><br><ul class="intervention-list"><li class="main-bullet">High-risk: History of developmental delays, cognitive processing deficits, limited social experience, language barriers, possible undiagnosed ASD features</li></ul><br><ul class="intervention-list"><li class="main-bullet">Protective: Parental involvement (homeschooling history), recent formal assessment completion, enrollment in specialized school setting</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><h4 class="bold-heading">Primary Approach: Multi-Tiered Systems of Support (MTSS) with Trauma-Informed PBIS</h4><br><ul class="intervention-list"><li class="main-bullet">Research Base: Sugai & Horner (2006); Cook et al. (2015) on trauma-informed practices; DuPaul & Stoner (2014) on ADHD interventions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Theoretical Foundation: Behavioral (antecedent interventions), Cognitive (executive function training), Social-Emotional (relationship building)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Expected Outcomes: 50% reduction in physical aggression incidents within 4 weeks; increased use of appropriate communication strategies; improved peer interactions</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p><h4 class="bold-heading">Strategy 1: Antecedent-Based Behavior Prevention System</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Kern & Clemens (2007); Conroy et al. (2005)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Visual schedule, timer, break cards, "cool down" corner with sensory tools, behavior tracking sheets</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Create personalized visual schedule with pictograms (8:00-8:15: Arrival, 8:15-8:30: Morning work) - 30 min preparation<br>  2. Implement 5:1 positive reinforcement system - immediate implementation<br>  3. Teach and practice "break card" system - 15 min daily instruction for 5 days<br>  4. Establish predictable transition routines with 2-minute warnings - implement across all transitions<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: ABC (Antecedent-Behavior-Consequence) data collection for all incidents; daily frequency count of aggression</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 25% reduction in physical aggression; increased use of break cards appropriately</li></ul></p><p><h4 class="bold-heading">Strategy 2: Social Communication Scripting</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Bellini (2006); Wong et al. (2015)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Social scripts cards, video modeling examples, communication board with basic needs</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Develop 5 basic social scripts ("I need help," "I need space," "I feel angry") - 45 min preparation<br>  2. Practice scripts through role-play 3x daily for 5 minutes - scheduled at 9:00, 11:30, 2:00<br>  3. Implement video modeling of appropriate interactions - 10 minutes daily<br>  4. Teach recognition of basic emotional states using visual aids - integrated throughout day<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Frequency count of appropriate script use; reduction in aggression during social situations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 50% appropriate use of taught scripts; decreased aggression during social interactions</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Emotional Regulation and Executive Functioning</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Intervention Program</strong>: Zones of Regulation Curriculum (Kuypers, 2011) modified for EAL and cognitive level</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Frequency</strong>: Daily 20-minute direct instruction; integrated practice throughout day</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Progress Monitoring</strong>: Weekly behavior frequency charts; pre/post intervention self-assessment; teacher rating scales</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adaptation Protocol</strong>: If no improvement after 2 weeks, increase visual supports; add physical movement breaks every 20 minutes; incorporate native language support</li></ul></p><p><h4 class="bold-heading">Secondary Focus: Academic Support</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Intervention Program</strong>: Direct Instruction reading and math programs with heavy visual scaffolding</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Frequency</strong>: 30 minutes daily 1:1 instruction; 45 minutes small group (3:1)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Progress Monitoring</strong>: Curriculum-based measurements weekly; work samples analysis</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adaptation Protocol</strong>: Modify language demands; use concrete manipulatives; provide extended processing time</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Skill Transfer Plans</strong>: Systematic fading of adult support; peer-mediated interventions; practice in multiple settings</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Independence Building</strong>: Graduated responsibility increases; self-monitoring checklists; choice-making opportunities</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Family Engagement</strong>: Weekly home communication log; parent training sessions bi-weekly; home behavior plan consistency</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><h4 class="bold-heading">Daily Data</h4>: Behavior frequency count; work completion rates; medication effectiveness (if applicable)<br><h4 class="bold-heading">Weekly Assessment</h4>: Social skills rating scale; academic CBM probes; behavior incident reports<br><h4 class="bold-heading">Monthly Review</h4>: IEP goal progress; standardized behavior rating scales; work portfolio review<br><h4 class="bold-heading">Decision Points</h4>: Continue if 25% improvement; modify if stagnant; escalate if regression or crisis</p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><h4 class="bold-heading">Team Members</h4>: Special education teacher, general education teacher, speech therapist, school psychologist, parents, EAL specialist<br><h4 class="bold-heading">Meeting Schedule</h4>: Weekly team meeting (30 min); bi-weekly parent update; monthly full team review<br><h4 class="bold-heading">Documentation Requirements</h4>: Daily behavior logs; intervention fidelity checklists; communication logs<br><h4 class="bold-heading">Parent Communication</h4>: Daily home note; weekly phone call; monthly progress report</p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><h4 class="bold-heading">Warning Signs</h4>: Increased agitation; verbal threats; property destruction; social withdrawal<br><h4 class="bold-heading">Immediate Response</h4>: Safe crisis management techniques; removal from triggering situation; de-escalation strategies<br><h4 class="bold-heading">Referral Criteria</h4>: Continued aggression despite intervention; self-injurious behavior; need for psychiatric evaluation<br><h4 class="bold-heading">Emergency Contacts</h4>: School psychologist; behavior specialist; crisis response team</p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><h4 class="bold-heading">Professional Development</h4>: Crisis Prevention Institute training; Zones of Regulation certification; EAL strategies workshop<br><h4 class="bold-heading">Educational Materials</h4>: "The Behavior Code" by Minahan & Rappaport; "Solving Behavior Problems Together" by Riffel<br><h4 class="bold-heading">Technology Tools</h4>: ClassDojo for behavior tracking; Pictello for social stories; ModMath for math support<br><h4 class="bold-heading">Community Resources</h4>: ADHD parent support groups; developmental pediatrician referral; social skills groups</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-controls,
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>
