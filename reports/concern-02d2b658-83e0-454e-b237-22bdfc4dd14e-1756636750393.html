@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Concern Report - Abby P</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f8fafc;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-height: 297mm;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .app-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .report-title {
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+
+    .report-date {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item, .concern-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label, .concern-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value, .concern-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .description-section {
+        margin-top: 1.5rem;
+    }
+
+    .description-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+
+    .description-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+    }
+
+    .interventions-content {
+        background: #fefefe;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Student Concern Report</h2>
+                <p class="report-date">Generated on August 31, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Print Controls (hidden during print) -->
+        <div class="print-controls no-print">
+            <button 
+                onclick="window.print()" 
+                class="print-button"
+                data-testid="button-print-report"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <polyline points="6,14 18,14"></polyline>
+                </svg>
+                Print Report
+            </button>
+        </div>
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Abby P.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Not specified</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">8/31/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    No description provided
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p><h4 class="bold-heading">DIFFERENTIATED LESSON PLAN FOR ABBY P</h4></p><p><h4 class="sub-heading">Lesson:</h4> Linear Equations in Slope-Intercept Form (Modified)<br><h4 class="sub-heading">Grade:</h4> 9<br><h4 class="sub-heading">Duration:</h4> 50 minutes (with flexible time allocation)<br><h4 class="sub-heading">Focus Student:</h4> Abby P (EAL Intermediate, counseling support needs)</p><p><h4 class="sub-heading">Differentiated Learning Objectives:</h4><br>1. Identify slope (m) and y-intercept (b) in simplified equations using visual cues<br>2. Graph a line using step-by-step guided process with physical manipulatives<br>3. Write basic equations when given slope and y-intercept using sentence frames</p><p><h4 class="sub-heading">Modified Materials:</h4><br><ul class="intervention-list"><li class="main-bullet">Colored graphing paper (quadrant I only initially)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Wikki Stix or string for physical line creation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Slope-intercept form graphic organizer (bilingual English/Chinese)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Calculator with large display</li></ul><br><ul class="intervention-list"><li class="main-bullet">Vocabulary cards with visuals</li></ul><br><ul class="intervention-list"><li class="main-bullet">Tablet with graphing app (Desmos or GeoGebra)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Modified worksheet with reduced problems and visual supports</li></ul></p><p><h4 class="sub-heading">Lesson Outline:</h4></p><p><h4 class="bold-heading">1. Warm-Up (8 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified problems with visual supports:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Graph with points (2,4) and (4,8) pre-plotted with connecting line</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Equation y = 2x + 5 with color-coding (m=blue, b=green)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Teacher uses think-aloud strategy with gestures and simplified language</li></ul><br><ul class="intervention-list"><li class="main-bullet">Abby uses vocabulary cards to match terms "slope" and "y-intercept" to visual examples</li></ul></p><p><h4 class="bold-heading">2. Introduction (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Use concrete example: "Phone plan: $10 basic fee + $2 per GB"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Physical demonstration with stacking blocks: base (b) and incremental adds (m)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer with fill-in-the-blank: y = __ x + __</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bilingual vocabulary support: slope (坡度), y-intercept (y截距)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Chunked information: Teach m and b separately with practice after each</li></ul></p><p><h4 class="bold-heading">3. Guided Practice (15 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Example 1: y = 2x + 1 using tactile materials</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Place Wikki Stix at (0,1) on coordinate plane</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Use "rise/run" cards: ↑2 →1 with physical movement</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Tablet graphing app to verify results</li></ul><br><ul class="intervention-list"><li class="main-bullet">Example 2: y = -½x + 4 with emphasis on negative slope visualization</li></ul><br><ul class="intervention-list"><li class="main-bullet">Abby works with partner for think-pair-share after each step</li></ul></p><p><h4 class="bold-heading">4. Independent Practice (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified worksheet with 4 problems instead of multiple sections:</li></ul><br>  1. Circle slope and underline y-intercept in y = 3x - 2<br>  2. Graph y = x + 2 using provided coordinate plane with starting point marked<br>  3. Complete equation: y = __ x + __ when given m=2, b=1<br>  4. Match graph to equation from two choices<br><ul class="intervention-list"><li class="main-bullet">Teacher provides immediate feedback and corrective instruction</li></ul></p><p><h4 class="bold-heading">5. Closing & Assessment (3 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified exit ticket:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Multiple choice: "What is the y-intercept in y = 4x + 3?" with options</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Partial graph completion: Continue the line from given starting point</li></ul><br><ul class="intervention-list"><li class="main-bullet">Verbal explanation option: "Tell me how you would graph y = 2x + 1"</li></ul></p><p><h4 class="sub-heading">Homework Adaptation:</h4><br><ul class="intervention-list"><li class="main-bullet">4 problems total with visual supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Option to complete digitally or on paper</li></ul><br><ul class="intervention-list"><li class="main-bullet">Parent guide sheet in Chinese explaining the concepts</li></ul></p><p><h4 class="bold-heading">COMPREHENSIVE DIFFERENTIATION STRATEGIES</h4></p><p><h4 class="bold-heading">Research-Based Content Modifications</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Sheltered Instruction Observation Protocol (SIOP)</strong> techniques: Content and language objectives explicitly stated, vocabulary emphasized with visual supports (Echevarria, Vogt, & Short, 2017)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>CRA Framework</strong>: Concrete (manipulatives), Representational (graphs), Abstract (equations) progression for mathematical understanding (Witzel, Mercer, & Miller, 2003)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Cognitive load reduction</strong>: Chunking information, eliminating extraneous processing through worked examples and guided practice (Sweller, 2010)</li></ul></p><p><h4 class="bold-heading">Process Adaptations</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Think-aloud modeling</strong>: Teacher demonstrates problem-solving process verbally while solving</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Gradual release</strong>: I do (teacher models), We do (guided practice), You do (independent practice) with extended guided phase</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Multimodal input</strong>: Visual, auditory, kinesthetic, and tactile learning opportunities integrated</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Wait time</strong>: Minimum 10 seconds for processing questions and responses (Rowe, 1986)</li></ul></p><p><h4 class="bold-heading">Assessment Modifications</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Alternative response modes</strong>: Verbal responses, pointing, matching, selection rather than exclusively written</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Portfolio assessment</strong>: Collection of work samples over time to show growth rather than single-point assessment</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Dynamic assessment</strong>: Test-teach-retest model to measure learning potential rather than static ability (Lidz, 1991)</li></ul></p><p><h4 class="bold-heading">Environmental Supports</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Strategic seating</strong>: Near teacher for proximity support, away from distractions</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Visual schedule</strong>: Clear timeline of lesson activities with visual cues</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Break options</strong>: Pre-arranged signal for 2-minute break if overwhelmed</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Reduced auditory distractions</strong>: Noise-reducing headphones available</li></ul></p><p><h4 class="bold-heading">Technology Integration</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Graphing calculator apps</strong>: Desmos or GeoGebra for visual representation</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Translation tools</strong>: Google Translate or similar for vocabulary support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Speech-to-text</strong>: For written responses if needed</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital graphic organizers</strong>: Modify and save for future reference</li></ul></p><p><h4 class="bold-heading">Progress Monitoring System</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly skill checks</strong>: 5-problem assessment tracking: identification, graphing, equation writing</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Language growth measure</strong>: Vocabulary acquisition tracking using curriculum-based measurement</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Behavioral observation</strong>: Engagement and participation metrics using interval recording</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent communication log</strong>: Weekly update on progress and strategies for home support</li></ul></p><p><h4 class="bold-heading">Collaboration Plan</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly check-in</strong>: Teacher-counselor collaboration to align academic and emotional support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent partnership</strong>: Monthly meeting to reinforce strategies and monitor home support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Peer support system</strong>: Trained class partner for collaborative work</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>EAL specialist consultation</strong>: Bi-weekly planning session for language support strategies</li></ul></p><p><h4 class="bold-heading">Implementation Timeline</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Week 1-2</strong>: Intensive supports with full scaffolding</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Week 3-4</strong>: Gradual reduction of scaffolds based on performance</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Monthly review</strong>: Adjustment of strategies based on progress data</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Quarterly evaluation</strong>: Comprehensive review of differentiation plan effectiveness</li></ul></p><p><h4 class="sub-heading">Citations:</h4><br>Echevarria, J., Vogt, M., & Short, D. (2017). Making content comprehensible for English learners: The SIOP model. Pearson.<br>Lidz, C. S. (1991). Practitioner's guide to dynamic assessment. Guilford Press.<br>Rowe, M. B. (1986). Wait time: Slowing down may be a way of speeding up! Journal of Teacher Education, 37(1), 43-50.<br>Sweller, J. (2010). Element interactivity and intrinsic, extraneous, and germane cognitive load. Educational Psychology Review, 22(2), 123-138.<br>Witzel, B. S., Mercer, C. D., & Miller, M. D. (2003). Teaching algebra to students with learning difficulties: An investigation of an explicit instruction model. Learning Disabilities Research & Practice, 18(2), 121-131.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-controls,
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>

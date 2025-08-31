@@ -22,7 +22,8 @@ export async function generateConcernHTMLReport(
   });
 
   const concernTypes = Array.isArray(concern.concernTypes) ? concern.concernTypes : [];
-  const concernTypeText = concernTypes.length > 0 ? concernTypes.join(', ') : 'Not specified';
+  const concernTypeText = concernTypes.length > 0 ? concernTypes.join(', ') : 
+    (concern.taskType === 'differentiation' ? 'Learning Support' : 'General Concern');
 
   // Format interventions content
   const formattedInterventions = interventions.map(intervention => 
@@ -104,7 +105,9 @@ export async function generateConcernHTMLReport(
             <div class="description-section">
                 <h4 class="description-title">Description:</h4>
                 <div class="description-content">
-                    ${concern.description || 'No description provided'}
+                    ${concern.description || (concern.taskType === 'differentiation' ? 
+                      'Differentiation strategies requested based on student learning needs and characteristics.' : 
+                      'General student concern requiring intervention support.')}
                 </div>
             </div>
         </section>

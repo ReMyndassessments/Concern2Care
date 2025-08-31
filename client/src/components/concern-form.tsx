@@ -53,17 +53,22 @@ const enhancedConcernFormSchema = z.object({
   // Task type selection for focused AI responses
   taskType: z.string().min(1, "Task type is required"),
 }).refine((data) => {
-  // For tier2_intervention tasks, require certain fields
+  // For all task types, require concern types and description
+  return data.concernTypes.length > 0 && 
+         data.description && data.description.length >= 10;
+}, {
+  message: "Please complete all required fields",
+  path: ["description"],
+}).refine((data) => {
+  // For tier2_intervention tasks, also require severity level
   if (data.taskType === 'tier2_intervention') {
-    return data.concernTypes.length > 0 && 
-           data.description && data.description.length >= 10 && 
-           data.severityLevel;
+    return data.severityLevel;
   }
-  // For differentiation tasks, no additional validation needed
+  // For differentiation tasks, severity is optional
   return true;
 }, {
-  message: "Please fill in all required fields for the selected task type",
-  path: ["taskType"], // This will show the error on the taskType field
+  message: "Please select severity level for intervention tasks",
+  path: ["severityLevel"],
 });
 
 type EnhancedConcernFormData = z.infer<typeof enhancedConcernFormSchema>;
@@ -697,8 +702,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
               </div>
             </div>
 
-            {/* Concern Types - Only for Tier 2 Intervention */}
-            {form.watch('taskType') === 'tier2_intervention' && (
+            {/* Concern Types - Required for all task types */}
+            {form.watch('taskType') && (
               <FormField
                 control={form.control}
                 name="concernTypes"
@@ -780,8 +785,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
             />
             )}
 
-            {/* Concern Description - Only for Tier 2 Intervention */}
-            {form.watch('taskType') === 'tier2_intervention' && (
+            {/* Concern Description - Required for all task types */}
+            {form.watch('taskType') && (
               <FormField
                 control={form.control}
                 name="description"
