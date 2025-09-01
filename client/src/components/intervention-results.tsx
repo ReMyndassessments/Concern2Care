@@ -557,33 +557,33 @@ export default function InterventionResults({
           <div className="space-y-8">
             {interventions.map((intervention, index) => (
               <Card key={intervention.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-gray-50/50">
-                <CardContent className="p-8">
-                  <div className="flex items-start space-x-6">
+                <CardContent className="p-4 md:p-8">
+                  <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                       <span className="text-lg font-bold">{index + 1}</span>
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center break-words">
                         <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full mr-4" />
                         {intervention.title}
                       </h3>
-                      <div className="prose prose-lg max-w-none mb-6 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                      <div className="prose prose-lg max-w-none mb-6 bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-100 overflow-hidden">
                         <FormattedRecommendations content={intervention.description} />
                       </div>
                       
                       {intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0 && (
-                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6 border border-blue-100">
-                          <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 md:p-6 mb-4 md:mb-6 border border-blue-100">
+                          <h4 className="text-base md:text-lg font-semibold text-blue-900 mb-3 md:mb-4 flex items-center">
                             <div className="w-5 h-5 bg-blue-500 rounded-full mr-3" />
                             Implementation Steps
                           </h4>
                           <ul className="space-y-3">
                             {intervention.steps.map((step: string, stepIndex: number) => (
-                              <li key={stepIndex} className="flex items-start space-x-4">
+                              <li key={stepIndex} className="flex items-start space-x-3 md:space-x-4">
                                 <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                                   {stepIndex + 1}
                                 </div>
-                                <span className="text-gray-800 leading-relaxed">{String(step)}</span>
+                                <span className="text-sm md:text-base text-gray-800 leading-relaxed break-words">{String(step)}</span>
                               </li>
                             ))}
                           </ul>
@@ -605,8 +605,8 @@ export default function InterventionResults({
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div className="flex items-center space-x-4">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-gray-100 space-y-3 sm:space-y-0">
+                        <div className="flex flex-wrap items-center gap-2 sm:space-x-4">
                           <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-sm">
                             <CheckCircle className="h-3 w-3 mr-1" />
                             Research-Based
@@ -622,7 +622,7 @@ export default function InterventionResults({
                         </div>
                         
                         {/* Action Buttons */}
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
                           {/* Save Button */}
                           {savedInterventions.has(intervention.id) || intervention.saved ? (
                             <div className="flex items-center space-x-3 bg-green-50 px-4 py-2 rounded-full border border-green-200">
@@ -655,12 +655,12 @@ export default function InterventionResults({
                       
                       {/* AI Output Action Buttons */}
                       <div className="mt-6 pt-4 border-t border-gray-100">
-                        <div className="flex items-center justify-center space-x-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:space-x-4">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleCopyToClipboard(intervention.title + '\n\n' + intervention.description)}
-                            className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200 hover:shadow-md px-4 py-2"
+                            className="w-full sm:w-auto bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200 hover:shadow-md px-4 py-2"
                             data-testid={`button-copy-intervention-${intervention.id}`}
                           >
                             <Copy className="h-4 w-4 mr-2" />
@@ -671,7 +671,7 @@ export default function InterventionResults({
                             variant="outline"
                             size="sm"
                             onClick={() => handleDownloadIntervention(intervention)}
-                            className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200 hover:shadow-md px-4 py-2"
+                            className="w-full sm:w-auto bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200 hover:shadow-md px-4 py-2"
                             data-testid={`button-download-intervention-${intervention.id}`}
                           >
                             <Download className="h-4 w-4 mr-2" />
@@ -682,7 +682,7 @@ export default function InterventionResults({
                             variant="outline"
                             size="sm"
                             onClick={() => handleShareIntervention(intervention)}
-                            className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200 hover:shadow-md px-4 py-2"
+                            className="w-full sm:w-auto bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm transition-all duration-200 hover:shadow-md px-4 py-2"
                             data-testid={`button-share-intervention-${intervention.id}`}
                           >
                             <Upload className="h-4 w-4 mr-2" />
@@ -698,14 +698,14 @@ export default function InterventionResults({
           </div>
           
           {/* Follow-up Questions Section */}
-          <div className="mt-12 bg-gradient-to-r from-gray-50 to-gray-100/50 rounded-2xl p-8 border border-gray-200">
+          <div className="mt-8 md:mt-12 bg-gradient-to-r from-gray-50 to-gray-100/50 rounded-2xl p-4 md:p-8 border border-gray-200">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
                 <Send className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Have Follow-Up Questions?</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-900">Have Follow-Up Questions?</h3>
             </div>
-            <div className="flex space-x-4 mb-6">
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
               <div className="flex-1">
                 <Input 
                   placeholder="Ask for specific implementation guidance..."
@@ -723,7 +723,7 @@ export default function InterventionResults({
               <Button 
                 onClick={handleFollowUpSubmit}
                 disabled={followUpMutation.isPending || !followUpQuestion.trim()}
-                className="h-12 px-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-200"
+                className="h-12 px-6 sm:px-8 w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 {followUpMutation.isPending ? (
                   <>
@@ -771,7 +771,7 @@ export default function InterventionResults({
           </div>
           
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-12 pt-8">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 md:mt-12 pt-6 md:pt-8">
             <Button 
               onClick={handleGenerateReport}
               disabled={reportMutation.isPending}
