@@ -309,18 +309,8 @@ export default function InterventionResults({
         description: t('results.htmlReportReady'),
       });
       
-      // Open report in new tab first for viewing
+      // Open report in new tab for viewing (teachers can use Print button to save)
       window.open(data.viewUrl, '_blank');
-      
-      // Also provide download option
-      setTimeout(() => {
-        const link = document.createElement('a');
-        link.href = data.downloadUrl;
-        link.download = `concern-report-${concern.studentFirstName}-${concern.studentLastInitial}.html`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }, 1000);
     },
     onError: (error: Error) => {
       if (isUnauthorizedError(error)) {
