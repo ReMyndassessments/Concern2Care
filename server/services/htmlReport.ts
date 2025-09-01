@@ -142,24 +142,65 @@ export async function generateMeetingHTMLReport(
                 </svg>
                 Print Document
             </button>
+            <div class="print-fallback-instructions">
+                <p><strong>Print Instructions:</strong></p>
+                <p>• Press <kbd>Ctrl+P</kbd> (Windows/Linux) or <kbd>Cmd+P</kbd> (Mac)</p>
+                <p>• Or right-click → Print</p>
+                <p>• Or use File → Print in your browser menu</p>
+            </div>
         </div>
 
         <script>
             function handlePrint() {
                 try {
-                    // Try the standard print function
-                    if (window.print) {
+                    // Multiple approaches for maximum compatibility
+                    if (typeof window !== 'undefined' && window.print) {
+                        // Try standard print
                         window.print();
-                    } else {
-                        // Fallback for browsers that might not support window.print
-                        alert('Please use your browser\\'s print function (Ctrl+P or Cmd+P) to print this document.');
+                        return;
                     }
+                    
+                    // Try alternative print method
+                    if (document.execCommand) {
+                        document.execCommand('print', false, null);
+                        return;
+                    }
+                    
+                    // Try creating a print event
+                    if (window.dispatchEvent) {
+                        const printEvent = new Event('beforeprint');
+                        window.dispatchEvent(printEvent);
+                        window.print();
+                        return;
+                    }
+                    
+                    // Final fallback
+                    showPrintInstructions();
                 } catch (error) {
                     console.error('Print error:', error);
-                    // Provide user-friendly fallback instructions
-                    alert('To print this document, please use your browser\\'s print function:\\n\\n• Windows/Linux: Press Ctrl+P\\n• Mac: Press Cmd+P\\n• Or use your browser\\'s File → Print menu');
+                    showPrintInstructions();
                 }
             }
+            
+            function showPrintInstructions() {
+                const instructions = 'To print this document:\\n\\n' +
+                    '• Windows/Linux: Press Ctrl+P\\n' +
+                    '• Mac: Press Cmd+P\\n' +
+                    '• Or use your browser\\'s File → Print menu\\n\\n' +
+                    'If the print dialog doesn\\'t open, try right-clicking and selecting \\"Print\\"';
+                alert(instructions);
+            }
+            
+            // Ensure print functionality is available when page loads
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add keyboard shortcut listener
+                document.addEventListener('keydown', function(e) {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                        e.preventDefault();
+                        handlePrint();
+                    }
+                });
+            });
         </script>
 
         <!-- Meeting Information Section -->
@@ -314,29 +355,70 @@ export async function generateConcernHTMLReport(
             >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6,9 6,2 18,2 18,9"></polyline>
-                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012-2H18"></path>
                     <polyline points="6,14 18,14"></polyline>
                 </svg>
                 Print Report
             </button>
+            <div class="print-fallback-instructions">
+                <p><strong>Print Instructions:</strong></p>
+                <p>• Press <kbd>Ctrl+P</kbd> (Windows/Linux) or <kbd>Cmd+P</kbd> (Mac)</p>
+                <p>• Or right-click → Print</p>
+                <p>• Or use File → Print in your browser menu</p>
+            </div>
         </div>
 
         <script>
             function handlePrint() {
                 try {
-                    // Try the standard print function
-                    if (window.print) {
+                    // Multiple approaches for maximum compatibility
+                    if (typeof window !== 'undefined' && window.print) {
+                        // Try standard print
                         window.print();
-                    } else {
-                        // Fallback for browsers that might not support window.print
-                        alert('Please use your browser\\'s print function (Ctrl+P or Cmd+P) to print this document.');
+                        return;
                     }
+                    
+                    // Try alternative print method
+                    if (document.execCommand) {
+                        document.execCommand('print', false, null);
+                        return;
+                    }
+                    
+                    // Try creating a print event
+                    if (window.dispatchEvent) {
+                        const printEvent = new Event('beforeprint');
+                        window.dispatchEvent(printEvent);
+                        window.print();
+                        return;
+                    }
+                    
+                    // Final fallback
+                    showPrintInstructions();
                 } catch (error) {
                     console.error('Print error:', error);
-                    // Provide user-friendly fallback instructions
-                    alert('To print this document, please use your browser\\'s print function:\\n\\n• Windows/Linux: Press Ctrl+P\\n• Mac: Press Cmd+P\\n• Or use your browser\\'s File → Print menu');
+                    showPrintInstructions();
                 }
             }
+            
+            function showPrintInstructions() {
+                const instructions = 'To print this document:\\n\\n' +
+                    '• Windows/Linux: Press Ctrl+P\\n' +
+                    '• Mac: Press Cmd+P\\n' +
+                    '• Or use your browser\\'s File → Print menu\\n\\n' +
+                    'If the print dialog doesn\\'t open, try right-clicking and selecting \\"Print\\"';
+                alert(instructions);
+            }
+            
+            // Ensure print functionality is available when page loads
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add keyboard shortcut listener
+                document.addEventListener('keydown', function(e) {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                        e.preventDefault();
+                        handlePrint();
+                    }
+                });
+            });
         </script>
 
         <!-- Student Information Section -->
@@ -831,6 +913,30 @@ function getMeetingReportCSS(theme: string): string {
         transform: translateY(0);
     }
 
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
     .report-footer {
         background: #f8fafc;
         padding: 2rem;
@@ -1154,6 +1260,30 @@ function getReportCSS(theme: string): string {
         transform: translateY(0);
     }
 
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
     .report-footer {
         background: #f8fafc;
         padding: 2rem;
@@ -1303,7 +1433,8 @@ function getPrintCSS(): string {
     }
 
     .print-controls,
-    .no-print {
+    .no-print,
+    .print-fallback-instructions {
         display: none !important;
     }
 
