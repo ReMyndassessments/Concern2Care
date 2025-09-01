@@ -2646,13 +2646,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const sanitizedTitle = title.replace(/[^a-zA-Z0-9\s-]/g, '').replace(/\s+/g, '-');
       const date = meetingData.date || meetingData.meetingDate || 'unknown-date';
       const filename = `meeting-prep-${sanitizedTitle}-${date}_${timestamp}.html`;
-      const filePath = path.join(__dirname, '../reports', filename);
-
-      // Ensure reports directory exists
-      const reportsDir = path.dirname(filePath);
-      if (!fs.existsSync(reportsDir)) {
-        fs.mkdirSync(reportsDir, { recursive: true });
-      }
+      const reportsDir = ensureReportsDirectory();
+      const filePath = path.join(reportsDir, filename);
 
       // Generate HTML meeting document
       await generateMeetingHTMLReport(
