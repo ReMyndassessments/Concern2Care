@@ -294,8 +294,8 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return await db.select().from(users).orderBy(users.createdAt);
+  async getAllUsers(): Promise<UserWithSchool[]> {
+    return await this.getUsersWithSchool();
   }
 
   async getUsersWithSchool(): Promise<UserWithSchool[]> {

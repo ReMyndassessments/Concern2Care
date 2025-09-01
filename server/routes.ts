@@ -2660,7 +2660,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         notes: meetingData.notes,
         includeRecommendations: meetingData.includeRecommendations,
         includeProgressNotes: meetingData.includeProgressNotes,
-        selectedConcerns: []
+        selectedConcerns: [] as any[]
       };
 
       // Fetch actual concern data if concerns are selected
@@ -2669,7 +2669,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           meetingData.selectedConcerns.map((id: string) => storage.getConcernWithDetails(id))
         );
         // Filter out any undefined concerns (in case some IDs don't exist)
-        transformedMeetingData.selectedConcerns = concernsData.filter(concern => concern !== undefined) as any[];
+        transformedMeetingData.selectedConcerns = concernsData.filter((concern): concern is NonNullable<typeof concern> => concern !== undefined);
       }
 
       // Generate HTML meeting document
