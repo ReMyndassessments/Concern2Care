@@ -758,7 +758,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Ensure reports directory exists
       const reportsDir = ensureReportsDirectory();
-      const filename = `concern-${concernId}-${Date.now()}.html`;
+      
+      // Create descriptive filename based on task type and student name
+      const reportType = concern.taskType === 'differentiation' 
+        ? 'Differentiation Report' 
+        : 'Tier 2 Intervention Report';
+      const studentName = `${concern.studentFirstName} ${concern.studentLastInitial}`;
+      const timestamp = Date.now();
+      
+      // Sanitize filename for filesystem compatibility
+      const filename = `${reportType} - ${studentName} - ${timestamp}.html`
+        .replace(/[^a-zA-Z0-9\s\-\.]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      
       const filePath = path.join(reportsDir, filename);
 
       // Generate HTML report
@@ -819,9 +832,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Report file not found" });
       }
 
-      // Serve as downloadable HTML file
-      res.setHeader('Content-Type', 'text/html');
-      res.setHeader('Content-Disposition', 'attachment; filename="concern-report.html"');
+      // Get concern details to create proper filename
+      const concern = await storage.getConcernWithDetails(report.concernId);
+      if (concern) {
+        const reportType = concern.taskType === 'differentiation' 
+          ? 'Differentiation Report' 
+          : 'Tier 2 Intervention Report';
+        const studentName = `${concern.studentFirstName} ${concern.studentLastInitial}`;
+        const downloadFilename = `${reportType} - ${studentName}.html`;
+        
+        res.setHeader('Content-Type', 'text/html');
+        res.setHeader('Content-Disposition', `attachment; filename="${downloadFilename}"`);
+      } else {
+        res.setHeader('Content-Type', 'text/html');
+        res.setHeader('Content-Disposition', 'attachment; filename="concern-report.html"');
+      }
       
       const fileStream = fs.createReadStream(report.pdfPath);
       fileStream.pipe(res);

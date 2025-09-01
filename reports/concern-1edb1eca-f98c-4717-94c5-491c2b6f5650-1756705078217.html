@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differentiation Report - Abby P</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 1rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Differentiation Report</h2>
+                <p class="report-date">Generated on September 1, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Print Controls (hidden during print) -->
+        <div class="print-controls no-print">
+            <button 
+                onclick="window.print()" 
+                class="print-button"
+                data-testid="button-print-report"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <polyline points="6,14 18,14"></polyline>
+                </svg>
+                Print Report
+            </button>
+        </div>
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Abby P.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Social/Emotional, Attendance, Family/Home</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/1/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    we need to develop a reentry plan for Crystal and to help to adapt this lesson
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p><h4 class="bold-heading">DIFFERENTIATED LESSON PLAN FOR ABBY P.</h4></p><p><h4 class="sub-heading">Lesson:</h4> Linear Equations in Slope-Intercept Form (Modified)<br><h4 class="sub-heading">Student:</h4> Abby P. (10th Grade)<br><h4 class="sub-heading">Duration:</h4> 50 minutes (with built-in flexibility)<br><h4 class="sub-heading">Modified Date:</h4> [Current Date]</p><p><h4 class="sub-heading">Differentiated Learning Objectives:</h4><br>1. Identify y-intercept (b) using visual supports and real-world contexts<br>2. Graph lines using step-by-step templates with physical manipulatives<br>3. Match equations to their graphs using color-coding and pattern recognition<br>4. Demonstrate understanding through multiple modalities (visual, kinesthetic, verbal)</p><p><h4 class="sub-heading">Materials for Abby:</h4><br><ul class="intervention-list"><li class="main-bullet">Color-coded graph paper (blue y-axis, red x-axis)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-printed coordinate plane with enlarged grid</li></ul><br><ul class="intervention-list"><li class="main-bullet">Physical "slope ruler" showing rise/run increments</li></ul><br><ul class="intervention-list"><li class="main-bullet">Visual vocabulary cards with images (slope = hill, intercept = starting point)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bilingual math dictionary (English + native language)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer for equation parts</li></ul><br><ul class="intervention-list"><li class="main-bullet">Tablet with graphing app (Desmos or GeoGebra)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Noise-reducing headphones</li></ul><br><ul class="intervention-list"><li class="main-bullet">Break area pass</li></ul></p><p><h4 class="sub-heading">Lesson Sequence with Modifications:</h4></p><p><h4 class="bold-heading">1. Warm-Up (8 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified problems with visual supports:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">"Find the change between (2,4) and (4,8)" with arrow diagrams</li></ul><br><ul class="intervention-list"><li class="sub-bullet">"What is the starting value when x=0 in y=2x+5?" with table representation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Abby uses physical number line to demonstrate answers</li></ul><br><ul class="intervention-list"><li class="main-bullet">Teacher provides immediate positive feedback</li></ul></p><p><h4 class="bold-heading">2. Introduction (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Use concrete example: "Phone plan: $10 monthly fee + $2 per GB"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Color-coded equation: y = [red]2[black]x + [blue]10</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer: "m = movement rate" "b = beginning point"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bilingual vocabulary support with visual symbols</li></ul><br><ul class="intervention-list"><li class="main-bullet">Kinesthetic demonstration: walk the line on floor grid tape</li></ul></p><p><h4 class="bold-heading">3. Guided Practice (15 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Example 1: y = 2x + 1 using slope ruler tool</li></ul><br><ul class="intervention-list"><li class="main-bullet">Example 2: y = -½x + 4 with downward arrow visual</li></ul><br><ul class="intervention-list"><li class="main-bullet">Abby uses tablet graphing app to verify physical manipulations</li></ul><br><ul class="intervention-list"><li class="main-bullet">Sentence frames: "I start at __ and move __ steps up/down for each step right"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Frequent comprehension checks: "Show me with your hands"</li></ul></p><p><h4 class="bold-heading">4. Independent Practice (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified worksheet with:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Matching equations to graphs (cut/paste activity)</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Fill-in-blank equations with word bank</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Two graphing problems with coordinate plane templates</li></ul><br><ul class="intervention-list"><li class="main-bullet">Option to work in quiet corner with headphones</li></ul><br><ul class="intervention-list"><li class="main-bullet">Calculator available for numerical verification</li></ul></p><p><h4 class="bold-heading">5. Closing & Assessment (3 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified exit ticket:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Circle the y-intercept in y = 3x - 2</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Use slope ruler to show movement on pre-drawn graph</li></ul><br><ul class="intervention-list"><li class="sub-bullet">"This line starts at __ and moves __"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Verbal explanation option available</li></ul></p><p><h4 class="sub-heading">Homework Alternatives:</h4><br><ul class="intervention-list"><li class="main-bullet">Choice board: Create a real-world example, complete 3 practice problems, or make a video explaining one concept</li></ul><br><ul class="intervention-list"><li class="main-bullet">Problems reduced to 4 total with template support</li></ul></p><p><h4 class="sub-heading">IMPLEMENTATION NOTES:</h4><br><ul class="intervention-list"><li class="main-bullet">Seat Abby near teacher desk but with visual barrier options</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-teach vocabulary 10 minutes before class</li></ul><br><ul class="intervention-list"><li class="main-bullet">Use timer for activity transitions with 2-minute warnings</li></ul><br><ul class="intervention-list"><li class="main-bullet">Prepare "break bucket" with sensory items for self-regulation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Coordinate with counselor regarding emotional check-in procedures</li></ul></p><p><h4 class="bold-heading">ONGOING DIFFERENTIATION STRATEGIES</h4></p><p><h4 class="sub-heading">Content Modifications:</h4><br><ul class="intervention-list"><li class="main-bullet">Use concrete-representational-abstract sequence for all new concepts (Miller & Hudson, 2007)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Provide bilingual glossaries with visual representations</li></ul><br><ul class="intervention-list"><li class="main-bullet">Chunk information into 5-7 minute segments with processing time</li></ul><br><ul class="intervention-list"><li class="main-bullet">Implement graphic organizers for problem-solving procedures</li></ul></p><p><h4 class="sub-heading">Process Adaptations:</h4><br><ul class="intervention-list"><li class="main-bullet">Incorporate Universal Design for Learning principles: multiple means of representation, action/expression, engagement (CAST, 2018)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Use think-aloud modeling with visual tracking supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Provide step-by-step checklists for multi-step problems</li></ul><br><ul class="intervention-list"><li class="main-bullet">Implement peer-assisted learning strategies with trained partner</li></ul></p><p><h4 class="sub-heading">Assessment Alternatives:</h4><br><ul class="intervention-list"><li class="main-bullet">Portfolio assessments demonstrating growth over time</li></ul><br><ul class="intervention-list"><li class="main-bullet">Oral assessments with visual supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Modified rubrics focusing on concept understanding rather than procedural fluency</li></ul><br><ul class="intervention-list"><li class="main-bullet">Error analysis opportunities: "Find and fix the mistake"</li></ul></p><p><h4 class="sub-heading">Environmental Optimizations:</h4><br><ul class="intervention-list"><li class="main-bullet">Designated quiet workspace with visual boundaries</li></ul><br><ul class="intervention-list"><li class="main-bullet">Consistent routine with visual schedule</li></ul><br><ul class="intervention-list"><li class="main-bullet">Preferential seating near instruction but with reduced distractions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Access to sensory tools and movement breaks</li></ul></p><p><h4 class="sub-heading">Progress Monitoring:</h4><br><ul class="intervention-list"><li class="main-bullet">Weekly curriculum-based measurements graphing proficiency</li></ul><br><ul class="intervention-list"><li class="main-bullet">Daily comprehension checks using 0-5 scale</li></ul><br><ul class="intervention-list"><li class="main-bullet">Behavior tracking aligned with academic engagement</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monthly parent/teacher/counselor collaboration meetings</li></ul></p><p><h4 class="sub-heading">Collaboration Plan:</h4><br><ul class="intervention-list"><li class="main-bullet">Bi-weekly consultation with ESL teacher for language support strategies</li></ul><br><ul class="intervention-list"><li class="main-bullet">Weekly check-in with school counselor regarding emotional regulation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monthly parent communication log (email/translated documents)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Peer tutor training for classroom support</li></ul></p><p><h4 class="sub-heading">Research Basis:</h4><br><ul class="intervention-list"><li class="main-bullet">EAL strategies: Gibbons (2015) scaffolding language, scaffolding learning</li></ul><br><ul class="intervention-list"><li class="main-bullet">Emotional/behavioral support: Simonsen et al. (2015) evidence-based practices in classroom management</li></ul><br><ul class="intervention-list"><li class="main-bullet">Mathematics differentiation: Witzel & Riccomini (2007) CRA instructional sequence</li></ul><br><ul class="intervention-list"><li class="main-bullet">Assessment modifications: Salend (2016) creating inclusive classrooms</li></ul></p><p><h4 class="sub-heading">Implementation Timeline:</h4><br><ul class="intervention-list"><li class="main-bullet">Immediate: Lesson-specific modifications</li></ul><br><ul class="intervention-list"><li class="main-bullet">2 weeks: Environmental adjustments and routine establishment</li></ul><br><ul class="intervention-list"><li class="main-bullet">4 weeks: Progress monitoring system fully implemented</li></ul><br><ul class="intervention-list"><li class="main-bullet">8 weeks: Review and adjust based on data collection</li></ul></p><p><h4 class="sub-heading">Data Collection Methods:</h4><br><ul class="intervention-list"><li class="main-bullet">Work samples with error pattern analysis</li></ul><br><ul class="intervention-list"><li class="main-bullet">Behavioral frequency counts during math instruction</li></ul><br><ul class="intervention-list"><li class="main-bullet">Language acquisition progression tracking</li></ul><br><ul class="intervention-list"><li class="main-bullet">Social-emotional learning checklists</li></ul></p><p>All strategies are grounded in peer-reviewed educational research and designed for sustainable implementation with progress monitoring systems to ensure effectiveness.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-controls,
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>

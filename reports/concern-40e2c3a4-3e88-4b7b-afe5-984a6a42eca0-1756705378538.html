@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tier 2 Intervention Report - Sonia M</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 1rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Tier 2 Intervention Report</h2>
+                <p class="report-date">Generated on September 1, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Print Controls (hidden during print) -->
+        <div class="print-controls no-print">
+            <button 
+                onclick="window.print()" 
+                class="print-button"
+                data-testid="button-print-report"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <polyline points="6,14 18,14"></polyline>
+                </svg>
+                Print Report
+            </button>
+        </div>
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Sonia M.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Academic, Social/Emotional, Family/Home</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/1/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    We need to help Crystal adjust to her new school. Possibly develop a reentry plan
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p><h4 class="bold-heading">1. Comprehensive Student Analysis</h4></p><p><ul class="intervention-list"><li class="main-bullet">Sonia demonstrates a complex profile with diagnosed Specific Learning Disorders in reading (word accuracy, rate) and written expression (spelling), combined with emotional/behavioral needs and current academic struggles</li></ul><br><ul class="intervention-list"><li class="main-bullet">Screening data indicates marginal performance across multiple domains (academics, communication, class participation, social behavior) despite passing expressive communication and socially appropriate behavior</li></ul><br><ul class="intervention-list"><li class="main-bullet">Primary risk factors: outdated psychoeducational assessment (2+ years), specific learning disabilities, transition to new school environment, occasional avoidance of eye contact suggesting potential social anxiety</li></ul><br><ul class="intervention-list"><li class="main-bullet">Protective factors: average attention skills, respectful classroom behavior, peer acceptance, appropriate self-presentation, no sensory or significant behavioral concerns</li></ul><br><ul class="intervention-list"><li class="main-bullet">Critical intervention targets: reading fluency and accuracy, written expression skills, social integration support, and emotional self-regulation strategies</li></ul></p><p><h4 class="bold-heading">2. Evidence-Based Intervention Framework</h4></p><p><ul class="intervention-list"><li class="main-bullet">Primary approach: Multi-Tiered System of Supports (MTSS) with intensive Tier 2 interventions in literacy combined with social-emotional learning (SEL) supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Theoretical foundation: Structured literacy approach (Moats, 2020) for reading/writing, combined with cognitive-behavioral strategies for emotional regulation (Beck Institute, 2021)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Research base: National Reading Panel (2000) recommendations for systematic phonics instruction, Graham & Perin (2007) writing intervention meta-analysis, CASEL framework for social-emotional learning</li></ul><br><ul class="intervention-list"><li class="main-bullet">Expected outcomes: 1.2+ years growth in reading accuracy, 80% mastery of grade-level spelling patterns, increased classroom participation metrics, demonstrated use of self-regulation strategies</li></ul></p><p><h4 class="bold-heading">3. Immediate Action Plan (Days 1-14)</h4></p><p><h4 class="bold-heading">Strategy 1: Systematic Phonics Intervention</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: National Reading Panel (2000), Orton-Gillingham approach</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Sound-spelling cards, decodable texts at instructional level, whiteboards, progress monitoring sheets</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Daily 25-minute sessions focusing on phoneme-grapheme correspondence (9:00-9:25 AM)<br>  2. Explicit instruction: "This sound is /ā/ represented by the letters a_e, ai, ay" with immediate practice<br>  3. Guided practice: Dictation of 10 words containing target patterns with immediate corrective feedback<br>  4. Application: Reading decodable text containing 90% known patterns and 10% target patterns<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Daily accuracy rates on word reading (5-minute timed assessment), weekly phonics pattern mastery checks</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 95% accuracy on target patterns, 50+ correct words per minute on instructional level text</li></ul></p><p><h4 class="bold-heading">Strategy 2: Writing Fluency Building</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Graham & Perin (2007), Self-Regulated Strategy Development (SRSD)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Writing prompt bank, graphic organizers, timer, vocabulary word bank</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Daily 15-minute writing fluency practice (1:30-1:45 PM)<br>  2. Explicit instruction in planning using POW + TREE strategy (Pick idea, Organize, Write + Topic sentence, Reasons, Explanations, Ending)<br>  3. Timed writing with gradual increase from 5 to 10 minutes<br>  4. Self-evaluation using rubric focusing on organization and spelling<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Words written correctly per minute, spelling accuracy percentage, organizational rubric scores</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 25% increase in words written correctly, 90% spelling accuracy on practiced words</li></ul></p><p><h4 class="bold-heading">4. Short-Term Intensive Support (Weeks 3-8)</h4></p><p><h4 class="bold-heading">Primary Focus Area: Reading Fluency and Comprehension</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Intervention Program</strong>: Read Naturally program with systematic fluency building</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Frequency</strong>: 4 sessions weekly, 30 minutes each (Monday-Thursday 9:00-9:30 AM)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Progress Monitoring</strong>: Weekly CBM reading probes, maze comprehension assessments, fluency rate charts</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adaptation Protocol</strong>: If growth rate <1.0 words per week, increase modeling component and decrease text difficulty by one grade level</li></ul></p><p><h4 class="bold-heading">5. Long-Term Skill Development (Weeks 9-16)</h4></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Skill Transfer Plans</strong>: Gradual introduction of classroom texts into intervention sessions, collaborative planning with content teachers for cross-curricular application</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Independence Building</strong>: Fading of graphic organizer supports, introduction of self-monitoring checklists, gradual reduction of session frequency to 3x/week</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Family Engagement</strong>: Weekly progress reports sent home, monthly strategy training sessions for parents, home reading log with specific practice strategies</li></ul></p><p><h4 class="bold-heading">6. Comprehensive Progress Monitoring System</h4></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Daily Data</strong>: 5-minute phonics pattern checks, writing fluency counts, behavior tracking using point sheet</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Assessment</strong>: AIMSWEB reading CBM, spelling inventory, SEL competency checklist</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Monthly Review</strong>: Standardized reading assessment, writing sample analysis, teacher and student self-report surveys</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Decision Points</strong>: Continue intervention if growth rate ≥1.0 words/week, modify if growth rate 0.5-1.0, intensify if growth rate <0.5</li></ul></p><p><h4 class="bold-heading">7. Collaboration and Communication Plan</h4></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Team Members</strong>: Special education teacher, classroom teachers, school counselor, speech-language pathologist, parents</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Meeting Schedule</strong>: Bi-weekly intervention team meetings, monthly full IEP team reviews</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Documentation Requirements</strong>: Daily session logs, weekly progress charts, intervention fidelity checklists</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent Communication</strong>: Weekly email updates, monthly progress reports, quarterly conference meetings</li></ul></p><p><h4 class="bold-heading">8. Escalation and Support Protocols</h4></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Warning Signs</strong>: Declining academic performance despite intervention, increased social withdrawal, refusal to participate in interventions</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Immediate Response</strong>: Crisis intervention team notification, functional behavior assessment initiation, possible schedule modification</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Referral Criteria</strong>: No progress after 8 weeks of intensive intervention, emergence of new behavioral concerns, parental request for evaluation</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Emergency Contacts</strong>: School psychologist, district behavior specialist, community mental health resources</li></ul></p><p><h4 class="bold-heading">9. Resource Recommendations</h4></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Professional Development</strong>: LETRS literacy training, Wilson Reading System certification, social-emotional learning implementation workshops</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Educational Materials</strong>: Read Naturally program, Words Their Way spelling inventory, Social Thinking curriculum materials</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Technology Tools</strong>: Lexia Core5, Read&Write literacy software, speech-to-text applications, audiobook subscriptions</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Community Resources</strong>: Local learning disability association, tutoring services with Orton-Gillingham trained tutors, adolescent mental health services</li></ul></p><p><h3 class="intervention-title">🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED</h3></p><p><h4 class="sub-heading">Share this case with Student Support immediately:</h4><br><ul class="intervention-list"><li class="main-bullet">Forward this concern and intervention plan to your school's student support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Schedule urgent consultation with counselor, social worker, or special education coordinator  </li></ul><br><ul class="intervention-list"><li class="main-bullet">Document all interventions and student responses for the support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Consider immediate safety protocols if student welfare is at risk</li></ul><br><ul class="intervention-list"><li class="main-bullet">Escalate to administration if no improvement within 48-72 hours</li></ul></p><p><h4 class="bold-heading">Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.</h4></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-controls,
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>
