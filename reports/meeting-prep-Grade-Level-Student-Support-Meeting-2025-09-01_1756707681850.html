@@ -1,0 +1,603 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Preparation Document - Grade-Level Student Support Meeting</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .agenda-section, .concerns-section, .notes-section, .includes-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .agenda-content, .notes-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+        white-space: pre-wrap;
+    }
+
+    .concerns-summary {
+        background: #eff6ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .total-concerns {
+        font-weight: 600;
+        color: #1e40af;
+        margin: 0;
+    }
+
+    .concern-card {
+        background: #fefefe;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .concern-header {
+        background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 1.5rem;
+        border-bottom: 1px solid #d1d5db;
+    }
+
+    .concern-student-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .concern-counter {
+        font-weight: 500;
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .concern-details {
+        padding: 1.5rem;
+    }
+
+    .concern-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .concern-meta-item {
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .concern-description, .actions-taken, .ai-interventions, .student-profile {
+        margin-bottom: 1.5rem;
+    }
+
+    .concern-description h5, .actions-taken h5, .ai-interventions h5, .student-profile h5 {
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .concern-description p {
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #10b981;
+        margin: 0;
+    }
+
+    .actions-taken ul, .student-profile ul {
+        list-style: none;
+        padding: 0;
+        background: #fef7f2;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+
+    .actions-taken li, .student-profile li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .actions-taken li::before {
+        content: "•";
+        color: #f59e0b;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .student-profile li::before {
+        content: "•";
+        color: #10b981;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .ai-interventions .interventions-content {
+        background: #fefefe;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-separator {
+        height: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 1.5rem 0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .includes-content {
+        background: #f0fdf4;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #10b981;
+    }
+
+    .include-item {
+        color: #047857;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
+        padding: 2rem 0;
+        border-top: 2px solid #e2e8f0;
+        margin-top: 3rem;
+    }
+
+    .footer-left, .footer-right {
+        color: #4b5563;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    .footer-right {
+        text-align: right;
+    }
+
+    .footer-right strong {
+        color: #1f2937;
+        font-weight: 700;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Meeting Preparation Document</h2>
+                <p class="report-date">Generated on September 1, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Print Controls (hidden during print) -->
+        <div class="print-controls no-print">
+            <button 
+                onclick="window.print()" 
+                class="print-button"
+                data-testid="button-print-meeting-prep"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <polyline points="6,14 18,14"></polyline>
+                </svg>
+                Print Document
+            </button>
+        </div>
+
+        <!-- Meeting Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Meeting Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Title:</span>
+                    <span class="info-value">Grade-Level Student Support Meeting</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Type:</span>
+                    <span class="info-value">IEP</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value">2025-09-01</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Time:</span>
+                    <span class="info-value">14:27</span>
+                </div>
+            </div>
+        </section>
+
+        
+
+        <!-- Student Concerns Section -->
+        <section class="concerns-section">
+            <h3 class="section-title">Student Concerns to Discuss</h3>
+            <div class="concerns-summary">
+                <p class="total-concerns">Total concerns selected: 1</p>
+            </div>
+            <div class="concerns-list">
+                
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">Crystal S (Grade 10th)</h4>
+          <div class="concern-counter">1. Behavior, Social/Emotional</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Classroom</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/29/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>I need suggestion to support Crystal She has elevated moodiness and is often found crying in the bathroom.</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p>Of course. As an educational intervention specialist, I will provide a comprehensive, evidence-based action plan for Crystal S. This plan integrates behavioral, academic, and social-emotional supports tailored to her unique profile.</p><p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Detailed Analysis of Concerns:</strong> Crystal's presentation of "elevated moodiness" and frequent crying in the bathroom are classic externalizing and internalizing behaviors, respectively. For a 10th-grade EAL learner with a Learning Disability (LD), these behaviors are likely not willful defiance but rather a manifestation of significant academic frustration, social isolation, and potential language-based anxiety. The bathroom may be her only perceived "safe" escape from overwhelming classroom demands where she cannot access the curriculum or communicate effectively.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Connection to Learning Profile:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Learning Disability:</strong> Impaired processing likely makes grade-level work inaccessible without intensive scaffolding, leading to repeated failure experiences and low academic self-concept.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>EAL (Beginner Proficiency):</strong> This creates a dual challenge: she is struggling with both the academic content *and* the language of instruction. Social interactions are also hindered, increasing isolation.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Struggling Academically:</strong> This is the predictable outcome of the intersection of her LD and EAL status. The behavior is a symptom of this academic distress.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Risk Factors:</strong> Academic failure, social rejection, development of an anxiety disorder or depression, school avoidance, dropping out.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Protective Factors:</strong> Parental contact has already been initiated (a positive step), she is seeking a private space to regulate (shows self-awareness), and she is in a supportive system that is seeking Tier 2 strategies early.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Primary Intervention Approach:</strong> A dual-framework approach using <strong>Trauma-Informed Practices</strong> (TIP) to address the social-emotional needs and create psychological safety, combined with the <strong>Universal Design for Learning (UDL)</strong> framework to systematically reduce academic and linguistic barriers. This is supported by <strong>Positive Behavioral Interventions and Supports (PBIS)</strong> to teach and reinforce desired behaviors.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Theoretical Foundation:</strong> <strong>Humanistic</strong> (building trust and safety), <strong>Behavioral</strong> (explicit teaching and reinforcing of coping skills), and <strong>Cognitive</strong> (scaffolding academic tasks to ensure success and rebuild self-efficacy).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Expected Outcomes & Success Indicators:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Short-Term (2 weeks):</strong> Reduction in bathroom breaks for crying by 50%; increased use of a requested "break" signal; completion of 1 modified academic task per day.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Mid-Term (8 weeks):</strong> Verbal or non-verbal initiation of a conversation with a peer or staff member; consistent use of a designated "calm down" space; demonstration of a learned coping strategy.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Long-Term (16 weeks):</strong> Improved academic engagement (on-task behavior increased to 80%); reduced frequency of moodiness as reported by two or more teachers; improved scores on curriculum-based measures.</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p><h4 class="bold-heading">Strategy 1: Non-Verbal Check-In & Check-Out (CICO) System with Break Card</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> PBIS (Crone, Horner, & Hawken, 2004); TIP for creating predictability and safety.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> 1) A visual "Feelings Chart" with emojis/faces and simple words (happy, sad, tired, frustrated, okay). 2) A "Break Card" (a red card or a specific image). 3) A simple CICO sheet with 2-3 goals (e.g., "I used my words or card," "I tried my work").</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Morning (8:05 AM, 3 mins):</strong> Meet Crystal at homeroom. Point to the Feelings Chart and ask, "How are you feeling today?" Accept a point or one-word answer. Briefly review the day's schedule. Give her the Break Card and explain: "If you feel overwhelmed, show this card to me, and you can go to the [designated calm corner] for 5 minutes."<br>    2.  <strong>Mid-Day (12:00 PM, 2 mins):</strong> Quick check. "Show me how you're feeling now. How did using your card/work go this morning?" Mark the CICO sheet together.<br>    3.  <strong>End of Day (2:55 PM, 3 mins):</strong> Final check. "Show me how you're feeling. What was one okay thing today?" Praise any effort. Send a copy of the CICO sheet home.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Daily CICO sheet points; tally of Break Card use; anecdotal notes on mood from the Feelings Chart.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> Crystal uses the Break Card instead of leaving to cry at least twice in 14 days; she participates in the check-in by pointing to the chart.</li></ul></p><p><h4 class="bold-heading">Strategy 2: Pre-Teaching & Vocabulary Scaffolding for Core Content</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> UDL Guideline 2: Provide options for language & symbols (CAST, 2018); EAL best practices (Goldenberg, 2010).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> 1) Upcoming lesson materials from content teachers. 2) A graphic organizer (e.g., Frayer model). 3) Translated word list or picture dictionary (use Google Translate if needed).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Preparation (Day Before, 10 mins):</strong> Collaborate with Science/History teacher to get 3-5 key vocabulary terms for the next day's lesson.<br>    2.  <strong>Intervention (Before Class or Homeroom, 7 mins):</strong> Pre-teach these terms to Crystal using the graphic organizer. Write the word, provide a simple definition, a picture, and use it in a sentence. "Crystal, today in science, the word is 'organism'. See? This fish is an organism. It's a living thing."<br>    3.  <strong>Reinforcement:</strong> Provide her with the graphic organizer to use as a note-taking guide during the lesson.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Track her ability to match the pre-taught vocabulary to a picture or definition on a simple exit ticket.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> Crystal correctly identifies 2 out of 3 pre-taught vocabulary words in an assessment context.</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Emotional Regulation and Academic Engagement</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Intervention Program:</strong> Explicit instruction in <strong>Zones of Regulation®</strong> (Leah Kuypers, 2011) to build emotional vocabulary and self-regulation skills.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Frequency:</strong> 3 times per week for 15 minutes in a small group or 1:1 setting.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Weekly behavior frequency tally: count of unprompted use of a regulation tool (e.g., deep breathing, asking for a break); weekly self-assessment using a Zones visual.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adaptation Protocol:</strong> If after 4 weeks no change in break card use or moodiness frequency, increase visual supports (e.g., a visual schedule of regulation strategies) and involve the school counselor more directly.</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Skill Transfer Plans:</strong> Generalize the Break Card and Zones language to other classes. Train one key teacher (e.g., Science) to implement the CICO and pre-teaching strategies.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Independence Building:</strong> Fade the CICO to a self-monitoring sheet where Crystal rates her own progress on her goals.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Family Engagement:</strong> Provide the family with a translated copy of the Feelings Chart and a list of key vocabulary words each week. Encourage them to talk about feelings and vocabulary in their native language to build foundational concepts.</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Daily Data:</strong> CICO point sheet, Break Card use tally, anecdotal note on predominant mood.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Weekly Assessment:</strong> Curriculum-Based Measurement (CBM) probe (e.g., 2-digit math facts, cloze reading passage) to track academic response to intervention; weekly self-assessment on Zones visual.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Monthly Review:</strong> Review all data points. Is there an upward trend in CICO points and academic probes? A downward trend in break card use (indicating less distress) or moodiness reports?</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Decision Points:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Continue:</strong> If data shows 3+ data points of improved performance.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Modify:</strong> If data is flat or variable for 3 consecutive weeks (e.g., change the reinforcement, try a different pre-teaching method).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Escalate (Tier 3):</strong> If data shows a sharp decline or no progress after 8 weeks of modified intervention, refer to the school's multidisciplinary team for a special education evaluation review.</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Team Members:</strong> Homeroom teacher (lead), EAL specialist, Special Education teacher, School Counselor, Content Area Teachers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Meeting Schedule:</strong> Brief weekly check-in (15 mins) with EAL/SpEd lead. Formal team meeting every 4 weeks.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation Requirements:</strong> CICO sheets and data tallies stored in a shared folder or log.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Parent Communication:</strong> Weekly email or message (using translation app) with a photo of the completed CICO sheet and one positive note. Schedule a monthly phone call with an interpreter.</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Warning Signs:</strong> Increased frequency of crying spells; refusal to leave the bathroom; verbal expressions of hopelessness or self-harm.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Immediate Response:</strong> If Crystal expresses or implies self-harm, follow school protocol immediately. This typically involves not leaving her alone and escorting her to the school counselor or psychologist for a risk assessment.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Referral Criteria:</strong> Refer to school counselor for ongoing emotional support. If academic gaps do not close with intensive intervention, refer for a special education reevaluation to ensure her IEP is appropriate.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Emergency Contacts:</strong> School Counselor ([Name, Ext]), School Psychologist ([Name, Ext]), Crisis Hotline ([Number]).</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Professional Development:</strong> "Zones of Regulation" training; "Supporting EAL Students with Learning Disabilities" (Colorín Colorado website offers excellent webinars).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Educational Materials:</strong> *The Zones of Regulation* curriculum; *Frayer Model* graphic organizers; *Google Translate* app; *Proloquo2Go* (if communication is a significant barrier).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Technology Tools:</strong> <strong>Microsoft Immersive Reader</strong> (for text decoding and translation); <strong>Khan Academy</strong> (for math instruction with built-in translation); <strong>Padlet</strong> or <strong>Jamboard</strong> for visual vocabulary boards.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Community Resources:</strong> Local cultural associations for her native language; community mental health services that offer counseling in her native language.</li></ul></p><p>This plan provides a structured, compassionate, and data-driven path forward to support Crystal in developing the skills she needs to feel safe, successful, and connected at school.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Learning Disability</li><li>EAL Learner (Beginner English proficiency)</li><li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+            </div>
+        </section>
+
+        
+
+        
+        <!-- Document Includes Section -->
+        <section class="includes-section">
+            <h3 class="section-title">Document Includes</h3>
+            <div class="includes-content">
+                <div class="include-item">• AI-generated intervention recommendations</div>
+                
+            </div>
+        </section>
+        
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p>Generated: September 1, 2025 at 06:21 AM</p>
+                    <p>Prepared by: Demo-Teacher ROBERTS</p>
+                </div>
+                <div class="footer-right">
+                    <p><strong>Concern2Care</strong></p>
+                    <p>AI-Powered Educational Support Platform</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-controls,
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>

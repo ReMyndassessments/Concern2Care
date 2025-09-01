@@ -131,7 +131,7 @@ export async function generateMeetingHTMLReport(
         <!-- Print Controls (hidden during print) -->
         <div class="print-controls no-print">
             <button 
-                onclick="window.print()" 
+                onclick="handlePrint()" 
                 class="print-button"
                 data-testid="button-print-meeting-prep"
             >
@@ -143,6 +143,24 @@ export async function generateMeetingHTMLReport(
                 Print Document
             </button>
         </div>
+
+        <script>
+            function handlePrint() {
+                try {
+                    // Try the standard print function
+                    if (window.print) {
+                        window.print();
+                    } else {
+                        // Fallback for browsers that might not support window.print
+                        alert('Please use your browser\\'s print function (Ctrl+P or Cmd+P) to print this document.');
+                    }
+                } catch (error) {
+                    console.error('Print error:', error);
+                    // Provide user-friendly fallback instructions
+                    alert('To print this document, please use your browser\\'s print function:\\n\\n• Windows/Linux: Press Ctrl+P\\n• Mac: Press Cmd+P\\n• Or use your browser\\'s File → Print menu');
+                }
+            }
+        </script>
 
         <!-- Meeting Information Section -->
         <section class="info-section">
@@ -290,7 +308,7 @@ export async function generateConcernHTMLReport(
         <!-- Print Controls (hidden during print) -->
         <div class="print-controls no-print">
             <button 
-                onclick="window.print()" 
+                onclick="handlePrint()" 
                 class="print-button"
                 data-testid="button-print-report"
             >
@@ -302,6 +320,24 @@ export async function generateConcernHTMLReport(
                 Print Report
             </button>
         </div>
+
+        <script>
+            function handlePrint() {
+                try {
+                    // Try the standard print function
+                    if (window.print) {
+                        window.print();
+                    } else {
+                        // Fallback for browsers that might not support window.print
+                        alert('Please use your browser\\'s print function (Ctrl+P or Cmd+P) to print this document.');
+                    }
+                } catch (error) {
+                    console.error('Print error:', error);
+                    // Provide user-friendly fallback instructions
+                    alert('To print this document, please use your browser\\'s print function:\\n\\n• Windows/Linux: Press Ctrl+P\\n• Mac: Press Cmd+P\\n• Or use your browser\\'s File → Print menu');
+                }
+            }
+        </script>
 
         <!-- Student Information Section -->
         <section class="info-section">
