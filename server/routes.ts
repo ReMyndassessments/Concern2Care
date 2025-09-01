@@ -2649,9 +2649,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const reportsDir = ensureReportsDirectory();
       const filePath = path.join(reportsDir, filename);
 
+      // Transform frontend data structure to match server expectations
+      const transformedMeetingData = {
+        title: meetingData.meetingTitle || meetingData.title,
+        type: meetingData.meetingType || meetingData.type,
+        date: meetingData.meetingDate || meetingData.date,
+        time: meetingData.meetingTime || meetingData.time,
+        attendees: meetingData.attendees,
+        agenda: meetingData.agenda,
+        notes: meetingData.notes,
+        includeRecommendations: meetingData.includeRecommendations,
+        includeProgressNotes: meetingData.includeProgressNotes,
+        selectedConcerns: []
+      };
+
+      // Fetch actual concern data if concerns are selected
+      if (meetingData.selectedConcerns && meetingData.selectedConcerns.length > 0) {
+        const concernsData = await Promise.all(
+          meetingData.selectedConcerns.map((id: string) => storage.getConcernWithDetails(id))
+        );
+        // Filter out any undefined concerns (in case some IDs don't exist)
+        transformedMeetingData.selectedConcerns = concernsData.filter(concern => concern !== undefined) as any[];
+      }
+
       // Generate HTML meeting document
       await generateMeetingHTMLReport(
-        meetingData,
+        transformedMeetingData,
         filePath,
         {
           firstName: session.user.firstName,
