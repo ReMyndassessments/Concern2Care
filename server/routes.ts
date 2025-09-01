@@ -2642,8 +2642,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Generate unique filename
       const timestamp = Date.now();
-      const sanitizedTitle = meetingData.title.replace(/[^a-zA-Z0-9\s-]/g, '').replace(/\s+/g, '-');
-      const filename = `meeting-prep-${sanitizedTitle}-${meetingData.date}_${timestamp}.html`;
+      const title = meetingData.title || meetingData.meetingTitle || 'meeting';
+      const sanitizedTitle = title.replace(/[^a-zA-Z0-9\s-]/g, '').replace(/\s+/g, '-');
+      const date = meetingData.date || meetingData.meetingDate || 'unknown-date';
+      const filename = `meeting-prep-${sanitizedTitle}-${date}_${timestamp}.html`;
       const filePath = path.join(__dirname, '../reports', filename);
 
       // Ensure reports directory exists
