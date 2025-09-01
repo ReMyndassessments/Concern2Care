@@ -818,42 +818,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Download HTML report - PROTECTED
+  // Download HTML report - DISABLED (teachers should use Print button instead)
   app.get("/api/reports/:id/download", requireAuth, async (req: any, res) => {
-    try {
-      const reportId = req.params.id;
-      const report = await storage.getReportById(reportId);
-      
-      if (!report || !report.pdfPath) {
-        return res.status(404).json({ message: "Report not found" });
-      }
-
-      if (!fs.existsSync(report.pdfPath)) {
-        return res.status(404).json({ message: "Report file not found" });
-      }
-
-      // Get concern details to create proper filename
-      const concern = await storage.getConcernWithDetails(report.concernId);
-      if (concern) {
-        const reportType = concern.taskType === 'differentiation' 
-          ? 'Differentiation Report' 
-          : 'Tier 2 Intervention Report';
-        const studentName = `${concern.studentFirstName} ${concern.studentLastInitial}`;
-        const downloadFilename = `${reportType} - ${studentName}.html`;
-        
-        res.setHeader('Content-Type', 'text/html');
-        res.setHeader('Content-Disposition', `attachment; filename="${downloadFilename}"`);
-      } else {
-        res.setHeader('Content-Type', 'text/html');
-        res.setHeader('Content-Disposition', 'attachment; filename="concern-report.html"');
-      }
-      
-      const fileStream = fs.createReadStream(report.pdfPath);
-      fileStream.pipe(res);
-    } catch (error) {
-      console.error("Error downloading report:", error);
-      res.status(500).json({ message: "Failed to download report" });
-    }
+    res.status(410).json({ 
+      message: "Download endpoint disabled. Please use the Print button in the report to save or print the document." 
+    });
   });
 
   // Share report via email - PROTECTED
