@@ -3193,9 +3193,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       doc.text(`Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, 60, footerY);
       doc.text(`Prepared by: ${session.user.firstName} ${session.user.lastName}`, 60, footerY + 15);
       
-      // Right-aligned branding
-      doc.text('Concern2Care', 545, footerY, { align: 'right' });
-      doc.text('AI-Powered Educational Support Platform', 545, footerY + 15, { align: 'right' });
+      // Right-aligned branding (with proper width constraint)
+      doc.text('Concern2Care', 60, footerY, { width: 485, align: 'right' });
+      doc.text('AI-Powered Educational Support Platform', 60, footerY + 15, { width: 485, align: 'right' });
       
       doc.fillColor('#000000');
 
