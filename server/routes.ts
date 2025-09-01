@@ -2751,7 +2751,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const testResult = await emailConfigService.testEmailConfiguration(emailConfig, testEmail);
       
       // Update test status
-      if (emailConfig.isUserConfig) {
+      if (emailConfig.source === 'user') {
         await emailConfigService.updateUserEmailTestStatus(userId, testResult.success ? 'success' : 'failed');
       } else {
         const user = await storage.getUserByEmail(req.user.claims.email);
@@ -2787,7 +2787,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/admin/school/:schoolId/email-config", requireAdmin, async (req: any, res) => {
     try {
       const { schoolId } = req.params;
-      const config = await emailConfigService.getSchoolEmailConfig(parseInt(schoolId));
+      const config = await emailConfigService.getSchoolEmailConfigForUser('admin-temp-' + schoolId);
       
       if (!config) {
         return res.json(null);
@@ -2814,7 +2814,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid email configuration data", errors: result.error.errors });
       }
 
-      const savedConfig = await emailConfigService.saveSchoolEmailConfig(parseInt(schoolId), adminId, result.data);
+      const savedConfig = await emailConfigService.saveSchoolEmailConfig(schoolId, adminId, result.data);
       
       // Log admin action
       console.log(`Admin ${adminId} configured email for school ${schoolId}`, {
@@ -2842,7 +2842,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get school email config directly
-      const schoolConfig = await emailConfigService.getSchoolEmailConfig(parseInt(schoolId));
+      const schoolConfig = await emailConfigService.getSchoolEmailConfigForUser('admin-temp-' + schoolId);
       
       if (!schoolConfig) {
         return res.status(400).json({ message: "No school email configuration found" });
@@ -2852,12 +2852,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const emailConfigForTest = {
         smtpHost: schoolConfig.smtpHost,
         smtpPort: schoolConfig.smtpPort,
-        smtpSecure: schoolConfig.smtpSecure,
+        smtpSecure: schoolConfig.smtpSecure || false,
         smtpUser: schoolConfig.smtpUser,
         smtpPassword: schoolConfig.smtpPassword,
-        fromEmail: schoolConfig.fromEmail,
-        fromName: schoolConfig.fromName,
-        isUserConfig: false
+        fromAddress: schoolConfig.fromAddress || schoolConfig.smtpUser,
+        fromName: schoolConfig.fromName || 'Concern2Care',
+        source: 'school' as const
       };
 
       // For admin testing, we need to get the configuration in the right format
@@ -2870,7 +2870,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const testResult = await emailConfigService.testEmailConfiguration(emailConfigForTest, testEmail);
       
       // Update test status for school
-      await emailConfigService.updateSchoolEmailTestStatus(parseInt(schoolId), testResult.success ? 'success' : 'failed');
+      await emailConfigService.updateSchoolEmailTestStatus(schoolId, testResult.success ? 'success' : 'failed');
 
       res.json(testResult);
     } catch (error) {
@@ -2885,7 +2885,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { schoolId } = req.params;
       const adminId = req.user.claims.sub;
       
-      await emailConfigService.deleteSchoolEmailConfig(parseInt(schoolId));
+      await emailConfigService.deleteSchoolEmailConfig(schoolId);
       
       // Log admin action
       console.log(`Admin ${adminId} deleted email config for school ${schoolId}`, {
@@ -2909,7 +2909,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Export teacher data (admin only)
   app.get('/api/admin/export/teachers', requireAdmin, async (req: any, res) => {
     try {
-      const data = await getTeacherExportData();
+      const { teacherId } = req.query;
+      if (!teacherId || typeof teacherId !== 'string') {
+        return res.status(400).json({ message: 'Teacher ID is required' });
+      }
+      const data = await getTeacherExportData(teacherId);
+      if (!data) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
       const csv = convertToCSV(data);
       
       res.setHeader('Content-Type', 'text/csv');
@@ -2924,7 +2931,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Export school data (admin only)
   app.get('/api/admin/export/schools', requireAdmin, async (req: any, res) => {
     try {
-      const data = await getSchoolExportData();
+      const { schoolName } = req.query;
+      if (!schoolName || typeof schoolName !== 'string') {
+        return res.status(400).json({ message: 'School name is required' });
+      }
+      const data = await getSchoolExportData(schoolName);
+      if (!data) {
+        return res.status(404).json({ message: 'School not found' });
+      }
       const csv = convertToCSV(data);
       
       res.setHeader('Content-Type', 'text/csv');
