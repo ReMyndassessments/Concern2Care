@@ -233,8 +233,8 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
   
   for (let i = 0; i < lines.length; i++) {
     const trimmedLine = lines[i].trim();
-    if (!trimmedLine) {
-      // Skip empty lines completely
+    if (!trimmedLine || trimmedLine === '***' || trimmedLine === '---') {
+      // Skip empty lines and formatting artifacts
       continue;
     }
     
@@ -386,13 +386,8 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       }
     }
     
-    // Separators
-    if (trimmedLine === '---') {
-      yPosition += 6;
-      ensureSpace(15);
-      doc.moveTo(leftMargin, yPosition).lineTo(pageWidth, yPosition).stroke('#d1d5db');
-      yPosition += 6;
-      inBulletList = false;
+    // Skip separator lines that cause formatting issues
+    if (trimmedLine === '---' || trimmedLine.match(/^-{3,}$/)) {
       continue;
     }
     
@@ -400,10 +395,14 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
     if (trimmedLine.length > 0) {
       const indent = inBulletList ? leftMargin + 25 : leftMargin + 10;
       const width = inBulletList ? 460 : 485;
-      const cleanText = trimmedLine.replace(/\*\*(.*?)\*\*/g, '$1');
+      const cleanText = trimmedLine
+        .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold markers
+        .replace(/\s+/g, ' ') // Normalize whitespace
+        .trim();
       
-      const height = addText(cleanText, indent, 9, '#374151', { width, align: 'justify' });
-      yPosition += height + 3;
+      // Add extra spacing for paragraphs to improve readability
+      const height = addText(cleanText, indent, 9, '#374151', { width, align: 'left', lineGap: 2 });
+      yPosition += height + 6; // Increased spacing between paragraphs
     }
   }
   

@@ -2899,7 +2899,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             doc.fontSize(14).font('Helvetica-Bold');
             doc.fillColor('#dc2626');
             const concernTypes = Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'N/A';
-            doc.text(`${concernCounter}. ${concernTypes} Concern`, { indent: 20 });
+            doc.text(`${concernCounter}. ${concernTypes}`, { indent: 20 });
             doc.fillColor('#000000');
             doc.moveDown(0.8);
 
@@ -2942,8 +2942,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
               indent: 40
             });
             doc.moveDown(1.2);
-
-            concernCounter++;
 
             // Actions taken section with improved formatting
             if (concern.actionsTaken && Array.isArray(concern.actionsTaken) && concern.actionsTaken.length > 0) {
@@ -3011,26 +3009,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 }
 
                 if (intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0) {
-                  doc.fontSize(10).font('Helvetica-Bold');
+                  doc.fontSize(11).font('Helvetica-Bold');
                   doc.fillColor('#374151');
                   doc.text('Implementation Steps:', { indent: 40 });
                   doc.fillColor('#000000');
-                  doc.moveDown(0.2);
+                  doc.moveDown(0.8);
                   
-                  doc.fontSize(9).font('Helvetica');
+                  doc.fontSize(10).font('Helvetica');
                   intervention.steps.forEach((step: any, stepIndex: number) => {
                     const stepText = typeof step === 'string' ? step : JSON.stringify(step);
-                    doc.text(`${stepIndex + 1}. ${stepText}`, { width: 420, indent: 60 });
+                    doc.text(`${stepIndex + 1}. ${stepText}`, { width: 420, indent: 60, lineGap: 3 });
+                    doc.moveDown(0.4);
                   });
-                  doc.moveDown(0.8);
+                  doc.moveDown(1.2);
                 }
 
                 if (intervention.timeline) {
-                  doc.fontSize(10).font('Helvetica-Bold');
+                  doc.fontSize(11).font('Helvetica-Bold');
                   doc.fillColor('#b45309');
                   doc.text(`Timeline: ${intervention.timeline}`, { indent: 40 });
                   doc.fillColor('#000000');
-                  doc.moveDown(0.3);
+                  doc.moveDown(1);
                 }
 
                 doc.moveDown(1.5);
