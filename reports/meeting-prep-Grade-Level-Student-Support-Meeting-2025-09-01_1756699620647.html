@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Preparation Document - undefined</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f8fafc;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-height: 297mm;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .app-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .report-title {
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+
+    .report-date {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .agenda-section, .concerns-section, .notes-section, .includes-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .agenda-content, .notes-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+        white-space: pre-wrap;
+    }
+
+    .concerns-summary {
+        background: #eff6ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .total-concerns {
+        font-weight: 600;
+        color: #1e40af;
+        margin: 0;
+    }
+
+    .concern-card {
+        background: #fefefe;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .concern-header {
+        background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 1.5rem;
+        border-bottom: 1px solid #d1d5db;
+    }
+
+    .concern-student-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .concern-counter {
+        font-weight: 500;
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .concern-details {
+        padding: 1.5rem;
+    }
+
+    .concern-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .concern-meta-item {
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .concern-description, .actions-taken, .ai-interventions, .student-profile {
+        margin-bottom: 1.5rem;
+    }
+
+    .concern-description h5, .actions-taken h5, .ai-interventions h5, .student-profile h5 {
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .concern-description p {
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #10b981;
+        margin: 0;
+    }
+
+    .actions-taken ul, .student-profile ul {
+        list-style: none;
+        padding: 0;
+        background: #fef7f2;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+
+    .actions-taken li, .student-profile li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .actions-taken li::before {
+        content: "•";
+        color: #f59e0b;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .student-profile li::before {
+        content: "•";
+        color: #10b981;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .ai-interventions .interventions-content {
+        background: #fefefe;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-separator {
+        height: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 1.5rem 0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .includes-content {
+        background: #f0fdf4;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #10b981;
+    }
+
+    .include-item {
+        color: #047857;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-left, .footer-right {
+        color: #6b7280;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .footer-right {
+        text-align: right;
+    }
+
+    .footer-right strong {
+        color: #374151;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Meeting Preparation Document</h2>
+                <p class="report-date">Generated on September 1, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Print Controls (hidden during print) -->
+        <div class="print-controls no-print">
+            <button 
+                onclick="window.print()" 
+                class="print-button"
+                data-testid="button-print-meeting-prep"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <polyline points="6,14 18,14"></polyline>
+                </svg>
+                Print Document
+            </button>
+        </div>
+
+        <!-- Meeting Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Meeting Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Title:</span>
+                    <span class="info-value">undefined</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Type:</span>
+                    <span class="info-value">undefined</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value">undefined</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Time:</span>
+                    <span class="info-value">undefined</span>
+                </div>
+            </div>
+        </section>
+
+        
+
+        <!-- Student Concerns Section -->
+        <section class="concerns-section">
+            <h3 class="section-title">Student Concerns to Discuss</h3>
+            <div class="concerns-summary">
+                <p class="total-concerns">Total concerns selected: 2</p>
+            </div>
+            <div class="concerns-list">
+                
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">undefined undefined (Grade Not specified)</h4>
+          <div class="concern-counter">1. Not specified</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Date:</strong> Unknown</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>No description provided</p>
+          </div>
+
+          
+
+          
+
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">undefined undefined (Grade Not specified)</h4>
+          <div class="concern-counter">2. Not specified</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Date:</strong> Unknown</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>No description provided</p>
+          </div>
+
+          
+
+          
+
+          
+        </div>
+      </div>
+    
+            </div>
+        </section>
+
+        
+
+        
+        <!-- Document Includes Section -->
+        <section class="includes-section">
+            <h3 class="section-title">Document Includes</h3>
+            <div class="includes-content">
+                <div class="include-item">• AI-generated intervention recommendations</div>
+                <div class="include-item">• Progress tracking section</div>
+            </div>
+        </section>
+        
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p>Generated: September 1, 2025 at 04:07 AM</p>
+                    <p>Prepared by: Demo-Teacher ROBERTS</p>
+                </div>
+                <div class="footer-right">
+                    <p><strong>Concern2Care</strong></p>
+                    <p>AI-Powered Educational Support Platform</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-controls,
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>

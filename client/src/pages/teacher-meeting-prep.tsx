@@ -230,7 +230,7 @@ export default function TeacherMeetingPrep() {
     try {
       setGeneratingPDF(true);
       
-      // Make the API request but handle it differently since it returns a PDF directly
+      // Make the API request to get HTML content
       const response = await fetch('/api/meeting-preparation/generate', {
         method: 'POST',
         headers: {
@@ -241,24 +241,33 @@ export default function TeacherMeetingPrep() {
       });
 
       if (response.ok) {
-        // Get the PDF blob from the response
-        const pdfBlob = await response.blob();
+        // Get the HTML content from the response
+        const htmlContent = await response.text();
         
-        // Create a download link
-        const url = window.URL.createObjectURL(pdfBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `meeting-prep-${meetingData.meetingTitle.replace(/[^a-zA-Z0-9]/g, '-')}-${meetingData.meetingDate}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Clean up the object URL
-        window.URL.revokeObjectURL(url);
+        // Open the HTML content in a new window for viewing and printing
+        const newWindow = window.open('', '_blank');
+        if (newWindow) {
+          newWindow.document.write(htmlContent);
+          newWindow.document.close();
+          
+          // Focus the new window
+          newWindow.focus();
+        } else {
+          // Fallback: create a blob and download as HTML file
+          const htmlBlob = new Blob([htmlContent], { type: 'text/html' });
+          const url = window.URL.createObjectURL(htmlBlob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `meeting-prep-${meetingData.meetingTitle.replace(/[^a-zA-Z0-9]/g, '-')}-${meetingData.meetingDate}.html`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        }
 
         toast({
           title: t('common.success', 'Success'),
-          description: t('meeting.successGenerated', 'Meeting preparation document has been generated and downloaded.'),
+          description: t('meeting.successGenerated', 'Meeting preparation document has been generated. You can view and print it from the new window.'),
         });
       } else {
         throw new Error('Failed to generate document');
