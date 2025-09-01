@@ -128,43 +128,6 @@ export async function generateMeetingHTMLReport(
             ${includeLetterhead ? '<div class="letterhead-space"></div>' : ''}
         </header>
 
-        <!-- Print Controls (hidden during print) -->
-        <div class="print-controls no-print">
-            <button 
-                onclick="handlePrint()" 
-                class="print-button"
-                data-testid="button-print-meeting-prep"
-            >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
-                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
-                    <polyline points="6,14 18,14"></polyline>
-                </svg>
-                Print Document
-            </button>
-
-        </div>
-
-        <script>
-            function handlePrint() {
-                // Force immediate print without fallbacks
-                setTimeout(function() {
-                    window.print();
-                }, 100);
-            }
-            
-            // Ensure the function is available immediately
-            document.addEventListener('DOMContentLoaded', function() {
-                // Make print button work on click
-                const printBtn = document.querySelector('.print-button');
-                if (printBtn) {
-                    printBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        handlePrint();
-                    });
-                }
-            });
-        </script>
 
         <!-- Meeting Information Section -->
         <section class="info-section">
@@ -309,43 +272,6 @@ export async function generateConcernHTMLReport(
             ${includeLetterhead ? '<div class="letterhead-space"></div>' : ''}
         </header>
 
-        <!-- Print Controls (hidden during print) -->
-        <div class="print-controls no-print">
-            <button 
-                onclick="handlePrint()" 
-                class="print-button"
-                data-testid="button-print-report"
-            >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
-                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012-2H18"></path>
-                    <polyline points="6,14 18,14"></polyline>
-                </svg>
-                Print Report
-            </button>
-
-        </div>
-
-        <script>
-            function handlePrint() {
-                // Force immediate print without fallbacks
-                setTimeout(function() {
-                    window.print();
-                }, 100);
-            }
-            
-            // Ensure the function is available immediately
-            document.addEventListener('DOMContentLoaded', function() {
-                // Make print button work on click
-                const printBtn = document.querySelector('.print-button');
-                if (printBtn) {
-                    printBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        handlePrint();
-                    });
-                }
-            });
-        </script>
 
         <!-- Student Information Section -->
         <section class="info-section">
