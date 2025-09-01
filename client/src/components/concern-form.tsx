@@ -574,30 +574,64 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     
                     {/* Conditional Follow-up Fields */}
                     {form.watch('hasDisability') && (
-                      <FormField
-                        control={form.control}
-                        name="disabilityType"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Type of Disability</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isAtLimit}>
-                              <FormControl>
-                                <SelectTrigger data-testid="select-disability-type">
-                                  <SelectValue placeholder="Select disability type" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {COMMON_DISABILITY_TYPES.map((type) => (
-                                  <SelectItem key={type} value={type}>
-                                    {type}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
+                      <div className="space-y-3">
+                        <FormField
+                          control={form.control}
+                          name="disabilityType"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Type of Disability</FormLabel>
+                              <Select 
+                                onValueChange={(value) => {
+                                  if (value !== 'Other') {
+                                    field.onChange(value);
+                                  } else {
+                                    field.onChange('Other');
+                                  }
+                                }} 
+                                defaultValue={COMMON_DISABILITY_TYPES.includes(field.value) ? field.value : 'Other'} 
+                                disabled={isAtLimit}
+                              >
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-disability-type">
+                                    <SelectValue placeholder="Select disability type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {COMMON_DISABILITY_TYPES.map((type) => (
+                                    <SelectItem key={type} value={type}>
+                                      {type}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        {form.watch('disabilityType') === 'Other' && (
+                          <FormField
+                            control={form.control}
+                            name="disabilityType"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Please specify disability type</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="Enter specific disability type"
+                                    value={field.value === 'Other' ? '' : field.value}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    disabled={isAtLimit}
+                                    data-testid="input-other-disability-type"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                         )}
-                      />
+                      </div>
                     )}
                     
                     {form.watch('isEalLearner') && (
