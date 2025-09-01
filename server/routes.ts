@@ -2640,8 +2640,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Meeting data is required' });
       }
 
-      // Debug: Log the received meeting data
-      console.log('📋 Meeting data received:', JSON.stringify(meetingData, null, 2));
 
       // Generate unique filename
       const timestamp = Date.now();
@@ -2666,29 +2664,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         selectedConcerns: [] as any[]
       };
 
-      // Debug: Log the transformed meeting data
-      console.log('🔄 Transformed meeting data:', JSON.stringify(transformedMeetingData, null, 2));
 
       // Fetch actual concern data if concerns are selected
       if (meetingData.selectedConcerns && meetingData.selectedConcerns.length > 0) {
-        console.log('🔍 Fetching concern details for IDs:', meetingData.selectedConcerns);
         const concernsData = await Promise.all(
           meetingData.selectedConcerns.map((id: string) => storage.getConcernWithDetails(id))
         );
         // Filter out any undefined concerns (in case some IDs don't exist)
         transformedMeetingData.selectedConcerns = concernsData.filter((concern): concern is NonNullable<typeof concern> => concern !== undefined);
         
-        // Debug: Log concern data with interventions
-        transformedMeetingData.selectedConcerns.forEach((concern, index) => {
-          console.log(`📝 Concern ${index + 1}:`, {
-            id: concern.id,
-            student: `${concern.studentFirstName} ${concern.studentLastInitial}`,
-            grade: concern.grade,
-            concernTypes: concern.concernTypes,
-            hasInterventions: !!(concern.interventions && concern.interventions.length > 0),
-            interventionCount: concern.interventions?.length || 0
-          });
-        });
       }
 
       // Generate HTML meeting document

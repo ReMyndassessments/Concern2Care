@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Concern Report - Sonia M</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f8fafc;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-height: 297mm;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .app-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .report-title {
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+
+    .report-date {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item, .concern-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label, .concern-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value, .concern-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .description-section {
+        margin-top: 1.5rem;
+    }
+
+    .description-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+
+    .description-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+    }
+
+    .interventions-content {
+        background: #fefefe;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Student Concern Report</h2>
+                <p class="report-date">Generated on September 1, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Print Controls (hidden during print) -->
+        <div class="print-controls no-print">
+            <button 
+                onclick="window.print()" 
+                class="print-button"
+                data-testid="button-print-report"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <polyline points="6,14 18,14"></polyline>
+                </svg>
+                Print Report
+            </button>
+        </div>
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Sonia M.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Social/Emotional</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/1/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    Sonia is having difficulty adjusting to her new school. She has shown increased anxiety in all her classes
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p><h4 class="bold-heading">1. Comprehensive Student Analysis</h4></p><p>Sonia presents with a complex profile of academic and social-emotional needs requiring targeted Tier 2 interventions. Her screening data indicates marginal performance across multiple domains despite average foundational skills, suggesting anxiety and adjustment difficulties are significantly impacting her academic performance and social engagement.</p><p>*Primary Concerns*: School anxiety related to new environment transition, marginal performance in academics, communication, class participation, and social behavior despite adequate foundational skills. Specific Learning Disorders in reading (word accuracy, rate) and written expression (spelling) compound adjustment challenges.</p><p>*Assessment Data Interpretation*: Screening scores (Academics: 9/15, Communication: 9/15, Class Participation: 8/15, Social Behavior: 10/15) all fall in marginal range despite passing scores in attention (11/15), expressive communication (14/30), and socially appropriate behavior (19/20). This discrepancy suggests performance anxiety rather than skill deficits.</p><p>*Risk Factors*: Recent school transition, specific learning disabilities, flat affect observed during interview, occasional eye contact avoidance, and marginal social-behavioral scores in new environment.</p><p>*Protective Factors*: Average attention skills, respectful classroom behavior, peer acceptance, appropriate expressive communication, and cooperative attitude during assessments.</p><p><h4 class="bold-heading">2. Evidence-Based Intervention Framework</h4></p><p>*Primary Approach*: Cognitive Behavioral Intervention for Trauma in Schools (CBITS) framework adapted for school transition anxiety (Jaycox et al., 2012) combined with Self-Regulated Strategy Development (SRSD) for writing (Graham & Harris, 2003) and Peer-Assisted Learning Strategies (PALS) for reading (Fuchs et al., 2001).</p><p>*Theoretical Foundation*: Cognitive-behavioral approach addressing anxiety symptoms through cognitive restructuring, combined with structured academic support that reduces cognitive load during skill acquisition.</p><p>*Expected Outcomes*: 50% reduction in observable anxiety behaviors within 4 weeks, 1.5 years growth in reading fluency and writing accuracy by end of semester, increased class participation from marginal to passing range on screening measures.</p><p><h4 class="bold-heading">3. Immediate Action Plan (Days 1-14)</h4></p><p><h4 class="bold-heading">Strategy 1: Anxiety Reduction Protocol with Predictable Routines</h4><br><ul class="intervention-list"><li class="main-bullet">*Research Base*: CBITS school-based intervention (Jaycox et al., 2012); Trauma-Informed Positive Education (Brunzell et al., 2016)</li></ul><br><ul class="intervention-list"><li class="main-bullet">*Materials Needed*: Visual schedule cards, timer, "stress thermometer" self-rating scale, quiet corner materials (headphones, fidget tools), transition warning cards</li></ul><br><ul class="intervention-list"><li class="main-bullet">*Implementation Steps*:</li></ul><br>  1. Pre-teach daily schedule using visual cards each morning (5 minutes)<br>  2. Implement 2-minute transition warnings before activity changes using visual timer<br>  3. Teach stress thermometer use: 1-5 scale with corresponding coping strategies (3 teaching sessions of 15 minutes)<br>  4. Establish non-verbal signal for anxiety escalation (colored card system)<br><ul class="intervention-list"><li class="main-bullet">*Data Collection*: Daily frequency count of anxiety behaviors (nail-biting, withdrawal, refusal); stress thermometer self-ratings 3x daily</li></ul><br><ul class="intervention-list"><li class="main-bullet">*Success Criteria*: 30% reduction in observed anxiety behaviors within 10 school days</li></ul></p><p><h4 class="bold-heading">Strategy 2: Academic Confidence Building with Differentiated Tasks</h4><br><ul class="intervention-list"><li class="main-bullet">*Research Base*: Scaffolded instruction research (van de Pol et al., 2010); Zone of Proximal Development applications</li></ul><br><ul class="intervention-list"><li class="main-bullet">*Materials Needed*: Task analysis templates, work samples at 3 difficulty levels, explicit rubrics, graphic organizers for writing</li></ul><br><ul class="intervention-list"><li class="main-bullet">*Implementation Steps*:</li></ul><br>  1. Pre-teach all assignments using "I do, we do, you do" model (10 minutes per major task)<br>  2. Provide choice of 3 assignment formats with identical content but varying output demands<br>  3. Implement writing frames with sentence starters for all written responses<br>  4. Use audio versions of texts paired with printed materials for reading tasks<br><ul class="intervention-list"><li class="main-bullet">*Data Collection*: Work completion rates, accuracy on first attempts, pre/post assessment of same skill</li></ul><br><ul class="intervention-list"><li class="main-bullet">*Success Criteria*: 90% work completion rate with 80% accuracy on modified tasks</li></ul></p><p><h4 class="bold-heading">4. Short-Term Intensive Support (Weeks 3-8)</h4></p><p><h4 class="bold-heading">Primary Focus Area: Reading Fluency and Writing Accuracy</h4></p><p>*Intervention Program*: Peer-Assisted Learning Strategies (PALS) for reading 3x weekly; Self-Regulated Strategy Development (SRSD) for writing 2x weekly</p><p>*Frequency*: 30-minute sessions Tuesday/Thursday (PALS), 45-minute sessions Monday/Wednesday (SRSD)</p><p>*Progress Monitoring*: Weekly curriculum-based measurements: 1-minute reading fluency probes, writing sample analysis using scoring rubric, spelling accuracy measures</p><p>*Adaptation Protocol*: If weekly growth rate falls below 1.0 words correct per minute in reading or writing rubric scores show no improvement after 3 weeks, increase session frequency to daily and incorporate additional visual supports</p><p><h4 class="bold-heading">5. Long-Term Skill Development (Weeks 9-16)</h4></p><p>*Maintenance and Generalization Strategies*: Cross-content application of writing strategies in science and social studies; student-led goal setting for anxiety management; peer mentoring program where Sonia supports newer students</p><p>*Independence Building*: Gradual fading of graphic organizers; reduced prompting for strategy use; self-monitoring checklists for anxiety management</p><p>*Family Engagement*: Weekly skill practice packets sent home with implementation guidelines; bi-weekly parent coaching sessions on anxiety support strategies; home-school communication log for success sharing</p><p><h4 class="bold-heading">6. Comprehensive Progress Monitoring System</h4></p><p>*Daily Data*: Anxiety behavior frequency counts; work completion rates; stress thermometer ratings</p><p>*Weekly Assessment*: Reading fluency CBM probes; writing sample analysis using 6-trait rubric; spelling accuracy measures; social participation tally</p><p>*Monthly Review*: Re-administer screening instrument subtests; compare with baseline; analyze trend lines across all measures</p><p>*Decision Points*: Continue intervention if growth rate ≥1.0 words per week in reading; modify if flat growth for 3 consecutive weeks; escalate to Tier 3 if regression or no improvement after 8 weeks</p><p><h4 class="bold-heading">7. Collaboration and Communication Plan</h4></p><p>*Team Members*: School counselor, special education teacher, content area teachers, school psychologist, parents</p><p>*Meeting Schedule*: Weekly 15-minute check-ins with counselor; bi-weekly intervention team meetings; monthly full team reviews</p><p>*Documentation Requirements*: Shared digital folder with progress monitoring data; intervention implementation logs; parent communication records</p><p>*Parent Communication*: Weekly email update with data summary; bi-weekly phone consultation; monthly progress report with graphs</p><p><h4 class="bold-heading">8. Escalation and Support Protocols</h4></p><p>*Warning Signs*: Increased withdrawal; refusal to attend school; declining academic performance despite interventions; social isolation</p><p>*Immediate Response*: Implement crisis de-escalation protocol; contact school psychologist; provide safe quiet space; notify parents immediately</p><p>*Referral Criteria*: No response to interventions after 8 weeks; escalation of anxiety symptoms; emergence of self-harm ideation</p><p>*Emergency Contacts*: School psychologist (ext. 234), Crisis hotline (555-HELP), Parent cell (on file)</p><p><h4 class="bold-heading">9. Resource Recommendations</h4></p><p>*Professional Development*: "Managing Anxiety in the Classroom" workshop (Anxiety and Depression Association of America); SRSD writing training (ThinkSRSD.com)</p><p>*Educational Materials*: "The Anxiety Workbook for Teens" (Schab); PALS reading materials (Vanderbilt University); graphic organizer sets for writing</p><p>*Technology Tools*: Read&Write literacy software; Inspiration Maps for graphic organizing; Calm app for anxiety management</p><p>*Community Resources*: Local chapter of Anxiety and Depression Association of America; tutoring support through learning center referral; teen anxiety support groups</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-controls,
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>

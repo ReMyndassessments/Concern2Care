@@ -253,6 +253,11 @@ export async function generateConcernHTMLReport(
   const concernTypeText = concernTypes.length > 0 ? concernTypes.join(', ') : 
     (concern.taskType === 'differentiation' ? 'Learning Support' : 'General Concern');
 
+  // Determine report title based on task type
+  const reportTitle = concern.taskType === 'differentiation' 
+    ? 'Differentiation Report' 
+    : 'Tier 2 Intervention Report';
+
   // Format interventions content
   const formattedInterventions = interventions.map(intervention => 
     formatMarkdownToHTML(intervention.description)
@@ -264,7 +269,7 @@ export async function generateConcernHTMLReport(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Concern Report - ${concern.studentFirstName} ${concern.studentLastInitial}</title>
+    <title>${reportTitle} - ${concern.studentFirstName} ${concern.studentLastInitial}</title>
     <style>
         ${getReportCSS(theme)}
     </style>
@@ -275,7 +280,7 @@ export async function generateConcernHTMLReport(
         <header class="report-header">
             <div class="header-content">
                 <h1 class="app-title">Concern2Care</h1>
-                <h2 class="report-title">Student Concern Report</h2>
+                <h2 class="report-title">${reportTitle}</h2>
                 <p class="report-date">Generated on ${currentDate}</p>
             </div>
             ${includeLetterhead ? '<div class="letterhead-space"></div>' : ''}
@@ -418,44 +423,61 @@ function getMeetingReportCSS(theme: string): string {
     }
 
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background: #f8fafc;
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
     }
 
     .report-container {
         max-width: 210mm;
         margin: 0 auto;
         background: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         min-height: 297mm;
+        padding: 0;
     }
 
     .report-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         color: white;
-        padding: 2rem;
+        padding: 3rem 2rem;
         text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
     }
 
     .app-title {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
     }
 
     .report-title {
-        font-size: 1.5rem;
-        font-weight: 400;
+        font-size: 1.8rem;
+        font-weight: 300;
         margin-bottom: 1rem;
-        opacity: 0.9;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
     }
 
     .report-date {
-        font-size: 0.9rem;
-        opacity: 0.8;
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
     }
 
     .section-title {
@@ -775,13 +797,17 @@ function getMeetingReportCSS(theme: string): string {
         justify-content: space-between;
         align-items: flex-start;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 2rem;
+        padding: 2rem 0;
+        border-top: 2px solid #e2e8f0;
+        margin-top: 3rem;
     }
 
     .footer-left, .footer-right {
-        color: #6b7280;
-        font-size: 0.9rem;
-        line-height: 1.5;
+        color: #4b5563;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-weight: 400;
     }
 
     .footer-right {
@@ -789,7 +815,8 @@ function getMeetingReportCSS(theme: string): string {
     }
 
     .footer-right strong {
-        color: #374151;
+        color: #1f2937;
+        font-weight: 700;
     }
   `;
 
@@ -805,119 +832,156 @@ function getReportCSS(theme: string): string {
     }
 
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background: #f8fafc;
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
     }
 
     .report-container {
         max-width: 210mm;
         margin: 0 auto;
         background: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         min-height: 297mm;
+        padding: 0;
     }
 
     .report-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         color: white;
-        padding: 2rem;
+        padding: 3rem 2rem;
         text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
     }
 
     .app-title {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
     }
 
     .report-title {
-        font-size: 1.5rem;
-        font-weight: 400;
+        font-size: 1.8rem;
+        font-weight: 300;
         margin-bottom: 1rem;
-        opacity: 0.9;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
     }
 
     .report-date {
-        font-size: 0.9rem;
-        opacity: 0.8;
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
     }
 
     .section-title {
-        color: #2563eb;
-        font-size: 1.4rem;
+        color: #1e3a8a;
+        font-size: 1.6rem;
         font-weight: 600;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #e2e8f0;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
     }
 
     .info-section, .concern-section, .interventions-section {
-        padding: 2rem;
-        border-bottom: 1px solid #e2e8f0;
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
     }
 
     .info-grid, .concern-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
     }
 
     .info-item, .concern-item {
-        background: #f8fafc;
-        padding: 1rem;
-        border-radius: 8px;
-        border-left: 4px solid #3b82f6;
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .info-label, .concern-label {
-        font-weight: 600;
+        font-weight: 700;
         color: #374151;
         display: block;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
     }
 
     .info-value, .concern-value {
-        color: #1f2937;
+        color: #111827;
         font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
     }
 
     .description-section {
-        margin-top: 1.5rem;
+        margin-top: 2rem;
     }
 
     .description-title {
-        font-size: 1.1rem;
-        font-weight: 600;
+        font-size: 1.2rem;
+        font-weight: 700;
         color: #374151;
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
     }
 
     .description-content {
-        background: #f9fafb;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        line-height: 1.7;
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
     }
 
     .interventions-content {
-        background: #fefefe;
-        padding: 2rem;
-        border-radius: 12px;
-        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
     }
 
     .intervention-title {
-        color: #1e40af;
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin: 1.5rem 0 1rem 0;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #e2e8f0;
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
     }
 
     .major-heading {
