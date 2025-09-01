@@ -257,8 +257,17 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   });
 
   const onSubmit = (data: EnhancedConcernFormData) => {
+    // Debug: Log form state and data
+    console.log('🔍 Form submission debug:', {
+      formErrors: form.formState.errors,
+      formData: data,
+      descriptionLength: data.description?.length || 0,
+      concernTypesLength: data.concernTypes?.length || 0
+    });
+    
     // Show user-friendly validation message if there are errors
     if (Object.keys(form.formState.errors).length > 0) {
+      console.log('❌ Form has validation errors:', form.formState.errors);
       toast({
         title: "Please fill in all required fields",
         description: "Check that all fields marked with * are completed.",

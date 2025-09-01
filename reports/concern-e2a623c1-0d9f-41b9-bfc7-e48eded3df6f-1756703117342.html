@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Concern Report - Abby P</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f8fafc;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-height: 297mm;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .app-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .report-title {
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+
+    .report-date {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item, .concern-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label, .concern-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value, .concern-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .description-section {
+        margin-top: 1.5rem;
+    }
+
+    .description-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+
+    .description-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+    }
+
+    .interventions-content {
+        background: #fefefe;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Student Concern Report</h2>
+                <p class="report-date">Generated on September 1, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Print Controls (hidden during print) -->
+        <div class="print-controls no-print">
+            <button 
+                onclick="window.print()" 
+                class="print-button"
+                data-testid="button-print-report"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                    <path d="M6,18H4a2,2 0 01-2-2V11a2,2 0 012-2H20a2,2 0 012,2v5a2,2 0 01-2,2H18"></path>
+                    <polyline points="6,14 18,14"></polyline>
+                </svg>
+                Print Report
+            </button>
+        </div>
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Abby P.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Social/Emotional</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/1/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    Abby has refused to attend school and is currently attending counseling outside of school. This meeting is to update her teachers and begin to develop an reentry plan.
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Concerns</strong>: School refusal behavior stemming from emotional/behavioral challenges, evidenced by complete non-attendance despite stable emotional presentation in counseling sessions. Repression coping mechanism identified as potential barrier to addressing underlying issues. Academic struggles likely compounded by absence and emotional factors.</li></ul><br>  <br><ul class="intervention-list"><li class="main-bullet"><strong>Learning Profile Connections</strong>: Emotional/behavioral diagnosis with current medication regimen showing positive effects on sleep/diet stability. Counseling reveals adequate cognitive capacity for planning and preparation (researching school rules, adapting schedules) but demonstrates avoidance patterns in discussing previous social conflicts. Repression coping style suggests potential trauma history requiring trauma-informed approaches.</li></ul></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Risk Factors</strong>: Pattern of avoidance behavior, reluctance to discuss previous conflicts, potential undisclosed trauma history, academic gaps developing due to non-attendance, possible social skill deficits masked by repression coping mechanism.</li></ul></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Protective Factors</strong>: Stable medication regimen, family support (sister attends same school), engagement in external counseling, demonstrated planning and organizational skills, positive counselor relationship, parental involvement willingness.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Approach</strong>: Trauma-Informed Check-In/Check-Out (CICO) combined with Graduated Reentry Protocol (based on PBIS framework and trauma-informed practices research by Cook et al., 2015)</li></ul><br>  <br><ul class="intervention-list"><li class="main-bullet"><strong>Theoretical Foundation</strong>: Behavioral (systematic desensitization through graduated exposure), Cognitive (addressing automatic negative thoughts about school), Academic (scaffolded reentry to prevent skill gaps)</li></ul><br>  <br><ul class="intervention-list"><li class="main-bullet"><strong>Expected Outcomes</strong>: 50% attendance within 2 weeks, 80% attendance within 8 weeks, reduced anxiety measures on daily rating scales, successful completion of modified academic assignments</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p><h4 class="bold-heading">Strategy 1: Graduated Reentry Protocol with Visual Schedule System</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Systematic desensitization (Wolpe, 1958), Trauma-Informed PBIS (McIntosh et al., 2016)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Visual schedule template, timer, preferred activity materials, anxiety rating scale (1-5), reinforcement menu</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Day 1-3: 30-minute school visits during non-instructional time with preferred adult (counselor or designated staff)<br>  2. Day 4-7: 60-minute visits including one class period with pre-teaching of content<br>  3. Day 8-14: Half-day attendance with scheduled breaks and reduced assignment load<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Daily attendance duration, anxiety ratings pre/post visit, assignment completion rates</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: Decreasing anxiety ratings, increasing attendance duration, successful completion of modified assignments</li></ul></p><p><h4 class="bold-heading">Strategy 2: Modified Check-In/Check-Out with Trauma-Informed Language</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: CICO effectiveness (Hawken et al., 2014), Trauma-sensitive language adaptations (Bath, 2008)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Daily point card, neutral visual cues, non-contingent reinforcement items</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Morning check-in with designated staff: "How is your body feeling today?" rather than "How are you?"<br>  2. Mid-day check: "What do you need to be successful this afternoon?"<br>  3. End-of-day check-out: "What worked well today?" with focus on effort rather than performance<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Daily point card data, staff anecdotal notes, student self-assessment</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 80% of daily points earned, decreasing staff prompts required, increasing student-initiated check-ins</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Emotional Regulation and Academic Engagement</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Intervention Program</strong>: Zones of Regulation curriculum combined with modified academic workload</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Frequency</strong>: Daily 15-minute regulation instruction, bi-weekly 30-minute social skills group, modified assignments in all core classes</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Progress Monitoring</strong>: Weekly curriculum-based measures in reading/math, daily emotion tracking, assignment completion rates</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adaptation Protocol</strong>: If anxiety ratings remain high (>4/5) for 3 consecutive days, reduce academic demands by 50% and increase sensory breaks</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Skill Transfer Plans</strong>: Fading adult support from 1:1 to small group to independent check-ins, generalization across settings through consistent language and expectations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Independence Building</strong>: Student-led goal setting, self-monitoring system implementation, gradual reduction of modified assignments based on performance data</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Family Engagement</strong>: Weekly parent training sessions on reinforcement techniques, home-school communication log, family therapy referrals if needed</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Daily Data</strong>: Anxiety rating scales, point card percentages, assignment completion tracking</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Assessment</strong>: Curriculum-based measurement probes, social skills observational data, attendance duration graphs</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Monthly Review</strong>: Standardized anxiety measures (GAD-7), academic achievement data, functional behavior assessment updates</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Decision Points</strong>: Modify interventions if 2+ weeks of plateaued progress, escalate to Tier 3 if regression occurs, consider special education evaluation if academic gaps exceed 1.5 years</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Team Members</strong>: School psychologist, counselor, all academic teachers, administration, external therapist (with release)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Meeting Schedule</strong>: Weekly team meetings for first month, then bi-weekly, daily brief check-ins among core team</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Documentation Requirements</strong>: Shared Google Doc for real-time updates, standardized data collection forms, therapy session summary forms (with consent)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent Communication</strong>: Daily email updates for first week, then weekly summary reports, scheduled bi-weekly phone conferences</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Warning Signs</strong>: Increased avoidance behaviors, rising anxiety ratings, verbal expressions of distress, academic performance decline</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Immediate Response</strong>: Safe space protocol activation, reduced demands, crisis counselor notification, parent contact</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Referral Criteria</strong>: Persistent school refusal beyond 4 weeks, self-harm ideation, significant academic regression</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Emergency Contacts</strong>: School psychologist, crisis intervention team, external therapist, community mental health crisis line</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Professional Development</strong>: Trauma-Informed Practices training (National Child Traumatic Stress Network resources), School Avoidance Alliance protocols</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Educational Materials</strong>: Zones of Regulation curriculum, "The Explosive Child" by Ross Greene, Cognitive Behavioral Intervention for Trauma in Schools (CBITS)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Technology Tools</strong>: Mood Meter app for emotion tracking, Google Classroom for modified assignments, noise-cancelling headphones for sensory needs</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Community Resources</strong>: Regional school refusal program referrals, family therapy services, community-based social skills groups</li></ul></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .print-controls,
+    .no-print {
+        display: none !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>
