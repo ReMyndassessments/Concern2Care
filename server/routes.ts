@@ -2804,16 +2804,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
            .lineWidth(2)
            .stroke();
         
-        doc.moveDown(1.5);
+        doc.moveDown(2.5);
         
         // Add separator line
-        doc.moveTo(50, doc.y + 10)
-           .lineTo(550, doc.y + 10)
+        doc.moveTo(50, doc.y + 15)
+           .lineTo(550, doc.y + 15)
            .strokeColor('#3b82f6')
            .lineWidth(2)
            .stroke();
         
-        doc.moveDown(2);
+        doc.moveDown(3);
         
         // Fetch detailed concern information with all related data (interventions, etc.)
         // Fetch complete concern details with all related data
@@ -2851,8 +2851,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         doc.text(`Total concerns selected: ${selectedConcernDetails.length}`);
         doc.fillColor('#000000');
         doc.x = 50;
-        doc.y = summaryY + 40;
-        doc.moveDown(1);
+        doc.y = summaryY + 45;
+        doc.moveDown(2.5);
 
         // Display each student's concerns with professional formatting
         let concernCounter = 1;
@@ -2886,8 +2886,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           doc.text(`${studentName} (Grade ${concerns[0].grade})`, 65, studentY + 18);
           doc.fillColor('#000000');
           doc.x = 50;
-          doc.y = studentY + 50;
-          doc.moveDown(1);
+          doc.y = studentY + 55;
+          doc.moveDown(2);
 
           concerns.forEach((concern: any, index: number) => {
             // Check page break for each concern
@@ -2901,7 +2901,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const concernTypes = Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'N/A';
             doc.text(`${concernCounter}. ${concernTypes} Concern`, { indent: 20 });
             doc.fillColor('#000000');
-            doc.moveDown(0.3);
+            doc.moveDown(0.8);
 
             // Metadata bar with colored background
             const metaY = doc.y;
@@ -2941,7 +2941,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               align: 'left',
               indent: 40
             });
-            doc.moveDown(0.5);
+            doc.moveDown(1.2);
 
             concernCounter++;
 
@@ -2960,7 +2960,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               if (concern.otherActionTaken) {
                 doc.text(`• ${concern.otherActionTaken}`, { width: 460, indent: 40 });
               }
-              doc.moveDown(0.8);
+              doc.moveDown(1.5);
             }
 
             // AI-Generated interventions with professional styling
@@ -2982,7 +2982,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                  .lineWidth(1)
                  .stroke();
               
-              doc.moveDown(0.8);
+              doc.moveDown(1.8);
 
               concern.interventions.forEach((intervention: any, intIndex: number) => {
                 // Intervention header with colored background
@@ -3007,7 +3007,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   // Use the enhanced markdown parser with table support
                   const currentY = doc.y;
                   doc.y = parseMarkdownToPDF(doc, intervention.description, currentY + 10);
-                  doc.moveDown(0.5);
+                  doc.moveDown(1.2);
                 }
 
                 if (intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0) {
@@ -3022,7 +3022,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     const stepText = typeof step === 'string' ? step : JSON.stringify(step);
                     doc.text(`${stepIndex + 1}. ${stepText}`, { width: 420, indent: 60 });
                   });
-                  doc.moveDown(0.3);
+                  doc.moveDown(0.8);
                 }
 
                 if (intervention.timeline) {
@@ -3033,7 +3033,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   doc.moveDown(0.3);
                 }
 
-                doc.moveDown(0.8);
+                doc.moveDown(1.5);
               });
             }
 
@@ -3068,7 +3068,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               profileItems.forEach(item => {
                 doc.text(`• ${item}`, { width: 440, indent: 40 });
               });
-              doc.moveDown(1);
+              doc.moveDown(2);
             }
 
             // Add separator line between concerns
@@ -3077,7 +3077,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                .strokeColor('#e5e7eb')
                .lineWidth(1)
                .stroke();
-            doc.moveDown(1.5);
+            doc.moveDown(2.5);
             
             concernCounter++;
           });
@@ -3124,8 +3124,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
         
         doc.fillColor('#000000');
-        doc.y = notesY + notesHeight + 15;
-        doc.moveDown(2);
+        doc.y = notesY + notesHeight + 20;
+        doc.moveDown(3);
       }
 
       // Document Options with professional styling
@@ -3142,22 +3142,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
            .lineWidth(1)
            .stroke();
         
-        doc.moveDown(1.2);
+        doc.moveDown(1.8);
         
         if (meetingData.includeRecommendations) {
           doc.fontSize(12).font('Helvetica');
           doc.fillColor('#059669');
           doc.text('• AI-generated intervention recommendations', 70, doc.y);
-          doc.moveDown(0.7);
+          doc.moveDown(1.2);
         }
         if (meetingData.includeProgressNotes) {
           doc.fontSize(12).font('Helvetica');
           doc.fillColor('#059669');
           doc.text('• Progress tracking section', 70, doc.y);
-          doc.moveDown(0.7);
+          doc.moveDown(1.2);
         }
         doc.fillColor('#000000');
-        doc.moveDown(2);
+        doc.moveDown(3);
       }
 
       // Professional footer with styling
@@ -3166,16 +3166,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Add space before footer
-      doc.moveDown(2);
+      doc.moveDown(3);
       
       // Footer separator line
-      doc.moveTo(50, doc.y + 10)
-         .lineTo(545, doc.y + 10)
+      doc.moveTo(50, doc.y + 15)
+         .lineTo(545, doc.y + 15)
          .strokeColor('#d1d5db')
          .lineWidth(1)
          .stroke();
       
-      doc.moveDown(1.5);
+      doc.moveDown(2.5);
       
       // Footer content with improved styling and spacing
       doc.fontSize(12).font('Helvetica-Bold');
