@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Concern Report - Abby P</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f8fafc;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-height: 297mm;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .app-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .report-title {
+        font-size: 1.5rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+
+    .report-date {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item, .concern-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label, .concern-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value, .concern-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .description-section {
+        margin-top: 1.5rem;
+    }
+
+    .description-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+
+    .description-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+    }
+
+    .interventions-content {
+        background: #fefefe;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Student Concern Report</h2>
+                <p class="report-date">Generated on August 31, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Abby P.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Not specified</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">8/31/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    No description provided
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p>Of course. As an educational intervention specialist, I will create a comprehensive, research-backed differentiated lesson plan for Abby P., incorporating her social-emotional needs and academic supports.</p><p>***</p><p><h3 class="intervention-title">1. DIFFERENTIATED LESSON PLAN FOR ABBY P.</h3></p><p><h4 class="bold-heading">Lesson Plan: Linear Equations in Slope-Intercept Form (Differentiated)</h4><br><h4 class="sub-heading">Student:</h4> Abby P.<br><h4 class="sub-heading">Grade:</h4> 9th<br><h4 class="sub-heading">Duration:</h4> 50 minutes (with built-in flexibility)<br><h4 class="sub-heading">Topic:</h4> Introduction to Linear Equations in Slope-Intercept Form (y = mx + b)</p><p><h4 class="sub-heading">Differentiated Learning Objectives:</h4><br>*By the end of this lesson, Abby will be able to:*<br>1.  <strong>Identify</strong> the slope (m) and y-intercept (b) in a slope-intercept equation with 80% accuracy using a graphic organizer.<br>2.  <strong>Graph</strong> a line given its slope-intercept form by correctly plotting the y-intercept and using the slope to find at least one more point, with visual and physical scaffolds.<br>3.  <strong>Express understanding</strong> verbally or in writing by explaining the steps she used to graph the line, reducing the demand for purely written output.</p><p><h4 class="sub-heading">Materials for Abby:</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Personal whiteboard & 4-color dry-erase marker set</strong> (For low-risk, erasable practice and color-coding)</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>"Slope-Intercept Navigator" Graphic Organizer</strong> (A pre-printed template with color-coded, step-by-step instructions and designated workspace)</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>"Slope Guy" & "Intercept Island" Visual Anchor Charts</strong> (Small, desk-sized references)</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Pre-printed Graph Paper</strong> with larger grids and bolded x/y axes</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Ruler</strong></li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Calculator</strong></li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Emotional Regulation Checklist</strong> (A small card with strategies: "1. Take a breath. 2. Use my organizer. 3. Ask for help.")</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Noise-reducing headphones</strong> (available upon request)</li></ul></p><p>---</p><p>#### <strong>Lesson Outline & Differentiated Activities</strong></p><p><h4 class="bold-heading">1. Warm-Up & Emotional Check-In (7 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Teacher Action:</strong> Greet Abby positively at the door. Privately provide her with her materials kit and ask, "How are you feeling about math today?" using a 1-5 scale. Direct her to the <strong>Modified Warm-Up</strong> on her personal whiteboard.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Activity for Abby (Modified):</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Problem 1:</strong> "Plot the point (0, 5) on your graph." (Focuses on the foundational skill of the y-intercept).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Problem 2:</strong> "The equation is y = 1x + 3. Circle the number that is the slope. Draw a box around the number that is the y-intercept." (Uses color-coding prompts to reduce language load).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Assessment:</strong> Teacher checks for understanding visually and offers immediate, positive feedback ("Excellent, you found the y-intercept!").</li></ul></p><p><h4 class="bold-heading">2. Introduction & Chunked Content Delivery (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Teacher Action:</strong> Use the whole-class real-world example (taxi fare). Then, provide Abby with a parallel, more concrete example.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adapted Content for Abby:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Example:</strong> "A video game character starts on level 3. Every coin she collects, she moves up 2 levels. What's the equation?" (y = 2x + 3).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Visual Support:</strong> Use the "<strong>Slope Guy</strong>" (a picture of a hiker going up/down a hill to represent positive/negative slope) and "<strong>Intercept Island</strong>" (a picture of an island on the y-axis where the line "starts").</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Vocabulary:</strong> Use consistent, simple language: "start value" (b), "change value" (m).</li></ul></p><p><h4 class="bold-heading">3. Guided Practice with Scaffolding (15 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Activity for Abby (Modified):</strong> Use the <strong>"Slope-Intercept Navigator"</strong> graphic organizer.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Step 1:</strong> <strong>Find m and b.</strong> Write the equation. Color `m` blue. Color `b` green.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Step 2:</strong> <strong>Plot the y-intercept.</strong> "Start on the y-axis at your green number. Plot a point. Label it (0, b)."</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Step 3:</strong> <strong>Use the slope.</strong> "From your point, use the blue number: Rise (up/down) then Run (right/left). Plot a second point."</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Step 4:</strong> <strong>Connect the points.</strong> "Use your ruler to draw the line through the points."</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Teacher Support:</strong> Work through Example 1 (y = 2x + 1) with the whole class, but check in with Abby specifically after each step of her organizer. For Example 2 (y = -½x + 4), use questioning: "Okay, your slope is negative. What does 'Slope Guy' do on a negative slope?"</li></ul></p><p><h4 class="bold-heading">4. Independent Practice & Strategic Choice (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Activity for Abby (Modified):</strong> Abby receives a <strong>Tiered Worksheet</strong> with 3 sections. She is encouraged to complete Section A and choose one problem from Section B.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Section A (Must Do):</strong></li></ul><br>        1.  Identify m and b from 3 equations using the color-coding method.<br>        2.  Graph y = 1x + 2 using the graphic organizer.<br><ul class="intervention-list"><li class="nested-bullet">  <strong>Section B (Choose One):</strong></li></ul><br>        1.  Graph y = -2x + 1.<br>        2.  *or* Look at a pre-graphed line and use a word bank to write the equation.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Teacher Support:</strong> Circulate but give Abby space to initiate help using her Emotional Regulation Checklist. Praise effort and strategy use.</li></ul></p><p><h4 class="bold-heading">5. Closing & Adapted Assessment (4 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Exit Ticket for Abby (Modified):</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Verbal Option:</strong> Teacher shows the equation y = 3x - 2. Abby uses her graphic organizer to talk through the steps to graph it. "First, I would start at... then use the slope to..."</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Written Option:</strong> A simplified exit slip with the equation and a pre-drawn graph grid. Prompt: "Plot the y-intercept and one other point using the slope."</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Homework:</strong> Abby is exempt from the standard homework. Instead, her optional practice is to teach the concept to a family member using her graphic organizer or to find one real-world example of a constant rate of change.</li></ul></p><p>---</p><p><h3 class="intervention-title">2. COMPREHENSIVE RESEARCH-BASED DIFFERENTIATION STRATEGIES</h3></p><p><h4 class="sub-heading">1. Differentiated Learning Objectives:</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Strategy:</strong> Utilize a <strong>backward design</strong> model (Wiggins & McTighe, 2005) to define clear, measurable goals focused on foundational skills. Objectives are tiered to ensure success and reduce anxiety.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation:</strong> For each new unit, create 2-3 tiered objectives for Abby, focusing on concrete skills before abstract application.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Use a simple +/- system on a skills checklist aligned with her tiered objectives during independent practice (e.g., "+" for independent completion, "√" with support, "-" for not demonstrated).</li></ul></p><p><h4 class="sub-heading">2. Adapted Content Delivery:</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Strategy:</strong> Implement <strong>Universal Design for Learning (UDL)</strong> principles, specifically <strong>Multiple Means of Representation</strong> (CAST, 2018). This includes:</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Graphic Organizers:</strong> Provide structured frameworks to chunk information and reduce cognitive load (Ellis, 2004).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Visual Supports:</strong> Use non-linguistic representations like "Slope Guy" to anchor concepts (Marzano, 2001).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Vocabulary Simplification:</strong> Pre-teach and use consistent, student-friendly language.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Timeline:</strong> Create a bank of UDL resources (graphic organizers, anchor charts) for upcoming algebra topics. Introduce them to Abby at the start of each unit.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Track Abby's ability to use these tools independently through observational notes and student self-reflection ("How helpful was your organizer today?" on a 1-3 scale).</li></ul></p><p><h4 class="sub-heading">3. Differentiated Activities:</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Strategy:</strong> Provide <strong>scaffolded instruction</strong> and <strong>choice</strong>.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Scaffolding:</strong> Use the "I Do, We Do, You Do" model with added steps, especially during the "We Do" phase (Fisher & Frey, 2008).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Choice:</strong> Offering 2-3 ways to engage with the content increases motivation and autonomy (Tomlinson, 2014).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation:</strong> Design all independent practice tasks with a "Must Do" and a "Choose to Do" section. Ensure activities include options for manipulatives, technology, writing, and verbal explanation.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Note which choices Abby makes over time to identify her preferred and most successful learning modalities.</li></ul></p><p><h4 class="sub-heading">4. Modified Assessment Methods:</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Strategy:</strong> Employ <strong>formative assessments</strong> that are low-stakes and varied.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Alternate Output:</strong> Allow verbal explanations, drawings, or selections from multiple-choice options to demonstrate knowledge without the barrier of extensive writing (Salend, 2016).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Focus on Process:</strong> Assess her use of strategies (e.g., "Did she use the graphic organizer correctly?") as a metric for success alongside accuracy.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation:</strong> Replace at least 50% of traditional quizzes with performance-based assessments, conferences, or portfolio reviews for Abby.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Use a digital portfolio (e.g., a shared Google Drive folder) to collect samples of her work over time to show growth.</li></ul></p><p><h4 class="sub-heading">5. Specific Accommodations:</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Environmental:</strong> Provide access to a <strong>quiet corner</strong> or pre-arranged signal to run an errand (e.g., return a book to the library) for a brief self-regulation break. Use a <strong>check-in/check-out (CICO) system</strong> with the school counselor to bookend her day (Crone, Hawken, & Horner, 2010).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Technology:</strong> Introduce <strong>graphing calculator apps</strong> (e.g., Desmos) that provide visual confirmation of her hand-drawn graphs, reinforcing correct answers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Time & Materials:</strong> Extend time on tests and major assignments by 50%. Provide all worksheets with increased font size and ample workspace.</li></ul></p><p><h4 class="sub-heading">6. Implementation Notes for the Teacher:</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Preparation:</strong> Abby's "Math Kit" (whiteboard, markers, organizer, charts) should be prepared before class. Brief the co-teacher or paraprofessional on the day's goals for Abby.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Interaction:</strong> Use proactive, positive, and specific praise ("I like how you used the blue marker to find the slope"). Avoid drawing undue attention to her; provide corrections privately.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Collaboration:</strong> Share this lesson plan and strategies with all of Abby's teachers to ensure consistency across all classrooms. Schedule a brief (5-min) weekly check-in with the school counselor to align academic and social-emotional supports.</li></ul></p><p><h4 class="sub-heading">7. Ongoing Differentiation & Collaboration Plans:</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Long-Term Content Modifications:</strong> Shift the focus of grading for Abby to heavily weight effort, progress, and mastery of key standards rather than every assignment. Consider a modified grading rubric.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring System:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Academic:</strong> Curriculum-Based Measurement (CBM) probes (e.g., 2-minute math fluency drills on core facts) administered bi-weekly to track foundational skill growth (Hosp, Hosp, & Howell, 2007).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Behavioral/SEL:</strong> Continue the daily CICO card, tracking a specific goal like "I used my strategies to start my work." The counselor can use this data in sessions.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Communication Plan:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>With Counselors:</strong> Establish a secure, shared document (e.g., a shared Google Doc) for brief, factual updates between teachers and counselors (e.g., "10/25: Abby used her graphic organizer well in class today. She attempted the 'Choose to Do' problem."). This respects confidentiality while promoting collaboration.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>With Parents:</strong> Schedule brief, monthly check-ins (via email or phone) led by the school counselor or case manager to share progress and reinforce strategies at home. Empower parents with the visual vocabulary (e.g., "Ask her what 'Slope Guy' is doing") to facilitate positive academic conversations.</li></ul></p><p><h4 class="sub-heading">References:</h4><br><ul class="intervention-list"><li class="main-bullet">  CAST (2018). *Universal Design for Learning Guidelines version 2.2*.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Crone, D. A., Hawken, L. S., & Horner, R. H. (2010). *Responding to problem behavior in schools: The behavior education program*. Guilford Press.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Ellis, E. S. (2004). *The Framing Routine*. Masterminds LLC.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Fisher, D., & Frey, N. (2008). *Better learning through structured teaching: A framework for the gradual release of responsibility*. ASCD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Hosp, M. K., Hosp, J. L., & Howell, K. W. (2007). *The ABCs of CBM: A practical guide to curriculum-based measurement*. Guilford Press.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Marzano, R. J. (2001). *Designing a new taxonomy of educational objectives*.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Salend, S. J. (2016). *Creating inclusive classrooms: Effective, differentiated and reflective practices*. Pearson.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Tomlinson, C. A. (2014). *The differentiated classroom: Responding to the needs of all learners*. ASCD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Wiggins, G., & McTighe, J. (2005). *Understanding by design*. ASCD.</li></ul></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    .report-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    @page {
+        margin: 1cm;
+        size: A4;
+    }
+
+    .section-break {
+        page-break-before: avoid;
+        break-inside: avoid;
+    }
+
+    .intervention-title,
+    .major-heading {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+  
+    </style>
+</body>
+</html>

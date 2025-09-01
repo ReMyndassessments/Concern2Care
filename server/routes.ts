@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { generateInterventions, answerFollowUpQuestion, generateRecommendations, followUpAssistance, GenerateRecommendationsRequest, FollowUpAssistanceRequest } from "./services/ai";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { generateConcernReport, ensureReportsDirectory, parseMarkdownToPDF } from "./services/pdf";
-import { generateConcernHTMLReport } from "./services/htmlReport";
+import { generateConcernHTMLReport, generateMeetingHTMLReport } from "./services/htmlReport";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
 import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports, schools, featureFlags, schoolFeatureOverrides } from "@shared/schema";
 import { db } from "./db";
@@ -2626,7 +2626,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Teacher: Meeting Preparation PDF Generation
+  // Teacher: Meeting Preparation HTML Document Generation
   app.post('/api/meeting-preparation/generate', async (req: any, res) => {
     try {
       const session = req.session;
@@ -2640,569 +2640,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Meeting data is required' });
       }
 
-      // Create PDF document
-      const doc = new PDFDocument({ margin: 50 });
-      const chunks: Uint8Array[] = [];
+      // Generate unique filename
+      const timestamp = Date.now();
+      const sanitizedTitle = meetingData.title.replace(/[^a-zA-Z0-9\s-]/g, '').replace(/\s+/g, '-');
+      const filename = `meeting-prep-${sanitizedTitle}-${meetingData.date}_${timestamp}.html`;
+      const filePath = path.join(__dirname, '../reports', filename);
 
-      doc.on('data', chunk => chunks.push(chunk));
-      doc.on('end', () => {
-        const pdfBuffer = Buffer.concat(chunks);
-        
-        // Set response headers for PDF download
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="meeting-prep-${meetingData.meetingDate}.pdf"`);
-        res.setHeader('Content-Length', pdfBuffer.length);
-        
-        res.send(pdfBuffer);
-      });
-
-      // Professional Header with styling
-      doc.fontSize(24).font('Helvetica-Bold');
-      doc.fillColor('#1f2937');
-      doc.text('MEETING PREPARATION DOCUMENT', { align: 'center' });
-      doc.fillColor('#000000');
-      
-      // Add decorative line under title
-      doc.moveTo(50, doc.y + 10)
-         .lineTo(550, doc.y + 10)
-         .strokeColor('#3b82f6')
-         .lineWidth(3)
-         .stroke();
-      
-      doc.moveDown(2.5);
-
-      // Meeting Information Section with professional formatting
-      doc.fontSize(20).font('Helvetica-Bold');
-      doc.fillColor('#1f2937');
-      doc.text('MEETING INFORMATION');
-      doc.fillColor('#000000');
-      
-      // Add horizontal line under header
-      doc.moveTo(50, doc.y + 8)
-         .lineTo(545, doc.y + 8)
-         .strokeColor('#d1d5db')
-         .lineWidth(2)
-         .stroke();
-      
-      doc.moveDown(1.2);
-      
-      // Create clean table-style layout
-      const startY = doc.y;
-      
-      // Title Row
-      doc.fontSize(13).font('Helvetica-Bold');
-      doc.fillColor('#1f2937');
-      doc.text('Title:', 50, startY);
-      doc.fontSize(12).font('Helvetica');
-      doc.fillColor('#374151');
-      doc.text(meetingData.meetingTitle || 'Not specified', 150, startY);
-      
-      // Type Row  
-      const typeY = startY + 25;
-      doc.fontSize(13).font('Helvetica-Bold');
-      doc.fillColor('#1f2937');
-      doc.text('Type:', 50, typeY);
-      doc.fontSize(12).font('Helvetica');
-      doc.fillColor('#374151');
-      doc.text(meetingData.meetingType || 'Not specified', 150, typeY);
-      
-      // Date Row
-      const dateY = startY + 50;
-      doc.fontSize(13).font('Helvetica-Bold');
-      doc.fillColor('#1f2937');
-      doc.text('Date:', 50, dateY);
-      doc.fontSize(12).font('Helvetica');
-      doc.fillColor('#374151');
-      doc.text(meetingData.meetingDate || 'Not specified', 150, dateY);
-      
-      // Time Row
-      const timeY = startY + 75;
-      doc.fontSize(13).font('Helvetica-Bold');
-      doc.fillColor('#1f2937');
-      doc.text('Time:', 50, timeY);
-      doc.fontSize(12).font('Helvetica');
-      doc.fillColor('#374151');
-      doc.text(meetingData.meetingTime || 'Not specified', 150, timeY);
-      
-      // Reset colors and position cursor properly
-      doc.fillColor('#000000');
-      doc.y = timeY + 35;
-
-      // Attendees Section with improved formatting
-      if (meetingData.attendees && meetingData.attendees.length > 0) {
-        doc.moveDown(1);
-        
-        doc.fontSize(16).font('Helvetica-Bold');
-        doc.fillColor('#1f2937');
-        doc.text('MEETING ATTENDEES');
-        doc.fillColor('#000000');
-        
-        // Add line under attendees header
-        doc.moveTo(50, doc.y + 5)
-           .lineTo(350, doc.y + 5)
-           .strokeColor('#d1d5db')
-           .lineWidth(1)
-           .stroke();
-           
-        doc.moveDown(1);
-        
-        doc.fontSize(12).font('Helvetica');
-        meetingData.attendees.forEach((attendee: string, index: number) => {
-          doc.text(`${index + 1}. ${attendee}`, 60, doc.y);
-          doc.moveDown(0.5);
-        });
-        doc.moveDown(1);
+      // Ensure reports directory exists
+      const reportsDir = path.dirname(filePath);
+      if (!fs.existsSync(reportsDir)) {
+        fs.mkdirSync(reportsDir, { recursive: true });
       }
 
-      // Agenda Section with better formatting
-      if (meetingData.agenda) {
-        // Add space before agenda
-        doc.moveDown(1);
-        
-        doc.fontSize(16).font('Helvetica-Bold');
-        doc.fillColor('#1f2937');
-        doc.text('MEETING AGENDA');
-        doc.fillColor('#000000');
-        
-        // Add line under agenda header
-        doc.moveTo(50, doc.y + 5)
-           .lineTo(300, doc.y + 5)
-           .strokeColor('#d1d5db')
-           .lineWidth(1)
-           .stroke();
-           
-        doc.moveDown(1);
-        
-        // Simple agenda content without complex positioning
-        doc.fontSize(12).font('Helvetica');
-        doc.fillColor('#374151');
-        doc.text(meetingData.agenda, 60, doc.y, { 
-          width: 480, 
-          align: 'left',
-          lineGap: 2
-        });
-        doc.fillColor('#000000');
-        doc.moveDown(2);
-      }
-
-      // Selected Concerns (if any)
-      if (meetingData.selectedConcerns && meetingData.selectedConcerns.length > 0) {
-        // Start new page for concerns if needed
-        if (doc.y > 650) {
-          doc.addPage();
+      // Generate HTML meeting document
+      await generateMeetingHTMLReport(
+        meetingData,
+        filePath,
+        {
+          firstName: session.user.firstName,
+          lastName: session.user.lastName
         }
-        
-        doc.fontSize(20).font('Helvetica-Bold');
-        doc.fillColor('#1f2937');
-        doc.text('STUDENT CONCERNS TO DISCUSS');
-        doc.fillColor('#000000');
-        
-        // Add horizontal line under header
-        doc.moveTo(50, doc.y + 8)
-           .lineTo(545, doc.y + 8)
-           .strokeColor('#d1d5db')
-           .lineWidth(2)
-           .stroke();
-        
-        doc.moveDown(2.5);
-        
-        // Add separator line
-        doc.moveTo(50, doc.y + 15)
-           .lineTo(550, doc.y + 15)
-           .strokeColor('#3b82f6')
-           .lineWidth(2)
-           .stroke();
-        
-        doc.moveDown(3);
-        
-        // Fetch detailed concern information with all related data (interventions, etc.)
-        // Fetch complete concern details with all related data
-        const selectedConcernDetails = [];
-        for (const concernId of meetingData.selectedConcerns) {
-          const concernWithDetails = await storage.getConcernWithDetails(concernId);
-          if (concernWithDetails) {
-            selectedConcernDetails.push(concernWithDetails);
-          }
-        }
+      );
 
-        // Group concerns by student
-        const concernsByStudent: { [key: string]: any[] } = {};
-        selectedConcernDetails.forEach((concern: any) => {
-          const studentKey = `${concern.studentFirstName} ${concern.studentLastInitial}`;
-          if (!concernsByStudent[studentKey]) {
-            concernsByStudent[studentKey] = [];
-          }
-          concernsByStudent[studentKey].push(concern);
-        });
-
-        // Summary info box
-        const summaryY = doc.y;
-        doc.rect(40, summaryY, 520, 30)
-           .fillColor('#eff6ff')
-           .strokeColor('#3b82f6')
-           .lineWidth(1)
-           .fillAndStroke();
-        doc.fillColor('#000000');
-        
-        doc.y = summaryY + 8;
-        doc.x = 60;
-        doc.fontSize(12).font('Helvetica-Bold');
-        doc.fillColor('#1e40af');
-        doc.text(`Total concerns selected: ${selectedConcernDetails.length}`);
-        doc.fillColor('#000000');
-        doc.x = 50;
-        doc.y = summaryY + 45;
-        doc.moveDown(2.5);
-
-        // Display each student's concerns with professional formatting
-        let concernCounter = 1;
-        for (const [studentName, concerns] of Object.entries(concernsByStudent)) {
-          // Check if we need a new page
-          if (doc.y > 700) {
-            doc.addPage();
-          }
-          
-          // Student header with background
-          const studentY = doc.y;
-          doc.rect(40, studentY, 520, 35)
-             .fillColor('#f1f5f9')
-             .strokeColor('#64748b')
-             .lineWidth(1)
-             .fillAndStroke();
-          doc.fillColor('#000000');
-          
-          doc.y = studentY + 10;
-          // Add subtle background box for student header
-          doc.rect(50, studentY + 5, 495, 35)
-             .fillColor('#f8fafc')
-             .fill()
-             .strokeColor('#e2e8f0')
-             .lineWidth(1)
-             .stroke();
-             
-          doc.x = 65;
-          doc.fontSize(18).font('Helvetica-Bold');
-          doc.fillColor('#1f2937');
-          doc.text(`${studentName} (Grade ${concerns[0].grade})`, 65, studentY + 18);
-          doc.fillColor('#000000');
-          doc.x = 50;
-          doc.y = studentY + 55;
-          doc.moveDown(2);
-
-          concerns.forEach((concern: any, index: number) => {
-            // Check page break for each concern
-            if (doc.y > 650) {
-              doc.addPage();
-            }
-            
-            // Concern header with numbering
-            doc.fontSize(14).font('Helvetica-Bold');
-            doc.fillColor('#dc2626');
-            const concernTypes = Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'N/A';
-            doc.text(`${concernCounter}. ${concernTypes}`, { indent: 20 });
-            doc.fillColor('#000000');
-            doc.moveDown(0.8);
-
-            // Metadata bar with colored background
-            const metaY = doc.y;
-            const severityColor = concern.severityLevel === 'urgent' ? '#dc2626' : 
-                                concern.severityLevel === 'moderate' ? '#f59e0b' : '#10b981';
-            
-            doc.rect(60, metaY, 480, 25)
-               .fillColor('#f9fafb')
-               .strokeColor('#e5e7eb')
-               .lineWidth(1)
-               .fillAndStroke();
-            
-            doc.y = metaY + 6;
-            doc.x = 80;
-            doc.fontSize(10).font('Helvetica-Bold');
-            doc.fillColor(severityColor);
-            doc.text(`Severity: ${concern.severityLevel?.toUpperCase() || 'N/A'}`, { continued: true });
-            doc.fillColor('#6b7280');
-            doc.text(` | Location: ${concern.location || 'N/A'} | Date: ${concern.createdAt ? new Date(concern.createdAt).toLocaleDateString() : 'N/A'}`);
-            doc.fillColor('#000000');
-            doc.x = 50;
-            doc.moveDown(1);
-
-            // Description section with subtle background
-            doc.fontSize(11).font('Helvetica-Bold');
-            doc.fillColor('#374151');
-            doc.text('Description:', { indent: 20 });
-            doc.fillColor('#000000');
-            doc.moveDown(0.3);
-            
-            doc.fontSize(11).font('Helvetica');
-            const description = concern.description && concern.description.trim() && concern.description !== 'undefined' 
-              ? concern.description 
-              : 'No specific description provided - please refer to concern category and severity level for context.';
-            doc.text(description, { 
-              width: 460, 
-              align: 'left',
-              indent: 40
-            });
-            doc.moveDown(1.2);
-
-            // Actions taken section with improved formatting
-            if (concern.actionsTaken && Array.isArray(concern.actionsTaken) && concern.actionsTaken.length > 0) {
-              doc.fontSize(11).font('Helvetica-Bold');
-              doc.fillColor('#059669');
-              doc.text('Actions Already Taken:', { indent: 20 });
-              doc.fillColor('#000000');
-              doc.moveDown(0.3);
-              
-              doc.fontSize(10).font('Helvetica');
-              concern.actionsTaken.forEach((action: string) => {
-                doc.text(`• ${action}`, { width: 460, indent: 40 });
-              });
-              if (concern.otherActionTaken) {
-                doc.text(`• ${concern.otherActionTaken}`, { width: 460, indent: 40 });
-              }
-              doc.moveDown(1.5);
-            }
-
-            // AI-Generated interventions with professional styling
-            if (meetingData.includeRecommendations && concern.interventions && concern.interventions.length > 0) {
-              // Check for page break
-              if (doc.y > 600) {
-                doc.addPage();
-              }
-              
-              doc.fontSize(14).font('Helvetica-Bold');
-              doc.fillColor('#7c3aed');
-              doc.text('AI-Generated Interventions', { indent: 20 });
-              doc.fillColor('#000000');
-              
-              // Add subtle line under interventions header
-              doc.moveTo(70, doc.y + 3)
-                 .lineTo(520, doc.y + 3)
-                 .strokeColor('#c4b5fd')
-                 .lineWidth(1)
-                 .stroke();
-              
-              doc.moveDown(1.8);
-
-              concern.interventions.forEach((intervention: any, intIndex: number) => {
-                // Intervention header with colored background
-                const intY = doc.y;
-                doc.rect(60, intY, 480, 25)
-                   .fillColor('#faf5ff')
-                   .strokeColor('#a855f7')
-                   .lineWidth(1)
-                   .fillAndStroke();
-                
-                doc.y = intY + 6;
-                doc.x = 80;
-                doc.fontSize(11).font('Helvetica-Bold');
-                doc.fillColor('#7c3aed');
-                const taskLabel = concern.taskType === 'differentiation' ? 'Differentiation Strategy' : 'Intervention Strategy';
-                doc.text(`${taskLabel} ${intIndex + 1}: ${intervention.title || 'Recommended Strategy'}`);
-                doc.fillColor('#000000');
-                doc.x = 50;
-                doc.moveDown(0.8);
-
-                if (intervention.description) {
-                  // Use the enhanced markdown parser with table support
-                  const currentY = doc.y;
-                  doc.y = parseMarkdownToPDF(doc, intervention.description, currentY + 10);
-                  doc.moveDown(1.2);
-                }
-
-                if (intervention.steps && Array.isArray(intervention.steps) && intervention.steps.length > 0) {
-                  doc.fontSize(11).font('Helvetica-Bold');
-                  doc.fillColor('#374151');
-                  doc.text('Implementation Steps:', { indent: 40 });
-                  doc.fillColor('#000000');
-                  doc.moveDown(0.8);
-                  
-                  doc.fontSize(10).font('Helvetica');
-                  intervention.steps.forEach((step: any, stepIndex: number) => {
-                    const stepText = typeof step === 'string' ? step : JSON.stringify(step);
-                    doc.text(`${stepIndex + 1}. ${stepText}`, { width: 420, indent: 60, lineGap: 3 });
-                    doc.moveDown(0.4);
-                  });
-                  doc.moveDown(1.2);
-                }
-
-                if (intervention.timeline) {
-                  doc.fontSize(11).font('Helvetica-Bold');
-                  doc.fillColor('#b45309');
-                  doc.text(`Timeline: ${intervention.timeline}`, { indent: 40 });
-                  doc.fillColor('#000000');
-                  doc.moveDown(1);
-                }
-
-                doc.moveDown(1.5);
-              });
-            }
-
-            // Student learning profile with professional styling
-            if (concern.hasIep || concern.hasDisability || concern.isEalLearner || concern.isGifted || concern.isStruggling || concern.otherNeeds) {
-              // Profile header with background
-              const profileY = doc.y;
-              doc.rect(60, profileY, 480, 25)
-                 .fillColor('#ecfdf5')
-                 .strokeColor('#10b981')
-                 .lineWidth(1)
-                 .fillAndStroke();
-              
-              doc.y = profileY + 6;
-              doc.x = 80;
-              doc.fontSize(11).font('Helvetica-Bold');
-              doc.fillColor('#047857');
-              doc.text('Student Learning Profile');
-              doc.fillColor('#000000');
-              doc.x = 50;
-              doc.moveDown(0.8);
-
-              const profileItems = [];
-              if (concern.hasIep) profileItems.push('Has IEP/504 Plan');
-              if (concern.hasDisability) profileItems.push(`Diagnosed with: ${concern.disabilityType || 'Not specified'}`);
-              if (concern.isEalLearner) profileItems.push(`EAL Learner (${concern.ealProficiency || 'Unspecified'} English proficiency)`);
-              if (concern.isGifted) profileItems.push('Gifted/Talented');
-              if (concern.isStruggling) profileItems.push('Currently struggling academically');
-              if (concern.otherNeeds) profileItems.push(`Other needs: ${concern.otherNeeds}`);
-
-              doc.fontSize(10).font('Helvetica');
-              profileItems.forEach(item => {
-                doc.text(`• ${item}`, { width: 440, indent: 40 });
-              });
-              doc.moveDown(2);
-            }
-
-            // Add separator line between concerns
-            doc.moveTo(80, doc.y)
-               .lineTo(520, doc.y)
-               .strokeColor('#e5e7eb')
-               .lineWidth(1)
-               .stroke();
-            doc.moveDown(2.5);
-            
-            concernCounter++;
-          });
-
-          doc.moveDown(2);
-        }
-      }
-
-      // Additional Notes with improved formatting
-      if (meetingData.notes) {
-        if (doc.y > 650) {
-          doc.addPage();
-        }
-        
-        doc.fontSize(18).font('Helvetica-Bold');
-        doc.fillColor('#1f2937');
-        doc.text('ADDITIONAL NOTES');
-        doc.fillColor('#000000');
-        
-        // Add horizontal line under header
-        doc.moveTo(50, doc.y + 8)
-           .lineTo(545, doc.y + 8)
-           .strokeColor('#d1d5db')
-           .lineWidth(2)
-           .stroke();
-        
-        doc.moveDown(1.5);
-        
-        // Clean notes content with subtle background
-        const notesY = doc.y;
-        const notesHeight = doc.heightOfString(meetingData.notes, { width: 480 }) + 25;
-        doc.rect(45, notesY - 5, 510, notesHeight)
-           .fillColor('#fefefe')
-           .strokeColor('#e5e7eb')
-           .lineWidth(1)
-           .fillAndStroke();
-        
-        doc.fontSize(12).font('Helvetica');
-        doc.fillColor('#374151');
-        doc.text(meetingData.notes, 60, notesY + 10, { 
-          width: 480, 
-          align: 'left',
-          lineGap: 2
-        });
-        
-        doc.fillColor('#000000');
-        doc.y = notesY + notesHeight + 20;
-        doc.moveDown(3);
-      }
-
-      // Document Options with professional styling
-      if (meetingData.includeRecommendations || meetingData.includeProgressNotes) {
-        doc.fontSize(16).font('Helvetica-Bold');
-        doc.fillColor('#1f2937');
-        doc.text('DOCUMENT INCLUDES');
-        doc.fillColor('#000000');
-        
-        // Add horizontal line under header
-        doc.moveTo(50, doc.y + 8)
-           .lineTo(400, doc.y + 8)
-           .strokeColor('#d1d5db')
-           .lineWidth(1)
-           .stroke();
-        
-        doc.moveDown(1.8);
-        
-        if (meetingData.includeRecommendations) {
-          doc.fontSize(12).font('Helvetica');
-          doc.fillColor('#059669');
-          doc.text('• AI-generated intervention recommendations', 70, doc.y);
-          doc.moveDown(1.2);
-        }
-        if (meetingData.includeProgressNotes) {
-          doc.fontSize(12).font('Helvetica');
-          doc.fillColor('#059669');
-          doc.text('• Progress tracking section', 70, doc.y);
-          doc.moveDown(1.2);
-        }
-        doc.fillColor('#000000');
-        doc.moveDown(3);
-      }
-
-      // Professional footer with styling
-      if (doc.y > 710) {
-        doc.addPage();
-      }
+      // Send the HTML file for display
+      const htmlContent = await fs.promises.readFile(filePath, 'utf8');
       
-      // Add space before footer
-      doc.moveDown(3);
-      
-      // Footer separator line
-      doc.moveTo(50, doc.y + 15)
-         .lineTo(545, doc.y + 15)
-         .strokeColor('#d1d5db')
-         .lineWidth(1)
-         .stroke();
-      
-      doc.moveDown(2.5);
-      
-      // Footer content with improved styling and spacing
-      doc.fontSize(12).font('Helvetica-Bold');
-      doc.fillColor('#374151');
-      doc.text('DOCUMENT INFORMATION', { align: 'center' });
-      
-      doc.moveDown(1);
-      
-      doc.fontSize(10).font('Helvetica');
-      doc.fillColor('#6b7280');
-      
-      const footerY = doc.y;
-      
-      // Left-aligned info
-      doc.text(`Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, 60, footerY);
-      doc.text(`Prepared by: ${session.user.firstName} ${session.user.lastName}`, 60, footerY + 15);
-      
-      // Right-aligned branding (with proper width constraint)
-      doc.text('Concern2Care', 60, footerY, { width: 485, align: 'right' });
-      doc.text('AI-Powered Educational Support Platform', 60, footerY + 15, { width: 485, align: 'right' });
-      
-      doc.fillColor('#000000');
-
-      // Finalize PDF
-      doc.end();
-
+      // Set response headers for HTML display
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.send(htmlContent);
     } catch (error) {
-      console.error('Error generating meeting preparation PDF:', error);
+      console.error('Error generating meeting preparation document:', error);
       res.status(500).json({ message: 'Failed to generate meeting preparation document' });
     }
   });
@@ -3258,12 +2725,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error("Email config validation failed:", result.error.errors);
         return res.status(400).json({ message: "Invalid email configuration data", errors: result.error.errors });
       }
-
-      const savedConfig = await emailConfigService.saveUserEmailConfig(userId, result.data);
       
-      // Return config without password for security
-      const { smtpPassword, ...safeConfig } = savedConfig;
-      res.json(safeConfig);
+      // Save the email configuration
+      const savedConfig = await emailConfigService.saveUserEmailConfig(userId, result.data);
+      res.json({ message: "Email configuration saved successfully", config: savedConfig });
     } catch (error) {
       console.error("Error saving user email config:", error);
       res.status(500).json({ message: "Failed to save email configuration" });
@@ -3281,18 +2746,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const emailConfig = await emailConfigService.getEmailConfiguration(userId);
+      
       if (!emailConfig) {
-        return res.status(400).json({ message: "No email configuration found" });
+        return res.status(404).json({ message: "No email configuration found" });
       }
 
       const testResult = await emailConfigService.testEmailConfiguration(emailConfig, testEmail);
       
       // Update test status
-      if (emailConfig.source === 'user') {
+      if (emailConfig.isUserConfig) {
         await emailConfigService.updateUserEmailTestStatus(userId, testResult.success ? 'success' : 'failed');
-      } else if (emailConfig.source === 'school') {
-        // Get user's school for updating school test status
-        const user = await storage.getUser(userId);
+      } else {
+        const user = await storage.getUserByEmail(req.user.claims.email);
         if (user?.schoolId) {
           await emailConfigService.updateSchoolEmailTestStatus(user.schoolId, testResult.success ? 'success' : 'failed');
         }
@@ -3310,7 +2775,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       await emailConfigService.deleteUserEmailConfig(userId);
-      res.json({ success: true, message: "Email configuration deleted" });
+      res.json({ message: "Email configuration deleted successfully" });
     } catch (error) {
       console.error("Error deleting user email config:", error);
       res.status(500).json({ message: "Failed to delete email configuration" });
@@ -3325,20 +2790,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/admin/school/:schoolId/email-config", requireAdmin, async (req: any, res) => {
     try {
       const { schoolId } = req.params;
+      const config = await emailConfigService.getSchoolEmailConfig(parseInt(schoolId));
       
-      // Get school config via direct query
-      const result = await db.query.schools.findFirst({
-        where: (schools, { eq }) => eq(schools.id, schoolId),
-        with: {
-          emailConfig: true
-        }
-      });
-
-      if (!result) {
-        return res.status(404).json({ message: "School not found" });
-      }
-
-      const config = result.emailConfig;
       if (!config) {
         return res.json(null);
       }
@@ -3364,19 +2817,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid email configuration data", errors: result.error.errors });
       }
 
-      const savedConfig = await emailConfigService.saveSchoolEmailConfig(schoolId, adminId, result.data);
+      const savedConfig = await emailConfigService.saveSchoolEmailConfig(parseInt(schoolId), adminId, result.data);
       
       // Log admin action
-      await storage.logAdminAction({
+      console.log(`Admin ${adminId} configured email for school ${schoolId}`, {
         adminId,
+        schoolId,
         action: 'configure_school_email',
-        targetSchoolId: schoolId,
-        details: { smtpHost: result.data.smtpHost, smtpPort: result.data.smtpPort }
+        timestamp: new Date().toISOString()
       });
       
-      // Return config without password for security
-      const { smtpPassword, ...safeConfig } = savedConfig;
-      res.json(safeConfig);
+      res.json({ message: "School email configuration saved successfully", config: savedConfig });
     } catch (error) {
       console.error("Error saving school email config:", error);
       res.status(500).json({ message: "Failed to save school email configuration" });
@@ -3394,56 +2845,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get school email config directly
-      const result = await db.query.schools.findFirst({
-        where: (schools, { eq }) => eq(schools.id, schoolId),
-        with: {
-          emailConfig: true
-        }
-      });
-
-      if (!result?.emailConfig) {
+      const schoolConfig = await emailConfigService.getSchoolEmailConfig(parseInt(schoolId));
+      
+      if (!schoolConfig) {
         return res.status(400).json({ message: "No school email configuration found" });
       }
 
-      // Use a temporary user ID to get the school config via the service
-      // Since this is an admin testing school config, we'll create a test config object
-      const emailConfig = {
-        smtpHost: result.emailConfig.smtpHost,
-        smtpPort: result.emailConfig.smtpPort,
-        smtpSecure: result.emailConfig.smtpSecure || false,
-        smtpUser: result.emailConfig.smtpUser,
-        smtpPassword: '', // Will be decrypted in the service
-        fromAddress: result.emailConfig.fromAddress || result.emailConfig.smtpUser,
-        fromName: result.emailConfig.fromName || 'Concern2Care',
-        source: 'school' as const
+      // Convert to the format expected by testEmailConfiguration
+      const emailConfigForTest = {
+        smtpHost: schoolConfig.smtpHost,
+        smtpPort: schoolConfig.smtpPort,
+        smtpSecure: schoolConfig.smtpSecure,
+        smtpUser: schoolConfig.smtpUser,
+        smtpPassword: schoolConfig.smtpPassword,
+        fromEmail: schoolConfig.fromEmail,
+        fromName: schoolConfig.fromName,
+        isUserConfig: false
       };
 
-      // We need to manually decrypt for testing - let's use the service method differently
-      // Create a mock user for this school to test via the service
-      const mockUser = { schoolId: schoolId };
+      // For admin testing, we need to get the configuration in the right format
       const schoolEmailConfig = await emailConfigService.getSchoolEmailConfigForUser('temp-admin-test');
       
       if (!schoolEmailConfig) {
         return res.status(400).json({ message: "Could not retrieve school email configuration for testing" });
       }
 
-      // Get the full email config via service which handles decryption
-      const fullEmailConfig = {
-        smtpHost: schoolEmailConfig.smtpHost,
-        smtpPort: schoolEmailConfig.smtpPort,
-        smtpSecure: schoolEmailConfig.smtpSecure || false,
-        smtpUser: schoolEmailConfig.smtpUser,
-        smtpPassword: schoolEmailConfig.smtpPassword, // This should be encrypted, we need to handle this
-        fromAddress: schoolEmailConfig.fromAddress || schoolEmailConfig.smtpUser,
-        fromName: schoolEmailConfig.fromName || 'Concern2Care',
-        source: 'school' as const
-      };
-
-      // For now, let's skip the test and just return success for the demo
-      const testResult = { success: true, message: 'School email configuration appears valid (test email functionality will be implemented)' };
+      const testResult = await emailConfigService.testEmailConfiguration(emailConfigForTest, testEmail);
       
-      // Update test status
-      await emailConfigService.updateSchoolEmailTestStatus(schoolId, testResult.success ? 'success' : 'failed');
+      // Update test status for school
+      await emailConfigService.updateSchoolEmailTestStatus(parseInt(schoolId), testResult.success ? 'success' : 'failed');
 
       res.json(testResult);
     } catch (error) {
@@ -3458,17 +2888,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { schoolId } = req.params;
       const adminId = req.user.claims.sub;
       
-      await emailConfigService.deleteSchoolEmailConfig(schoolId);
+      await emailConfigService.deleteSchoolEmailConfig(parseInt(schoolId));
       
       // Log admin action
-      await storage.logAdminAction({
+      console.log(`Admin ${adminId} deleted email config for school ${schoolId}`, {
         adminId,
+        schoolId,
         action: 'delete_school_email_config',
-        targetSchoolId: schoolId,
-        details: {}
+        timestamp: new Date().toISOString()
       });
       
-      res.json({ success: true, message: "School email configuration deleted" });
+      res.json({ message: "School email configuration deleted successfully" });
     } catch (error) {
       console.error("Error deleting school email config:", error);
       res.status(500).json({ message: "Failed to delete school email configuration" });
@@ -3476,100 +2906,139 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ===========================================
-  // DEMO PROGRAM MANAGEMENT
+  // DATA EXPORT ROUTES (ADMIN ONLY)
   // ===========================================
-  
-  // Get all demo schools
-  app.get('/api/admin/demo-schools', requireAdmin, async (req: any, res) => {
+
+  // Export teacher data (admin only)
+  app.get('/api/admin/export/teachers', requireAdmin, async (req: any, res) => {
     try {
-      // Check if demo program feature is enabled
-      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
-      if (!isDemoProgramEnabled) {
-        return res.status(403).json({ message: 'Demo program feature is not enabled' });
-      }
-
-      const demoSchools = await getDemoSchools();
-      res.json({ demoSchools });
-    } catch (error) {
-      console.error('Error fetching demo schools:', error);
-      res.status(500).json({ message: 'Failed to fetch demo schools' });
-    }
-  });
-
-  // Get demo school details
-  app.get('/api/admin/demo-schools/:schoolId', requireAdmin, async (req: any, res) => {
-    try {
-      // Check if demo program feature is enabled
-      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
-      if (!isDemoProgramEnabled) {
-        return res.status(403).json({ message: 'Demo program feature is not enabled' });
-      }
-
-      const { schoolId } = req.params;
-      const demoSchool = await getDemoSchoolDetails(schoolId);
-      res.json(demoSchool);
-    } catch (error) {
-      console.error('Error fetching demo school details:', error);
-      res.status(500).json({ message: 'Failed to fetch demo school details' });
-    }
-  });
-
-  // Start demo program for a school
-  app.post('/api/admin/demo-schools/:schoolId/start', requireAdmin, async (req: any, res) => {
-    try {
-      // Check if demo program feature is enabled
-      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
-      if (!isDemoProgramEnabled) {
-        return res.status(403).json({ message: 'Demo program feature is not enabled' });
-      }
-
-      const { schoolId } = req.params;
-      const { demoLengthDays = 60 } = req.body;
+      const data = await getTeacherExportData();
+      const csv = convertToCSV(data);
       
-      const demoSchool = await startDemoProgram(schoolId, demoLengthDays);
-      res.json({ success: true, demoSchool });
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="teachers_export.csv"');
+      res.send(csv);
     } catch (error) {
-      console.error('Error starting demo program:', error);
-      res.status(500).json({ message: 'Failed to start demo program' });
+      console.error('Error exporting teacher data:', error);
+      res.status(500).json({ message: 'Failed to export teacher data' });
     }
   });
 
-  // Set pilot teacher status
-  app.post('/api/admin/teachers/:teacherId/pilot', requireAdmin, async (req: any, res) => {
+  // Export school data (admin only)
+  app.get('/api/admin/export/schools', requireAdmin, async (req: any, res) => {
     try {
-      // Check if demo program feature is enabled
-      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
-      if (!isDemoProgramEnabled) {
-        return res.status(403).json({ message: 'Demo program feature is not enabled' });
-      }
-
-      const { teacherId } = req.params;
-      const { isPilot, discount = 50 } = req.body;
+      const data = await getSchoolExportData();
+      const csv = convertToCSV(data);
       
-      await setPilotTeacher(teacherId, isPilot, discount);
-      res.json({ success: true, message: isPilot ? 'Teacher marked as pilot' : 'Pilot status removed' });
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="schools_export.csv"');
+      res.send(csv);
     } catch (error) {
-      console.error('Error setting pilot teacher status:', error);
-      res.status(500).json({ message: 'Failed to update pilot teacher status' });
+      console.error('Error exporting school data:', error);
+      res.status(500).json({ message: 'Failed to export school data' });
     }
   });
 
-  // Convert demo school to full subscription
-  app.post('/api/admin/demo-schools/:schoolId/convert', requireAdmin, async (req: any, res) => {
+  // Get all school names (for export/reports)
+  app.get('/api/admin/school-names', requireAdmin, async (req: any, res) => {
     try {
-      // Check if demo program feature is enabled
-      const isDemoProgramEnabled = await storage.isFeatureEnabled('demo_program');
-      if (!isDemoProgramEnabled) {
-        return res.status(403).json({ message: 'Demo program feature is not enabled' });
+      const schoolNames = await getAllSchoolNames();
+      res.json(schoolNames);
+    } catch (error) {
+      console.error('Error getting school names:', error);
+      res.status(500).json({ message: 'Failed to get school names' });
+    }
+  });
+
+  // ===========================================
+  // SYSTEM HEALTH & MONITORING
+  // ===========================================
+
+  // Get system health (public - for monitoring)
+  app.get('/api/health', async (req, res) => {
+    try {
+      const health = await getSystemHealth();
+      res.json(health);
+    } catch (error) {
+      console.error('Error getting system health:', error);
+      res.status(500).json({ message: 'Failed to get system health' });
+    }
+  });
+
+  // Get detailed system health (admin only)
+  app.get('/api/admin/health/detailed', requireAdmin, async (req: any, res) => {
+    try {
+      const health = await getDetailedSystemHealth();
+      res.json(health);
+    } catch (error) {
+      console.error('Error getting detailed system health:', error);
+      res.status(500).json({ message: 'Failed to get detailed system health' });
+    }
+  });
+
+  // ===========================================
+  // REFERRAL SYSTEM
+  // ===========================================
+
+  // Get referrals for current user
+  app.get('/api/referrals', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const referrals = await getReferrals(userId);
+      res.json(referrals);
+    } catch (error) {
+      console.error('Error loading referrals:', error);
+      res.status(500).json({ message: 'Failed to load referrals' });
+    }
+  });
+
+  // Create new referral
+  app.post('/api/referrals/create', requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const referral = await createReferral({ ...req.body, userId });
+      res.json(referral);
+    } catch (error) {
+      console.error('Error creating referral:', error);
+      res.status(500).json({ message: 'Failed to create referral' });
+    }
+  });
+
+  // ===========================================
+  // PASSWORD RESET FUNCTIONALITY
+  // ===========================================
+
+  // Initiate password reset
+  app.post('/api/auth/password-reset/initiate', async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
       }
 
-      const { schoolId } = req.params;
-      
-      await convertDemoToFull(schoolId);
-      res.json({ success: true, message: 'Demo school converted to full subscription' });
+      const result = await initiatePasswordReset(email);
+      res.json(result);
     } catch (error) {
-      console.error('Error converting demo school:', error);
-      res.status(500).json({ message: 'Failed to convert demo school' });
+      console.error('Error initiating password reset:', error);
+      res.status(500).json({ message: 'Failed to initiate password reset' });
+    }
+  });
+
+  // Confirm password reset with token
+  app.post('/api/auth/password-reset/confirm', async (req, res) => {
+    try {
+      const { token, newPassword } = req.body;
+      
+      if (!token || !newPassword) {
+        return res.status(400).json({ message: 'Token and new password are required' });
+      }
+
+      const result = await confirmPasswordReset(token, newPassword);
+      res.json(result);
+    } catch (error) {
+      console.error('Error confirming password reset:', error);
+      res.status(500).json({ message: 'Failed to reset password' });
     }
   });
 
