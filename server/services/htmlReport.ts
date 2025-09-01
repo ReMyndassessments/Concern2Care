@@ -142,64 +142,27 @@ export async function generateMeetingHTMLReport(
                 </svg>
                 Print Document
             </button>
-            <div class="print-fallback-instructions">
-                <p><strong>Print Instructions:</strong></p>
-                <p>• Press <kbd>Ctrl+P</kbd> (Windows/Linux) or <kbd>Cmd+P</kbd> (Mac)</p>
-                <p>• Or right-click → Print</p>
-                <p>• Or use File → Print in your browser menu</p>
-            </div>
+
         </div>
 
         <script>
             function handlePrint() {
-                try {
-                    // Multiple approaches for maximum compatibility
-                    if (typeof window !== 'undefined' && window.print) {
-                        // Try standard print
-                        window.print();
-                        return;
-                    }
-                    
-                    // Try alternative print method
-                    if (document.execCommand) {
-                        document.execCommand('print', false, null);
-                        return;
-                    }
-                    
-                    // Try creating a print event
-                    if (window.dispatchEvent) {
-                        const printEvent = new Event('beforeprint');
-                        window.dispatchEvent(printEvent);
-                        window.print();
-                        return;
-                    }
-                    
-                    // Final fallback
-                    showPrintInstructions();
-                } catch (error) {
-                    console.error('Print error:', error);
-                    showPrintInstructions();
-                }
+                // Force immediate print without fallbacks
+                setTimeout(function() {
+                    window.print();
+                }, 100);
             }
             
-            function showPrintInstructions() {
-                const instructions = 'To print this document:\\n\\n' +
-                    '• Windows/Linux: Press Ctrl+P\\n' +
-                    '• Mac: Press Cmd+P\\n' +
-                    '• Or use your browser\\'s File → Print menu\\n\\n' +
-                    'If the print dialog doesn\\'t open, try right-clicking and selecting \\"Print\\"';
-                alert(instructions);
-            }
-            
-            // Ensure print functionality is available when page loads
+            // Ensure the function is available immediately
             document.addEventListener('DOMContentLoaded', function() {
-                // Add keyboard shortcut listener
-                document.addEventListener('keydown', function(e) {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                // Make print button work on click
+                const printBtn = document.querySelector('.print-button');
+                if (printBtn) {
+                    printBtn.addEventListener('click', function(e) {
                         e.preventDefault();
                         handlePrint();
-                    }
-                });
+                    });
+                }
             });
         </script>
 
@@ -360,64 +323,27 @@ export async function generateConcernHTMLReport(
                 </svg>
                 Print Report
             </button>
-            <div class="print-fallback-instructions">
-                <p><strong>Print Instructions:</strong></p>
-                <p>• Press <kbd>Ctrl+P</kbd> (Windows/Linux) or <kbd>Cmd+P</kbd> (Mac)</p>
-                <p>• Or right-click → Print</p>
-                <p>• Or use File → Print in your browser menu</p>
-            </div>
+
         </div>
 
         <script>
             function handlePrint() {
-                try {
-                    // Multiple approaches for maximum compatibility
-                    if (typeof window !== 'undefined' && window.print) {
-                        // Try standard print
-                        window.print();
-                        return;
-                    }
-                    
-                    // Try alternative print method
-                    if (document.execCommand) {
-                        document.execCommand('print', false, null);
-                        return;
-                    }
-                    
-                    // Try creating a print event
-                    if (window.dispatchEvent) {
-                        const printEvent = new Event('beforeprint');
-                        window.dispatchEvent(printEvent);
-                        window.print();
-                        return;
-                    }
-                    
-                    // Final fallback
-                    showPrintInstructions();
-                } catch (error) {
-                    console.error('Print error:', error);
-                    showPrintInstructions();
-                }
+                // Force immediate print without fallbacks
+                setTimeout(function() {
+                    window.print();
+                }, 100);
             }
             
-            function showPrintInstructions() {
-                const instructions = 'To print this document:\\n\\n' +
-                    '• Windows/Linux: Press Ctrl+P\\n' +
-                    '• Mac: Press Cmd+P\\n' +
-                    '• Or use your browser\\'s File → Print menu\\n\\n' +
-                    'If the print dialog doesn\\'t open, try right-clicking and selecting \\"Print\\"';
-                alert(instructions);
-            }
-            
-            // Ensure print functionality is available when page loads
+            // Ensure the function is available immediately
             document.addEventListener('DOMContentLoaded', function() {
-                // Add keyboard shortcut listener
-                document.addEventListener('keydown', function(e) {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                // Make print button work on click
+                const printBtn = document.querySelector('.print-button');
+                if (printBtn) {
+                    printBtn.addEventListener('click', function(e) {
                         e.preventDefault();
                         handlePrint();
-                    }
-                });
+                    });
+                }
             });
         </script>
 
