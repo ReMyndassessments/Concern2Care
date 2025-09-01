@@ -281,6 +281,7 @@ export async function generateConcernHTMLReport(
             <div class="header-content">
                 <h1 class="app-title">Concern2Care</h1>
                 <h2 class="report-title">${reportTitle}</h2>
+                <h3 class="student-name">Student: ${concern.studentFirstName} ${concern.studentLastInitial}.</h3>
                 <p class="report-date">Generated on ${currentDate}</p>
             </div>
             ${includeLetterhead ? '<div class="letterhead-space"></div>' : ''}
@@ -469,9 +470,17 @@ function getMeetingReportCSS(theme: string): string {
     .report-title {
         font-size: 1.8rem;
         font-weight: 300;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
         opacity: 0.95;
         letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
     }
 
     .report-date {
@@ -878,9 +887,17 @@ function getReportCSS(theme: string): string {
     .report-title {
         font-size: 1.8rem;
         font-weight: 300;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
         opacity: 0.95;
         letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
     }
 
     .report-date {
