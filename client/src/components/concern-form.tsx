@@ -582,14 +582,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                             <FormItem>
                               <FormLabel>Type of Disability</FormLabel>
                               <Select 
-                                onValueChange={(value) => {
-                                  if (value !== 'Other') {
-                                    field.onChange(value);
-                                  } else {
-                                    field.onChange('Other');
-                                  }
-                                }} 
-                                defaultValue={COMMON_DISABILITY_TYPES.includes(field.value) ? field.value : 'Other'} 
+                                onValueChange={field.onChange}
+                                value={COMMON_DISABILITY_TYPES.includes(field.value) ? field.value : 'Other'} 
                                 disabled={isAtLimit}
                               >
                                 <FormControl>
