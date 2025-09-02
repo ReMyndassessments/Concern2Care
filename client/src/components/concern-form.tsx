@@ -605,21 +605,31 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         />
                         
                         {form.watch('disabilityType') === 'Other' && (
-                          <div className="mt-3">
-                            <label htmlFor="custom-disability" className="block text-sm font-medium mb-2">
-                              Please specify disability type
+                          <div className="mt-3 p-4 border border-blue-200 bg-blue-50 rounded-lg">
+                            <label htmlFor="custom-disability-input" className="block text-sm font-bold mb-3 text-blue-800">
+                              Please specify disability type:
                             </label>
                             <input
-                              id="custom-disability"
+                              id="custom-disability-input"
                               type="text"
-                              placeholder="Enter specific disability type"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              placeholder="Type here (e.g., Dyslexia, Cerebral Palsy, etc.)"
+                              defaultValue=""
+                              className="w-full px-4 py-3 text-lg border-2 border-blue-300 rounded-lg bg-white focus:outline-none focus:ring-4 focus:ring-blue-400 focus:border-blue-600 shadow-sm"
                               onChange={(e) => {
-                                form.setValue('disabilityType', e.target.value || 'Other');
+                                console.log('Input changed:', e.target.value);
+                                form.setValue('disabilityType', e.target.value.trim() || 'Other');
                               }}
-                              disabled={isAtLimit}
+                              onFocus={(e) => {
+                                console.log('Input focused');
+                                e.target.style.backgroundColor = '#ffffff';
+                              }}
+                              disabled={false}
+                              autoComplete="off"
                               data-testid="input-other-disability-type"
                             />
+                            <p className="mt-2 text-sm text-blue-600">
+                              Click above and type your specific disability type
+                            </p>
                           </div>
                         )}
                       </div>
