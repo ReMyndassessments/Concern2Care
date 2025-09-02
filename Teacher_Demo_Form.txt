@@ -1,0 +1,165 @@
+===============================================================================
+                          CONCERN2CARE DEMO FORM
+                    Student Support Information for Teachers
+===============================================================================
+
+Instructions: Please fill out this form completely for a real student concern 
+you'd like to address during the demo. This information will help generate 
+AI-powered intervention strategies.
+
+===============================================================================
+STUDENT INFORMATION
+===============================================================================
+
+Student Name (First & Last): _______________________________________________
+
+Grade Level: ________    Age: ________    Gender: _________________________
+
+Teacher Name: __________________________________________________________
+
+Subject/Class: _________________________________________________________
+
+===============================================================================
+PRIMARY CONCERN AREAS
+===============================================================================
+Check ALL that apply to this student:
+
+☐ Academic Performance
+☐ Behavior Management  
+☐ Social/Emotional Development
+☐ Peer Relationships
+☐ Communication Skills
+☐ Attendance Issues
+☐ Family/Home Factors
+☐ Other: ____________________________________________________________
+
+===============================================================================
+DETAILED CONCERN DESCRIPTION
+===============================================================================
+
+Describe the specific concern(s) you're observing:
+_____________________________________________________________________
+_____________________________________________________________________
+_____________________________________________________________________
+_____________________________________________________________________
+
+How long has this been an issue?
+☐ Less than 2 weeks    ☐ 2-4 weeks    ☐ 1-2 months    ☐ 3+ months
+
+Severity Level:
+☐ Mild (occasional concern)    
+☐ Moderate (regular issue)    
+☐ Urgent (immediate attention needed)
+
+===============================================================================
+STUDENT LEARNING PROFILE
+===============================================================================
+
+Does the student have an IEP (Individualized Education Program)?
+☐ Yes    ☐ No    ☐ In process
+
+Has the student been diagnosed with a disability?
+☐ Yes    ☐ No
+
+If yes, specify type:
+☐ ADHD    
+☐ Autism Spectrum    
+☐ Learning Disability    
+☐ Emotional/Behavioral
+☐ Physical Disability    
+☐ Intellectual Disability    
+☐ Hearing Impairment
+☐ Visual Impairment    
+☐ Speech/Language    
+☐ Other: ________________________________________________________
+
+Is the student an English Language Learner (EAL)?
+☐ Yes    ☐ No
+
+If yes, English proficiency level:
+☐ Beginner    ☐ Intermediate    ☐ Advanced    ☐ Proficient
+
+Is the student identified as gifted/talented?
+☐ Yes    ☐ No
+
+Is the student currently struggling academically?
+☐ Yes    ☐ No
+
+===============================================================================
+CURRENT INTERVENTIONS
+===============================================================================
+What have you already tried?
+
+☐ Parent contact/meeting
+☐ Behavior chart/tracking
+☐ Modified assignments
+☐ Peer support/buddy system
+☐ Schedule changes
+☐ Additional practice time
+☐ Different seating arrangement
+☐ Break cards/movement breaks
+☐ Other: ________________________________________________________
+
+Results of previous interventions:
+_____________________________________________________________________
+_____________________________________________________________________
+
+===============================================================================
+GOALS & OUTCOMES
+===============================================================================
+
+What would success look like for this student?
+_____________________________________________________________________
+_____________________________________________________________________
+
+Are there any specific strategies you'd like to explore?
+_____________________________________________________________________
+_____________________________________________________________________
+
+===============================================================================
+ADDITIONAL CONTEXT
+===============================================================================
+
+Any other relevant information about this student:
+(Family situation, medical needs, cultural considerations, etc.)
+_____________________________________________________________________
+_____________________________________________________________________
+_____________________________________________________________________
+
+Best time to implement new strategies:
+☐ Morning    
+☐ Afternoon    
+☐ During specific subject: _________________________________________
+☐ Transition times    
+☐ Other: ________________________________________________________
+
+===============================================================================
+FOR DEMO USE
+===============================================================================
+
+Type of support needed:
+☐ Differentiation Report (adapting teaching methods/materials)
+☐ Tier 2 Intervention Report (targeted behavioral/academic support)
+☐ Both types of support
+
+Will this be shared in a meeting?
+☐ Yes - with: ☐ Parents  ☐ Admin  ☐ Support staff  ☐ Other teachers
+☐ No - personal reference only
+
+===============================================================================
+
+Teacher Signature: _____________________________ Date: ___________________
+
+Thank you for providing this information. This will help demonstrate how 
+Concern2Care can generate personalized, evidence-based intervention 
+strategies for your students.
+
+===============================================================================
+NOTES SECTION
+===============================================================================
+Space for additional observations or updates:
+_____________________________________________________________________
+_____________________________________________________________________
+_____________________________________________________________________
+_____________________________________________________________________
+_____________________________________________________________________
