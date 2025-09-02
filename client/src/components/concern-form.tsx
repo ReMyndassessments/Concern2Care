@@ -583,7 +583,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               <FormLabel>Type of Disability</FormLabel>
                               <Select 
                                 onValueChange={field.onChange}
-                                value={COMMON_DISABILITY_TYPES.includes(field.value) ? field.value : 'Other'} 
+                                value={field.value || ''} 
                                 disabled={isAtLimit}
                               >
                                 <FormControl>
@@ -604,7 +604,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           )}
                         />
                         
-                        {(form.watch('disabilityType') === 'Other' || !COMMON_DISABILITY_TYPES.includes(form.watch('disabilityType'))) && form.watch('disabilityType') && (
+                        {form.watch('disabilityType') === 'Other' && (
                           <FormField
                             control={form.control}
                             name="disabilityType"
