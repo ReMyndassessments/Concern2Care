@@ -614,10 +614,14 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                 <FormControl>
                                   <Input
                                     placeholder="Enter specific disability type"
-                                    value={field.value === 'Other' ? '' : field.value || ''}
-                                    onChange={(e) => field.onChange(e.target.value || 'Other')}
+                                    value=""
+                                    onChange={(e) => {
+                                      const customValue = e.target.value.trim();
+                                      field.onChange(customValue || 'Other');
+                                    }}
                                     disabled={isAtLimit}
                                     data-testid="input-other-disability-type"
+                                    className="mt-2"
                                   />
                                 </FormControl>
                                 <FormMessage />
