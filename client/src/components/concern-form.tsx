@@ -604,7 +604,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           )}
                         />
                         
-                        {form.watch('disabilityType') === 'Other' && (
+                        {(form.watch('disabilityType') === 'Other' || !COMMON_DISABILITY_TYPES.includes(form.watch('disabilityType'))) && form.watch('disabilityType') && (
                           <FormField
                             control={form.control}
                             name="disabilityType"
@@ -614,8 +614,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                 <FormControl>
                                   <Input
                                     placeholder="Enter specific disability type"
-                                    value={field.value === 'Other' ? '' : field.value}
-                                    onChange={(e) => field.onChange(e.target.value)}
+                                    value={field.value === 'Other' ? '' : field.value || ''}
+                                    onChange={(e) => field.onChange(e.target.value || 'Other')}
                                     disabled={isAtLimit}
                                     data-testid="input-other-disability-type"
                                   />
