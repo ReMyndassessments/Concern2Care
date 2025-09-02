@@ -605,29 +605,22 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         />
                         
                         {form.watch('disabilityType') === 'Other' && (
-                          <FormField
-                            control={form.control}
-                            name="disabilityType"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Please specify disability type</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="Enter specific disability type"
-                                    value=""
-                                    onChange={(e) => {
-                                      const customValue = e.target.value.trim();
-                                      field.onChange(customValue || 'Other');
-                                    }}
-                                    disabled={isAtLimit}
-                                    data-testid="input-other-disability-type"
-                                    className="mt-2"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <div className="mt-3">
+                            <label htmlFor="custom-disability" className="block text-sm font-medium mb-2">
+                              Please specify disability type
+                            </label>
+                            <input
+                              id="custom-disability"
+                              type="text"
+                              placeholder="Enter specific disability type"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              onChange={(e) => {
+                                form.setValue('disabilityType', e.target.value || 'Other');
+                              }}
+                              disabled={isAtLimit}
+                              data-testid="input-other-disability-type"
+                            />
+                          </div>
                         )}
                       </div>
                     )}
