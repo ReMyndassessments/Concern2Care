@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tier 2 Intervention Report - Crystal R</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Tier 2 Intervention Report</h2>
+                <h3 class="student-name">Student: Crystal R.</h3>
+                <p class="report-date">Generated on September 3, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Crystal R.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Attendance</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/3/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    Crystal has math anxiety and tends to distract others in class as she needs to fit in and mask her lack of confidence
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Concerns</strong>: Chronic absenteeism (moderate severity) combined with math anxiety and disruptive peer interactions. Attendance issues likely exacerbate academic struggles, creating a cyclical pattern where falling behind increases anxiety, which then fuels avoidance behaviors.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Learning Profile</strong>: Diagnosis of "Other" suggests potential undifferentiated neurodevelopmental or mental health considerations. Math anxiety manifests as task avoidance and compensatory social behaviors (disrupting peers to mask academic insecurity). Social motivation to "fit in" indicates strong peer orientation that could be leveraged positively.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Contributing Factors</strong>: Math skill deficits likely predate current manifestations; anxiety functions as both cause and effect of academic struggles. Disruptive behaviors serve dual functions: avoidance of challenging tasks and attainment of peer attention/social status.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Risk Factors</strong>: Academic skill gaps widening due to absenteeism; potential development of oppositional behaviors; social reinforcement of inappropriate classroom behaviors; internalization of "math identity" as incapable.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Protective Factors</strong>: Responsive to teacher communication; parental engagement previously attempted; social motivation indicates capacity for positive peer relationships.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Approach</strong>: Integrated academic-behavioral intervention combining: 1) Concrete math skill remediation through incremental success experiences (based on gradual exposure principles for anxiety management), 2) Replacement behavior training for appropriate help-seeking and self-regulation, and 3) Peer-mediated supports to channel social motivation productively.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Theoretical Foundation</strong>: Cognitive-behavioral framework (addressing anxiety through controlled exposure and cognitive restructuring); social learning theory (leveraging peer modeling); self-determination theory (addressing needs for competence, autonomy, and relatedness).</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Hembree (1990) meta-analysis on math anxiety treatment; Ramirez et al. (2018) on math anxiety and working memory; PBIS frameworks for replacement behaviors; UDL principles for multiple means of engagement.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Expected Outcomes</strong>: 15% reduction in absenteeism within 4 weeks; 25% increase in on-task behavior during math; demonstrated use of at least 2 appropriate help-seeking strategies; 0.5 grade level improvement in math computation skills.</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p><h4 class="bold-heading">Strategy 1: Math Anxiety Reduction Protocol</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Graduated exposure therapy (Chok et al., 2019); success priming interventions (Morony et al., 2013)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Pre-assembled "confidence builders" (3 sets of problems at 70%, 80%, and 90% known accuracy levels); visual timer; anxiety thermometer chart; preferred activity materials for reinforcement</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Daily 10-minute session before math class: Present 5 problems from 70% known accuracy set (2:00 minutes)<br>  2. Student completes problems with immediate corrective feedback and positive reinforcement for attempt (3:00 minutes)<br>  3. Student rates anxiety on 1-5 scale and identifies one successful strategy used (2:00 minutes)<br>  4. Teacher provides specific praise and previews one upcoming concept using concrete example (3:00 minutes)<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Daily anxiety ratings; accuracy on confidence builders; teacher anecdotal notes on affective response</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: Anxiety ratings decrease by 1 point on 5-point scale; 95% accuracy on known material; verbalization of one positive math statement daily</li></ul></p><p><h4 class="bold-heading">Strategy 2: Peer-Assisted Learning Setup</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Peer-Assisted Learning Strategies (PALS) Fuchs et al., 1997; social motivation frameworks</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Structured partner activity scripts; visual instruction cards; peer training materials; interdependent group contingency chart</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Identify 2 responsible peer partners and provide 15-minute training on support strategies (Day 1)<br>  2. Implement structured partner work for first 10 minutes of independent practice daily<br>  3. Use "expert of the day" system where Crystal teaches mastered skill to partner twice weekly<br>  4. Group contingency: Whole class earns 2-minute break when all partners remain on-task<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Frequency of appropriate peer interactions; off-task behavior during partner work; accuracy during peer teaching</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 80% reduction in disruptive peer interactions; 90% engagement during partner work; correct demonstration of taught skill</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Math Computational Fluency and Attendance Motivation</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Intervention Program</strong>: Schema-Based Instruction for word problems (Jitendra et al., 2015) combined with Check-In/Check-Out for attendance</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Frequency</strong>: 4x/week for 20 minutes small group instruction; daily check-in/check-out with assigned staff member</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Progress Monitoring</strong>: Weekly curriculum-based measurement in math computation; daily attendance tracking with same-day parent notification for absences; weekly self-efficacy surveys</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adaptation Protocol</strong>: If weekly growth rate <0.4 digits correct per minute, increase modeling time and decrease problem difficulty. If attendance doesn't improve by Week 4, implement home-based reinforcement system.</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Skill Transfer Plans</strong>: Gradual fading of pre-teaching sessions; implementation of student-led "math help booth" where Crystal assists younger students with mastered skills</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Independence Building</strong>: Self-monitoring checklist for math tasks; anxiety management cue cards; progressive responsibility for organizing own materials</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Family Engagement</strong>: Bi-weekly math game packets sent home; parent training on anxiety-reducing language; family math night participation requirement</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Daily Data</strong>: Attendance tracking; anxiety thermometer ratings; completion of confidence builders</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Assessment</strong>: Math CBM probes; systematic direct observation of on-task behavior; peer interaction frequency counts</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Monthly Review</strong>: Standardized math assessment progress; attendance percentage trends; student self-report surveys on math confidence</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Decision Points</strong>: After 4 weeks - continue if 50% of goals met; modify if 25-49% goals met; intensify if <25% goals met. After 8 weeks - consider special education evaluation if inadequate progress despite interventions.</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Team Members</strong>: Math teacher, school counselor, special education consultant, parent, school nurse</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Meeting Schedule</strong>: Weekly 15-minute check-in with teacher/counselor; bi-weekly team meeting; monthly parent conference</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Documentation Requirements</strong>: Daily log of interventions implemented; weekly progress graphs; incident reports for disruptive behaviors</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent Communication</strong>: Daily attendance report via text/email; weekly progress report; home activity suggestions</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Warning Signs</strong>: Consecutive absences without communication; refusal to enter classroom; crying or panic attacks during math; increased disruptive behaviors</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Immediate Response</strong>: Pre-planned calm-down space with counselor availability; alternative assignment providing immediate success; parent contact within same period</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Referral Criteria</strong>: Continued absenteeism despite interventions; persistent panic symptoms; self-harm statements; no progress after 8 weeks of intensive intervention</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Emergency Contacts</strong>: School counselor (ext. 234); school psychologist (ext. 456); community mental health crisis line (555-1234)</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Professional Development</strong>: "Math Anxiety Reduction Strategies" workshop (National Council of Teachers of Mathematics); "Check-In/Check-Out Implementation" training (PBIS.org)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Educational Materials</strong>: _Building Mathematical Confidence_ curriculum (WestEd); _Overcoming Math Anxiety_ student workbook (Research Press)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Technology Tools</strong>: Freckle Education for differentiated practice; ClassDojo for home-school communication; Breath2Relax app for anxiety management</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Community Resources</strong>: Math tutoring at public library; community center homework help; children's mental health clinic for anxiety assessment</li></ul></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>

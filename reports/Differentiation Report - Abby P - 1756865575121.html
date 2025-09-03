@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differentiation Report - Abby P</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Differentiation Report</h2>
+                <h3 class="student-name">Student: Abby P.</h3>
+                <p class="report-date">Generated on September 3, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Abby P.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Academic, Attendance</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/3/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    Abby is refusing to come to school. We want to differentiate her lessons so she has less anxiety around individual class.
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p><h4 class="bold-heading">Differentiated Lesson Plan for Abby P.</h4></p><p><h4 class="sub-heading">Lesson Title:</h4> Modified Chinese Idioms (成语) Lesson for EAL and Emotional Support Needs<br><h4 class="sub-heading">Time:</h4> 50 minutes<br><h4 class="sub-heading">Skill Focus:</h4> Vocabulary Building, Basic Comprehension, Cultural Exposure</p><p><h4 class="sub-heading">Differentiated Learning Objectives:</h4><br>By the end of the lesson, Abby will be able to:<br>1. Identify 1-2 common 成语 from visual cues and simple definitions<br>2. Match idioms to their basic meanings using bilingual supports<br>3. Create one simple sentence using a provided idiom frame with 75% accuracy</p><p><h4 class="sub-heading">Materials Adapted:</h4><br><ul class="intervention-list"><li class="main-bullet">Visual idiom cards with images representing literal and figurative meanings (color-coded)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bilingual vocabulary list (English/Chinese) with simplified definitions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer for idiom analysis (with sentence starters)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Tablet with text-to-speech capability for reading support</li></ul><br><ul class="intervention-list"><li class="main-bullet">Noise-reducing headphones available</li></ul><br><ul class="intervention-list"><li class="main-bullet">Timer for activity transitions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-printed response cards for participation</li></ul></p><p><h4 class="sub-heading">Lesson Procedure with Modifications:</h4></p><p>1. <strong>Warm-Up (8 minutes)</strong><br>   - Present "画蛇添足" with large visual showing snake with/without feet<br>   - Use total physical response: demonstrate "adding unnecessary things" with gestures<br>   - Provide bilingual phrase: "Doing too much can ruin things"<br>   - Abby uses pre-printed cards to indicate understanding: "I get it" / "I need help"</p><p>2. <strong>Introduction (12 minutes)</strong><br>   - Introduce ONE idiom at a time with visual story sequence cards<br>   - Use simplified language: "This idiom means..." instead of cultural explanations<br>   - Provide physical objects for manipulation (puzzle pieces matching idiom to meaning)<br>   - Incorporate movement breaks between idioms</p><p>3. <strong>Guided Practice (15 minutes)</strong><br>   - Work 1:1 with teacher or peer buddy<br>   - Use matching game with visual cards instead of reading passage<br>   - Sentence frames provided: "This idiom means ______. Example: ______."<br>   - Frequent check-ins: "Show me thumbs up/middle/down" for understanding</p><p>4. <strong>Independent Practice (10 minutes)</strong><br>   - Modified worksheet with word bank and picture supports<br>   - Reduced choices: Match 2 idioms instead of 3<br>   - Option to dictate sentence to teacher instead of writing<br>   - Timer visible for task completion</p><p>5. <strong>Closure (5 minutes)</strong><br>   - Abby shares one thing learned using choice board: "I learned..." / "I liked..."<br>   - Teacher provides specific praise for effort and persistence<br>   - Preview next lesson's single idiom with visual cue</p><p><h4 class="sub-heading">Modified Assessment Methods:</h4><br><ul class="intervention-list"><li class="main-bullet">Observation checklist for engagement and task completion</li></ul><br><ul class="intervention-list"><li class="main-bullet">Accuracy in matching activities (80% success target)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Sentence production with rubric focusing on attempt rather than perfection</li></ul><br><ul class="intervention-list"><li class="main-bullet">Self-assessment smiley face scale for comfort level</li></ul></p><p><h4 class="sub-heading">Specific Accommodations:</h4><br><ul class="intervention-list"><li class="main-bullet">Preferential seating near teacher but with reduced visual distractions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Extended time for processing and response</li></ul><br><ul class="intervention-list"><li class="main-bullet">Break options available upon request</li></ul><br><ul class="intervention-list"><li class="main-bullet">Reduced language load: focus on receptive understanding before production</li></ul><br><ul class="intervention-list"><li class="main-bullet">Positive behavior reinforcement system aligned with counseling goals</li></ul></p><p><h4 class="sub-heading">Implementation Notes:</h4><br><ul class="intervention-list"><li class="main-bullet">Prepare all visual materials in advance with color coding</li></ul><br><ul class="intervention-list"><li class="main-bullet">Coordinate with counselor regarding emotional regulation strategies to use during lesson</li></ul><br><ul class="intervention-list"><li class="main-bullet">Have bilingual dictionary available for emergency vocabulary needs</li></ul><br><ul class="intervention-list"><li class="main-bullet">Schedule lesson during Abby's optimal alertness period (per counseling notes)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-teach one idiom the day before to reduce novelty stress</li></ul></p><p>---</p><p><h4 class="bold-heading">COMPREHENSIVE DIFFERENTIATION STRATEGIES</h4></p><p><h4 class="bold-heading">Research-Based Content Modifications</h4><br>1. <strong>Language Simplification Protocol</strong><br>   - Implement SIOP (Sheltered Instruction Observation Protocol) strategies for EAL learners (Echevarría, Vogt, & Short, 2017)<br>   - Use controlled vocabulary lists with frequency-based word selection<br>   - Provide bilingual glossaries for all content units<br>   - Implementation: Immediate and ongoing</p><p>2. <strong>Visual Support System</strong><br>   - Develop permanent visual word wall with imagery and translations<br>   - Use graphic organizers for all narrative content (story maps, sequence charts)<br>   - Implement Universal Design for Learning principles for multiple representations (CAST, 2018)<br>   - Progress monitoring: Weekly vocabulary recognition checks</p><p><h4 class="bold-heading">Process Adaptations</h4><br>1. <strong>Chunking and Pacing</strong><br>   - Break all assignments into 3-5 minute segments with clear completion criteria<br>   - Use visual timers and transition warnings<br>   - Provide task analysis sheets for multi-step assignments<br>   - Research basis: Executive function support for emotional/behavioral needs (Dawson & Guare, 2018)</p><p>2. <strong>Response Accommodations</strong><br>   - Implement response choice board: verbal, written, pointing, or technology-assisted<br>   - Reduce language production demands through modified output expectations<br>   - Use gradual release model: "I do, we do, you do" with extended scaffolding<br>   - Progress monitoring: Weekly samples of response mode effectiveness</p><p><h4 class="bold-heading">Assessment Alternatives</h4><br>1. <strong>Modified Grading Rubrics</strong><br>   - Focus on effort and progress rather than absolute accuracy<br>   - Use portfolio assessment to track growth over time<br>   - Implement alternative scoring weights: 40% effort, 40% progress, 20% accuracy<br>   - Research basis: Growth mindset assessment practices (Tomlinson & Moon, 2013)</p><p>2. <strong>Formative Assessment System</strong><br>   - Daily exit tickets with visual supports<br>   - Regular student self-assessment using emotion scales and understanding checks<br>   - Curriculum-based measurement for vocabulary growth tracking<br>   - Implementation: Weekly data review with counseling team</p><p><h4 class="bold-heading">Environmental Optimizations</h4><br>1. <strong>Classroom Modifications</strong><br>   - Designated quiet area with visual barriers available<br>   - Consistent routine with visual schedule<br>   - Preferential seating with reduced auditory/visual distractions<br>   - Research basis: Environmental modifications for emotional regulation (Minahan & Rappaport, 2012)</p><p>2. <strong>Technology Supports</strong><br>   - Text-to-speech software for all reading materials<br>   - Voice recording options for responses<br>   - Bilingual digital dictionary always available<br>   - Implementation: Immediate training and access</p><p><h4 class="bold-heading">Progress Monitoring System</h4><br>1. <strong>Data Collection Protocol</strong><br>   - Weekly vocabulary recognition probes<br>   - Bi-weekly writing samples with rubric scores<br>   - Daily engagement tracking using 5-point scale<br>   - Monthly parent feedback surveys on homework stress levels</p><p>2. <strong>Collaboration Framework</strong><br>   - Weekly email update to counselor with observations<br>   - Bi-weekly team meeting with counselor, ESL teacher, and parents<br>   - Shared documentation system using secure platform<br>   - Research basis: Collaborative problem-solving model (Newton et al., 2012)</p><p><h4 class="bold-heading">Timeline and Implementation</h4><br><ul class="intervention-list"><li class="main-bullet">Week 1-2: Implement basic accommodations and baseline data collection</li></ul><br><ul class="intervention-list"><li class="main-bullet">Week 3-4: Refine strategies based on initial response</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monthly: Review progress data and adjust interventions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Quarterly: Formal review of IEP/504 plan accommodations</li></ul></p><p><h4 class="sub-heading">Citations:</h4><br>CAST (2018). Universal Design for Learning Guidelines version 2.2.<br>Dawson, P., & Guare, R. (2018). Executive skills in children and adolescents: A practical guide to assessment and intervention.<br>Echevarría, J., Vogt, M., & Short, D. (2017). Making content comprehensible for English learners: The SIOP Model.<br>Minahan, J., & Rappaport, N. (2012). The behavior code: A practical guide to understanding and teaching the most challenging students.<br>Newton, J. S., et al. (2012). A systematic review of team-building interventions for improving performance.<br>Tomlinson, C. A., & Moon, T. R. (2013). Assessment and student success in a differentiated classroom.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>

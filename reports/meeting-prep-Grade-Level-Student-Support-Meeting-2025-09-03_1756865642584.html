@@ -1,0 +1,1071 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Preparation Document - Grade-Level Student Support Meeting</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .agenda-section, .concerns-section, .notes-section, .includes-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .agenda-content, .notes-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+        white-space: pre-wrap;
+    }
+
+    .concerns-summary {
+        background: #eff6ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .total-concerns {
+        font-weight: 600;
+        color: #1e40af;
+        margin: 0;
+    }
+
+    .concern-card {
+        background: #fefefe;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .concern-header {
+        background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 1.5rem;
+        border-bottom: 1px solid #d1d5db;
+    }
+
+    .concern-student-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .concern-counter {
+        font-weight: 500;
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .concern-details {
+        padding: 1.5rem;
+    }
+
+    .concern-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .concern-meta-item {
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .concern-description, .actions-taken, .ai-interventions, .student-profile {
+        margin-bottom: 1.5rem;
+    }
+
+    .concern-description h5, .actions-taken h5, .ai-interventions h5, .student-profile h5 {
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .concern-description p {
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #10b981;
+        margin: 0;
+    }
+
+    .actions-taken ul, .student-profile ul {
+        list-style: none;
+        padding: 0;
+        background: #fef7f2;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+
+    .actions-taken li, .student-profile li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .actions-taken li::before {
+        content: "•";
+        color: #f59e0b;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .student-profile li::before {
+        content: "•";
+        color: #10b981;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .ai-interventions .interventions-content {
+        background: #fefefe;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-separator {
+        height: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 1.5rem 0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .includes-content {
+        background: #f0fdf4;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #10b981;
+    }
+
+    .include-item {
+        color: #047857;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
+        padding: 2rem 0;
+        border-top: 2px solid #e2e8f0;
+        margin-top: 3rem;
+    }
+
+    .footer-left, .footer-right {
+        color: #4b5563;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    .footer-right {
+        text-align: right;
+    }
+
+    .footer-right strong {
+        color: #1f2937;
+        font-weight: 700;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Meeting Preparation Document</h2>
+                <p class="report-date">Generated on September 3, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Meeting Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Meeting Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Title:</span>
+                    <span class="info-value">Grade-Level Student Support Meeting</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Type:</span>
+                    <span class="info-value">SST</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value">2025-09-03</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Time:</span>
+                    <span class="info-value">03:13</span>
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- Meeting Agenda Section -->
+        <section class="agenda-section">
+            <h3 class="section-title">Meeting Agenda</h3>
+            <div class="agenda-content">
+                This meeting is to get all Abby's teachers on board with her intervention
+            </div>
+        </section>
+        
+
+        <!-- Student Concerns Section -->
+        <section class="concerns-section">
+            <h3 class="section-title">Student Concerns to Discuss</h3>
+            <div class="concerns-summary">
+                <p class="total-concerns">Total concerns selected: 6</p>
+            </div>
+            <div class="concerns-list">
+                
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">Abby P (Grade 8th)</h4>
+          <div class="concern-counter">1. Academic, Attendance</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Classroom</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/3/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>Abby is refusing to come to school. We want to differentiate her lessons so she has less anxiety around individual class.</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h4 class="bold-heading">Differentiated Lesson Plan for Abby P.</h4></p><p><h4 class="sub-heading">Lesson Title:</h4> Modified Chinese Idioms (成语) Lesson for EAL and Emotional Support Needs<br><h4 class="sub-heading">Time:</h4> 50 minutes<br><h4 class="sub-heading">Skill Focus:</h4> Vocabulary Building, Basic Comprehension, Cultural Exposure</p><p><h4 class="sub-heading">Differentiated Learning Objectives:</h4><br>By the end of the lesson, Abby will be able to:<br>1. Identify 1-2 common 成语 from visual cues and simple definitions<br>2. Match idioms to their basic meanings using bilingual supports<br>3. Create one simple sentence using a provided idiom frame with 75% accuracy</p><p><h4 class="sub-heading">Materials Adapted:</h4><br><ul class="intervention-list"><li class="main-bullet">Visual idiom cards with images representing literal and figurative meanings (color-coded)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bilingual vocabulary list (English/Chinese) with simplified definitions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer for idiom analysis (with sentence starters)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Tablet with text-to-speech capability for reading support</li></ul><br><ul class="intervention-list"><li class="main-bullet">Noise-reducing headphones available</li></ul><br><ul class="intervention-list"><li class="main-bullet">Timer for activity transitions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-printed response cards for participation</li></ul></p><p><h4 class="sub-heading">Lesson Procedure with Modifications:</h4></p><p>1. <strong>Warm-Up (8 minutes)</strong><br>   - Present "画蛇添足" with large visual showing snake with/without feet<br>   - Use total physical response: demonstrate "adding unnecessary things" with gestures<br>   - Provide bilingual phrase: "Doing too much can ruin things"<br>   - Abby uses pre-printed cards to indicate understanding: "I get it" / "I need help"</p><p>2. <strong>Introduction (12 minutes)</strong><br>   - Introduce ONE idiom at a time with visual story sequence cards<br>   - Use simplified language: "This idiom means..." instead of cultural explanations<br>   - Provide physical objects for manipulation (puzzle pieces matching idiom to meaning)<br>   - Incorporate movement breaks between idioms</p><p>3. <strong>Guided Practice (15 minutes)</strong><br>   - Work 1:1 with teacher or peer buddy<br>   - Use matching game with visual cards instead of reading passage<br>   - Sentence frames provided: "This idiom means ______. Example: ______."<br>   - Frequent check-ins: "Show me thumbs up/middle/down" for understanding</p><p>4. <strong>Independent Practice (10 minutes)</strong><br>   - Modified worksheet with word bank and picture supports<br>   - Reduced choices: Match 2 idioms instead of 3<br>   - Option to dictate sentence to teacher instead of writing<br>   - Timer visible for task completion</p><p>5. <strong>Closure (5 minutes)</strong><br>   - Abby shares one thing learned using choice board: "I learned..." / "I liked..."<br>   - Teacher provides specific praise for effort and persistence<br>   - Preview next lesson's single idiom with visual cue</p><p><h4 class="sub-heading">Modified Assessment Methods:</h4><br><ul class="intervention-list"><li class="main-bullet">Observation checklist for engagement and task completion</li></ul><br><ul class="intervention-list"><li class="main-bullet">Accuracy in matching activities (80% success target)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Sentence production with rubric focusing on attempt rather than perfection</li></ul><br><ul class="intervention-list"><li class="main-bullet">Self-assessment smiley face scale for comfort level</li></ul></p><p><h4 class="sub-heading">Specific Accommodations:</h4><br><ul class="intervention-list"><li class="main-bullet">Preferential seating near teacher but with reduced visual distractions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Extended time for processing and response</li></ul><br><ul class="intervention-list"><li class="main-bullet">Break options available upon request</li></ul><br><ul class="intervention-list"><li class="main-bullet">Reduced language load: focus on receptive understanding before production</li></ul><br><ul class="intervention-list"><li class="main-bullet">Positive behavior reinforcement system aligned with counseling goals</li></ul></p><p><h4 class="sub-heading">Implementation Notes:</h4><br><ul class="intervention-list"><li class="main-bullet">Prepare all visual materials in advance with color coding</li></ul><br><ul class="intervention-list"><li class="main-bullet">Coordinate with counselor regarding emotional regulation strategies to use during lesson</li></ul><br><ul class="intervention-list"><li class="main-bullet">Have bilingual dictionary available for emergency vocabulary needs</li></ul><br><ul class="intervention-list"><li class="main-bullet">Schedule lesson during Abby's optimal alertness period (per counseling notes)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-teach one idiom the day before to reduce novelty stress</li></ul></p><p>---</p><p><h4 class="bold-heading">COMPREHENSIVE DIFFERENTIATION STRATEGIES</h4></p><p><h4 class="bold-heading">Research-Based Content Modifications</h4><br>1. <strong>Language Simplification Protocol</strong><br>   - Implement SIOP (Sheltered Instruction Observation Protocol) strategies for EAL learners (Echevarría, Vogt, & Short, 2017)<br>   - Use controlled vocabulary lists with frequency-based word selection<br>   - Provide bilingual glossaries for all content units<br>   - Implementation: Immediate and ongoing</p><p>2. <strong>Visual Support System</strong><br>   - Develop permanent visual word wall with imagery and translations<br>   - Use graphic organizers for all narrative content (story maps, sequence charts)<br>   - Implement Universal Design for Learning principles for multiple representations (CAST, 2018)<br>   - Progress monitoring: Weekly vocabulary recognition checks</p><p><h4 class="bold-heading">Process Adaptations</h4><br>1. <strong>Chunking and Pacing</strong><br>   - Break all assignments into 3-5 minute segments with clear completion criteria<br>   - Use visual timers and transition warnings<br>   - Provide task analysis sheets for multi-step assignments<br>   - Research basis: Executive function support for emotional/behavioral needs (Dawson & Guare, 2018)</p><p>2. <strong>Response Accommodations</strong><br>   - Implement response choice board: verbal, written, pointing, or technology-assisted<br>   - Reduce language production demands through modified output expectations<br>   - Use gradual release model: "I do, we do, you do" with extended scaffolding<br>   - Progress monitoring: Weekly samples of response mode effectiveness</p><p><h4 class="bold-heading">Assessment Alternatives</h4><br>1. <strong>Modified Grading Rubrics</strong><br>   - Focus on effort and progress rather than absolute accuracy<br>   - Use portfolio assessment to track growth over time<br>   - Implement alternative scoring weights: 40% effort, 40% progress, 20% accuracy<br>   - Research basis: Growth mindset assessment practices (Tomlinson & Moon, 2013)</p><p>2. <strong>Formative Assessment System</strong><br>   - Daily exit tickets with visual supports<br>   - Regular student self-assessment using emotion scales and understanding checks<br>   - Curriculum-based measurement for vocabulary growth tracking<br>   - Implementation: Weekly data review with counseling team</p><p><h4 class="bold-heading">Environmental Optimizations</h4><br>1. <strong>Classroom Modifications</strong><br>   - Designated quiet area with visual barriers available<br>   - Consistent routine with visual schedule<br>   - Preferential seating with reduced auditory/visual distractions<br>   - Research basis: Environmental modifications for emotional regulation (Minahan & Rappaport, 2012)</p><p>2. <strong>Technology Supports</strong><br>   - Text-to-speech software for all reading materials<br>   - Voice recording options for responses<br>   - Bilingual digital dictionary always available<br>   - Implementation: Immediate training and access</p><p><h4 class="bold-heading">Progress Monitoring System</h4><br>1. <strong>Data Collection Protocol</strong><br>   - Weekly vocabulary recognition probes<br>   - Bi-weekly writing samples with rubric scores<br>   - Daily engagement tracking using 5-point scale<br>   - Monthly parent feedback surveys on homework stress levels</p><p>2. <strong>Collaboration Framework</strong><br>   - Weekly email update to counselor with observations<br>   - Bi-weekly team meeting with counselor, ESL teacher, and parents<br>   - Shared documentation system using secure platform<br>   - Research basis: Collaborative problem-solving model (Newton et al., 2012)</p><p><h4 class="bold-heading">Timeline and Implementation</h4><br><ul class="intervention-list"><li class="main-bullet">Week 1-2: Implement basic accommodations and baseline data collection</li></ul><br><ul class="intervention-list"><li class="main-bullet">Week 3-4: Refine strategies based on initial response</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monthly: Review progress data and adjust interventions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Quarterly: Formal review of IEP/504 plan accommodations</li></ul></p><p><h4 class="sub-heading">Citations:</h4><br>CAST (2018). Universal Design for Learning Guidelines version 2.2.<br>Dawson, P., & Guare, R. (2018). Executive skills in children and adolescents: A practical guide to assessment and intervention.<br>Echevarría, J., Vogt, M., & Short, D. (2017). Making content comprehensible for English learners: The SIOP Model.<br>Minahan, J., & Rappaport, N. (2012). The behavior code: A practical guide to understanding and teaching the most challenging students.<br>Newton, J. S., et al. (2012). A systematic review of team-building interventions for improving performance.<br>Tomlinson, C. A., & Moon, T. R. (2013). Assessment and student success in a differentiated classroom.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Emotional/Behavioral</li><li>EAL Learner (Beginner English proficiency)</li><li>Currently struggling academically</li><li>Other needs: Counseling Summary of Abby P.
+
+Name: Abby P.	Counseling Sessions: 1st Session conducted on 9/29/2023, 60 mins
+2nd Session conducted on 10/7/2023, 60mins
+3rd Session conducted on 10/11/2023, 60mins
+                          
+Nissi Counselor: Nancy Z.
+
+Abby displayed stable emotions during these three weeks. She also explained that she kept regular sleep and diet daily since she sticks to the medication routine and experiences fewer side effects.  
+
+Abby seems satisfied with her current situation and has no concerns about the coming schooling since her sister has already studied there.Abby explained that she already adapted her schedules for a better transition in school and completed the homework to research school rules and upcoming learning subjects. Abby did demonstrate the repression mechanism of coping with challenges. Therefore, a solid social support system could encourage students to access the necessary resources.
+
+Abby and the counselor established a positive relationship. Still, the client could be coached with more active interaction to be engaged in sessions. Therefore, the counselor will continue to provide multiple counseling tools and techniques, such as drawing, role play, and narrative approach, to deliver psychological education on self-awareness of emotional intelligence, social skills with peers, academic motivation, and learning skills to support the client’s holistic well-being. 
+
+Our risk assessment is “low risk” because the client displays a stable emotional and social status. Abby didn’t mention experiencing flashbacks of previous social conflicts but was reluctant to continue the discussion. Meanwhile, Abby denied any self-harming or suicidal ideation or plan. 
+
+A counseling session will be arranged for parents before the next 1-1 session with Abby herself, which aims to collect more data on Abby ‘s growth history and empower parents with positive parenting skills in supporting Abby’s social, emotional, and academic growth.
+
+
+This summary is based on three sessions of support with the express understanding that Abby shall continue counseling from the Nissi Counseling Center after being enrolled in school.
+
+</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">Abby P (Grade 10th)</h4>
+          <div class="concern-counter">2. Academic</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Classroom</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/1/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>To help lesson anxiety we need to differentiate Crystal's lessons.</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h4 class="bold-heading">Differentiated Lesson Plan for Abby P.</h4></p><p><h4 class="sub-heading">Lesson:</h4> Linear Equations in Slope-Intercept Form (Differentiated Version)<br><h4 class="sub-heading">Student:</h4> Abby P.<br><h4 class="sub-heading">Grade:</h4> 10th<br><h4 class="sub-heading">Duration:</h4> 50 minutes (with built-in flexibility)<br><h4 class="sub-heading">Modified Learning Objectives:</h4><br>1. Identify slope (m) and y-intercept (b) in equations using visual supports and guided practice.<br>2. Graph lines using step-by-step templates with reduced cognitive load.<br>3. Write equations from graphs with scaffolded support and choice in response format.</p><p><h4 class="sub-heading">Materials for Abby:</h4><br><ul class="intervention-list"><li class="main-bullet">Color-coded graphing template (pre-printed axes with highlighted quadrants)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Slope-intercept formula card (visual reference with color-coded m and b)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Guided practice worksheets with partially completed examples</li></ul><br><ul class="intervention-list"><li class="main-bullet">Digital graphing calculator (Desmos or similar) on tablet/computer</li></ul><br><ul class="intervention-list"><li class="main-bullet">Emotion regulation toolkit (pre-approved break options, stress ball, noise-canceling headphones)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Self-monitoring checklist for task completion</li></ul></p><p><h4 class="sub-heading">Lesson Outline with Modifications:</h4></p><p><h4 class="bold-heading">1. Warm-Up (7 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified problems with visual supports:</li></ul><br>  1. Graph with points (2,4) and (4,8) pre-plotted; calculate slope using rise/run visual guide<br>  2. Equation y=2x+5 with color-coded components (slope blue, intercept green)<br><ul class="intervention-list"><li class="main-bullet">Abby uses reference card and works with teacher or peer partner for 3 minutes</li></ul><br><ul class="intervention-list"><li class="main-bullet">Teacher provides immediate corrective feedback using visual examples</li></ul></p><p><h4 class="bold-heading">2. Introduction (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Present y=mx+b using large visual anchor chart with color coding and real-world examples</li></ul><br><ul class="intervention-list"><li class="main-bullet">Incorporate choice: Abby can select which real-world example to explore (taxi fare, phone plan, or video game points)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Use think-aloud modeling with explicit step-by-step language</li></ul><br><ul class="intervention-list"><li class="main-bullet">Provide printed notes with fill-in-the-blank sections to reduce writing demands</li></ul></p><p><h4 class="bold-heading">3. Guided Practice (15 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified examples with scaffolding:</li></ul><br>  Example 1: y=2x+1 with pre-plotted y-intercept and slope arrows<br>  Example 2: y=-½x+4 with fraction conversion visual aid (½ = 1 up/2 left)<br><ul class="intervention-list"><li class="main-bullet">Abby uses graphing template with coordinate points pre-labeled</li></ul><br><ul class="intervention-list"><li class="main-bullet">Incorporate movement: Use floor grid tape for physical graphing demonstration</li></ul><br><ul class="intervention-list"><li class="main-bullet">Frequent check-ins: "Show me where you are" self-assessment prompts every 3 minutes</li></ul></p><p><h4 class="bold-heading">4. Independent Practice (15 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Tiered worksheet with choice options:</li></ul><br>  Tier 1: Identify slope/intercept with color-matching activity<br>  Tier 2: Graph using pre-plotted starting points with slope direction arrows<br>  Tier 3: Write equations with word bank and sentence starters<br><ul class="intervention-list"><li class="main-bullet">Abby selects starting difficulty level with teacher guidance</li></ul><br><ul class="intervention-list"><li class="main-bullet">Access to digital graphing tool for immediate feedback</li></ul><br><ul class="intervention-list"><li class="main-bullet">Break options available after each completed problem</li></ul></p><p><h4 class="bold-heading">5. Closing & Assessment (6 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified exit ticket:</li></ul><br>  Multiple-choice options for slope/intercept identification<br>  Graph completion with pre-drawn axes and starting point<br>  Option to verbally explain steps to teacher instead of written response<br><ul class="intervention-list"><li class="main-bullet">Self-rating scale: "How confident do you feel?" (1-5 visual scale)</li></ul></p><p><h4 class="sub-heading">Homework Modifications:</h4><br><ul class="intervention-list"><li class="main-bullet">Reduced problems (5 instead of 10) with increased white space</li></ul><br><ul class="intervention-list"><li class="main-bullet">Option to complete digitally or with scribe support</li></ul><br><ul class="intervention-list"><li class="main-bullet">Video tutorial links provided for additional support</li></ul></p><p>---</p><p><h4 class="bold-heading">Comprehensive Differentiation Strategies for Abby P.</h4></p><p><h4 class="bold-heading">Research-Based Accommodations & Modifications</h4><br>*(Based on: Every Student Succeeds Act, 2015; Council for Exceptional Children Standards; Hattie, 2012 Visible Learning Meta-Analysis)*</p><p><h4 class="bold-heading">1. Content Delivery Modifications</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Chunking</strong>: Break information into 7-10 minute segments with clear transition signals (Research: Coyne et al., 2016)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Multisensory Input</strong>: Combine visual, auditory, and kinesthetic elements in each concept presentation (Research: Meyer & Rose, 2005)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Advanced Organizers</strong>: Provide concept maps and preview documents before lessons (Research: Ausubel, 1968)</li></ul></p><p><h4 class="bold-heading">Implementation Timeline</h4>: Immediate implementation with weekly review of effectiveness</p><p><h4 class="bold-heading">2. Environmental Supports</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Preferential Seating</strong>: Near instruction point but with buffer space from high-traffic areas</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Break System</strong>: Scheduled breaks every 15 minutes with visual timer (Research: Adamson et al., 2019)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Noise Reduction</strong>: Access to quiet corner or noise-canceling headphones during independent work</li></ul></p><p><h4 class="bold-heading">Progress Monitoring</h4>: Daily behavior tracking using 5-point scale for engagement and self-regulation</p><p><h4 class="bold-heading">3. Assessment Adaptations</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Alternative Response Formats</strong>: Oral responses, graphic organizers, or digital submissions (Research: Thurlow et al., 2016)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Extended Time</strong>: 1.5x time allowance for assessments and major assignments</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Rubric Modification</strong>: Focus on core concepts rather than procedural precision</li></ul></p><p><h4 class="bold-heading">Data Collection</h4>: Weekly work samples with competency-based grading on priority standards</p><p><h4 class="bold-heading">4. Social-Emotional Supports</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Check-In/Check-Out System</strong>: Morning and afternoon meetings with counseling liaison (Research: Crone et al., 2010)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Self-Monitoring Tools</strong>: Emotion regulation checklist and coping strategy menu (Research: Mitchem et al., 2017)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Peer Support</strong>: Trained peer partner for academic collaboration (Research: Carter et al., 2015)</li></ul></p><p><h4 class="bold-heading">Implementation Plan</h4>: Collaborate with counseling team to align classroom strategies with therapeutic goals</p><p><h4 class="bold-heading">5. Technology Integration</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Graphing Software</strong>: Desmos or GeoGebra for visual representation and error analysis</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Speech-to-Text</strong>: For written responses and note-taking</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital Organization Tools</strong>: Task management apps with reminders and breakdowns</li></ul></p><p><h4 class="bold-heading">Training Required</h4>: 30-minute teacher training on assistive technology features</p><p><h4 class="bold-heading">6. Collaborative Planning System</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Coordination</strong>: Brief meeting with counseling team (15 minutes virtual)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent Communication</strong>: Bi-weekly progress updates via preferred method (email/text/portal)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Data Sharing</strong>: Secure platform for sharing academic and behavioral progress monitoring</li></ul></p><p><h4 class="bold-heading">Documentation</h4>: Use standardized forms for consistency across providers (Research: Jung, 2018)</p><p><h4 class="bold-heading">7. Long-Term Progress Monitoring</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Academic</strong>: Curriculum-based measurements for algebra proficiency 2x/month</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Behavioral</strong>: Direct observation data using interval recording 1x/week</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Social-Emotional</strong>: Student self-rating scales and counselor progress notes</li></ul></p><p><h4 class="bold-heading">Review Cycle</h4>: Formal review of differentiation plan every 6 weeks with IEP team</p><p><h4 class="sub-heading">Citations:</h4><br>Adamson, R. M., et al. (2019). Journal of Positive Behavior Interventions<br>Coyne, M. D., et al. (2016). Exceptional Children<br>Crone, D. A., et al. (2010). Responding to Problem Behavior in Schools<br>Hattie, J. (2012). Visible Learning for Teachers<br>Jung, P. G., et al. (2018). Intervention in School and Clinic<br>Mitchem, K. J., et al. (2017). Preventing School Failure<br>Thurlow, M. L., et al. (2016). Testing Students with Disabilities</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Emotional/Behavioral</li><li>Other needs: Counseling Summary of Abby P.
+
+Name: Abby P.	Counseling Sessions: 1st Session conducted on 9/29/2023, 60 mins
+2nd Session conducted on 10/7/2023, 60mins
+3rd Session conducted on 10/11/2023, 60mins
+                          
+Nissi Counselor: Nancy Z.
+
+Abby displayed stable emotions during these three weeks. She also explained that she kept regular sleep and diet daily since she sticks to the medication routine and experiences fewer side effects.  
+
+Abby seems satisfied with her current situation and has no concerns about the coming schooling since her sister has already studied there.Abby explained that she already adapted her schedules for a better transition in school and completed the homework to research school rules and upcoming learning subjects. Abby did demonstrate the repression mechanism of coping with challenges. Therefore, a solid social support system could encourage students to access the necessary resources.
+
+Abby and the counselor established a positive relationship. Still, the client could be coached with more active interaction to be engaged in sessions. Therefore, the counselor will continue to provide multiple counseling tools and techniques, such as drawing, role play, and narrative approach, to deliver psychological education on self-awareness of emotional intelligence, social skills with peers, academic motivation, and learning skills to support the client’s holistic well-being. 
+
+Our risk assessment is “low risk” because the client displays a stable emotional and social status. Abby didn’t mention experiencing flashbacks of previous social conflicts but was reluctant to continue the discussion. Meanwhile, Abby denied any self-harming or suicidal ideation or plan. 
+
+A counseling session will be arranged for parents before the next 1-1 session with Abby herself, which aims to collect more data on Abby ‘s growth history and empower parents with positive parenting skills in supporting Abby’s social, emotional, and academic growth.
+
+
+This summary is based on three sessions of support with the express understanding that Abby shall continue counseling from the Nissi Counseling Center after being enrolled in school.
+
+</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">Abby P (Grade 10th)</h4>
+          <div class="concern-counter">3. Social/Emotional, Attendance, Family/Home</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/1/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>we need to develop a reentry plan for Crystal and to help to adapt this lesson</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h4 class="bold-heading">DIFFERENTIATED LESSON PLAN FOR ABBY P.</h4></p><p><h4 class="sub-heading">Lesson:</h4> Linear Equations in Slope-Intercept Form (Modified)<br><h4 class="sub-heading">Student:</h4> Abby P. (10th Grade)<br><h4 class="sub-heading">Duration:</h4> 50 minutes (with built-in flexibility)<br><h4 class="sub-heading">Modified Date:</h4> [Current Date]</p><p><h4 class="sub-heading">Differentiated Learning Objectives:</h4><br>1. Identify y-intercept (b) using visual supports and real-world contexts<br>2. Graph lines using step-by-step templates with physical manipulatives<br>3. Match equations to their graphs using color-coding and pattern recognition<br>4. Demonstrate understanding through multiple modalities (visual, kinesthetic, verbal)</p><p><h4 class="sub-heading">Materials for Abby:</h4><br><ul class="intervention-list"><li class="main-bullet">Color-coded graph paper (blue y-axis, red x-axis)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-printed coordinate plane with enlarged grid</li></ul><br><ul class="intervention-list"><li class="main-bullet">Physical "slope ruler" showing rise/run increments</li></ul><br><ul class="intervention-list"><li class="main-bullet">Visual vocabulary cards with images (slope = hill, intercept = starting point)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bilingual math dictionary (English + native language)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer for equation parts</li></ul><br><ul class="intervention-list"><li class="main-bullet">Tablet with graphing app (Desmos or GeoGebra)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Noise-reducing headphones</li></ul><br><ul class="intervention-list"><li class="main-bullet">Break area pass</li></ul></p><p><h4 class="sub-heading">Lesson Sequence with Modifications:</h4></p><p><h4 class="bold-heading">1. Warm-Up (8 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified problems with visual supports:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">"Find the change between (2,4) and (4,8)" with arrow diagrams</li></ul><br><ul class="intervention-list"><li class="sub-bullet">"What is the starting value when x=0 in y=2x+5?" with table representation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Abby uses physical number line to demonstrate answers</li></ul><br><ul class="intervention-list"><li class="main-bullet">Teacher provides immediate positive feedback</li></ul></p><p><h4 class="bold-heading">2. Introduction (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Use concrete example: "Phone plan: $10 monthly fee + $2 per GB"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Color-coded equation: y = [red]2[black]x + [blue]10</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer: "m = movement rate" "b = beginning point"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bilingual vocabulary support with visual symbols</li></ul><br><ul class="intervention-list"><li class="main-bullet">Kinesthetic demonstration: walk the line on floor grid tape</li></ul></p><p><h4 class="bold-heading">3. Guided Practice (15 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Example 1: y = 2x + 1 using slope ruler tool</li></ul><br><ul class="intervention-list"><li class="main-bullet">Example 2: y = -½x + 4 with downward arrow visual</li></ul><br><ul class="intervention-list"><li class="main-bullet">Abby uses tablet graphing app to verify physical manipulations</li></ul><br><ul class="intervention-list"><li class="main-bullet">Sentence frames: "I start at __ and move __ steps up/down for each step right"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Frequent comprehension checks: "Show me with your hands"</li></ul></p><p><h4 class="bold-heading">4. Independent Practice (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified worksheet with:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Matching equations to graphs (cut/paste activity)</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Fill-in-blank equations with word bank</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Two graphing problems with coordinate plane templates</li></ul><br><ul class="intervention-list"><li class="main-bullet">Option to work in quiet corner with headphones</li></ul><br><ul class="intervention-list"><li class="main-bullet">Calculator available for numerical verification</li></ul></p><p><h4 class="bold-heading">5. Closing & Assessment (3 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified exit ticket:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Circle the y-intercept in y = 3x - 2</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Use slope ruler to show movement on pre-drawn graph</li></ul><br><ul class="intervention-list"><li class="sub-bullet">"This line starts at __ and moves __"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Verbal explanation option available</li></ul></p><p><h4 class="sub-heading">Homework Alternatives:</h4><br><ul class="intervention-list"><li class="main-bullet">Choice board: Create a real-world example, complete 3 practice problems, or make a video explaining one concept</li></ul><br><ul class="intervention-list"><li class="main-bullet">Problems reduced to 4 total with template support</li></ul></p><p><h4 class="sub-heading">IMPLEMENTATION NOTES:</h4><br><ul class="intervention-list"><li class="main-bullet">Seat Abby near teacher desk but with visual barrier options</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-teach vocabulary 10 minutes before class</li></ul><br><ul class="intervention-list"><li class="main-bullet">Use timer for activity transitions with 2-minute warnings</li></ul><br><ul class="intervention-list"><li class="main-bullet">Prepare "break bucket" with sensory items for self-regulation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Coordinate with counselor regarding emotional check-in procedures</li></ul></p><p><h4 class="bold-heading">ONGOING DIFFERENTIATION STRATEGIES</h4></p><p><h4 class="sub-heading">Content Modifications:</h4><br><ul class="intervention-list"><li class="main-bullet">Use concrete-representational-abstract sequence for all new concepts (Miller & Hudson, 2007)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Provide bilingual glossaries with visual representations</li></ul><br><ul class="intervention-list"><li class="main-bullet">Chunk information into 5-7 minute segments with processing time</li></ul><br><ul class="intervention-list"><li class="main-bullet">Implement graphic organizers for problem-solving procedures</li></ul></p><p><h4 class="sub-heading">Process Adaptations:</h4><br><ul class="intervention-list"><li class="main-bullet">Incorporate Universal Design for Learning principles: multiple means of representation, action/expression, engagement (CAST, 2018)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Use think-aloud modeling with visual tracking supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Provide step-by-step checklists for multi-step problems</li></ul><br><ul class="intervention-list"><li class="main-bullet">Implement peer-assisted learning strategies with trained partner</li></ul></p><p><h4 class="sub-heading">Assessment Alternatives:</h4><br><ul class="intervention-list"><li class="main-bullet">Portfolio assessments demonstrating growth over time</li></ul><br><ul class="intervention-list"><li class="main-bullet">Oral assessments with visual supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Modified rubrics focusing on concept understanding rather than procedural fluency</li></ul><br><ul class="intervention-list"><li class="main-bullet">Error analysis opportunities: "Find and fix the mistake"</li></ul></p><p><h4 class="sub-heading">Environmental Optimizations:</h4><br><ul class="intervention-list"><li class="main-bullet">Designated quiet workspace with visual boundaries</li></ul><br><ul class="intervention-list"><li class="main-bullet">Consistent routine with visual schedule</li></ul><br><ul class="intervention-list"><li class="main-bullet">Preferential seating near instruction but with reduced distractions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Access to sensory tools and movement breaks</li></ul></p><p><h4 class="sub-heading">Progress Monitoring:</h4><br><ul class="intervention-list"><li class="main-bullet">Weekly curriculum-based measurements graphing proficiency</li></ul><br><ul class="intervention-list"><li class="main-bullet">Daily comprehension checks using 0-5 scale</li></ul><br><ul class="intervention-list"><li class="main-bullet">Behavior tracking aligned with academic engagement</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monthly parent/teacher/counselor collaboration meetings</li></ul></p><p><h4 class="sub-heading">Collaboration Plan:</h4><br><ul class="intervention-list"><li class="main-bullet">Bi-weekly consultation with ESL teacher for language support strategies</li></ul><br><ul class="intervention-list"><li class="main-bullet">Weekly check-in with school counselor regarding emotional regulation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monthly parent communication log (email/translated documents)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Peer tutor training for classroom support</li></ul></p><p><h4 class="sub-heading">Research Basis:</h4><br><ul class="intervention-list"><li class="main-bullet">EAL strategies: Gibbons (2015) scaffolding language, scaffolding learning</li></ul><br><ul class="intervention-list"><li class="main-bullet">Emotional/behavioral support: Simonsen et al. (2015) evidence-based practices in classroom management</li></ul><br><ul class="intervention-list"><li class="main-bullet">Mathematics differentiation: Witzel & Riccomini (2007) CRA instructional sequence</li></ul><br><ul class="intervention-list"><li class="main-bullet">Assessment modifications: Salend (2016) creating inclusive classrooms</li></ul></p><p><h4 class="sub-heading">Implementation Timeline:</h4><br><ul class="intervention-list"><li class="main-bullet">Immediate: Lesson-specific modifications</li></ul><br><ul class="intervention-list"><li class="main-bullet">2 weeks: Environmental adjustments and routine establishment</li></ul><br><ul class="intervention-list"><li class="main-bullet">4 weeks: Progress monitoring system fully implemented</li></ul><br><ul class="intervention-list"><li class="main-bullet">8 weeks: Review and adjust based on data collection</li></ul></p><p><h4 class="sub-heading">Data Collection Methods:</h4><br><ul class="intervention-list"><li class="main-bullet">Work samples with error pattern analysis</li></ul><br><ul class="intervention-list"><li class="main-bullet">Behavioral frequency counts during math instruction</li></ul><br><ul class="intervention-list"><li class="main-bullet">Language acquisition progression tracking</li></ul><br><ul class="intervention-list"><li class="main-bullet">Social-emotional learning checklists</li></ul></p><p>All strategies are grounded in peer-reviewed educational research and designed for sustainable implementation with progress monitoring systems to ensure effectiveness.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Emotional/Behavioral</li><li>EAL Learner (Beginner English proficiency)</li><li>Currently struggling academically</li><li>Other needs: Counseling Summary of Abby P.
+
+Name: Abby P.	Counseling Sessions: 1st Session conducted on 9/29/2023, 60 mins
+2nd Session conducted on 10/7/2023, 60mins
+3rd Session conducted on 10/11/2023, 60mins
+                          
+Nissi Counselor: Nancy Z.
+
+Abby displayed stable emotions during these three weeks. She also explained that she kept regular sleep and diet daily since she sticks to the medication routine and experiences fewer side effects.  
+
+Abby seems satisfied with her current situation and has no concerns about the coming schooling since her sister has already studied there.Abby explained that she already adapted her schedules for a better transition in school and completed the homework to research school rules and upcoming learning subjects. Abby did demonstrate the repression mechanism of coping with challenges. Therefore, a solid social support system could encourage students to access the necessary resources.
+
+Abby and the counselor established a positive relationship. Still, the client could be coached with more active interaction to be engaged in sessions. Therefore, the counselor will continue to provide multiple counseling tools and techniques, such as drawing, role play, and narrative approach, to deliver psychological education on self-awareness of emotional intelligence, social skills with peers, academic motivation, and learning skills to support the client’s holistic well-being. 
+
+Our risk assessment is “low risk” because the client displays a stable emotional and social status. Abby didn’t mention experiencing flashbacks of previous social conflicts but was reluctant to continue the discussion. Meanwhile, Abby denied any self-harming or suicidal ideation or plan. 
+
+A counseling session will be arranged for parents before the next 1-1 session with Abby herself, which aims to collect more data on Abby ‘s growth history and empower parents with positive parenting skills in supporting Abby’s social, emotional, and academic growth.
+
+
+This summary is based on three sessions of support with the express understanding that Abby shall continue counseling from the Nissi Counseling Center after being enrolled in school.
+
+</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">Abby P (Grade 10th)</h4>
+          <div class="concern-counter">4. Social/Emotional</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/1/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>Abby has refused to attend school and is currently attending counseling outside of school. This meeting is to update her teachers and begin to develop an reentry plan.</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Concerns</strong>: School refusal behavior stemming from emotional/behavioral challenges, evidenced by complete non-attendance despite stable emotional presentation in counseling sessions. Repression coping mechanism identified as potential barrier to addressing underlying issues. Academic struggles likely compounded by absence and emotional factors.</li></ul><br>  <br><ul class="intervention-list"><li class="main-bullet"><strong>Learning Profile Connections</strong>: Emotional/behavioral diagnosis with current medication regimen showing positive effects on sleep/diet stability. Counseling reveals adequate cognitive capacity for planning and preparation (researching school rules, adapting schedules) but demonstrates avoidance patterns in discussing previous social conflicts. Repression coping style suggests potential trauma history requiring trauma-informed approaches.</li></ul></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Risk Factors</strong>: Pattern of avoidance behavior, reluctance to discuss previous conflicts, potential undisclosed trauma history, academic gaps developing due to non-attendance, possible social skill deficits masked by repression coping mechanism.</li></ul></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Protective Factors</strong>: Stable medication regimen, family support (sister attends same school), engagement in external counseling, demonstrated planning and organizational skills, positive counselor relationship, parental involvement willingness.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Approach</strong>: Trauma-Informed Check-In/Check-Out (CICO) combined with Graduated Reentry Protocol (based on PBIS framework and trauma-informed practices research by Cook et al., 2015)</li></ul><br>  <br><ul class="intervention-list"><li class="main-bullet"><strong>Theoretical Foundation</strong>: Behavioral (systematic desensitization through graduated exposure), Cognitive (addressing automatic negative thoughts about school), Academic (scaffolded reentry to prevent skill gaps)</li></ul><br>  <br><ul class="intervention-list"><li class="main-bullet"><strong>Expected Outcomes</strong>: 50% attendance within 2 weeks, 80% attendance within 8 weeks, reduced anxiety measures on daily rating scales, successful completion of modified academic assignments</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p><h4 class="bold-heading">Strategy 1: Graduated Reentry Protocol with Visual Schedule System</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Systematic desensitization (Wolpe, 1958), Trauma-Informed PBIS (McIntosh et al., 2016)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Visual schedule template, timer, preferred activity materials, anxiety rating scale (1-5), reinforcement menu</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Day 1-3: 30-minute school visits during non-instructional time with preferred adult (counselor or designated staff)<br>  2. Day 4-7: 60-minute visits including one class period with pre-teaching of content<br>  3. Day 8-14: Half-day attendance with scheduled breaks and reduced assignment load<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Daily attendance duration, anxiety ratings pre/post visit, assignment completion rates</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: Decreasing anxiety ratings, increasing attendance duration, successful completion of modified assignments</li></ul></p><p><h4 class="bold-heading">Strategy 2: Modified Check-In/Check-Out with Trauma-Informed Language</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: CICO effectiveness (Hawken et al., 2014), Trauma-sensitive language adaptations (Bath, 2008)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Daily point card, neutral visual cues, non-contingent reinforcement items</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Morning check-in with designated staff: "How is your body feeling today?" rather than "How are you?"<br>  2. Mid-day check: "What do you need to be successful this afternoon?"<br>  3. End-of-day check-out: "What worked well today?" with focus on effort rather than performance<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Daily point card data, staff anecdotal notes, student self-assessment</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 80% of daily points earned, decreasing staff prompts required, increasing student-initiated check-ins</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Emotional Regulation and Academic Engagement</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Intervention Program</strong>: Zones of Regulation curriculum combined with modified academic workload</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Frequency</strong>: Daily 15-minute regulation instruction, bi-weekly 30-minute social skills group, modified assignments in all core classes</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Progress Monitoring</strong>: Weekly curriculum-based measures in reading/math, daily emotion tracking, assignment completion rates</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adaptation Protocol</strong>: If anxiety ratings remain high (>4/5) for 3 consecutive days, reduce academic demands by 50% and increase sensory breaks</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Skill Transfer Plans</strong>: Fading adult support from 1:1 to small group to independent check-ins, generalization across settings through consistent language and expectations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Independence Building</strong>: Student-led goal setting, self-monitoring system implementation, gradual reduction of modified assignments based on performance data</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Family Engagement</strong>: Weekly parent training sessions on reinforcement techniques, home-school communication log, family therapy referrals if needed</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Daily Data</strong>: Anxiety rating scales, point card percentages, assignment completion tracking</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Assessment</strong>: Curriculum-based measurement probes, social skills observational data, attendance duration graphs</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Monthly Review</strong>: Standardized anxiety measures (GAD-7), academic achievement data, functional behavior assessment updates</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Decision Points</strong>: Modify interventions if 2+ weeks of plateaued progress, escalate to Tier 3 if regression occurs, consider special education evaluation if academic gaps exceed 1.5 years</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Team Members</strong>: School psychologist, counselor, all academic teachers, administration, external therapist (with release)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Meeting Schedule</strong>: Weekly team meetings for first month, then bi-weekly, daily brief check-ins among core team</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Documentation Requirements</strong>: Shared Google Doc for real-time updates, standardized data collection forms, therapy session summary forms (with consent)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent Communication</strong>: Daily email updates for first week, then weekly summary reports, scheduled bi-weekly phone conferences</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Warning Signs</strong>: Increased avoidance behaviors, rising anxiety ratings, verbal expressions of distress, academic performance decline</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Immediate Response</strong>: Safe space protocol activation, reduced demands, crisis counselor notification, parent contact</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Referral Criteria</strong>: Persistent school refusal beyond 4 weeks, self-harm ideation, significant academic regression</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Emergency Contacts</strong>: School psychologist, crisis intervention team, external therapist, community mental health crisis line</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Professional Development</strong>: Trauma-Informed Practices training (National Child Traumatic Stress Network resources), School Avoidance Alliance protocols</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Educational Materials</strong>: Zones of Regulation curriculum, "The Explosive Child" by Ross Greene, Cognitive Behavioral Intervention for Trauma in Schools (CBITS)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Technology Tools</strong>: Mood Meter app for emotion tracking, Google Classroom for modified assignments, noise-cancelling headphones for sensory needs</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Community Resources</strong>: Regional school refusal program referrals, family therapy services, community-based social skills groups</li></ul></p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Emotional/Behavioral</li><li>Currently struggling academically</li><li>Other needs: Counseling Summary of Abby P.
+
+Name: Abby P.	Counseling Sessions: 1st Session conducted on 9/29/2023, 60 mins
+2nd Session conducted on 10/7/2023, 60mins
+3rd Session conducted on 10/11/2023, 60mins
+                          
+Nissi Counselor: Nancy Z.
+
+Abby displayed stable emotions during these three weeks. She also explained that she kept regular sleep and diet daily since she sticks to the medication routine and experiences fewer side effects.  
+
+Abby seems satisfied with her current situation and has no concerns about the coming schooling since her sister has already studied there.Abby explained that she already adapted her schedules for a better transition in school and completed the homework to research school rules and upcoming learning subjects. Abby did demonstrate the repression mechanism of coping with challenges. Therefore, a solid social support system could encourage students to access the necessary resources.
+
+Abby and the counselor established a positive relationship. Still, the client could be coached with more active interaction to be engaged in sessions. Therefore, the counselor will continue to provide multiple counseling tools and techniques, such as drawing, role play, and narrative approach, to deliver psychological education on self-awareness of emotional intelligence, social skills with peers, academic motivation, and learning skills to support the client’s holistic well-being. 
+
+Our risk assessment is “low risk” because the client displays a stable emotional and social status. Abby didn’t mention experiencing flashbacks of previous social conflicts but was reluctant to continue the discussion. Meanwhile, Abby denied any self-harming or suicidal ideation or plan. 
+
+A counseling session will be arranged for parents before the next 1-1 session with Abby herself, which aims to collect more data on Abby ‘s growth history and empower parents with positive parenting skills in supporting Abby’s social, emotional, and academic growth.
+
+
+This summary is based on three sessions of support with the express understanding that Abby shall continue counseling from the Nissi Counseling Center after being enrolled in school.
+
+</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">Abby P (Grade 8th)</h4>
+          <div class="concern-counter">5. Social/Emotional</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/31/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>Abby, is refusing to come to school, and complains that the tasks are too hard.</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h4 class="bold-heading">Differentiated Lesson Plan for Abby P: Linear Equations in Slope-Intercept Form</h4></p><p><h4 class="bold-heading">Modified Learning Objectives</h4><br>1. Identify slope (m) and y-intercept (b) in simplified equations using visual supports<br>2. Graph a line using step-by-step guidance with color-coded materials<br>3. Write basic equations when given slope and y-intercept using templates</p><p><h4 class="bold-heading">Materials Adapted</h4><br><ul class="intervention-list"><li class="main-bullet">Color-coded graph paper (blue y-axis, green x-axis)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-printed coordinate grids with enlarged squares</li></ul><br><ul class="intervention-list"><li class="main-bullet">Slope-intercept form visual guide (laminated)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphing checklist with visual prompts</li></ul><br><ul class="intervention-list"><li class="main-bullet">Digital graphing calculator with large display</li></ul><br><ul class="intervention-list"><li class="main-bullet">Stress-reduction tools (fidget tool, breathing visual prompt)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Modified worksheet with reduced problems and increased spacing</li></ul></p><p><h4 class="bold-heading">Lesson Timeline (50 minutes)</h4></p><p><h4 class="bold-heading">Warm-Up (7 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified problems with visual supports:</li></ul><br>  1. Find slope between (2,4) and (4,8) using rise/run diagram<br>  2. Identify y-intercept in y = 2x + 5 with color-highlighted "b"<br><ul class="intervention-list"><li class="main-bullet">Individual think time with option to use graphing calculator</li></ul><br><ul class="intervention-list"><li class="main-bullet">Partner share instead of whole-group sharing</li></ul></p><p><h4 class="bold-heading">Introduction (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Simplified language: "y = mx + b" introduced as "math recipe for lines"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Real-world example: Taxi cost scenario with visual storyboard</li></ul><br><ul class="intervention-list"><li class="main-bullet">Color-coding: m = green (slope), b = blue (y-intercept)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer: Slope-intercept form template with fill-in blanks</li></ul></p><p><h4 class="bold-heading">Guided Practice (15 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Example 1: y = 2x + 1 with step-by-step checklist:</li></ul><br>  [ ] Find starting point (0,b)<br>  [ ] Use slope: rise/run = 2/1<br>  [ ] Plot next point: up 2, right 1<br>  [ ] Draw line through points<br><ul class="intervention-list"><li class="main-bullet">Physical movement: Use floor grid for kinesthetic graphing</li></ul><br><ul class="intervention-list"><li class="main-bullet">Example 2: y = -½x + 4 with emphasis on negative slope visualization</li></ul></p><p><h4 class="bold-heading">Independent Practice (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified worksheet with 3 problems instead of multiple sections:</li></ul><br>  1. Identify m and b with color-highlighting option<br>  2. Graph one equation with checklist support<br>  3. Write equation from simple graph<br><ul class="intervention-list"><li class="main-bullet">Option to work with teacher, in pair, or independently</li></ul><br><ul class="intervention-list"><li class="main-bullet">Calculator and templates available</li></ul></p><p><h4 class="bold-heading">Closing & Assessment (4 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified exit ticket:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Circle slope and y-intercept in y = 3x - 2</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Complete first two steps of graphing process</li></ul><br><ul class="intervention-list"><li class="main-bullet">Verbal explanation option instead of written response</li></ul></p><p><h4 class="bold-heading">Homework Adaptation</h4><br><ul class="intervention-list"><li class="main-bullet">4 problems total with template support</li></ul><br><ul class="intervention-list"><li class="main-bullet">Option to complete digitally or on paper</li></ul><br><ul class="intervention-list"><li class="main-bullet">Parent support guide included</li></ul></p><p>---</p><p><h4 class="bold-heading">COMPREHENSIVE DIFFERENTIATION STRATEGIES</h4></p><p><h4 class="bold-heading">Research-Based Accommodations for Emotional/Behavioral Needs</h4></p><p><h4 class="bold-heading">Environmental Modifications</h4><br><ul class="intervention-list"><li class="main-bullet">Preferential seating near instruction area but with buffer space</li></ul><br><ul class="intervention-list"><li class="main-bullet">Visual schedule of lesson activities on desk</li></ul><br><ul class="intervention-list"><li class="main-bullet">Break area access with 3-minute timer option</li></ul><br><ul class="intervention-list"><li class="main-bullet">Noise-reducing headphones available</li></ul><br><ul class="intervention-list"><li class="main-bullet">Consistent routine with transition warnings</li></ul></p><p><h4 class="bold-heading">Content Delivery Adaptations</h4><br><ul class="intervention-list"><li class="main-bullet">Chunk instruction into 7-10 minute segments (Mastropieri & Scruggs, 2018)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Multisensory presentation: visual, auditory, kinesthetic</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizers for conceptual relationships</li></ul><br><ul class="intervention-list"><li class="main-bullet">Vocabulary preview with visual glossary</li></ul><br><ul class="intervention-list"><li class="main-bullet">Real-world connections to maintain engagement</li></ul></p><p><h4 class="bold-heading">Process Modifications</h4><br><ul class="intervention-list"><li class="main-bullet">Task analysis with step-by-step checklists</li></ul><br><ul class="intervention-list"><li class="main-bullet">Choice boards for demonstration of understanding</li></ul><br><ul class="intervention-list"><li class="main-bullet">Increased processing time (50% additional time)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Scaffolded practice: I do → We do → You do</li></ul><br><ul class="intervention-list"><li class="main-bullet">Errorless learning approaches with immediate feedback</li></ul></p><p><h4 class="bold-heading">Assessment Adaptations</h4><br><ul class="intervention-list"><li class="main-bullet">Alternative response modes: verbal, digital, selection</li></ul><br><ul class="intervention-list"><li class="main-bullet">Portfolio assessments over time</li></ul><br><ul class="intervention-list"><li class="main-bullet">Reduced volume with maintained rigor</li></ul><br><ul class="intervention-list"><li class="main-bullet">Formative assessment every 10-15 minutes</li></ul><br><ul class="intervention-list"><li class="main-bullet">Rubrics with specific behavioral expectations</li></ul></p><p><h4 class="bold-heading">Behavioral Support Strategies</h4><br><ul class="intervention-list"><li class="main-bullet">Positive behavior intervention system with immediate reinforcement</li></ul><br><ul class="intervention-list"><li class="main-bullet">Pre-correction before challenging activities</li></ul><br><ul class="intervention-list"><li class="main-bullet">Self-monitoring checklist for on-task behavior</li></ul><br><ul class="intervention-list"><li class="main-bullet">Break options with visual timer</li></ul><br><ul class="intervention-list"><li class="main-bullet">Predictable routine with clear expectations</li></ul></p><p><h4 class="bold-heading">Progress Monitoring System</h4><br><ul class="intervention-list"><li class="main-bullet">Weekly graphing of:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Academic accuracy on modified assessments</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Work completion rates</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Behavioral incident data</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Engagement duration metrics</li></ul><br><ul class="intervention-list"><li class="main-bullet">Curriculum-based measurement probes biweekly</li></ul><br><ul class="intervention-list"><li class="main-bullet">Counselor-teacher collaboration notes weekly</li></ul></p><p><h4 class="bold-heading">Implementation Timeline</h4><br><ul class="intervention-list"><li class="main-bullet">Week 1-2: Environmental and material modifications</li></ul><br><ul class="intervention-list"><li class="main-bullet">Week 3-4: Process and assessment adaptations</li></ul><br><ul class="intervention-list"><li class="main-bullet">Week 5-6: Behavioral support implementation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Ongoing: Progress monitoring and adjustment</li></ul></p><p><h4 class="bold-heading">Collaboration Plan</h4><br><ul class="intervention-list"><li class="main-bullet">Biweekly counselor-teacher meetings</li></ul><br><ul class="intervention-list"><li class="main-bullet">Parent communication log</li></ul><br><ul class="intervention-list"><li class="main-bullet">Data review every 2 weeks</li></ul><br><ul class="intervention-list"><li class="main-bullet">Intervention adjustment monthly</li></ul></p><p><h4 class="bold-heading">Citations</h4><br>Mastropieri, M. A., & Scruggs, T. E. (2018). The inclusive classroom: Strategies for effective differentiated instruction. Pearson.<br>Vaughn, S., Bos, C. S., & Schumm, J. S. (2018). Teaching students who are exceptional, diverse, and at risk in the general education classroom. Pearson.<br>Tomlinson, C. A. (2017). How to differentiate instruction in academically diverse classrooms. ASCD.</p><p><h4 class="bold-heading">Materials Preparation</h4><br><ul class="intervention-list"><li class="main-bullet">Color-coded templates laminated</li></ul><br><ul class="intervention-list"><li class="main-bullet">Visual schedules pre-made</li></ul><br><ul class="intervention-list"><li class="main-bullet">Modified worksheets printed</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphing tools organized in individual kit</li></ul><br><ul class="intervention-list"><li class="main-bullet">Behavior monitoring sheets ready</li></ul></p><p><h4 class="bold-heading">Professional Development Components</h4><br><ul class="intervention-list"><li class="main-bullet">Training on emotional/behavioral support strategies</li></ul><br><ul class="intervention-list"><li class="main-bullet">Modeling of differentiation techniques</li></ul><br><ul class="intervention-list"><li class="main-bullet">Co-planning time with special education staff</li></ul><br><ul class="intervention-list"><li class="main-bullet">Data interpretation support</li></ul></p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Emotional/Behavioral</li><li>Currently struggling academically</li><li>Other needs: Counseling Summary of Abby Pan
+
+Name: Abby Pan 	Counseling Sessions: 1st Session conducted on 9/29/2023, 60 mins
+2nd Session conducted on 10/7/2023, 60mins
+3rd Session conducted on 10/11/2023, 60mins
+                          
+Nissi Counselor: Nancy Zhong 
+
+Abby displayed stable emotions during these three weeks. She also explained that she kept regular sleep and diet daily since she sticks to the medication routine and experiences fewer side effects.  
+
+Abby seems satisfied with her current situation and has no concerns about the coming schooling since her sister has already studied there.Abby explained that she already adapted her schedules for a better transition in school and completed the homework to research school rules and upcoming learning subjects. Abby did demonstrate the repression mechanism of coping with challenges. Therefore, a solid social support system could encourage students to access the necessary resources.
+
+Abby and the counselor established a positive relationship. Still, the client could be coached with more active interaction to be engaged in sessions. Therefore, the counselor will continue to provide multiple counseling tools and techniques, such as drawing, role play, and narrative approach, to deliver psychological education on self-awareness of emotional intelligence, social skills with peers, academic motivation, and learning skills to support the client’s holistic well-being. 
+
+Our risk assessment is “low risk” because the client displays a stable emotional and social status. Abby didn’t mention experiencing flashbacks of previous social conflicts but was reluctant to continue the discussion. Meanwhile, Abby denied any self-harming or suicidal ideation or plan. 
+
+A counseling session will be arranged for parents before the next 1-1 session with Abby herself, which aims to collect more data on Abby ‘s growth history and empower parents with positive parenting skills in supporting Abby’s social, emotional, and academic growth.
+
+
+This summary is based on three sessions of support with the express understanding that Abby shall continue counseling from the Nissi Counseling Center after being enrolled in school.
+
+</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">Abby P (Grade 9th)</h4>
+          <div class="concern-counter">6. Not specified</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Grade 9 13 students</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/31/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Description:</h5>
+            <p>No description provided</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h4 class="bold-heading">DIFFERENTIATED LESSON PLAN FOR ABBY P</h4></p><p><h4 class="sub-heading">Lesson:</h4> Linear Equations in Slope-Intercept Form (Modified)<br><h4 class="sub-heading">Grade:</h4> 9<br><h4 class="sub-heading">Duration:</h4> 50 minutes (with flexible time allocation)<br><h4 class="sub-heading">Focus Student:</h4> Abby P (EAL Intermediate, counseling support needs)</p><p><h4 class="sub-heading">Differentiated Learning Objectives:</h4><br>1. Identify slope (m) and y-intercept (b) in simplified equations using visual cues<br>2. Graph a line using step-by-step guided process with physical manipulatives<br>3. Write basic equations when given slope and y-intercept using sentence frames</p><p><h4 class="sub-heading">Modified Materials:</h4><br><ul class="intervention-list"><li class="main-bullet">Colored graphing paper (quadrant I only initially)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Wikki Stix or string for physical line creation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Slope-intercept form graphic organizer (bilingual English/Chinese)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Calculator with large display</li></ul><br><ul class="intervention-list"><li class="main-bullet">Vocabulary cards with visuals</li></ul><br><ul class="intervention-list"><li class="main-bullet">Tablet with graphing app (Desmos or GeoGebra)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Modified worksheet with reduced problems and visual supports</li></ul></p><p><h4 class="sub-heading">Lesson Outline:</h4></p><p><h4 class="bold-heading">1. Warm-Up (8 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified problems with visual supports:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Graph with points (2,4) and (4,8) pre-plotted with connecting line</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Equation y = 2x + 5 with color-coding (m=blue, b=green)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Teacher uses think-aloud strategy with gestures and simplified language</li></ul><br><ul class="intervention-list"><li class="main-bullet">Abby uses vocabulary cards to match terms "slope" and "y-intercept" to visual examples</li></ul></p><p><h4 class="bold-heading">2. Introduction (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Use concrete example: "Phone plan: $10 basic fee + $2 per GB"</li></ul><br><ul class="intervention-list"><li class="main-bullet">Physical demonstration with stacking blocks: base (b) and incremental adds (m)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Graphic organizer with fill-in-the-blank: y = __ x + __</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bilingual vocabulary support: slope (坡度), y-intercept (y截距)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Chunked information: Teach m and b separately with practice after each</li></ul></p><p><h4 class="bold-heading">3. Guided Practice (15 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Example 1: y = 2x + 1 using tactile materials</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Place Wikki Stix at (0,1) on coordinate plane</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Use "rise/run" cards: ↑2 →1 with physical movement</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Tablet graphing app to verify results</li></ul><br><ul class="intervention-list"><li class="main-bullet">Example 2: y = -½x + 4 with emphasis on negative slope visualization</li></ul><br><ul class="intervention-list"><li class="main-bullet">Abby works with partner for think-pair-share after each step</li></ul></p><p><h4 class="bold-heading">4. Independent Practice (12 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified worksheet with 4 problems instead of multiple sections:</li></ul><br>  1. Circle slope and underline y-intercept in y = 3x - 2<br>  2. Graph y = x + 2 using provided coordinate plane with starting point marked<br>  3. Complete equation: y = __ x + __ when given m=2, b=1<br>  4. Match graph to equation from two choices<br><ul class="intervention-list"><li class="main-bullet">Teacher provides immediate feedback and corrective instruction</li></ul></p><p><h4 class="bold-heading">5. Closing & Assessment (3 minutes)</h4><br><ul class="intervention-list"><li class="main-bullet">Modified exit ticket:</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Multiple choice: "What is the y-intercept in y = 4x + 3?" with options</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Partial graph completion: Continue the line from given starting point</li></ul><br><ul class="intervention-list"><li class="main-bullet">Verbal explanation option: "Tell me how you would graph y = 2x + 1"</li></ul></p><p><h4 class="sub-heading">Homework Adaptation:</h4><br><ul class="intervention-list"><li class="main-bullet">4 problems total with visual supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Option to complete digitally or on paper</li></ul><br><ul class="intervention-list"><li class="main-bullet">Parent guide sheet in Chinese explaining the concepts</li></ul></p><p><h4 class="bold-heading">COMPREHENSIVE DIFFERENTIATION STRATEGIES</h4></p><p><h4 class="bold-heading">Research-Based Content Modifications</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Sheltered Instruction Observation Protocol (SIOP)</strong> techniques: Content and language objectives explicitly stated, vocabulary emphasized with visual supports (Echevarria, Vogt, & Short, 2017)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>CRA Framework</strong>: Concrete (manipulatives), Representational (graphs), Abstract (equations) progression for mathematical understanding (Witzel, Mercer, & Miller, 2003)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Cognitive load reduction</strong>: Chunking information, eliminating extraneous processing through worked examples and guided practice (Sweller, 2010)</li></ul></p><p><h4 class="bold-heading">Process Adaptations</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Think-aloud modeling</strong>: Teacher demonstrates problem-solving process verbally while solving</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Gradual release</strong>: I do (teacher models), We do (guided practice), You do (independent practice) with extended guided phase</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Multimodal input</strong>: Visual, auditory, kinesthetic, and tactile learning opportunities integrated</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Wait time</strong>: Minimum 10 seconds for processing questions and responses (Rowe, 1986)</li></ul></p><p><h4 class="bold-heading">Assessment Modifications</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Alternative response modes</strong>: Verbal responses, pointing, matching, selection rather than exclusively written</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Portfolio assessment</strong>: Collection of work samples over time to show growth rather than single-point assessment</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Dynamic assessment</strong>: Test-teach-retest model to measure learning potential rather than static ability (Lidz, 1991)</li></ul></p><p><h4 class="bold-heading">Environmental Supports</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Strategic seating</strong>: Near teacher for proximity support, away from distractions</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Visual schedule</strong>: Clear timeline of lesson activities with visual cues</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Break options</strong>: Pre-arranged signal for 2-minute break if overwhelmed</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Reduced auditory distractions</strong>: Noise-reducing headphones available</li></ul></p><p><h4 class="bold-heading">Technology Integration</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Graphing calculator apps</strong>: Desmos or GeoGebra for visual representation</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Translation tools</strong>: Google Translate or similar for vocabulary support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Speech-to-text</strong>: For written responses if needed</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital graphic organizers</strong>: Modify and save for future reference</li></ul></p><p><h4 class="bold-heading">Progress Monitoring System</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly skill checks</strong>: 5-problem assessment tracking: identification, graphing, equation writing</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Language growth measure</strong>: Vocabulary acquisition tracking using curriculum-based measurement</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Behavioral observation</strong>: Engagement and participation metrics using interval recording</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent communication log</strong>: Weekly update on progress and strategies for home support</li></ul></p><p><h4 class="bold-heading">Collaboration Plan</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly check-in</strong>: Teacher-counselor collaboration to align academic and emotional support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent partnership</strong>: Monthly meeting to reinforce strategies and monitor home support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Peer support system</strong>: Trained class partner for collaborative work</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>EAL specialist consultation</strong>: Bi-weekly planning session for language support strategies</li></ul></p><p><h4 class="bold-heading">Implementation Timeline</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Week 1-2</strong>: Intensive supports with full scaffolding</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Week 3-4</strong>: Gradual reduction of scaffolds based on performance</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Monthly review</strong>: Adjustment of strategies based on progress data</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Quarterly evaluation</strong>: Comprehensive review of differentiation plan effectiveness</li></ul></p><p><h4 class="sub-heading">Citations:</h4><br>Echevarria, J., Vogt, M., & Short, D. (2017). Making content comprehensible for English learners: The SIOP model. Pearson.<br>Lidz, C. S. (1991). Practitioner's guide to dynamic assessment. Guilford Press.<br>Rowe, M. B. (1986). Wait time: Slowing down may be a way of speeding up! Journal of Teacher Education, 37(1), 43-50.<br>Sweller, J. (2010). Element interactivity and intrinsic, extraneous, and germane cognitive load. Educational Psychology Review, 22(2), 123-138.<br>Witzel, B. S., Mercer, C. D., & Miller, M. D. (2003). Teaching algebra to students with learning difficulties: An investigation of an explicit instruction model. Learning Disabilities Research & Practice, 18(2), 121-131.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>EAL Learner (Intermediate English proficiency)</li><li>Currently struggling academically</li><li>Other needs: Counseling Summary of Abby Pan
+
+Name: Abby Pan 	Counseling Sessions: 1st Session conducted on 9/29/2023, 60 mins
+2nd Session conducted on 10/7/2023, 60mins
+3rd Session conducted on 10/11/2023, 60mins
+                          
+Nissi Counselor: Nancy Zhong 
+
+Abby displayed stable emotions during these three weeks. She also explained that she kept regular sleep and diet daily since she sticks to the medication routine and experiences fewer side effects.  
+
+Abby seems satisfied with her current situation and has no concerns about the coming schooling since her sister has already studied there.Abby explained that she already adapted her schedules for a better transition in school and completed the homework to research school rules and upcoming learning subjects. Abby did demonstrate the repression mechanism of coping with challenges. Therefore, a solid social support system could encourage students to access the necessary resources.
+
+Abby and the counselor established a positive relationship. Still, the client could be coached with more active interaction to be engaged in sessions. Therefore, the counselor will continue to provide multiple counseling tools and techniques, such as drawing, role play, and narrative approach, to deliver psychological education on self-awareness of emotional intelligence, social skills with peers, academic motivation, and learning skills to support the client’s holistic well-being. 
+
+Our risk assessment is “low risk” because the client displays a stable emotional and social status. Abby didn’t mention experiencing flashbacks of previous social conflicts but was reluctant to continue the discussion. Meanwhile, Abby denied any self-harming or suicidal ideation or plan. 
+
+A counseling session will be arranged for parents before the next 1-1 session with Abby herself, which aims to collect more data on Abby ‘s growth history and empower parents with positive parenting skills in supporting Abby’s social, emotional, and academic growth.
+
+
+This summary is based on three sessions of support with the express understanding that Abby shall continue counseling from the Nissi Counseling Center after being enrolled in school.
+
+</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+            </div>
+        </section>
+
+        
+        <!-- Additional Notes Section -->
+        <section class="notes-section">
+            <h3 class="section-title">Additional Notes</h3>
+            <div class="notes-content">
+                Possibly ask student support to help with an IEP
+            </div>
+        </section>
+        
+
+        
+        <!-- Document Includes Section -->
+        <section class="includes-section">
+            <h3 class="section-title">Document Includes</h3>
+            <div class="includes-content">
+                <div class="include-item">• AI-generated intervention recommendations</div>
+                <div class="include-item">• Progress tracking section</div>
+            </div>
+        </section>
+        
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p>Generated: September 3, 2025 at 02:14 AM</p>
+                    <p>Prepared by: Demo-Teacher ROBERTS</p>
+                </div>
+                <div class="footer-right">
+                    <p><strong>Concern2Care</strong></p>
+                    <p>AI-Powered Educational Support Platform</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>
