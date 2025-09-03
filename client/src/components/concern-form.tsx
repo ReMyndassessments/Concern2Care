@@ -605,7 +605,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           )}
                         />
                         
-                        {form.watch('disabilityType') === 'Other' && (
+                        {(form.watch('disabilityType') === 'Other' || (form.watch('disabilityType') && !COMMON_DISABILITY_TYPES.includes(form.watch('disabilityType')))) && (
                           <div className="mt-3 p-4 border border-blue-200 bg-blue-50 rounded-lg">
                             <label htmlFor="custom-disability-input" className="block text-sm font-bold mb-3 text-blue-800">
                               Please specify disability type:
@@ -614,11 +614,12 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               id="custom-disability-input"
                               type="text"
                               placeholder="Type here (e.g., Dyslexia, Cerebral Palsy, etc.)"
-                              defaultValue=""
+                              defaultValue={form.watch('disabilityType') === 'Other' ? '' : form.watch('disabilityType') || ''}
                               className="w-full px-4 py-3 text-lg border-2 border-blue-300 rounded-lg bg-white focus:outline-none focus:ring-4 focus:ring-blue-400 focus:border-blue-600 shadow-sm"
                               onChange={(e) => {
                                 console.log('Input changed:', e.target.value);
-                                form.setValue('disabilityType', e.target.value.trim() || 'Other');
+                                const value = e.target.value.trim();
+                                form.setValue('disabilityType', value || 'Other');
                               }}
                               onFocus={(e) => {
                                 console.log('Input focused');
