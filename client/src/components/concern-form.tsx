@@ -271,7 +271,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   };
 
   // Check if user is at their request limit
-  const isAtLimit = user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20);
+  // Temporarily disable limit check for demo purposes
+  const isAtLimit = false; // user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20);
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
