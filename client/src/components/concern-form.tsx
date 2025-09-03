@@ -169,6 +169,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
   const [showOtherConcern, setShowOtherConcern] = useState(false);
   const [showOtherAction, setShowOtherAction] = useState(false);
   const [showDifferentiation, setShowDifferentiation] = useState(false);
+  const [customDisabilityText, setCustomDisabilityText] = useState("");
 
   const form = useForm<EnhancedConcernFormData>({
     resolver: zodResolver(enhancedConcernFormSchema),
@@ -605,32 +606,35 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                           )}
                         />
                         
-                        {(form.watch('disabilityType') === 'Other' || (form.watch('disabilityType') && !COMMON_DISABILITY_TYPES.includes(form.watch('disabilityType')))) && (
-                          <div className="mt-3 p-4 border border-blue-200 bg-blue-50 rounded-lg">
-                            <label htmlFor="custom-disability-input" className="block text-sm font-bold mb-3 text-blue-800">
-                              Please specify disability type:
+                        {form.watch('disabilityType') === 'Other' && (
+                          <div className="mt-3 p-4 border-2 border-green-400 bg-green-50 rounded-lg">
+                            <label htmlFor="custom-disability-text" className="block text-lg font-bold mb-3 text-green-800">
+                              TYPE YOUR CUSTOM DISABILITY HERE:
                             </label>
                             <input
-                              id="custom-disability-input"
+                              id="custom-disability-text"
                               type="text"
-                              placeholder="Type here (e.g., Dyslexia, Cerebral Palsy, etc.)"
-                              defaultValue={form.watch('disabilityType') === 'Other' ? '' : form.watch('disabilityType') || ''}
-                              className="w-full px-4 py-3 text-lg border-2 border-blue-300 rounded-lg bg-white focus:outline-none focus:ring-4 focus:ring-blue-400 focus:border-blue-600 shadow-sm"
+                              placeholder="Start typing now..."
+                              value={customDisabilityText}
+                              className="w-full px-4 py-4 text-xl border-4 border-green-500 rounded-lg bg-white focus:outline-none focus:ring-4 focus:ring-green-400 focus:border-green-700 shadow-lg font-bold"
                               onChange={(e) => {
-                                console.log('Input changed:', e.target.value);
-                                const value = e.target.value.trim();
-                                form.setValue('disabilityType', value || 'Other');
+                                console.log('TYPING:', e.target.value);
+                                setCustomDisabilityText(e.target.value);
+                                if (e.target.value.trim()) {
+                                  form.setValue('disabilityType', e.target.value.trim());
+                                } else {
+                                  form.setValue('disabilityType', 'Other');
+                                }
                               }}
-                              onFocus={(e) => {
-                                console.log('Input focused');
-                                e.target.style.backgroundColor = '#ffffff';
+                              onFocus={() => {
+                                console.log('INPUT FOCUSED - YOU CAN TYPE NOW');
                               }}
-                              disabled={false}
                               autoComplete="off"
+                              autoFocus
                               data-testid="input-other-disability-type"
                             />
-                            <p className="mt-2 text-sm text-blue-600">
-                              Click above and type your specific disability type
+                            <p className="mt-3 text-lg font-bold text-green-700">
+                              ↑ CLICK AND TYPE IN THE BOX ABOVE ↑
                             </p>
                           </div>
                         )}
