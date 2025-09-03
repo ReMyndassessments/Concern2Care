@@ -618,6 +618,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               value={customDisabilityText}
                               className="w-full px-4 py-4 text-xl border-4 border-green-500 rounded-lg bg-white focus:outline-none focus:ring-4 focus:ring-green-400 focus:border-green-700 shadow-lg font-bold"
                               onChange={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
                                 console.log('TYPING:', e.target.value);
                                 setCustomDisabilityText(e.target.value);
                                 if (e.target.value.trim()) {
