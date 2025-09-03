@@ -620,7 +620,14 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                               onChange={(e) => {
                                 const value = e.target.value;
                                 setCustomDisabilityText(value);
+                                // Don't update form until user finishes typing
+                              }}
+                              onBlur={(e) => {
+                                const value = e.target.value;
                                 form.setValue('disabilityType', value.trim() || 'Other');
+                              }}
+                              onKeyDown={(e) => {
+                                e.stopPropagation();
                               }}
                               autoComplete="off"
                               data-testid="input-other-disability-type"
