@@ -101,7 +101,7 @@ async function ensureEssentialUsers() {
   
   // Seija teacher user - PRODUCTION ESSENTIAL
   try {
-    const seijaEmail = 'seija.kotiprlto@lyceeshanghai.com';
+    const seijaEmail = 'seija.kotipelto@lyceeshanghai.com';
     const seijaId = 'teacher-seija-' + Date.now();
     
     await db.execute(sql`
