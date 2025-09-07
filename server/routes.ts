@@ -1902,8 +1902,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Password must be at least 6 characters long' });
       }
 
+      // Normalize email to lowercase for consistency
+      const normalizedEmail = email.toLowerCase();
+      
       // Check if user already exists
-      const existingUser = await storage.getUserByEmail?.(email);
+      const existingUser = await storage.getUserByEmail?.(normalizedEmail);
       if (existingUser) {
         return res.status(409).json({ 
           message: 'A teacher with this email already exists',
@@ -1926,7 +1929,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id: `teacher-${Date.now()}`,
         firstName,
         lastName,
-        email,
+        email: normalizedEmail,
         password: hashedPassword,
         school: school || '',
         schoolDistrict: schoolDistrict || '',
