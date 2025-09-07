@@ -10,7 +10,7 @@ export function useAuth() {
     queryFn: async () => {
       console.log('🔐 Checking authentication...');
       try {
-        const response = await fetch("/api/auth/user", {
+        const response = await fetch(`${window.location.origin}/api/auth/user`, {
           credentials: 'include', // Ensure cookies are sent
           cache: 'no-cache', // Prevent browser caching issues
           headers: {
