@@ -160,11 +160,30 @@ export default function TeacherManagement() {
       }
     } catch (error: any) {
       console.error("Error adding teacher:", error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to add teacher",
-        variant: "destructive"
-      });
+      
+      // Handle the specific case where teacher already exists
+      if (error.status === 409 && error.existingTeacher) {
+        const existingTeacher = error.existingTeacher;
+        toast({
+          title: "Teacher Already Exists",
+          description: `${existingTeacher.name} (${existingTeacher.email}) is already in the system at ${existingTeacher.school}. You can edit the existing teacher instead.`,
+          variant: "destructive"
+        });
+        
+        // Find and select the existing teacher in the list to help user locate them
+        const existingInList = teachers.find(t => t.email === existingTeacher.email);
+        if (existingInList) {
+          setSelectedTeacher(existingInList);
+          setShowEditDialog(true);
+          setShowAddDialog(false);
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to add teacher",
+          variant: "destructive"
+        });
+      }
     }
   };
 
