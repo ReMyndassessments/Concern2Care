@@ -339,13 +339,68 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteUser(id: string): Promise<void> {
-    // For new teachers with no data, start with the minimum approach
-    // Delete admin logs first (these are the most common blockers)
-    await db.delete(adminLogs).where(eq(adminLogs.targetUserId, id));
-    await db.delete(adminLogs).where(eq(adminLogs.adminId, id));
+    console.log(`🗑️ Starting deletion of user ${id}...`);
     
-    // Try deleting the user directly
-    await db.delete(users).where(eq(users.id, id));
+    try {
+      // Delete in order of foreign key dependencies (child tables first)
+      
+      // 1. Delete progress notes (references concerns via intervention_id and users via teacher_id)
+      const deletedProgressNotes = await db.delete(progressNotes).where(eq(progressNotes.teacherId, id));
+      console.log(`   ✅ Deleted progress notes for teacher ${id}`);
+      
+      // 2. Delete follow-up questions (references concerns)
+      const userConcerns = await db.select({ id: concerns.id }).from(concerns).where(eq(concerns.teacherId, id));
+      const concernIds = userConcerns.map(c => c.id);
+      if (concernIds.length > 0) {
+        await db.delete(followUpQuestions).where(inArray(followUpQuestions.concernId, concernIds));
+        console.log(`   ✅ Deleted follow-up questions for ${concernIds.length} concerns`);
+      }
+      
+      // 3. Delete reports (references concerns)
+      if (concernIds.length > 0) {
+        await db.delete(reports).where(inArray(reports.concernId, concernIds));
+        console.log(`   ✅ Deleted reports for ${concernIds.length} concerns`);
+      }
+      
+      // 4. Delete interventions (references concerns)
+      if (concernIds.length > 0) {
+        await db.delete(interventions).where(inArray(interventions.concernId, concernIds));
+        console.log(`   ✅ Deleted interventions for ${concernIds.length} concerns`);
+      }
+      
+      // 5. Delete concerns (references users via teacher_id)
+      await db.delete(concerns).where(eq(concerns.teacherId, id));
+      console.log(`   ✅ Deleted ${concernIds.length} concerns for teacher ${id}`);
+      
+      // 6. Delete API keys created by this user
+      await db.delete(apiKeys).where(eq(apiKeys.createdBy, id));
+      console.log(`   ✅ Deleted API keys created by user ${id}`);
+      
+      // 7. Delete user email configs
+      await db.delete(userEmailConfigs).where(eq(userEmailConfigs.userId, id));
+      console.log(`   ✅ Deleted email configs for user ${id}`);
+      
+      // 8. Delete school email configs where this user was the configurator
+      await db.delete(schoolEmailConfigs).where(eq(schoolEmailConfigs.configuredBy, id));
+      console.log(`   ✅ Deleted school email configs configured by user ${id}`);
+      
+      // 9. Delete school feature overrides enabled by this user
+      await db.delete(schoolFeatureOverrides).where(eq(schoolFeatureOverrides.enabledBy, id));
+      console.log(`   ✅ Deleted school feature overrides enabled by user ${id}`);
+      
+      // 10. Delete admin logs (both as admin and as target)
+      await db.delete(adminLogs).where(eq(adminLogs.targetUserId, id));
+      await db.delete(adminLogs).where(eq(adminLogs.adminId, id));
+      console.log(`   ✅ Deleted admin logs for user ${id}`);
+      
+      // 11. Finally, delete the user
+      const result = await db.delete(users).where(eq(users.id, id));
+      console.log(`   ✅ Deleted user ${id} successfully`);
+      
+    } catch (error) {
+      console.error(`❌ Error deleting user ${id}:`, error);
+      throw new Error(`Failed to delete user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   async bulkCreateUsers(userList: UpsertUser[]): Promise<User[]> {
