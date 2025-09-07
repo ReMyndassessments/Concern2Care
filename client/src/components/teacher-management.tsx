@@ -628,6 +628,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                     <Input
                       id="password"
                       type="password"
+                      autoComplete="new-password"
                       value={newTeacher.password}
                       onChange={(e) => setNewTeacher({...newTeacher, password: e.target.value})}
                       placeholder="Enter password (min 6 characters)"
@@ -1134,6 +1135,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                 <Input
                   id="newPassword"
                   type="password"
+                  autoComplete="new-password"
                   placeholder="Enter new password (minimum 6 characters)"
                   value={newPassword || ""}
                   onChange={(e) => setNewPassword(e.target.value)}
