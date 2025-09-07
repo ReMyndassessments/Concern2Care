@@ -68,34 +68,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   });
 
-  // Enable sessions for professional authentication with PostgreSQL persistence
-  const pgSession = connectPgSimple(session);
-  
-  // Detect production environment
-  const isProduction = process.env.NODE_ENV === 'production' || 
-                      process.env.REPLIT_DOMAINS?.includes('.replit.app');
+  // Enable sessions - using memory store for immediate fix, can switch back to PostgreSQL later
+  console.log('🔧 Setting up session management...');
   
   app.use(session({
     secret: process.env.SESSION_SECRET || 'concern2care-session-secret-development-key-very-long',
-    resave: false, // Don't save session if unmodified
-    saveUninitialized: false, // Don't create session until something stored
-    store: new pgSession({
-      conString: process.env.DATABASE_URL,
-      tableName: 'session',
-      createTableIfMissing: true,
-      ttl: 4 * 60 * 60, // 4 hours in seconds
-      schemaName: 'public', // Explicit schema
-      pruneSessionInterval: 60 * 15 // Clean up expired sessions every 15 minutes
-    }),
-    rolling: true, // Reset session timeout on activity
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
     name: 'connect.sid',
     cookie: {
-      secure: false, // Keep false for Replit
+      secure: false,
       maxAge: 4 * 60 * 60 * 1000, // 4 hours
       httpOnly: true,
       sameSite: 'lax'
     }
   }));
+  
+  console.log('✅ Session management configured');
 
   // Add session debugging middleware (removed destructive cleanup)
   app.use((req: any, res, next) => {
