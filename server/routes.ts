@@ -81,17 +81,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     saveUninitialized: false, // Don't create session until something stored
     store: new pgSession({
       conString: process.env.DATABASE_URL,
-      tableName: 'session', // Will be created automatically
+      tableName: 'session',
       createTableIfMissing: true,
-      ttl: 4 * 60 * 60 // 4 hours in seconds
+      ttl: 4 * 60 * 60, // 4 hours in seconds
+      schemaName: 'public', // Explicit schema
+      pruneSessionInterval: 60 * 15 // Clean up expired sessions every 15 minutes
     }),
     rolling: true, // Reset session timeout on activity
     name: 'connect.sid',
     cookie: {
-      secure: false, // Keep false for Replit environment
+      secure: false, // Keep false for Replit
       maxAge: 4 * 60 * 60 * 1000, // 4 hours
-      httpOnly: true, // Prevent XSS attacks
-      sameSite: 'lax' // Required for cross-origin requests
+      httpOnly: true,
+      sameSite: 'lax'
     }
   }));
 
@@ -152,58 +154,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
               isAdmin: user.isAdmin || false
             };
             
-            // Set session data directly (simpler approach)
+            // Set session data directly and save immediately
             req.session.user = sessionUser;
             req.session.isAuthenticated = true;
             
-            console.log('🔐 Session data after login:', {
+            console.log('🔐 Session data set:', {
               isAuthenticated: req.session.isAuthenticated,
               user: req.session.user ? 'present' : 'missing',
               sessionId: req.sessionID?.slice(0, 8)
             });
 
-            // Force session save with enhanced error handling and retries
-            const saveSessionWithRetry = (attempt = 1) => {
-              req.session.save((err: any) => {
-                if (err) {
-                  console.error(`❌ Session save error (attempt ${attempt}):`, err);
-                  if (attempt < 3) {
-                    console.log(`🔄 Retrying session save (attempt ${attempt + 1})...`);
-                    setTimeout(() => saveSessionWithRetry(attempt + 1), 200);
-                    return;
-                  } else {
-                    return res.status(500).json({ message: "Session creation failed after retries" });
-                  }
-                }
-                
-                console.log('✅ Session saved successfully for:', user.email, 'SessionID:', req.sessionID?.slice(0, 8));
-                console.log('✅ Session state after save:', {
-                  isAuthenticated: req.session.isAuthenticated,
-                  hasUser: !!req.session.user,
-                  userEmail: req.session.user?.email,
-                  sessionId: req.sessionID?.slice(0, 8)
-                });
-                
-                // Verify session state before responding
-                if (req.session.isAuthenticated !== true || !req.session.user) {
-                  console.error('❌ Session state verification failed after save');
-                  return res.status(500).json({ message: "Session state verification failed" });
-                }
-                
-                // Add production delay to ensure session persistence across load balancers
-                const delay = (process.env.NODE_ENV === 'production' || process.env.REPLIT_DOMAINS?.includes('.replit.app')) ? 750 : 100;
-                setTimeout(() => {
-                  return res.json({ 
-                    success: true, 
-                    user: req.session.user,
-                    message: "Login successful",
-                    sessionId: req.sessionID?.slice(0, 8) // For debugging
-                  });
-                }, delay);
+            // Simplified session save - just save it directly
+            req.session.save((err: any) => {
+              if (err) {
+                console.error('❌ Session save failed:', err);
+                return res.status(500).json({ message: "Login failed - session error" });
+              }
+              
+              console.log('✅ Session saved for:', user.email);
+              
+              return res.json({ 
+                success: true, 
+                user: sessionUser,
+                message: "Login successful"
               });
-            };
-            
-            saveSessionWithRetry();
+            });
             return; // Exit after successful login
           }
         }
