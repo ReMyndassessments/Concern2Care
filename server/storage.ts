@@ -320,8 +320,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(user: UpsertUser): Promise<User> {
-    // Hash password if provided
+    // Hash password if provided and normalize email to lowercase
     const userData = { ...user };
+    if (userData.email) {
+      userData.email = userData.email.toLowerCase();
+    }
     if (userData.password) {
       userData.password = await bcrypt.hash(userData.password, 10);
     }
