@@ -40,6 +40,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, inArray, sql } from "drizzle-orm";
+import bcrypt from "bcrypt";
 
 // Interface for storage operations
 export interface IStorage {
@@ -319,7 +320,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(user: UpsertUser): Promise<User> {
-    const [newUser] = await db.insert(users).values(user).returning();
+    // Hash password if provided
+    const userData = { ...user };
+    if (userData.password) {
+      userData.password = await bcrypt.hash(userData.password, 10);
+    }
+    
+    const [newUser] = await db.insert(users).values(userData).returning();
     if (!newUser) {
       throw new Error("Failed to create user");
     }
