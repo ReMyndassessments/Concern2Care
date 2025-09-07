@@ -98,6 +98,25 @@ async function ensureEssentialUsers() {
   } catch (error) {
     console.log('ℹ️ Teacher user operation result:', error instanceof Error ? error.message : String(error));
   }
+  
+  // Seija teacher user - PRODUCTION ESSENTIAL
+  try {
+    const seijaEmail = 'seija.kotiprlto@lyceeshanghai.com';
+    const seijaId = 'teacher-seija-' + Date.now();
+    
+    await db.execute(sql`
+      INSERT INTO users (id, email, password, first_name, last_name, school, is_admin, role, is_active, support_requests_limit, created_at, updated_at) 
+      VALUES (${seijaId}, ${seijaEmail}, ${passwordHash}, ${'Seija'}, ${'Kotipelto'}, ${'Lycee Francais de Shanghai'}, ${false}, ${'teacher'}, ${true}, ${20}, ${new Date()}, ${new Date()})
+      ON CONFLICT (email) DO UPDATE SET
+        password = EXCLUDED.password,
+        is_admin = EXCLUDED.is_admin,
+        role = EXCLUDED.role,
+        updated_at = EXCLUDED.updated_at
+    `);
+    console.log('✅ Seija teacher user ensured via SQL upsert');
+  } catch (error) {
+    console.log('ℹ️ Seija user operation result:', error instanceof Error ? error.message : String(error));
+  }
 }
 
 /**
