@@ -417,20 +417,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
     }
   };
 
-  const handleShowCurrentPassword = (teacher: Teacher) => {
-    if (teacher.password) {
-      setRevealedPasswords(prev => ({
-        ...prev,
-        [teacher.id]: teacher.password!
-      }));
-    } else {
-      toast({
-        title: "No Password Set",
-        description: "This teacher doesn't have a password set yet. Use the key icon to set one.",
-        variant: "destructive"
-      });
-    }
-  };
 
   const handleGenerateAndShowPassword = async (teacher: Teacher) => {
     try {
@@ -1020,16 +1006,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                           title="Edit teacher"
                         >
                           <Edit2 className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleShowCurrentPassword(teacher)}
-                          className="h-6 w-6 p-0 text-green-600 hover:text-green-700 hover:border-green-300"
-                          data-testid={`button-show-password-${teacher.id}`}
-                          title={revealedPasswords[teacher.id] ? "Password shown" : "Show current password"}
-                        >
-                          <Eye className="h-3 w-3" />
                         </Button>
                         <Button
                           variant="outline"
