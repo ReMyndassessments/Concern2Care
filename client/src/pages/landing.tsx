@@ -4,10 +4,22 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { queryClient } from '@/lib/queryClient';
+import { useEffect } from 'react';
 
 export default function Landing() {
   const { t } = useTranslation();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isLoading } = useAuth();
+
+  // Redirect authenticated users to their dashboard
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      if (user.isAdmin) {
+        window.location.replace('/admin');
+      } else {
+        window.location.replace('/home');
+      }
+    }
+  }, [isLoading, isAuthenticated, user]);
 
   const handleLogout = async () => {
     try {
