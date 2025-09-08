@@ -830,7 +830,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
                       <p className="text-xs text-muted-foreground mt-1">{teacher.email}</p>
                       <Badge variant="outline" className="text-xs mt-1">
-                        {teacher.school || "Not specified"}
+                        Password: ****
                       </Badge>
                     </div>
                     <Badge variant={teacher.isActive ? "default" : "secondary"} className="text-xs">
@@ -916,7 +916,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   )}
                   <TableHead className="min-w-[120px] text-xs lg:text-sm">Name</TableHead>
                   <TableHead className="min-w-[180px] text-xs lg:text-sm">Email</TableHead>
-                  <TableHead className="min-w-[100px] text-xs lg:text-sm">School</TableHead>
+                  <TableHead className="min-w-[100px] text-xs lg:text-sm">Password</TableHead>
                   <TableHead className="min-w-[80px] text-xs lg:text-sm">Requests</TableHead>
                   <TableHead className="min-w-[60px] text-xs lg:text-sm">Status</TableHead>
                   <TableHead className="min-w-[120px] text-xs lg:text-sm">Actions</TableHead>
@@ -957,8 +957,8 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-1">
-                        <School className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs lg:text-sm truncate">{teacher.school || "Not specified"}</span>
+                        <Key className="h-3 w-3 text-gray-400" />
+                        <span className="text-xs lg:text-sm truncate font-mono">****</span>
                       </div>
                     </TableCell>
                     <TableCell>
