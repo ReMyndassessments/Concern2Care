@@ -1134,10 +1134,17 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleGenerateAndShowPassword(passwordTeacher)}
+                    onClick={() => {
+                      if (passwordTeacher.password) {
+                        setRevealedPasswords(prev => ({
+                          ...prev,
+                          [passwordTeacher.id]: passwordTeacher.password!
+                        }));
+                      }
+                    }}
                     disabled={!!revealedPasswords[passwordTeacher.id]}
                     data-testid="button-show-current-password"
-                    title="Generate and show current password"
+                    title="Show current password"
                   >
                     {revealedPasswords[passwordTeacher.id] ? "Shown" : "Show"}
                   </Button>
