@@ -1,104 +1,66 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, FileText, Users, Clock, Shield, CheckCircle, Star, Mail, TrendingUp, DollarSign, BarChart3 } from "lucide-react";
-import { useState } from "react";
-import { useFeatureFlags } from "@/hooks/useFeatureFlags";
-import { LanguageSwitcher } from "@/components/language-switcher";
-import { useTranslation } from "react-i18next";
+import { Sparkles } from "lucide-react";
 
 export default function Landing() {
-  const [showComparison, setShowComparison] = useState(false);
-  const { isFeatureEnabled } = useFeatureFlags();
-  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
-      {/* Floating Geometric Elements - Mobile Responsive */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-1/4 w-16 h-16 md:w-24 md:h-24 bg-purple-300 rounded-full opacity-60"></div>
-        <div className="absolute top-32 right-1/3 w-12 h-12 md:w-16 md:h-16 bg-emerald-200 rounded-full opacity-70"></div>
-        <div className="absolute top-48 right-1/4 w-14 h-14 md:w-20 md:h-20 bg-pink-200 rounded-full opacity-60"></div>
-        <div className="absolute bottom-1/3 left-1/5 w-12 h-12 md:w-18 md:h-18 bg-blue-200 rounded-full opacity-50"></div>
-        <div className="absolute bottom-1/4 right-1/5 w-10 h-10 md:w-14 md:h-14 bg-purple-200 rounded-full opacity-60"></div>
-      </div>
-
-      {/* Header - Mobile Responsive */}
-      <header className="relative z-10 py-4 md:py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+      {/* Header */}
+      <header className="relative z-10 py-6">
+        <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
           <div className="flex-1"></div>
-          <div className="flex items-center space-x-3">
-            <LanguageSwitcher className="" />
-            <Button 
-              onClick={() => window.location.href = '/login'}
-              size="sm"
-              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold text-sm md:text-base px-4 py-2 md:px-6 md:py-3"
-            >
-              {t('auth.teacherSignIn', 'Teacher Sign In')}
-            </Button>
-          </div>
+          <Button 
+            onClick={() => window.location.href = '/login'}
+            size="sm"
+            className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-6 py-3"
+          >
+            Teacher Sign In
+          </Button>
         </div>
       </header>
 
-      {/* Hero Section - Mobile Responsive */}
-      <section className="relative z-10 py-8 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* Hero Section */}
+      <section className="relative z-10 py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
           {/* Logo */}
-          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-6 md:mb-8">
-            <Sparkles className="h-8 w-8 md:h-10 md:w-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-8">
+            <Sparkles className="h-10 w-10 text-white" />
           </div>
           
-          {/* Main Heading - Mobile Responsive */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 md:mb-6 leading-tight">
+          {/* Main Heading */}
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6 leading-tight">
             Concern2Care
           </h1>
           
-          {/* Tagline - Mobile Responsive */}
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-2 font-medium px-2">
-            {t('landing.tagline', 'A Teacher Tool for Differentiation and Classroom Interventions')}
+          {/* Tagline */}
+          <p className="text-2xl text-gray-700 mb-2 font-medium px-2">
+            A Teacher Tool for Differentiation and Classroom Interventions
           </p>
-          
         </div>
       </section>
 
-      {/* Main Content Card - Mobile Responsive */}
-      <section className="relative z-10 pb-12 md:pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl md:rounded-3xl shadow-lg p-6 md:p-12 text-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight px-2">
-              {t('landing.mainHeading', 'Adapt Any Lesson. Support Every Learner.')}
+      {/* Main Content Card */}
+      <section className="relative z-10 pb-20">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-3xl shadow-lg p-12 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 leading-tight px-2">
+              Adapt Any Lesson. Support Every Learner.
             </h2>
             
-            <p className="text-base sm:text-lg text-gray-700 mb-6 md:mb-8 leading-relaxed px-2 max-w-3xl mx-auto">
-              {t('landing.description', 'Trusted, AI-powered, strategies for academic, behavioral, and social-emotional needs. Teachers get practical tools to adapt instruction in the moment. Administrators get stronger capacity, consistent support, and better outcomes for every student.')}
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed px-2 max-w-3xl mx-auto">
+              Trusted, AI-powered strategies for academic, behavioral, and social-emotional needs. Teachers get practical tools to adapt instruction in the moment. Administrators get stronger capacity, consistent support, and better outcomes for every student.
             </p>
             
-            <div className="space-y-4">
-              <Button 
-                size="lg"
-                onClick={() => window.location.href = '/login'}
-                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-base md:text-lg px-8 md:px-12 py-3 md:py-4 rounded-xl font-medium shadow-lg w-full sm:w-auto"
-              >
-                🔐 {t('landing.secureLogin', 'Secure Teacher Login')}
-              </Button>
-
-              {/* Individual Teacher Registration - Feature Flag */}
-              {isFeatureEnabled('individual_teacher_registration') && (
-                <div className="pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-3">{t('landing.individualTeacher', 'Individual teacher? Try Concern2Care for $10/month:')}</p>
-                  <Button 
-                    size="sm"
-                    variant="outline"
-                    onClick={() => window.location.href = '/register'}
-                    className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50 font-medium px-6 py-2 rounded-lg"
-                  >
-                    ☕ {t('landing.startSubscription', 'Start Your Individual Subscription')}
-                  </Button>
-                </div>
-              )}
-            </div>
+            <Button 
+              size="lg"
+              onClick={() => window.location.href = '/login'}
+              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-lg px-12 py-4 rounded-xl font-medium shadow-lg"
+            >
+              🔐 Secure Teacher Login
+            </Button>
             
-            <p className="text-xs md:text-sm text-gray-500 mt-4 md:mt-6 px-2">
-              {t('landing.ferpaCompliant', 'FERPA compliant • Evidence-based strategies • Trusted by educators')}
+            <p className="text-sm text-gray-500 mt-6 px-2">
+              FERPA compliant • Evidence-based strategies • Trusted by educators
             </p>
           </div>
         </div>
