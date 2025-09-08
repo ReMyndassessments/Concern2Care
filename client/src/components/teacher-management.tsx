@@ -32,7 +32,7 @@ interface Teacher {
   firstName: string;
   lastName: string;
   email: string;
-  school: string | null;
+  password?: string;
   schoolDistrict?: string;
   primaryGrade?: string;
   primarySubject?: string;
@@ -50,7 +50,6 @@ interface NewTeacher {
   lastName: string;
   email: string;
   password: string;
-  school: string;
   schoolDistrict: string;
   primaryGrade: string;
   primarySubject: string;
@@ -74,7 +73,7 @@ export default function TeacherManagement() {
     lastName: "",
     email: "",
     password: "",
-    school: "",
+
     schoolDistrict: "",
     primaryGrade: "",
     primarySubject: "",
@@ -113,8 +112,7 @@ export default function TeacherManagement() {
   const handleAddTeacher = async () => {
     try {
       if (!newTeacher.firstName || !newTeacher.lastName || !newTeacher.email || !newTeacher.password || 
-          !newTeacher.school || !newTeacher.primaryGrade || 
-          !newTeacher.primarySubject || !newTeacher.teacherType) {
+          !newTeacher.primaryGrade || !newTeacher.primarySubject || !newTeacher.teacherType) {
         toast({
           title: "Error",
           description: "Please fill in all required fields marked with *",
@@ -148,7 +146,7 @@ export default function TeacherManagement() {
           lastName: "",
           email: "",
           password: "",
-          school: "",
+      
           schoolDistrict: "",
           primaryGrade: "",
           primarySubject: "",
@@ -420,8 +418,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
   const filteredTeachers = teachers.filter(teacher =>
     teacher.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     teacher.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    teacher.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (teacher.school || "").toLowerCase().includes(searchTerm.toLowerCase())
+    teacher.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const formatDate = (dateString: string) => {
