@@ -48,31 +48,31 @@ export default function Landing() {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 py-6">
-        <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
+      <header className="relative z-10 py-4 sm:py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex justify-between items-center">
           <div className="flex-1"></div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher />
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">
-                  Welcome, {user?.firstName || user?.email}
+                <span className="text-xs sm:text-sm text-gray-600 hidden sm:inline">
+                  Welcome, {user?.firstName || user?.email?.split('@')[0]}
                 </span>
                 {user?.isAdmin ? (
                   <Button 
                     onClick={() => window.location.href = '/admin'}
                     size="sm"
                     variant="outline"
-                    className="px-4 py-2"
+                    className="px-2 sm:px-4 py-2 text-xs sm:text-sm"
                   >
-                    Admin Panel
+                    Admin
                   </Button>
                 ) : (
                   <Button 
                     onClick={() => window.location.href = '/home'}
                     size="sm"
                     variant="outline"
-                    className="px-4 py-2"
+                    className="px-2 sm:px-4 py-2 text-xs sm:text-sm"
                   >
                     Dashboard
                   </Button>
@@ -81,17 +81,17 @@ export default function Landing() {
                   onClick={handleLogout}
                   size="sm"
                   variant="ghost"
-                  className="text-gray-600 hover:text-red-600 px-4 py-2"
+                  className="text-gray-600 hover:text-red-600 px-2 sm:px-4 py-2 text-xs sm:text-sm"
                 >
-                  <LogOut className="w-4 h-4 mr-1" />
-                  Logout
+                  <LogOut className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Logout</span>
                 </Button>
               </div>
             ) : (
               <Button 
                 onClick={() => window.location.href = '/login'}
                 size="sm"
-                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-6 py-3"
+                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm"
               >
                 {t('auth.teacherSignIn')}
               </Button>
@@ -101,46 +101,46 @@ export default function Landing() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative z-10 py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+      <section className="relative z-10 py-8 sm:py-12 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           {/* Logo */}
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-8">
-            <Sparkles className="h-10 w-10 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-6 sm:mb-8">
+            <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
           </div>
           
           {/* Main Heading */}
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 sm:mb-6 leading-tight">
             Concern2Care
           </h1>
           
           {/* Tagline */}
-          <p className="text-2xl text-gray-700 mb-2 font-medium px-2">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-2 font-medium px-2">
             {t('landing.tagline')}
           </p>
         </div>
       </section>
 
       {/* Main Content Card */}
-      <section className="relative z-10 pb-20">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-white rounded-3xl shadow-lg p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 leading-tight px-2">
+      <section className="relative z-10 pb-12 sm:pb-16 md:pb-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 md:p-12 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight px-2">
               {t('landing.mainHeading')}
             </h2>
             
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed px-2 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-700 mb-6 sm:mb-8 leading-relaxed px-2 max-w-3xl mx-auto">
               {t('landing.description')}
             </p>
             
             <Button 
               size="lg"
               onClick={() => window.location.href = '/login'}
-              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-lg px-12 py-4 rounded-xl font-medium shadow-lg"
+              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 rounded-xl font-medium shadow-lg w-full sm:w-auto"
             >
               🔐 {t('landing.secureLogin')}
             </Button>
             
-            <p className="text-sm text-gray-500 mt-6 px-2">
+            <p className="text-xs sm:text-sm text-gray-500 mt-4 sm:mt-6 px-2">
               {t('landing.ferpaCompliant')}
             </p>
           </div>
@@ -195,57 +195,57 @@ export default function Landing() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('pricing.title')}</h2>
-            <p className="text-xl text-gray-600 mb-2">{t('pricing.subtitle')}</p>
-            <p className="text-gray-600">{t('pricing.description')}</p>
+      <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t('pricing.title')}</h2>
+            <p className="text-lg sm:text-xl text-gray-600 mb-2">{t('pricing.subtitle')}</p>
+            <p className="text-sm sm:text-base text-gray-600">{t('pricing.description')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
             {/* Standard Plan: 1-200 Teachers */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-purple-500 relative">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-2 border-purple-500 relative">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">{t('pricing.popular')}</span>
+                <span className="bg-purple-500 text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-medium">{t('pricing.popular')}</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('pricing.standardPlan')}</h3>
-              <p className="text-gray-600 mb-4">{t('pricing.standardRange')}</p>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{t('pricing.standardPlan')}</h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-4">{t('pricing.standardRange')}</p>
               <div className="mb-6">
-                <div className="text-3xl font-bold text-gray-900">$10<span className="text-lg text-gray-600">/teacher/month</span></div>
-                <p className="text-gray-600">{t('pricing.annual')}</p>
-                <p className="text-green-600 font-medium">{t('pricing.save10')}</p>
+                <div className="text-2xl sm:text-3xl font-bold text-gray-900">$10<span className="text-base sm:text-lg text-gray-600">/teacher/month</span></div>
+                <p className="text-sm sm:text-base text-gray-600">{t('pricing.annual')}</p>
+                <p className="text-sm sm:text-base text-green-600 font-medium">{t('pricing.save10')}</p>
               </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.aiRecommendations')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.supportRequests')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.pdfGeneration')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.emailSharing')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.prioritySupport')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.analytics')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.bulkManagement')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.training')}</li>
+              <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.aiRecommendations')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.supportRequests')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.pdfGeneration')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.emailSharing')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.prioritySupport')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.analytics')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.bulkManagement')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.training')}</span></li>
               </ul>
               <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
             </div>
 
             {/* Enterprise Plan: 200+ Teachers */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('pricing.enterprise')}</h3>
-              <p className="text-gray-600 mb-4">{t('pricing.enterpriseRange')}</p>
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-200">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{t('pricing.enterprise')}</h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-4">{t('pricing.enterpriseRange')}</p>
               <div className="mb-6">
-                <div className="text-3xl font-bold text-gray-900">{t('pricing.custom')}</div>
-                <p className="text-gray-600">{t('pricing.customPricing')}</p>
+                <div className="text-2xl sm:text-3xl font-bold text-gray-900">{t('pricing.custom')}</div>
+                <p className="text-sm sm:text-base text-gray-600">{t('pricing.customPricing')}</p>
               </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.everythingInStandard')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.accountManager')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.whiteLabel')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.apiAccess')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.customDevelopment')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.reporting')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.support24')}</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.onsiteSupport')}</li>
+              <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.everythingInStandard')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.accountManager')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.whiteLabel')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.apiAccess')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.customDevelopment')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.reporting')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.support24')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.onsiteSupport')}</span></li>
               </ul>
               <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
             </div>
@@ -255,29 +255,29 @@ export default function Landing() {
 
 
       {/* What's Included */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('included.title')}</h2>
+      <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t('included.title')}</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h3 className="font-semibold text-gray-900 mb-4">{t('included.coreFeatures')}</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.aiRecommendations')}</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.pdfGeneration')}</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.emailSharing')}</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.supportRequests')}</li>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl p-6 sm:p-8 shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('included.coreFeatures')}</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start"><Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('included.aiRecommendations')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('included.pdfGeneration')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('included.emailSharing')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('included.supportRequests')}</span></li>
               </ul>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h3 className="font-semibold text-gray-900 mb-4">{t('included.securitySupport')}</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.secureStorage')}</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.updates')}</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.customerSupport')}</li>
+            <div className="bg-white rounded-xl p-6 sm:p-8 shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('included.securitySupport')}</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start"><Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('included.secureStorage')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('included.updates')}</span></li>
+                <li className="flex items-start"><Check className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('included.customerSupport')}</span></li>
               </ul>
             </div>
 
@@ -287,23 +287,23 @@ export default function Landing() {
 
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-purple-600 to-blue-600">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">{t('cta.title')}</h2>
-          <p className="text-xl text-purple-100 mb-8">{t('cta.subtitle')}</p>
-          <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-4">{t('cta.getQuote')}</Button>
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-purple-600 to-blue-600">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">{t('cta.title')}</h2>
+          <p className="text-lg sm:text-xl text-purple-100 mb-6 sm:mb-8">{t('cta.subtitle')}</p>
+          <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto">{t('cta.getQuote')}</Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-gray-900 text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <p className="text-gray-400 mb-4">
+      <footer className="py-8 sm:py-12 bg-gray-900 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-gray-400 mb-4 text-sm sm:text-base">
             <Mail className="w-4 h-4 inline mr-2" />
 {t('cta.questions')}
           </p>
-          <p className="text-gray-500 text-sm mb-2">{t('footer.copyright')}</p>
-          <p className="text-gray-600 text-sm">{t('footer.poweredBy')}</p>
+          <p className="text-gray-500 text-xs sm:text-sm mb-2">{t('footer.copyright')}</p>
+          <p className="text-gray-600 text-xs sm:text-sm">{t('footer.poweredBy')}</p>
         </div>
       </footer>
     </div>
