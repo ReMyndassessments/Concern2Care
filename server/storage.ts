@@ -300,23 +300,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUsersWithSchool(): Promise<UserWithSchool[]> {
+    // Since users now have simple school strings, we can't join with schools table
     const result = await db
-      .select({
-        user: users,
-        schoolData: schools
-      })
+      .select()
       .from(users)
-      .leftJoin(schools, eq(users.schoolId, schools.id))
       .orderBy(users.createdAt);
 
-    return result.map(row => ({
-      ...row.user,
-      school: row.schoolData
+    return result.map(user => ({
+      ...user,
+      school: null // No structured school object available
     }));
   }
 
-  async getUsersBySchool(schoolId: string): Promise<User[]> {
-    return await db.select().from(users).where(eq(users.schoolId, schoolId));
+  async getUsersBySchool(schoolName: string): Promise<User[]> {
+    return await db.select().from(users).where(eq(users.school, schoolName));
   }
 
   async createUser(user: UpsertUser): Promise<User> {

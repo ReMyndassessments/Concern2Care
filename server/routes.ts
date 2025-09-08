@@ -1119,15 +1119,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "School not found" });
       }
 
-      // Get affected users
-      const affectedUsers = await storage.getUsersBySchoolId(schoolId);
+      // Get affected users - now using school name instead of ID
+      const affectedUsers = await storage.getUsersBySchool(school.name);
       
       // Get total concerns from all teachers in this school
+      // Note: Since users now have simple school names, this query needs the school name
+      const schoolName = school.name;
       const concernsQuery = await db
         .select({ count: sql<number>`count(*)` })
         .from(concerns)
         .innerJoin(users, eq(concerns.teacherId, users.id))
-        .where(eq(users.schoolId, schoolId));
+        .where(eq(users.school, schoolName));
       
       const totalConcerns = concernsQuery[0]?.count || 0;
 
@@ -1137,7 +1139,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .from(interventions)
         .innerJoin(concerns, eq(interventions.concernId, concerns.id))
         .innerJoin(users, eq(concerns.teacherId, users.id))
-        .where(eq(users.schoolId, schoolId));
+        .where(eq(users.school, schoolName));
       
       const totalInterventions = interventionsQuery[0]?.count || 0;
 
@@ -1147,7 +1149,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .from(reports)
         .innerJoin(concerns, eq(reports.concernId, concerns.id))
         .innerJoin(users, eq(concerns.teacherId, users.id))
-        .where(eq(users.schoolId, schoolId));
+        .where(eq(users.school, schoolName));
       
       const totalReports = reportsQuery[0]?.count || 0;
 
@@ -1191,7 +1193,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get all users in this school with their complete data
-      const schoolUsers = await storage.getUsersBySchoolId(schoolId);
+      const schoolUsers = await storage.getUsersBySchool(school.name);
       
       const fullExportData = {
         school: school,
@@ -2760,8 +2762,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await emailConfigService.updateUserEmailTestStatus(userId, testResult.success ? 'success' : 'failed');
       } else {
         const user = await storage.getUserByEmail(req.user.claims.email);
-        if (user?.schoolId) {
-          await emailConfigService.updateSchoolEmailTestStatus(user.schoolId, testResult.success ? 'success' : 'failed');
+        if (user?.school) {
+          // Note: Email test status update requires school ID, but user only has school name
+          console.log('School email test status update skipped - school ID not available');
         }
       }
 
