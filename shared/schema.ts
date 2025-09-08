@@ -38,13 +38,12 @@ export const schools = pgTable("schools", {
 // User storage table for teachers and admins.
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: varchar("email").unique(),
+  email: varchar("email").unique().notNull(),
   password: varchar("password"), // Hashed password for teacher login
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
-  school: varchar("school"), // Keep for backward compatibility
-  schoolId: varchar("school_id").references(() => schools.id), // New structured school reference
+  school: varchar("school"), // Simple school name field
   schoolDistrict: varchar("school_district"), // School district information
   primaryGrade: varchar("primary_grade"), // Primary grade taught
   primarySubject: varchar("primary_subject"), // Primary subject taught
@@ -57,23 +56,10 @@ export const users = pgTable("users", {
   isActive: boolean("is_active").default(true),
   lastLoginAt: timestamp("last_login_at"),
   
-  // Individual teacher account fields (feature flag: ENABLE_INDIVIDUAL_REGISTRATION)
-  accountType: varchar("account_type").default('admin_managed'), // 'admin_managed' | 'individual'
-  subscriptionStatus: varchar("subscription_status"), // 'active' | 'expired' | 'pending' | null for admin_managed
-  subscriptionProvider: varchar("subscription_provider"), // 'buymeacoffee' | null for admin_managed
-  subscriptionId: varchar("subscription_id"), // External subscription ID
-  subscriptionExpiry: timestamp("subscription_expiry"), // When subscription expires
-  
-  // Demo Program Management
-  isPilotTeacher: boolean("is_pilot_teacher").default(false),
-  pilotDiscount: integer("pilot_discount").default(0), // Percentage discount (0-100)
-  pilotDiscountExpiry: timestamp("pilot_discount_expiry"),
-  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 }, (table) => ({
   emailIdx: index("users_email_idx").on(table.email),
-  schoolIdIdx: index("users_school_id_idx").on(table.schoolId),
   activeUsersIdx: index("users_active_idx").on(table.isActive),
   lastLoginIdx: index("users_last_login_idx").on(table.lastLoginAt),
 }));
@@ -262,10 +248,6 @@ export const schoolRelations = relations(schools, ({ one, many }) => ({
 }));
 
 export const userRelations = relations(users, ({ one, many }) => ({
-  school: one(schools, {
-    fields: [users.schoolId],
-    references: [schools.id],
-  }),
   concerns: many(concerns),
   adminLogs: many(adminLogs, { relationName: "admin_actions" }),
   targetLogs: many(adminLogs, { relationName: "admin_targets" }),
