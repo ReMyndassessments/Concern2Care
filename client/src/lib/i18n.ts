@@ -360,10 +360,6 @@ const resources = {
       'pricing.features.onsiteSupport': 'On-site training & support',
       'pricing.features.basicSupport': 'Basic onboarding support',
       'pricing.features.everythingInSmall': 'Everything in Small School',
-      'pricing.features.prioritySupport': 'Priority customer support',
-      'pricing.features.analytics': 'Advanced analytics dashboard',
-      'pricing.features.bulkManagement': 'Bulk teacher management',
-      'pricing.features.training': 'Custom training sessions',
       
       // Real School Examples - specific translations
       'pricing.examples.teachers25': '25 Teachers',
@@ -429,10 +425,7 @@ const resources = {
       'comparison.leadershipPitch': 'Leadership Pitch',
       'comparison.leadershipDesc': 'For under $17 per student per year, you can cover both teacher efficiency AND student wellbeing. That\'s a complete AI ecosystem supporting staff and students — without breaking your budget.',
       'pricing.features.everythingInMedium': 'Everything in Medium School',
-      'pricing.features.accountManager': 'Dedicated account manager',
       'pricing.features.integrations': 'Custom integrations',
-      'pricing.features.reporting': 'Advanced reporting suite',
-      'pricing.features.support24': '24/7 priority support',
       'pricing.features.everythingInLarge': 'Everything in Large School',
       
       // Real School Examples
@@ -497,16 +490,6 @@ const resources = {
       'included.secureStorage': 'Secure data storage and privacy protection',
       'included.updates': 'Regular feature updates and improvements',
       'included.customerSupport': 'Customer support and training resources',
-      
-      // CTA Section
-      'cta.title': 'Ready to Transform Student Support?',
-      'cta.subtitle': 'Join thousands of educators using AI-powered tools to better support their students. Get a personalized quote for your school today.',
-      'cta.getQuote': 'Get Your Quote - sales@remynd.online',
-      'cta.questions': 'Questions? Email us at sales@remynd.online',
-      
-      // Footer
-      'footer.copyright': '© 2025 Concern2Care. Built for educators, by educators.',
-      'footer.poweredBy': 'Powered by ReMynd Student Services',
       
       // Language Switcher
       'language.switch': 'Switch Language',
@@ -1107,16 +1090,6 @@ const resources = {
       'included.secureStorage': '安全数据存储和隐私保护',
       'included.updates': '定期功能更新和改进',
       'included.customerSupport': '客户支持和培训资源',
-      
-      // CTA Section
-      'cta.title': '准备好变革学生支持了吗？',
-      'cta.subtitle': '加入数千名使用AI驱动工具更好支持学生的教育工作者。立即为您的学校获取个性化报价。',
-      'cta.getQuote': '获取报价 - sales@remynd.online',
-      'cta.questions': '有问题？请发送邮件至 sales@remynd.online',
-      
-      // Footer
-      'footer.copyright': '© 2025 Concern2Care. 为教育工作者而打造，由教育工作者开发。',
-      'footer.poweredBy': '由ReMynd Student Services提供支持',
       
       // Language Switcher
       'language.switch': '切换语言',
