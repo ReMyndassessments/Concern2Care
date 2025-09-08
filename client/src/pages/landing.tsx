@@ -195,14 +195,14 @@ export default function Landing() {
                 <p className="text-green-600 font-medium">{t('pricing.save10')}</p>
               </div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Full AI-powered recommendations</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />20 support requests per teacher/month</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />PDF report generation</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Email sharing capabilities</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Priority customer support</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Advanced analytics dashboard</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Bulk teacher management</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Custom training sessions</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.aiRecommendations')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.supportRequests')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.pdfGeneration')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.emailSharing')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.prioritySupport')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.analytics')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.bulkManagement')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.training')}</li>
               </ul>
               <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
             </div>
@@ -216,14 +216,14 @@ export default function Landing() {
                 <p className="text-gray-600">{t('pricing.customPricing')}</p>
               </div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Everything in Standard Plan</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Dedicated account manager</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />White-label solutions</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />API access</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Custom feature development</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Advanced reporting suite</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />24/7 priority support</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />On-site training & support</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.everythingInStandard')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.accountManager')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.whiteLabel')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.apiAccess')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.customDevelopment')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.reporting')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.support24')}</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />{t('pricing.features.onsiteSupport')}</li>
               </ul>
               <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
             </div>
