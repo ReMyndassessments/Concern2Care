@@ -818,7 +818,14 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                 <div className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
+                        {teacher.isAdmin && (
+                          <Badge variant="default" className="text-xs bg-blue-100 text-blue-800 border-blue-300">
+                            Admin
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-xs text-muted-foreground mt-1">{teacher.email}</p>
                       <Badge variant="outline" className="text-xs mt-1">
                         {revealedPasswords[teacher.id] ? `Password: ${revealedPasswords[teacher.id]}` : "Password: ****"}
@@ -832,7 +839,13 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   <div className="grid grid-cols-2 gap-4 text-xs">
                     <div>
                       <span className="text-muted-foreground">Requests Used:</span>
-                      <div className="font-medium">{teacher.supportRequestsUsed}/{teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}</div>
+                      <div className="font-medium">
+                        {teacher.isAdmin ? (
+                          <span className="text-blue-600 font-semibold">Unlimited (Admin)</span>
+                        ) : (
+                          `${teacher.supportRequestsUsed}/${teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}`
+                        )}
+                      </div>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Joined:</span>
@@ -935,8 +948,15 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       </TableCell>
                     )}
                     <TableCell>
-                      <div className="font-medium text-xs lg:text-sm">
-                        {teacher.firstName} {teacher.lastName}
+                      <div className="flex items-center gap-2">
+                        <div className="font-medium text-xs lg:text-sm">
+                          {teacher.firstName} {teacher.lastName}
+                        </div>
+                        {teacher.isAdmin && (
+                          <Badge variant="default" className="text-xs bg-blue-100 text-blue-800 border-blue-300">
+                            Admin
+                          </Badge>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -947,8 +967,14 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                     </TableCell>
                     <TableCell>
                       <div className="text-xs lg:text-sm">
-                        <span className="font-medium">{teacher.supportRequestsUsed || 0}</span>
-                        <span className="text-gray-500"> / {teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}</span>
+                        {teacher.isAdmin ? (
+                          <span className="font-medium text-blue-600">Unlimited</span>
+                        ) : (
+                          <>
+                            <span className="font-medium">{teacher.supportRequestsUsed || 0}</span>
+                            <span className="text-gray-500"> / {teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}</span>
+                          </>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
