@@ -300,7 +300,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
         body: {
           csvData: base64Content,
           filename: file.name,
-          schoolName: 'Default School',
+          schoolName: 'Import',
           sendCredentials: false
         }
       });
@@ -629,16 +629,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       onChange={(e) => setNewTeacher({...newTeacher, password: e.target.value})}
                       placeholder="Enter password (min 6 characters)"
                       data-testid="input-password"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="school">School *</Label>
-                    <Input
-                      id="school"
-                      value={newTeacher.school}
-                      onChange={(e) => setNewTeacher({...newTeacher, school: e.target.value})}
-                      placeholder="Enter school name"
-                      data-testid="input-school"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1072,15 +1062,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   value={selectedTeacher.email}
                   onChange={(e) => setSelectedTeacher({...selectedTeacher, email: e.target.value})}
                   data-testid="input-edit-email"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="editSchool">School</Label>
-                <Input
-                  id="editSchool"
-                  value={selectedTeacher.school?.name || ""}
-                  onChange={(e) => setSelectedTeacher({...selectedTeacher, school: selectedTeacher.school ? {...selectedTeacher.school, name: e.target.value} : null})}
-                  data-testid="input-edit-school"
                 />
               </div>
               <div className="space-y-2">
