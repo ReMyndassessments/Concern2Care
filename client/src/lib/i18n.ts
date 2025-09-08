@@ -471,7 +471,8 @@ const resources = {
       
       // CTA Section
       'cta.title': 'Ready to Transform Student Support?',
-      'cta.subtitle': 'Join thousands of educators using AI-powered tools to better support their students. Get a personalized quote for your school today.',
+      'cta.subtitle': 'Join thousands of educators using AI-powered tools to support their students.',
+      'cta.subtitleMobile': 'AI-powered student support for your school.',
       'cta.getQuote': 'Get Your Quote - sales@remynd.online',
       'cta.questions': 'Questions? Email us at sales@remynd.online',
       

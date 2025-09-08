@@ -287,23 +287,24 @@ export default function Landing() {
 
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-purple-600 to-blue-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">{t('cta.title')}</h2>
-          <p className="text-lg sm:text-xl text-purple-100 mb-6 sm:mb-8">{t('cta.subtitle')}</p>
-          <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base w-full sm:w-auto">{t('cta.getQuote')}</Button>
+      <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-br from-purple-600 to-blue-600">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">{t('cta.title')}</h2>
+          <p className="hidden sm:block text-xl sm:text-2xl text-purple-100 mb-8 sm:mb-10 max-w-3xl mx-auto leading-relaxed">{t('cta.subtitle')}</p>
+          <p className="block sm:hidden text-xl text-purple-100 mb-8 leading-relaxed">{t('cta.subtitleMobile')}</p>
+          <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-4 text-lg w-full sm:w-auto min-h-[56px] rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">{t('cta.getQuote')}</Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 sm:py-12 bg-gray-900 text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <p className="text-gray-400 mb-4 text-sm sm:text-base">
-            <Mail className="w-4 h-4 inline mr-2" />
-{t('cta.questions')}
+      <footer className="py-12 sm:py-16 bg-gray-900 text-center">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8">
+          <p className="text-gray-300 mb-6 text-base sm:text-lg">
+            <Mail className="w-5 h-5 inline mr-2" />
+            {t('cta.questions')}
           </p>
-          <p className="text-gray-500 text-xs sm:text-sm mb-2">{t('footer.copyright')}</p>
-          <p className="text-gray-600 text-xs sm:text-sm">{t('footer.poweredBy')}</p>
+          <p className="text-gray-400 text-sm sm:text-base mb-3">{t('footer.copyright')}</p>
+          <p className="text-gray-500 text-sm sm:text-base">{t('footer.poweredBy')}</p>
         </div>
       </footer>
     </div>
