@@ -97,6 +97,35 @@ export default function TeacherManagement() {
     loadTeachers();
   }, []);
 
+  // Automatically load password when password dialog opens
+  useEffect(() => {
+    if (passwordTeacher && showPasswordDialog && !revealedPasswords[passwordTeacher.id]) {
+      const loadCurrentPassword = async () => {
+        try {
+          const response = await apiRequest(`/api/admin/teachers/${passwordTeacher.id}`, {
+            method: "GET"
+          });
+          
+          if (response.password) {
+            setRevealedPasswords(prev => ({
+              ...prev,
+              [passwordTeacher.id]: response.password
+            }));
+          }
+        } catch (error) {
+          console.error("Error loading current password:", error);
+          // Set a fallback so user can still change password
+          setRevealedPasswords(prev => ({
+            ...prev,
+            [passwordTeacher.id]: "Error loading password"
+          }));
+        }
+      };
+      
+      loadCurrentPassword();
+    }
+  }, [passwordTeacher, showPasswordDialog]);
+
   const loadTeachers = async () => {
     try {
       setLoading(true);
@@ -1136,7 +1165,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   <Input
                     id="currentPassword"
                     type="text"
-                    value={revealedPasswords[passwordTeacher.id] || "****"}
+                    value={revealedPasswords[passwordTeacher.id] || "Loading..."}
                     readOnly
                     className="font-mono bg-gray-50"
                     data-testid="input-current-password"
@@ -1171,11 +1200,11 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                         });
                       }
                     }}
-                    disabled={!!revealedPasswords[passwordTeacher.id]}
+                    disabled={true}
                     data-testid="button-show-current-password"
-                    title="Show current password"
+                    title="Password is automatically shown"
                   >
-                    {revealedPasswords[passwordTeacher.id] ? "Shown" : "Show"}
+                    Visible
                   </Button>
                 </div>
               </div>

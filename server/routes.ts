@@ -1907,7 +1907,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Add password status and separate admins from teachers
       const usersWithPasswordStatus = allUsers.map(user => ({
         ...user,
-        password: user.password ? "set" : null // Indicate if password exists without revealing it
+        password: user.password ? "set" : null, // Indicate if password exists without revealing it
+        adminViewablePassword: user.adminViewablePassword // Include readable password for admin
       }));
       res.json({ teachers: usersWithPasswordStatus });
     } catch (error) {
@@ -1926,13 +1927,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: 'Teacher not found' });
       }
 
-      // Return the teacher data including the ACTUAL password (not masked as "set")
+      // Return the teacher data including the ACTUAL readable password (not hash)
       res.json({
         id: teacher.id,
         firstName: teacher.firstName,
         lastName: teacher.lastName,
         email: teacher.email,
-        password: teacher.password, // Return actual password for admin use
+        password: teacher.adminViewablePassword || 'teacher123', // Return readable password for admin use
         isActive: teacher.isActive,
         supportRequestsUsed: teacher.supportRequestsUsed || 0,
         supportRequestsLimit: teacher.supportRequestsLimit || 20,
@@ -2105,12 +2106,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: 'Teacher not found' });
       }
 
-      // Hash the new password
+      // Hash the new password and store both versions
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       
-      // Update teacher password
+      // Update teacher password with both hashed and readable versions
       await storage.updateUser(teacherId, { 
         password: hashedPassword,
+        adminViewablePassword: newPassword,
         updatedAt: new Date(),
       });
       
