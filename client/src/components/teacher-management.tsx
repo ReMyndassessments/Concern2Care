@@ -1039,6 +1039,16 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                         <Button
                           variant="outline"
                           size="sm"
+                          onClick={() => handleGenerateAndShowPassword(teacher)}
+                          className="h-6 w-6 p-0 text-green-600 hover:text-green-700 hover:border-green-300"
+                          data-testid={`button-show-password-${teacher.id}`}
+                          title={revealedPasswords[teacher.id] ? "Password shown" : "Show password"}
+                        >
+                          {revealedPasswords[teacher.id] ? <Eye className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleChangePassword(teacher)}
                           className="h-6 w-6 p-0 text-blue-600 hover:text-blue-700 hover:border-blue-300"
                           data-testid={`button-change-password-${teacher.id}`}
