@@ -68,10 +68,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   });
 
-  // Enable sessions - using memory store for immediate fix, can switch back to PostgreSQL later
+  // Enable sessions - using PostgreSQL store for production reliability
   console.log('🔧 Setting up session management...');
   
+  const pgSession = connectPgSimple(session);
+  
   app.use(session({
+    store: new pgSession({
+      conString: process.env.DATABASE_URL,
+      tableName: 'session',
+      createTableIfMissing: true
+    }),
     secret: process.env.SESSION_SECRET || 'concern2care-session-secret-development-key-very-long',
     resave: false,
     saveUninitialized: false,
