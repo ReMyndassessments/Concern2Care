@@ -24,7 +24,9 @@ import {
   FileText,
   Database,
   Key,
-  Upload
+  Upload,
+  Eye,
+  EyeOff
 } from "lucide-react";
 
 interface Teacher {
@@ -85,6 +87,7 @@ export default function TeacherManagement() {
   const [exportLoading, setExportLoading] = useState<string | null>(null);
   const [showBulkExport, setShowBulkExport] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [showPasswords, setShowPasswords] = useState(false);
   const [passwordTeacher, setPasswordTeacher] = useState<Teacher | null>(null);
   const [newPassword, setNewPassword] = useState("");
 
@@ -195,7 +198,6 @@ export default function TeacherManagement() {
           firstName: selectedTeacher.firstName,
           lastName: selectedTeacher.lastName,
           email: selectedTeacher.email,
-          school: selectedTeacher.school,
           supportRequestsLimit: selectedTeacher.supportRequestsLimit,
           isActive: selectedTeacher.isActive
         }
@@ -563,6 +565,15 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   </Button>
                 </DialogTrigger>
               </Dialog>
+              <Button 
+                variant="outline"
+                onClick={() => setShowPasswords(!showPasswords)}
+                className="w-full sm:w-auto"
+                data-testid="button-toggle-passwords"
+              >
+                {showPasswords ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                {showPasswords ? "Hide Status" : "Show Status"}
+              </Button>
               <Button onClick={handleBulkUpload} variant="outline" className="w-full sm:w-auto" data-testid="button-bulk-upload">
                 <Upload className="h-4 w-4 mr-2" />
                 Bulk Upload CSV
@@ -820,7 +831,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
                       <p className="text-xs text-muted-foreground mt-1">{teacher.email}</p>
                       <Badge variant="outline" className="text-xs mt-1">
-                        Password: ****
+                        {showPasswords ? (teacher.password ? "Password: Encrypted" : "Password: Not Set") : "Password: ****"}
                       </Badge>
                     </div>
                     <Badge variant={teacher.isActive ? "default" : "secondary"} className="text-xs">
@@ -948,7 +959,9 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                     <TableCell>
                       <div className="flex items-center space-x-1">
                         <Key className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs lg:text-sm truncate font-mono">****</span>
+                        <span className="text-xs lg:text-sm truncate font-mono">
+                          {showPasswords ? (teacher.password ? "Encrypted" : "Not Set") : "****"}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell>

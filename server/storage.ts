@@ -726,7 +726,7 @@ export class DatabaseStorage implements IStorage {
     const schoolUsers = await db
       .select()
       .from(users)
-      .where(eq(users.schoolId, schoolId));
+      .where(eq(users.school, schoolId));
     return schoolUsers;
   }
 
