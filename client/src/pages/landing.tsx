@@ -263,14 +263,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Why Schools Choose */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Schools Choose Concern2Care</h2>
-          <p className="text-xl text-gray-600 mb-8">Better outcomes, better value than other education technology solutions</p>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">View ROI Comparison</Button>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-purple-600 to-blue-600">
