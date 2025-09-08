@@ -236,26 +236,26 @@ export default function Landing() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What's Included</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('included.title')}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h3 className="font-semibold text-gray-900 mb-4">Core Features</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">{t('included.coreFeatures')}</h3>
               <ul className="space-y-2">
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />AI-powered intervention recommendations</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Professional PDF report generation</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Email sharing and collaboration tools</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />20 support requests per teacher per month</li>
+                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.aiRecommendations')}</li>
+                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.pdfGeneration')}</li>
+                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.emailSharing')}</li>
+                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.supportRequests')}</li>
               </ul>
             </div>
 
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h3 className="font-semibold text-gray-900 mb-4">Security & Support</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">{t('included.securitySupport')}</h3>
               <ul className="space-y-2">
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Secure data storage and privacy protection</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Regular feature updates and improvements</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Customer support and training resources</li>
+                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.secureStorage')}</li>
+                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.updates')}</li>
+                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />{t('included.customerSupport')}</li>
               </ul>
             </div>
 

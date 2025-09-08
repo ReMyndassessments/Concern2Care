@@ -486,6 +486,18 @@ const resources = {
       'footer.copyright': '© 2025 Concern2Care. Built for educators, by educators.',
       'footer.poweredBy': 'Powered by ReMynd Student Services',
       
+      // What's Included
+      'included.title': 'What\'s Included',
+      'included.coreFeatures': 'Core Features',
+      'included.aiRecommendations': 'AI-powered intervention recommendations',
+      'included.pdfGeneration': 'Professional PDF report generation',
+      'included.emailSharing': 'Email sharing and collaboration tools',
+      'included.supportRequests': '20 support requests per teacher per month',
+      'included.securitySupport': 'Security & Support',
+      'included.secureStorage': 'Secure data storage and privacy protection',
+      'included.updates': 'Regular feature updates and improvements',
+      'included.customerSupport': 'Customer support and training resources',
+      
       // Language Switcher
       'language.switch': 'Switch Language',
       'language.english': 'English',
@@ -1073,6 +1085,18 @@ const resources = {
       // Footer
       'footer.copyright': '© 2025 Concern2Care. 为教育工作者而打造，由教育工作者开发。',
       'footer.poweredBy': '由ReMynd Student Services提供支持',
+      
+      // What's Included
+      'included.title': '包含内容',
+      'included.coreFeatures': '核心功能',
+      'included.aiRecommendations': 'AI驱动的干预推荐',
+      'included.pdfGeneration': '专业PDF报告生成',
+      'included.emailSharing': '邮件分享和协作工具',
+      'included.supportRequests': '每位教师每月20次支持请求',
+      'included.securitySupport': '安全与支持',
+      'included.secureStorage': '安全数据存储和隐私保护',
+      'included.updates': '定期功能更新和改进',
+      'included.customerSupport': '客户支持和培训资源',
       
       // Language Switcher
       'language.switch': '切换语言',
