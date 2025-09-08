@@ -432,7 +432,7 @@ const resources = {
       'pricing.features.onsiteSupport': 'On-site training & support',
       
       // Real School Examples
-      'pricing.realExamples': 'Real School Examples',
+      'pricing.realSchoolExamples': 'Real School Examples',
       'pricing.savingsDescription': 'See how much your school could save with annual billing',
       'pricing.monthly': 'Monthly',
       'pricing.annualSavings': 'Annual Savings: $300',
@@ -960,6 +960,8 @@ const resources = {
       'pricing.supportRequests1500': '每月支持请求：共1,500次',
       'pricing.supportRequests3000': '每月支持请求：共3,000次',
       'pricing.perTeacherMonth': '/教师/月',
+      'pricing.realSchoolExamples': '真实学校案例',
+      'pricing.savingsDescription': '查看您的学校通过年度计费可节省多少费用',
       // ROI 对比模态框
       'comparison.metric': '指标',
       'comparison.magicSchool': 'Magic School',
@@ -1022,9 +1024,7 @@ const resources = {
       'pricing.features.customDevelopment': '定制功能开发',
       'pricing.features.onsiteSupport': '现场培训和支持',
       
-      // Real School Examples
-      'pricing.realExamples': '真实学校案例',
-      'pricing.savingsDescription': '查看您的学校通过年付可以节省多少费用',
+      // Real School Examples  
       'pricing.monthly': '月付',
       'pricing.annualSavings': '年付节省：$300',
       'pricing.supportRequests': '每月支持请求：共500次',
