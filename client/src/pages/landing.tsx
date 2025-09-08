@@ -231,47 +231,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Real School Examples */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('pricing.realSchoolExamples')}</h2>
-            <p className="text-xl text-gray-600">{t('pricing.savingsDescription')}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-50 rounded-xl p-8 text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('pricing.examples.teachers25')}</h3>
-              <div className="space-y-2 mb-6">
-                <div className="flex justify-between"><span>Monthly:</span><span className="font-bold">$250</span></div>
-                <div className="flex justify-between"><span>Annual:</span><span className="font-bold text-green-600">$2,700</span></div>
-                <div className="text-lg font-bold text-green-600">Annual Savings: $300</div>
-              </div>
-              <p className="text-gray-600">Monthly Support Requests: 500 total</p>
-            </div>
-
-            <div className="bg-gray-50 rounded-xl p-8 text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('pricing.examples.teachers75')}</h3>
-              <div className="space-y-2 mb-6">
-                <div className="flex justify-between"><span>Monthly:</span><span className="font-bold">$750</span></div>
-                <div className="flex justify-between"><span>Annual:</span><span className="font-bold text-green-600">$8,100</span></div>
-                <div className="text-lg font-bold text-green-600">Annual Savings: $900</div>
-              </div>
-              <p className="text-gray-600">Monthly Support Requests: 1,500 total</p>
-            </div>
-
-            <div className="bg-gray-50 rounded-xl p-8 text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('pricing.examples.teachers150')}</h3>
-              <div className="space-y-2 mb-6">
-                <div className="flex justify-between"><span>Monthly:</span><span className="font-bold">$1,500</span></div>
-                <div className="flex justify-between"><span>Annual:</span><span className="font-bold text-green-600">$16,200</span></div>
-                <div className="text-lg font-bold text-green-600">Annual Savings: $1,800</div>
-              </div>
-              <p className="text-gray-600">Monthly Support Requests: 3,000 total</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* What's Included */}
       <section className="py-20 bg-gray-50">
