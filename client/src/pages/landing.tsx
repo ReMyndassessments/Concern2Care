@@ -37,6 +37,16 @@ export default function Landing() {
   
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-purple-200 rounded-full opacity-60 animate-pulse"></div>
+        <div className="absolute top-40 right-16 w-24 h-24 bg-green-200 rounded-full opacity-50 animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-32 right-32 w-40 h-40 bg-pink-200 rounded-full opacity-40 animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="absolute bottom-20 left-20 w-28 h-28 bg-blue-200 rounded-full opacity-50 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-yellow-200 rounded-full opacity-30 animate-pulse" style={{animationDelay: '3s'}}></div>
+        <div className="absolute top-32 right-1/3 w-20 h-20 bg-indigo-200 rounded-full opacity-40 animate-pulse" style={{animationDelay: '1.5s'}}></div>
+      </div>
+
       {/* Header */}
       <header className="relative z-10 py-6">
         <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
