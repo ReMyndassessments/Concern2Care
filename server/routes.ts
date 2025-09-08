@@ -44,28 +44,18 @@ import { emailConfigService } from "./services/emailConfig";
 import { insertUserEmailConfigSchema, insertSchoolEmailConfigSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Health check endpoint for deployment systems only - check for health check requests
-  app.get('/', async (req, res, next) => {
-    // Only respond with health check for deployment systems or explicit health check requests
-    const userAgent = req.get('user-agent') || '';
-    const acceptsJson = req.accepts(['html', 'json']) === 'json';
-    
-    // Health check for deployment systems (they typically don't send Accept: text/html)
-    if (acceptsJson || userAgent.includes('health') || userAgent.includes('check') || userAgent.includes('monitor')) {
-      try {
-        const health = await getSystemHealth();
-        return res.status(200).json(health);
-      } catch (error) {
-        return res.status(503).json({ 
-          status: 'unhealthy', 
-          timestamp: new Date().toISOString(),
-          error: 'Health check failed'
-        });
-      }
+  // Health check endpoint - only respond for specific health check requests
+  app.get('/health', async (req, res) => {
+    try {
+      const health = await getSystemHealth();
+      return res.status(200).json(health);
+    } catch (error) {
+      return res.status(503).json({ 
+        status: 'unhealthy', 
+        timestamp: new Date().toISOString(),
+        error: 'Health check failed'
+      });
     }
-    
-    // For regular users (browsers), continue to serve the React app
-    next();
   });
 
   // Enable sessions - using PostgreSQL store for production reliability
