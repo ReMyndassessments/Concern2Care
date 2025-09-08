@@ -2041,33 +2041,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin: Generate new password and return it (for admin to see)
-  app.post('/api/admin/teachers/:id/generate-password', requireAdmin, async (req: any, res) => {
-    try {
-      const teacherId = req.params.id;
-      
-      // Get teacher information
-      const teacher = await storage.getUser(teacherId);
-      if (!teacher) {
-        return res.status(404).json({ message: 'Teacher not found' });
-      }
-
-      // Generate a new random password
-      const newPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-4).toUpperCase() + '!';
-      
-      // Update teacher with new password
-      await storage.updateUser(teacherId, { password: newPassword });
-      
-      res.json({ 
-        success: true, 
-        newPassword: newPassword,
-        message: 'New password generated successfully' 
-      });
-    } catch (error) {
-      console.error('Error generating new password:', error);
-      res.status(500).json({ message: 'Failed to generate new password' });
-    }
-  });
+  // REMOVED: No automated password generation - Admin has full manual control
 
   // Admin: Change teacher password directly (no email required)
   app.post('/api/admin/teachers/:id/change-password', requireAdmin, async (req: any, res) => {

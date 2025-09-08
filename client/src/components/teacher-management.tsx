@@ -418,32 +418,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
   };
 
 
-  const handleGenerateAndShowPassword = async (teacher: Teacher) => {
-    try {
-      const response = await apiRequest(`/api/admin/teachers/${teacher.id}/generate-password`, {
-        method: "POST"
-      });
-
-      if (response.success && response.newPassword) {
-        setRevealedPasswords(prev => ({
-          ...prev,
-          [teacher.id]: response.newPassword
-        }));
-        toast({
-          title: "Password Generated",
-          description: `New password generated for ${teacher.firstName} ${teacher.lastName}`
-        });
-        loadTeachers(); // Refresh the list
-      }
-    } catch (error: any) {
-      console.error("Error generating password:", error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to generate password",
-        variant: "destructive"
-      });
-    }
-  };
 
   const filteredTeachers = teachers.filter(teacher =>
     teacher.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
