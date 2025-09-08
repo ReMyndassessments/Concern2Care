@@ -479,7 +479,7 @@ const resources = {
       // CTA Section
       'cta.title': 'Ready to Transform Student Support?',
       'cta.subtitle': 'Join thousands of educators using AI-powered tools to better support their students. Get a personalized quote for your school today.',
-      'cta.getQuote': 'Get Your Quote',
+      'cta.getQuote': 'Get Your Quote - sales@remynd.online',
       'cta.questions': 'Questions? Email us at sales@remynd.online',
       
       // Footer
@@ -501,7 +501,7 @@ const resources = {
       // CTA Section
       'cta.title': 'Ready to Transform Student Support?',
       'cta.subtitle': 'Join thousands of educators using AI-powered tools to better support their students. Get a personalized quote for your school today.',
-      'cta.getQuote': 'Get Your Quote',
+      'cta.getQuote': 'Get Your Quote - sales@remynd.online',
       'cta.questions': 'Questions? Email us at sales@remynd.online',
       
       // Footer
@@ -1089,7 +1089,7 @@ const resources = {
       // CTA Section
       'cta.title': '准备好变革学生支持了吗？',
       'cta.subtitle': '加入数千名使用AI驱动工具更好支持学生的教育工作者。立即为您的学校获取个性化报价。',
-      'cta.getQuote': '获取报价',
+      'cta.getQuote': '获取报价 - sales@remynd.online',
       'cta.questions': '有问题？请发送邮件至 sales@remynd.online',
       
       // Footer
@@ -1111,7 +1111,7 @@ const resources = {
       // CTA Section
       'cta.title': '准备好变革学生支持了吗？',
       'cta.subtitle': '加入数千名使用AI驱动工具更好支持学生的教育工作者。立即为您的学校获取个性化报价。',
-      'cta.getQuote': '获取报价',
+      'cta.getQuote': '获取报价 - sales@remynd.online',
       'cta.questions': '有问题？请发送邮件至 sales@remynd.online',
       
       // Footer
