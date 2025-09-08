@@ -51,23 +51,25 @@ function Router() {
         </>
       ) : (
         <>
+          {/* Always allow landing page for authenticated users */}
+          <Route path="/" component={Landing} />
+          
           {/* Admin routes */}
           {user?.isAdmin ? (
             <>
               <Route path="/admin" component={AdminPage} />
               <Route path="/admin/*" component={AdminPage} />
-              <Route path="/" component={() => { window.location.href = '/admin'; return null; }} />
               {/* Block teacher-only routes for admins */}
-              <Route path="/new-request" component={() => { window.location.href = '/admin'; return null; }} />
-              <Route path="/my-support-requests" component={() => { window.location.href = '/admin'; return null; }} />
-              <Route path="/meeting-prep" component={() => { window.location.href = '/admin'; return null; }} />
-              <Route path="/settings" component={() => { window.location.href = '/admin'; return null; }} />
-              <Route path="/concerns/:id" component={() => { window.location.href = '/admin'; return null; }} />
+              <Route path="/new-request" component={() => { window.location.href = '/'; return null; }} />
+              <Route path="/my-support-requests" component={() => { window.location.href = '/'; return null; }} />
+              <Route path="/meeting-prep" component={() => { window.location.href = '/'; return null; }} />
+              <Route path="/settings" component={() => { window.location.href = '/'; return null; }} />
+              <Route path="/concerns/:id" component={() => { window.location.href = '/'; return null; }} />
             </>
           ) : (
             <>
               {/* Teacher routes */}
-              <Route path="/" component={Home} />
+              <Route path="/home" component={Home} />
               <Route path="/new-request" component={Home} />
               <Route path="/my-support-requests" component={MySupportRequests} />
               <Route path="/meeting-prep" component={TeacherMeetingPrep} />

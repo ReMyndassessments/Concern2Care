@@ -1,10 +1,27 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, FileText, Users, Clock, Check, Mail } from "lucide-react";
+import { Sparkles, FileText, Users, Clock, Check, Mail, LogOut } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
+import { queryClient } from '@/lib/queryClient';
 
 export default function Landing() {
   const { t } = useTranslation();
+  const { isAuthenticated, user } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
+      // Stay on landing page after logout
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
   
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
@@ -14,13 +31,49 @@ export default function Landing() {
           <div className="flex-1"></div>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
-            <Button 
-              onClick={() => window.location.href = '/login'}
-              size="sm"
-              className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-6 py-3"
-            >
-              {t('auth.teacherSignIn')}
-            </Button>
+            {isAuthenticated ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600">
+                  Welcome, {user?.firstName || user?.email}
+                </span>
+                {user?.isAdmin ? (
+                  <Button 
+                    onClick={() => window.location.href = '/admin'}
+                    size="sm"
+                    variant="outline"
+                    className="px-4 py-2"
+                  >
+                    Admin Panel
+                  </Button>
+                ) : (
+                  <Button 
+                    onClick={() => window.location.href = '/home'}
+                    size="sm"
+                    variant="outline"
+                    className="px-4 py-2"
+                  >
+                    Dashboard
+                  </Button>
+                )}
+                <Button 
+                  onClick={handleLogout}
+                  size="sm"
+                  variant="ghost"
+                  className="text-gray-600 hover:text-red-600 px-4 py-2"
+                >
+                  <LogOut className="w-4 h-4 mr-1" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                onClick={() => window.location.href = '/login'}
+                size="sm"
+                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-6 py-3"
+              >
+                {t('auth.teacherSignIn')}
+              </Button>
+            )}
           </div>
         </div>
       </header>
