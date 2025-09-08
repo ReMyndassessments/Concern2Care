@@ -51,8 +51,12 @@ function Router() {
         </>
       ) : (
         <>
-          {/* Always allow landing page for authenticated users */}
-          <Route path="/" component={Landing} />
+          {/* Redirect root to appropriate dashboard */}
+          <Route path="/" component={() => { 
+            const redirectPath = user?.isAdmin ? '/admin' : '/home';
+            window.location.replace(redirectPath);
+            return null;
+          }} />
           
           {/* Admin routes */}
           {user?.isAdmin ? (
