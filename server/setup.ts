@@ -58,7 +58,7 @@ async function ensureEssentialUsers() {
     throw new Error(`Database connection failed: ${dbError instanceof Error ? dbError.message : String(dbError)}`);
   }
   
-  const passwordHash = await bcrypt.hash('teacher123', 10);
+  const passwordHash = await bcrypt.hash('password123', 10);
   console.log('🔒 Password hash generated');
   
   // Admin user
