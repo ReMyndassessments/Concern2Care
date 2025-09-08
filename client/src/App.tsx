@@ -17,7 +17,7 @@ import AdminPage from "@/pages/admin-page";
 import NotFound from "@/pages/not-found";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     return (
@@ -50,17 +50,36 @@ function Router() {
         </>
       ) : (
         <>
-          <Route path="/admin" component={AdminPage} />
-          <Route path="/admin/*" component={AdminPage} />
-          <Route path="/" component={Home} />
-          <Route path="/new-request" component={Home} />
-          <Route path="/my-support-requests" component={MySupportRequests} />
-          <Route path="/meeting-prep" component={TeacherMeetingPrep} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/concerns/:id" component={ConcernDetail} />
-          {/* Redirect login and register to home when authenticated */}
-          <Route path="/login" component={() => { window.location.href = '/'; return null; }} />
-          <Route path="/register" component={() => { window.location.href = '/'; return null; }} />
+          {/* Admin routes */}
+          {user?.isAdmin ? (
+            <>
+              <Route path="/admin" component={AdminPage} />
+              <Route path="/admin/*" component={AdminPage} />
+              <Route path="/" component={() => { window.location.href = '/admin'; return null; }} />
+              {/* Block teacher-only routes for admins */}
+              <Route path="/new-request" component={() => { window.location.href = '/admin'; return null; }} />
+              <Route path="/my-support-requests" component={() => { window.location.href = '/admin'; return null; }} />
+              <Route path="/meeting-prep" component={() => { window.location.href = '/admin'; return null; }} />
+              <Route path="/settings" component={() => { window.location.href = '/admin'; return null; }} />
+              <Route path="/concerns/:id" component={() => { window.location.href = '/admin'; return null; }} />
+            </>
+          ) : (
+            <>
+              {/* Teacher routes */}
+              <Route path="/" component={Home} />
+              <Route path="/new-request" component={Home} />
+              <Route path="/my-support-requests" component={MySupportRequests} />
+              <Route path="/meeting-prep" component={TeacherMeetingPrep} />
+              <Route path="/settings" component={Settings} />
+              <Route path="/concerns/:id" component={ConcernDetail} />
+              {/* Block admin routes for teachers */}
+              <Route path="/admin" component={() => { window.location.href = '/'; return null; }} />
+              <Route path="/admin/*" component={() => { window.location.href = '/'; return null; }} />
+            </>
+          )}
+          {/* Redirect login and register to appropriate home when authenticated */}
+          <Route path="/login" component={() => { window.location.href = user?.isAdmin ? '/admin' : '/'; return null; }} />
+          <Route path="/register" component={() => { window.location.href = user?.isAdmin ? '/admin' : '/'; return null; }} />
         </>
       )}
       <Route component={NotFound} />

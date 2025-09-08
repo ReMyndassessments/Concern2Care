@@ -312,8 +312,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create a new concern and generate recommendations - PROTECTED
-  app.post("/api/concerns", requireAuth, async (req: any, res) => {
+  // Require teacher role (not admin) for creating concerns
+  const requireTeacher = (req: any, res: any, next: any) => {
+    if (req.session.isAuthenticated && req.session.user) {
+      if (req.session.user.isAdmin) {
+        return res.status(403).json({ message: "Admin accounts cannot create concerns. This feature is for teachers only." });
+      }
+      req.user = { claims: { sub: req.session.user.id } };
+      next();
+    } else {
+      res.status(401).json({ message: "Authentication required" });
+    }
+  };
+
+  // Create a new concern and generate recommendations - TEACHERS ONLY
+  app.post("/api/concerns", requireTeacher, async (req: any, res) => {
     try {
       // SECURE: Get real user ID from authenticated session
       const userId = req.user.claims.sub;

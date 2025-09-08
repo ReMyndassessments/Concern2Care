@@ -843,7 +843,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <span className="text-muted-foreground">Requests Used:</span>
                       <div className="font-medium">
                         {teacher.isAdmin ? (
-                          <span className="text-blue-600 font-semibold">Unlimited (Admin)</span>
+                          <span className="text-gray-500 text-xs">N/A</span>
                         ) : (
                           `${teacher.supportRequestsUsed}/${teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}`
                         )}
@@ -970,7 +970,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                     <TableCell>
                       <div className="text-xs lg:text-sm">
                         {teacher.isAdmin ? (
-                          <span className="font-medium text-blue-600">Unlimited</span>
+                          <span className="text-gray-500">N/A</span>
                         ) : (
                           <>
                             <span className="font-medium">{teacher.supportRequestsUsed || 0}</span>
