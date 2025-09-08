@@ -755,96 +755,85 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
         </CardHeader>
       </Card>
 
-      {/* Search and Export Controls */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <Card className="sm:col-span-2">
-          <CardContent className="p-3 md:p-4">
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <Label htmlFor="search" className="text-sm">Search Teachers</Label>
-                <Input
-                  id="search"
-                  placeholder="Search by name, email, or school..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  data-testid="input-search"
-                  className="text-sm"
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowBulkExport(!showBulkExport)}
-                  className="text-xs"
-                  data-testid="button-toggle-bulk-export"
-                >
-                  <Database className="h-3 w-3 mr-1" />
-                  {showBulkExport ? 'Hide' : 'Show'} Bulk Export
-                </Button>
-                {showBulkExport && selectedTeachers.length > 0 && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleBulkExport('csv')}
-                      disabled={exportLoading === 'bulk'}
-                      className="text-xs"
-                      data-testid="button-bulk-export-csv"
-                    >
-                      {exportLoading === 'bulk' ? 'Exporting...' : (
-                        <>
-                          <Download className="h-3 w-3 mr-1" />
-                          Export CSV ({selectedTeachers.length})
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleBulkExport('json')}
-                      disabled={exportLoading === 'bulk'}
-                      className="text-xs"
-                      data-testid="button-bulk-export-json"
-                    >
-                      {exportLoading === 'bulk' ? 'Exporting...' : (
-                        <>
-                          <FileText className="h-3 w-3 mr-1" />
-                          Export JSON ({selectedTeachers.length})
-                        </>
-                      )}
-                    </Button>
-                  </>
-                )}
-              </div>
+      {/* Search and Controls */}
+      <Card>
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            <div className="flex-1 max-w-md">
+              <Label htmlFor="search" className="text-sm font-medium">Search Teachers</Label>
+              <Input
+                id="search"
+                placeholder="Search by name, email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mt-1"
+                data-testid="input-search"
+              />
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-3 md:p-4">
-            <div className="flex items-center space-x-2">
-              <Users className="h-4 w-4 text-blue-600" />
-              <div>
-                <p className="text-xs md:text-sm text-gray-600">Total Teachers</p>
-                <p className="text-lg md:text-2xl font-bold">{teachers.length}</p>
+            
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-6 text-sm">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-brand-blue">{filteredTeachers.length}</div>
+                  <div className="text-xs text-gray-500">
+                    {filteredTeachers.length === 1 ? 'Teacher' : 'Teachers'}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-600">{teachers.filter(t => t.isActive).length}</div>
+                  <div className="text-xs text-gray-500">Active</div>
+                </div>
               </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowBulkExport(!showBulkExport)}
+                data-testid="button-show-bulk-export"
+              >
+                <Database className="h-4 w-4 mr-2" />
+                Show Bulk Export
+              </Button>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-3 md:p-4">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <div>
-                <p className="text-xs md:text-sm text-gray-600">Active</p>
-                <p className="text-lg md:text-2xl font-bold">{teachers.filter(t => t.isActive).length}</p>
-              </div>
+          </div>
+          
+          {showBulkExport && (
+            <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t">
+              {selectedTeachers.length > 0 && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleBulkExport('csv')}
+                    disabled={exportLoading === 'bulk'}
+                    data-testid="button-bulk-export-csv"
+                  >
+                    {exportLoading === 'bulk' ? 'Exporting...' : (
+                      <>
+                        <Download className="h-4 w-4 mr-2" />
+                        Export CSV ({selectedTeachers.length})
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleBulkExport('json')}
+                    disabled={exportLoading === 'bulk'}
+                    data-testid="button-bulk-export-json"
+                  >
+                    {exportLoading === 'bulk' ? 'Exporting...' : (
+                      <>
+                        <FileText className="h-4 w-4 mr-2" />
+                        Export JSON ({selectedTeachers.length})
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Teachers Table */}
       <Card>
