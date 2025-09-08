@@ -19,7 +19,7 @@ export default function Landing() {
               size="sm"
               className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-6 py-3"
             >
-              {t('landing.teacherSignIn')}
+              {t('auth.teacherSignIn')}
             </Button>
           </div>
         </div>
@@ -35,7 +35,7 @@ export default function Landing() {
           
           {/* Main Heading */}
           <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6 leading-tight">
-            {t('landing.mainTitle')}
+            Concern2Care
           </h1>
           
           {/* Tagline */}
