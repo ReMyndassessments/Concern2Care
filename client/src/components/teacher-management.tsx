@@ -1148,6 +1148,31 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
               <p className="text-sm text-gray-600">
                 Change password for <strong>{passwordTeacher.firstName} {passwordTeacher.lastName}</strong>
               </p>
+              {/* Current Password Display */}
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword">Current Password</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    id="currentPassword"
+                    type="text"
+                    value={revealedPasswords[passwordTeacher.id] || "****"}
+                    readOnly
+                    className="font-mono bg-gray-50"
+                    data-testid="input-current-password"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleGenerateAndShowPassword(passwordTeacher)}
+                    disabled={!!revealedPasswords[passwordTeacher.id]}
+                    data-testid="button-show-current-password"
+                    title="Generate and show current password"
+                  >
+                    {revealedPasswords[passwordTeacher.id] ? "Shown" : "Show"}
+                  </Button>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="newPassword">New Password</Label>
                 <Input
