@@ -558,11 +558,34 @@ export default function HelpGuide() {
         <Section icon={Smartphone} title="Mobile and Accessibility">
           <SubSection title="Mobile Device Usage">
             <FeatureList features={[
-              "Fully responsive design works on phones and tablets",
-              "Touch-friendly interface for mobile interactions",
-              "All features available on mobile devices",
-              "Optimized forms for mobile data entry",
-              "Action buttons work seamlessly on touch devices"
+              "Fully responsive design works perfectly on phones and tablets",
+              "Touch-friendly interface with large buttons (56px minimum height)",
+              "All features available on mobile devices with optimized layouts",
+              "Mobile-first forms with proper keyboard optimization",
+              "Collapsible navigation menus for easy mobile navigation",
+              "Full-width buttons on mobile for easy tapping",
+              "Optimized text sizes and spacing for mobile reading"
+            ]} />
+          </SubSection>
+
+          <SubSection title="Mobile Usage Tips">
+            <StepList steps={[
+              "Use landscape mode for easier table viewing and data entry",
+              "Tap and hold buttons if they don't respond immediately",
+              "The hamburger menu (☰) provides quick access to all features",
+              "Scroll horizontally on data tables to view all columns",
+              "Use pinch-to-zoom for detailed report viewing",
+              "Voice-to-text works well in concern description fields"
+            ]} />
+          </SubSection>
+
+          <SubSection title="Mobile-Optimized Features">
+            <FeatureList features={[
+              "Mobile-friendly landing page with shorter text on small screens",
+              "Touch-optimized CTA buttons with enhanced visual feedback",
+              "Responsive admin dashboard with scrollable content",
+              "Mobile-friendly login page with proper keyboard handling",
+              "Swipe gestures supported for navigation where applicable"
             ]} />
           </SubSection>
 
@@ -742,12 +765,14 @@ export default function HelpGuide() {
             <div className="bg-green-50 p-4 rounded-lg">
               <p className="font-medium text-green-800 mb-2">Latest Enhancements:</p>
               <FeatureList features={[
-                "Action buttons added to all AI-generated content",
-                "Fixed PDF character encoding and formatting issues",
-                "Improved Chinese language support throughout the system",
-                "Enhanced mobile responsiveness for action buttons",
-                "Better table formatting in PDF reports",
-                "Streamlined copy, download, and share workflows"
+                "Comprehensive mobile responsiveness improvements across all pages",
+                "Mobile-optimized CTA section with touch-friendly 56px buttons",
+                "Enhanced mobile navigation with collapsible menus",
+                "Mobile-first responsive breakpoints (sm, md, lg, xl)",
+                "Improved mobile text sizing and readability",
+                "Touch-friendly button designs with proper spacing",
+                "Mobile-specific content optimization for better user experience",
+                "Enhanced mobile landing page with shortened text for small screens"
               ]} />
             </div>
           </SubSection>
