@@ -181,11 +181,14 @@ export default function Landing() {
             <p className="text-gray-600">{t('pricing.description')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Small School */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('pricing.smallSchool')}</h3>
-              <p className="text-gray-600 mb-4">{t('pricing.smallSchoolRange')}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Standard Plan: 1-200 Teachers */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-purple-500 relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">{t('pricing.popular')}</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('pricing.standardPlan')}</h3>
+              <p className="text-gray-600 mb-4">{t('pricing.standardRange')}</p>
               <div className="mb-6">
                 <div className="text-3xl font-bold text-gray-900">$10<span className="text-lg text-gray-600">/teacher/month</span></div>
                 <p className="text-gray-600">{t('pricing.annual')}</p>
@@ -196,25 +199,6 @@ export default function Landing() {
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />20 support requests per teacher/month</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />PDF report generation</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Email sharing capabilities</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Basic onboarding support</li>
-              </ul>
-              <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
-            </div>
-
-            {/* Medium School */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-purple-500 relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">Popular</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('pricing.mediumSchool')}</h3>
-              <p className="text-gray-600 mb-4">{t('pricing.mediumSchoolRange')}</p>
-              <div className="mb-6">
-                <div className="text-3xl font-bold text-gray-900">$10<span className="text-lg text-gray-600">/teacher/month</span></div>
-                <p className="text-gray-600">{t('pricing.annual')}</p>
-                <p className="text-green-600 font-medium">{t('pricing.save10')}</p>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Everything in Small School</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Priority customer support</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Advanced analytics dashboard</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Bulk teacher management</li>
@@ -223,38 +207,22 @@ export default function Landing() {
               <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
             </div>
 
-            {/* Large School */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('pricing.largeSchool')}</h3>
-              <p className="text-gray-600 mb-4">{t('pricing.largeSchoolRange')}</p>
-              <div className="mb-6">
-                <div className="text-3xl font-bold text-gray-900">$10<span className="text-lg text-gray-600">/teacher/month</span></div>
-                <p className="text-gray-600">{t('pricing.annual')}</p>
-                <p className="text-green-600 font-medium">{t('pricing.save10')}</p>
-              </div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Everything in Medium School</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Dedicated account manager</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Custom integrations</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Advanced reporting suite</li>
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />24/7 priority support</li>
-              </ul>
-              <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
-            </div>
-
-            {/* Enterprise */}
+            {/* Enterprise Plan: 200+ Teachers */}
             <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-2">{t('pricing.enterprise')}</h3>
               <p className="text-gray-600 mb-4">{t('pricing.enterpriseRange')}</p>
               <div className="mb-6">
-                <div className="text-3xl font-bold text-gray-900">Custom</div>
-                <p className="text-gray-600">Annual: Custom pricing</p>
+                <div className="text-3xl font-bold text-gray-900">{t('pricing.custom')}</div>
+                <p className="text-gray-600">{t('pricing.customPricing')}</p>
               </div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Everything in Large School</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Everything in Standard Plan</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Dedicated account manager</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />White-label solutions</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />API access</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Custom feature development</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />Advanced reporting suite</li>
+                <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />24/7 priority support</li>
                 <li className="flex items-center"><Check className="w-5 h-5 text-green-500 mr-2" />On-site training & support</li>
               </ul>
               <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
