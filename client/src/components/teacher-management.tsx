@@ -1116,12 +1116,31 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => {
-                      if (passwordTeacher.password) {
-                        setRevealedPasswords(prev => ({
-                          ...prev,
-                          [passwordTeacher.id]: passwordTeacher.password!
-                        }));
+                    onClick={async () => {
+                      try {
+                        // Get fresh teacher data from database to ensure we have the latest password
+                        const response = await apiRequest(`/api/admin/teachers/${passwordTeacher.id}`, {
+                          method: "GET"
+                        });
+                        
+                        if (response.password) {
+                          setRevealedPasswords(prev => ({
+                            ...prev,
+                            [passwordTeacher.id]: response.password
+                          }));
+                        } else {
+                          toast({
+                            title: "No Password Found",
+                            description: "This teacher doesn't have a password set.",
+                            variant: "destructive"
+                          });
+                        }
+                      } catch (error) {
+                        toast({
+                          title: "Error",
+                          description: "Could not retrieve current password",
+                          variant: "destructive"
+                        });
                       }
                     }}
                     disabled={!!revealedPasswords[passwordTeacher.id]}

@@ -1903,6 +1903,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get single teacher with actual password (for admin password management)
+  app.get('/api/admin/teachers/:id', requireAdmin, async (req: any, res) => {
+    try {
+      const teacherId = req.params.id;
+      const teacher = await storage.getUser(teacherId);
+      
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      // Return the teacher data including the ACTUAL password (not masked as "set")
+      res.json({
+        id: teacher.id,
+        firstName: teacher.firstName,
+        lastName: teacher.lastName,
+        email: teacher.email,
+        password: teacher.password, // Return actual password for admin use
+        isActive: teacher.isActive,
+        supportRequestsUsed: teacher.supportRequestsUsed || 0,
+        supportRequestsLimit: teacher.supportRequestsLimit || 20,
+        additionalRequests: teacher.additionalRequests || 0,
+        createdAt: teacher.createdAt,
+        lastLoginAt: teacher.lastLoginAt
+      });
+    } catch (error) {
+      console.error('Error fetching teacher:', error);
+      res.status(500).json({ message: 'Failed to fetch teacher' });
+    }
+  });
+
   // Admin: Create a new teacher
   app.post('/api/admin/teachers', requireAdmin, async (req: any, res) => {
     try {
