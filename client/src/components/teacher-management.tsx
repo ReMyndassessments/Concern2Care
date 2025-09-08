@@ -42,6 +42,8 @@ interface Teacher {
   supportRequestsLimit: number;
   supportRequestsUsed: number;
   additionalRequests: number;
+  isAdmin: boolean;
+  role?: string;
   isActive: boolean;
   createdAt: string;
   lastLoginAt?: string;
