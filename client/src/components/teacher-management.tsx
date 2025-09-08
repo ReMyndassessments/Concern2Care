@@ -88,6 +88,7 @@ export default function TeacherManagement() {
   const [showBulkExport, setShowBulkExport] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
+  const [revealedPasswords, setRevealedPasswords] = useState<{[key: string]: string}>({});
   const [passwordTeacher, setPasswordTeacher] = useState<Teacher | null>(null);
   const [newPassword, setNewPassword] = useState("");
 
@@ -417,6 +418,33 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
     }
   };
 
+  const handleGenerateAndShowPassword = async (teacher: Teacher) => {
+    try {
+      const response = await apiRequest(`/api/admin/teachers/${teacher.id}/generate-password`, {
+        method: "POST"
+      });
+
+      if (response.success && response.newPassword) {
+        setRevealedPasswords(prev => ({
+          ...prev,
+          [teacher.id]: response.newPassword
+        }));
+        toast({
+          title: "Password Generated",
+          description: `New password generated for ${teacher.firstName} ${teacher.lastName}`
+        });
+        loadTeachers(); // Refresh the list
+      }
+    } catch (error: any) {
+      console.error("Error generating password:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to generate password",
+        variant: "destructive"
+      });
+    }
+  };
+
   const filteredTeachers = teachers.filter(teacher =>
     teacher.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     teacher.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -572,7 +600,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                 data-testid="button-toggle-passwords"
               >
                 {showPasswords ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-                {showPasswords ? "Hide Status" : "Show Status"}
+                {showPasswords ? "Hide Passwords" : "Show Passwords"}
               </Button>
               <Button onClick={handleBulkUpload} variant="outline" className="w-full sm:w-auto" data-testid="button-bulk-upload">
                 <Upload className="h-4 w-4 mr-2" />
@@ -831,7 +859,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
                       <p className="text-xs text-muted-foreground mt-1">{teacher.email}</p>
                       <Badge variant="outline" className="text-xs mt-1">
-                        {showPasswords ? (teacher.password ? "Password: Encrypted" : "Password: Not Set") : "Password: ****"}
+                        {showPasswords ? (revealedPasswords[teacher.id] ? `Password: ${revealedPasswords[teacher.id]}` : (teacher.password ? "Password: Hidden" : "Password: Not Set")) : "Password: ****"}
                       </Badge>
                     </div>
                     <Badge variant={teacher.isActive ? "default" : "secondary"} className="text-xs">
@@ -960,7 +988,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <div className="flex items-center space-x-1">
                         <Key className="h-3 w-3 text-gray-400" />
                         <span className="text-xs lg:text-sm truncate font-mono">
-                          {showPasswords ? (teacher.password ? "Encrypted" : "Not Set") : "****"}
+                          {showPasswords ? (revealedPasswords[teacher.id] || (teacher.password ? "Hidden" : "Not Set")) : "****"}
                         </span>
                       </div>
                     </TableCell>
@@ -1011,12 +1039,12 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleChangePassword(teacher)}
+                          onClick={() => handleGenerateAndShowPassword(teacher)}
                           className="h-6 w-6 p-0 text-blue-600 hover:text-blue-700 hover:border-blue-300"
-                          data-testid={`button-change-password-${teacher.id}`}
-                          title="Change password directly"
+                          data-testid={`button-show-password-${teacher.id}`}
+                          title={revealedPasswords[teacher.id] ? "Password already shown" : "Generate and show password"}
                         >
-                          <Key className="h-3 w-3" />
+                          {revealedPasswords[teacher.id] ? <Eye className="h-3 w-3" /> : <Key className="h-3 w-3" />}
                         </Button>
                         <Button
                           variant="outline"
