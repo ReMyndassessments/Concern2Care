@@ -51,42 +51,42 @@ export default function Home() {
               {t('dashboard.welcome', 'Welcome back, {{name}}!', { name: user?.firstName || t('dashboard.teacher', 'Teacher') })}
             </h1>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
             <div className="text-center">
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 {user?.supportRequestsUsed || 0}
               </div>
-              <p className="text-gray-600 text-xs sm:text-sm">{t('dashboard.requestsUsedThisMonth', 'Requests Used This Month')}</p>
+              <p className="text-gray-600 text-xs sm:text-sm leading-tight">{t('dashboard.requestsUsedThisMonth', 'Requests Used This Month')}</p>
             </div>
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 {(user?.supportRequestsLimit || 20) - (user?.supportRequestsUsed || 0)}
               </div>
-              <p className="text-gray-600 text-sm">{t('dashboard.requestsRemaining', 'Requests Remaining')}</p>
+              <p className="text-gray-600 text-xs sm:text-sm leading-tight">{t('dashboard.requestsRemaining', 'Requests Remaining')}</p>
             </div>
             <div className="text-center">
-              <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
+              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 mb-1 sm:mb-2">
                 <div 
-                  className="bg-gradient-to-r from-purple-500 to-blue-500 h-3 rounded-full transition-all duration-500" 
+                  className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 sm:h-3 rounded-full transition-all duration-500" 
                   style={{ width: `${Math.min(usagePercentage, 100)}%` }}
                 ></div>
               </div>
-              <p className="text-gray-600 text-sm">{t('dashboard.percentUsed', '{{percent}}% Used', { percent: Math.round(usagePercentage) })}</p>
+              <p className="text-gray-600 text-xs sm:text-sm leading-tight">{t('dashboard.percentUsed', '{{percent}}% Used', { percent: Math.round(usagePercentage) })}</p>
             </div>
           </div>
         </div>
 
         {/* Usage Limit Warning - Show when at limit */}
         {user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20) && (
-          <div className="max-w-4xl mx-auto mb-6">
-            <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-2xl p-6">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="h-5 w-5 text-red-600" />
+          <div className="max-w-4xl mx-auto mb-4 sm:mb-6">
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+              <div className="flex items-start sm:items-center space-x-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-red-800 mb-2">{t('dashboard.limitReached', 'Monthly Request Limit Reached')}</h3>
-                  <p className="text-red-700 mb-3">
+                  <h3 className="text-base sm:text-lg font-semibold text-red-800 mb-2">{t('dashboard.limitReached', 'Monthly Request Limit Reached')}</h3>
+                  <p className="text-sm sm:text-base text-red-700 mb-3">
                     {t('dashboard.limitReachedDesc', 'You\'ve used all {{count}} of your monthly support requests. The form below has been temporarily disabled.', { count: user.supportRequestsLimit || 20 })}
                   </p>
                   <div className="bg-white/70 rounded-lg p-4 mb-4">
@@ -110,10 +110,10 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <Button 
                       onClick={() => window.location.href = 'mailto:admin@yourschool.edu?subject=Request for Additional Student Support Requests&body=Hello,%0A%0AI have reached my monthly limit of support requests and need additional requests for urgent student needs.%0A%0ATeacher: ' + encodeURIComponent((user.firstName || '') + ' ' + (user.lastName || '')) + '%0AEmail: ' + encodeURIComponent(user.email || '') + '%0ACurrent Usage: ' + (user.supportRequestsUsed || 0) + '/' + (user.supportRequestsLimit || 20) + '%0A%0APlease approve additional requests for this month.%0A%0AThank you!'}
-                      className="bg-red-600 hover:bg-red-700 text-white"
+                      className="bg-red-600 hover:bg-red-700 text-white text-sm"
                       size="sm"
                     >
                       {t('dashboard.emailAdministrator', '📧 Email Administrator')}
@@ -121,12 +121,12 @@ export default function Home() {
                     <Button 
                       onClick={() => window.location.href = '/my-support-requests'}
                       variant="outline"
-                      className="border-red-200 text-red-700 hover:bg-red-50"
+                      className="border-red-200 text-red-700 hover:bg-red-50 text-sm"
                       size="sm"
                     >
                       {t('dashboard.viewMyRequests', '📋 View My Requests')}
                     </Button>
-                    <Button asChild variant="outline" className="border-red-200 text-red-700 hover:bg-red-50" size="sm">
+                    <Button asChild variant="outline" className="border-red-200 text-red-700 hover:bg-red-50 text-sm" size="sm">
                       <Link href="/meeting-prep">
                         {t('dashboard.meetingPrep', '📅 Meeting Prep')}
                       </Link>
@@ -148,22 +148,25 @@ export default function Home() {
                 </div>
                 <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">{t('dashboard.documentNewConcern', 'Document New Concern')}</h2>
                 {user && (user.supportRequestsUsed || 0) >= (user.supportRequestsLimit || 20) && (
-                  <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
-                    {t('dashboard.formDisabled', 'Form Disabled - Limit Reached')}
+                  <div className="bg-red-100 text-red-800 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+                    <span className="hidden sm:inline">{t('dashboard.formDisabled', 'Form Disabled - Limit Reached')}</span>
+                    <span className="sm:hidden">Disabled</span>
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-2">
-                <Button asChild variant="outline" size="sm" className="hidden md:flex border-purple-200 hover:bg-purple-50">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <Button asChild variant="outline" size="sm" className="hidden sm:flex border-purple-200 hover:bg-purple-50">
                   <Link href="/my-support-requests">
-                    <FileText className="mr-2 h-4 w-4" />
-                    {t('dashboard.viewMyRequestsBtn', 'View My Requests')}
+                    <FileText className="mr-1 sm:mr-2 h-4 w-4" />
+                    <span className="hidden md:inline">{t('dashboard.viewMyRequestsBtn', 'View My Requests')}</span>
+                    <span className="md:hidden">Requests</span>
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="sm" className="border-purple-200 hover:bg-purple-50">
                   <Link href="/meeting-prep">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    {t('dashboard.meetingPrepBtn', 'Meeting Prep')}
+                    <Calendar className="mr-1 sm:mr-2 h-4 w-4" />
+                    <span className="hidden sm:inline">{t('dashboard.meetingPrepBtn', 'Meeting Prep')}</span>
+                    <span className="sm:hidden">Prep</span>
                   </Link>
                 </Button>
               </div>
