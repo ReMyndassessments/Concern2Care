@@ -371,6 +371,14 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
         title: "Password Changed",
         description: `Password updated successfully for ${passwordTeacher.firstName} ${passwordTeacher.lastName}`,
       });
+      
+      // Clear the old revealed password from cache so "Show" button works correctly with new password
+      setRevealedPasswords(prev => {
+        const updated = { ...prev };
+        delete updated[passwordTeacher.id];
+        return updated;
+      });
+      
       setShowPasswordDialog(false);
       setPasswordTeacher(null);
       setNewPassword("");
