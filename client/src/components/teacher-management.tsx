@@ -87,7 +87,6 @@ export default function TeacherManagement() {
   const [exportLoading, setExportLoading] = useState<string | null>(null);
   const [showBulkExport, setShowBulkExport] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
-  const [showPasswords, setShowPasswords] = useState(false);
   const [revealedPasswords, setRevealedPasswords] = useState<{[key: string]: string}>({});
   const [passwordTeacher, setPasswordTeacher] = useState<Teacher | null>(null);
   const [newPassword, setNewPassword] = useState("");
@@ -584,29 +583,20 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                 Manage teacher accounts and permissions
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-wrap gap-2">
               <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
                 <DialogTrigger asChild>
-                  <Button className="bg-brand-blue hover:bg-brand-blue/90 w-full sm:w-auto" data-testid="button-add-teacher">
+                  <Button className="bg-brand-blue hover:bg-brand-blue/90" data-testid="button-add-teacher">
                     <Plus className="h-4 w-4 mr-2" />
                     Add Teacher
                   </Button>
                 </DialogTrigger>
               </Dialog>
-              <Button 
-                variant="outline"
-                onClick={() => setShowPasswords(!showPasswords)}
-                className="w-full sm:w-auto"
-                data-testid="button-toggle-passwords"
-              >
-                {showPasswords ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-                {showPasswords ? "Hide Passwords" : "Show Passwords"}
-              </Button>
-              <Button onClick={handleBulkUpload} variant="outline" className="w-full sm:w-auto" data-testid="button-bulk-upload">
+              <Button onClick={handleBulkUpload} variant="outline" data-testid="button-bulk-upload">
                 <Upload className="h-4 w-4 mr-2" />
                 Bulk Upload CSV
               </Button>
-              <Button onClick={handleDownloadTemplate} variant="outline" className="w-full sm:w-auto" data-testid="button-download-template">
+              <Button onClick={handleDownloadTemplate} variant="outline" data-testid="button-download-template">
                 <Download className="h-4 w-4 mr-2" />
                 Download Template
               </Button>
@@ -848,7 +838,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
                       <p className="text-xs text-muted-foreground mt-1">{teacher.email}</p>
                       <Badge variant="outline" className="text-xs mt-1">
-                        {showPasswords ? (revealedPasswords[teacher.id] ? `Password: ${revealedPasswords[teacher.id]}` : (teacher.password ? "Password: Hidden" : "Password: Not Set")) : "Password: ****"}
+                        {revealedPasswords[teacher.id] ? `Password: ${revealedPasswords[teacher.id]}` : "Password: ****"}
                       </Badge>
                     </div>
                     <Badge variant={teacher.isActive ? "default" : "secondary"} className="text-xs">
@@ -977,7 +967,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <div className="flex items-center space-x-1">
                         <Key className="h-3 w-3 text-gray-400" />
                         <span className="text-xs lg:text-sm truncate font-mono">
-                          {showPasswords ? (revealedPasswords[teacher.id] || (teacher.password ? "Hidden" : "Not Set")) : "****"}
+                          {revealedPasswords[teacher.id] || "****"}
                         </span>
                       </div>
                     </TableCell>
