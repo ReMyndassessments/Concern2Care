@@ -28,7 +28,6 @@ export default function Login() {
       const responseData = await response.json();
 
       if (response.ok && responseData.success) {
-        console.log('✅ Login successful, updating auth cache...');
         // Clear old auth cache and set new data
         queryClient.removeQueries({ queryKey: ["/api/auth/user"] });
         queryClient.setQueryData(["/api/auth/user"], responseData.user);
@@ -36,7 +35,6 @@ export default function Login() {
         const redirectDelay = window.location.hostname.includes('replit.app') ? 1500 : 500;
         setTimeout(() => {
           // Always redirect to landing page as requested
-          console.log('✅ Redirecting to landing page');
           window.location.replace('/');
         }, redirectDelay);
       } else {

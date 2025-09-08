@@ -8,7 +8,6 @@ export function useAuth() {
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     queryFn: async () => {
-      console.log('🔐 Checking authentication...');
       try {
         const response = await fetch(`${window.location.origin}/api/auth/user`, {
           credentials: 'include', // Ensure cookies are sent
@@ -18,9 +17,7 @@ export function useAuth() {
             'Pragma': 'no-cache'
           }
         });
-        console.log('🔐 Auth response status:', response.status);
         if (response.status === 401) {
-          console.log('🔐 Not authenticated');
           return null; // Not authenticated, return null instead of throwing
         }
         if (!response.ok) {
@@ -28,7 +25,6 @@ export function useAuth() {
           throw new Error("Failed to fetch user");
         }
         const userData = await response.json();
-        console.log('🔐 Authentication successful:', userData.email);
         return userData;
       } catch (error) {
         console.error('🔐 Auth check error:', error);
@@ -40,7 +36,6 @@ export function useAuth() {
   // Explicitly handle the loading state and null user
   const isAuthenticated = !isLoading && !!user && !error;
   
-  console.log('🔐 Auth state:', { isLoading, isAuthenticated, hasUser: !!user, hasError: !!error });
   
   return {
     user,
