@@ -267,9 +267,9 @@ export default function Landing() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-purple-600 to-blue-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">Ready to Transform Student Support?</h2>
-          <p className="text-xl text-purple-100 mb-8">Join thousands of educators using AI-powered tools to better support their students. Get a personalized quote for your school today.</p>
-          <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-4">Get Your Quote</Button>
+          <h2 className="text-4xl font-bold text-white mb-4">{t('cta.title')}</h2>
+          <p className="text-xl text-purple-100 mb-8">{t('cta.subtitle')}</p>
+          <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-4">{t('cta.getQuote')}</Button>
         </div>
       </section>
 
@@ -278,10 +278,10 @@ export default function Landing() {
         <div className="max-w-4xl mx-auto px-4">
           <p className="text-gray-400 mb-4">
             <Mail className="w-4 h-4 inline mr-2" />
-            Questions? Email us at sales@remynd.online
+{t('cta.questions')}
           </p>
-          <p className="text-gray-500 text-sm mb-2">© 2025 Concern2Care. Built for educators, by educators.</p>
-          <p className="text-gray-600 text-sm">Powered by ReMynd Student Services</p>
+          <p className="text-gray-500 text-sm mb-2">{t('footer.copyright')}</p>
+          <p className="text-gray-600 text-sm">{t('footer.poweredBy')}</p>
         </div>
       </footer>
     </div>
