@@ -26,14 +26,13 @@ import {
   Key,
   Upload
 } from "lucide-react";
-import type { School as SchoolType } from "@shared/schema";
 
 interface Teacher {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  school: SchoolType | null;
+  school: string | null;
   schoolDistrict?: string;
   primaryGrade?: string;
   primarySubject?: string;
@@ -422,7 +421,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
     teacher.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     teacher.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     teacher.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (typeof teacher.school === 'string' ? teacher.school : teacher.school?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+    (teacher.school || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const formatDate = (dateString: string) => {
@@ -834,7 +833,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <h3 className="font-medium text-sm">{teacher.firstName} {teacher.lastName}</h3>
                       <p className="text-xs text-muted-foreground mt-1">{teacher.email}</p>
                       <Badge variant="outline" className="text-xs mt-1">
-                        {typeof teacher.school === 'string' ? teacher.school : teacher.school?.name || "Not specified"}
+                        {teacher.school || "Not specified"}
                       </Badge>
                     </div>
                     <Badge variant={teacher.isActive ? "default" : "secondary"} className="text-xs">
@@ -962,7 +961,7 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                     <TableCell>
                       <div className="flex items-center space-x-1">
                         <School className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs lg:text-sm truncate">{typeof teacher.school === 'string' ? teacher.school : teacher.school?.name || "Not specified"}</span>
+                        <span className="text-xs lg:text-sm truncate">{teacher.school || "Not specified"}</span>
                       </div>
                     </TableCell>
                     <TableCell>

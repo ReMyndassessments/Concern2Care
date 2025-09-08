@@ -300,7 +300,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUsersWithSchool(): Promise<UserWithSchool[]> {
-    // Since users now have simple school strings, we can't join with schools table
+    // Since users now have simple school strings, return them directly
     const result = await db
       .select()
       .from(users)
@@ -308,7 +308,7 @@ export class DatabaseStorage implements IStorage {
 
     return result.map(user => ({
       ...user,
-      school: null // No structured school object available
+      school: user.school // Return the school string directly
     }));
   }
 

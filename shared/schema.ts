@@ -465,9 +465,7 @@ export type InterventionWithProgressNotes = Intervention & {
   progressNotes: ProgressNote[];
 };
 
-export type UserWithSchool = Omit<User, 'school'> & {
-  school: School | null;
-};
+export type UserWithSchool = User;
 
 export type SchoolWithUsers = School & {
   users: User[];
