@@ -1933,7 +1933,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         firstName: teacher.firstName,
         lastName: teacher.lastName,
         email: teacher.email,
-        password: teacher.adminViewablePassword || 'teacher123', // Return readable password for admin use
+        password: teacher.adminViewablePassword, // Return readable password for admin use
         isActive: teacher.isActive,
         supportRequestsUsed: teacher.supportRequestsUsed || 0,
         supportRequestsLimit: teacher.supportRequestsLimit || 20,
@@ -1989,6 +1989,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         lastName,
         email: normalizedEmail,
         password: hashedPassword,
+        adminViewablePassword: password, // Store the actual password for admin viewing
         school: school?.trim() || null,
         schoolDistrict: schoolDistrict?.trim() || null,
         primaryGrade: primaryGrade?.trim() || null,
