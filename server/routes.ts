@@ -1891,12 +1891,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/admin/teachers', requireAdmin, async (req: any, res) => {
     try {
       const allUsers = await storage.getAllUsers();
-      // Add password status to each teacher (for security, we don't send actual passwords)
-      const teachersWithPasswordStatus = allUsers.map(teacher => ({
-        ...teacher,
-        password: teacher.password ? "set" : null // Indicate if password exists without revealing it
+      // Add password status and separate admins from teachers
+      const usersWithPasswordStatus = allUsers.map(user => ({
+        ...user,
+        password: user.password ? "set" : null // Indicate if password exists without revealing it
       }));
-      res.json({ teachers: teachersWithPasswordStatus });
+      res.json({ teachers: usersWithPasswordStatus });
     } catch (error) {
       console.error('Teachers fetch error:', error);
       res.status(500).json({ message: 'Failed to fetch teachers' });

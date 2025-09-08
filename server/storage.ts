@@ -200,6 +200,15 @@ export class DatabaseStorage implements IStorage {
       throw new Error(`User ${id} not found`);
     }
     
+    // Admin users have unlimited requests
+    if (user.isAdmin) {
+      return {
+        canCreate: true,
+        used: 0,
+        limit: -1 // -1 indicates unlimited
+      };
+    }
+    
     const used = user.supportRequestsUsed || 0;
     const baseLimit = user.supportRequestsLimit || 20;
     const additionalRequests = user.additionalRequests || 0;
