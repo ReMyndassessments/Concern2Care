@@ -259,18 +259,6 @@ export default function Landing() {
               </ul>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h3 className="font-semibold text-gray-900 mb-4">Flexible Terms</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Monthly or annual billing options</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />10% discount for annual subscriptions</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Add or remove teachers anytime</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Cancel with 30-day notice</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Prorated billing for mid-cycle changes</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Volume discounts for 100+ teachers</li>
-                <li className="flex items-center"><Check className="w-4 h-4 text-green-500 mr-2" />Custom enterprise solutions available</li>
-              </ul>
-            </div>
           </div>
         </div>
       </section>
