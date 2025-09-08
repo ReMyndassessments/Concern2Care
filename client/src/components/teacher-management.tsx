@@ -924,7 +924,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                   )}
                   <TableHead className="min-w-[120px] text-xs lg:text-sm">Name</TableHead>
                   <TableHead className="min-w-[180px] text-xs lg:text-sm">Email</TableHead>
-                  <TableHead className="min-w-[100px] text-xs lg:text-sm">Password</TableHead>
                   <TableHead className="min-w-[80px] text-xs lg:text-sm">Requests</TableHead>
                   <TableHead className="min-w-[60px] text-xs lg:text-sm">Status</TableHead>
                   <TableHead className="min-w-[120px] text-xs lg:text-sm">Actions</TableHead>
@@ -961,14 +960,6 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                       <div className="flex items-center space-x-1">
                         <Mail className="h-3 w-3 text-gray-400" />
                         <span className="text-xs lg:text-sm truncate max-w-[150px]">{teacher.email}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-1">
-                        <Key className="h-3 w-3 text-gray-400" />
-                        <span className="text-xs lg:text-sm truncate font-mono">
-                          {revealedPasswords[teacher.id] || "****"}
-                        </span>
                       </div>
                     </TableCell>
                     <TableCell>
