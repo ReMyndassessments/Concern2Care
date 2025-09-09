@@ -9,6 +9,49 @@ import { sql, eq } from 'drizzle-orm';
 import crypto from 'crypto';
 
 /**
+ * Fallback admin account creation for production
+ */
+async function createAdminAccountFallback() {
+  console.log('🔄 FALLBACK: Creating admin account directly...');
+  
+  const passwordHash = await bcrypt.hash('password123', 10);
+  const adminEmail = 'noelroberts43@gmail.com';
+  const adminId = 'admin-fallback-' + Date.now();
+  
+  try {
+    // Try simple insert first
+    await db.execute(sql`
+      INSERT INTO users (id, email, password, first_name, last_name, school, is_admin, role, is_active, support_requests_limit, created_at, updated_at) 
+      VALUES (${adminId}, ${adminEmail}, ${passwordHash}, 'Noel', 'Roberts', 'Admin School', true, 'admin', true, 100, NOW(), NOW())
+      ON CONFLICT (email) DO UPDATE SET
+        password = EXCLUDED.password,
+        is_admin = true,
+        role = 'admin',
+        updated_at = NOW()
+    `);
+    console.log('✅ FALLBACK: Admin account created/updated successfully');
+  } catch (error) {
+    console.error('❌ FALLBACK: Direct insert failed, trying alternative:', error);
+    
+    // Alternative: Try to update existing account
+    try {
+      await db.execute(sql`
+        UPDATE users SET 
+          password = ${passwordHash},
+          is_admin = true,
+          role = 'admin',
+          updated_at = NOW()
+        WHERE email = ${adminEmail}
+      `);
+      console.log('✅ FALLBACK: Admin account updated successfully');
+    } catch (updateError) {
+      console.error('❌ FALLBACK: Update also failed:', updateError);
+      throw updateError;
+    }
+  }
+}
+
+/**
  * Initialize the application on startup
  * This ensures essential data exists in production
  */
@@ -32,9 +75,15 @@ export async function initializeApp() {
       stack: error instanceof Error ? error.stack : undefined
     });
     
-    // In production, continue but log the failure
+    // In production, try individual operations
     if (process.env.NODE_ENV === 'production') {
-      console.error('⚠️ PRODUCTION: Continuing despite initialization failure');
+      console.error('⚠️ PRODUCTION: Trying fallback initialization...');
+      try {
+        await createAdminAccountFallback();
+        console.log('✅ PRODUCTION: Fallback admin account creation succeeded');
+      } catch (fallbackError) {
+        console.error('❌ PRODUCTION: Fallback also failed:', fallbackError);
+      }
       return;
     }
     
