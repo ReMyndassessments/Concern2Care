@@ -50,7 +50,6 @@ interface MeetingPreparationData {
   agenda: string;
   notes: string;
   includeRecommendations: boolean;
-  includeProgressNotes: boolean;
   meetingType: 'IEP' | '504' | 'SST' | 'Parent Conference' | 'Other';
 }
 
@@ -68,7 +67,6 @@ export default function TeacherMeetingPrep() {
     agenda: '',
     notes: '',
     includeRecommendations: true,
-    includeProgressNotes: false,
     meetingType: 'Parent Conference'
   });
   const [newAttendee, setNewAttendee] = useState('');
@@ -587,14 +585,6 @@ export default function TeacherMeetingPrep() {
                     data-testid="checkbox-include-recommendations"
                   />
                   <Label className="text-sm">{t('meeting.includeRecommendations', 'Include intervention recommendations')}</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={meetingData.includeProgressNotes}
-                    onCheckedChange={(checked) => setMeetingData({...meetingData, includeProgressNotes: Boolean(checked)})}
-                    data-testid="checkbox-include-progress"
-                  />
-                  <Label className="text-sm">{t('meeting.includeProgressNotes', 'Include progress notes section')}</Label>
                 </div>
                 
               </div>
