@@ -179,7 +179,7 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                   </div>
                 </div>
 
-                {/* Success Story */}
+                {/* Success Story & Community */}
                 {index === 0 && (
                   <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
                     <p className="text-xs text-green-800">
@@ -187,6 +187,18 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
                     </p>
                     <p className="text-xs text-green-700 mt-1">
                       {t('confidence.teachersReport', 'Teachers report: "This gave me confidence to try new approaches!"')}
+                    </p>
+                  </div>
+                )}
+                
+                {/* Community Learning */}
+                {index === 1 && (
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-4">
+                    <p className="text-xs text-purple-800 font-medium mb-1">
+                      {t('confidence.others', 'Other teachers in similar situations tried:')}
+                    </p>
+                    <p className="text-xs text-purple-700">
+                      "I started with small groups and built confidence before trying whole-class approaches. It made all the difference!"
                     </p>
                   </div>
                 )}

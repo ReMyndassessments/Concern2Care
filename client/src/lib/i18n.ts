@@ -108,7 +108,7 @@ const resources = {
       'form.otherSpecify': 'Other (please specify)',
       'form.specifyOtherConcern': 'Specify other concern type',
       'form.detailedDescription': 'Detailed Description of Concern',
-      'form.descriptionPlaceholder': 'Please provide specific details about the observed behavior or concern. Include frequency, duration, context, and any patterns you\'ve noticed...',
+      'form.descriptionPlaceholder': 'Share what you\'ve noticed about this student. Other teachers find that specific examples help create the most useful strategies together...',
       'form.specificObjectiveNote': 'You\'re not alone in this. The more details you share, the better we can support you with proven strategies that work.',
       'form.severityLevel': 'Severity Level',
       'form.mildClassroom': 'Mild – Needs classroom support',
