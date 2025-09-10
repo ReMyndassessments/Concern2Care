@@ -67,7 +67,7 @@ export async function generateConcernReport(
       }
 
       // AI-Generated Interventions
-      doc.fontSize(14).fillColor('#000000').text('AI-Generated Intervention Strategies', 50, yPosition);
+      doc.fontSize(14).fillColor('#000000').text('AI-Generated Strategy Recommendations', 50, yPosition);
       yPosition += 25;
 
       interventions.forEach((intervention, index) => {
@@ -238,6 +238,24 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       continue;
     }
     
+    // Handle # headers (single #)
+    if (trimmedLine.match(/^#\s+(.+)/)) {
+      const title = trimmedLine.replace(/^#\s+/, '');
+      yPosition += 5;
+      const height = addText(title, leftMargin, 16, '#1e40af', { align: 'left' });
+      yPosition += height + 8;
+      continue;
+    }
+    
+    // Handle ## headers (double ##)
+    if (trimmedLine.match(/^##\s+(.+)/)) {
+      const title = trimmedLine.replace(/^##\s+/, '');
+      yPosition += 3;
+      const height = addText(title, leftMargin, 14, '#1e40af', { align: 'left' });
+      yPosition += height + 6;
+      continue;
+    }
+    
     // Main headings (### **Title**) - Large, prominent headings
     if (trimmedLine.match(/^###\s*\*\*(.*?)\*\*/)) {
       const title = trimmedLine.replace(/^###\s*\*\*(.*?)\*\*/, '$1');
@@ -332,10 +350,10 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       continue;
     }
     
-    // Regular bullet points
-    if (trimmedLine.match(/^[-\*]\s/)) {
-      const content = trimmedLine.replace(/^[-\*]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1');
-      const height = addText(`- ${content}`, leftMargin + 20, 9, '#374151', { width: 475 });
+    // Regular bullet points - handle •, *, and - characters
+    if (trimmedLine.match(/^[-\*•]\s/) || trimmedLine.startsWith('•')) {
+      const content = trimmedLine.replace(/^[-\*•]\s*/, '').replace(/\*\*(.*?)\*\*/g, '$1');
+      const height = addText(`• ${content}`, leftMargin + 20, 9, '#374151', { width: 475 });
       yPosition += height + 2;
       inBulletList = true;
       continue;

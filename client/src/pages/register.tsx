@@ -70,7 +70,7 @@ export default function Register() {
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800">AI-Generated Tier 2 Interventions</p>
+                    <p className="font-medium text-gray-800">AI-Generated Behavior Support Strategies</p>
                     <p className="text-sm text-gray-600">Evidence-based intervention strategies for student concerns</p>
                   </div>
                 </div>

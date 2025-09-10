@@ -530,7 +530,7 @@ export default function InterventionResults({
           <div className="flex items-center space-x-2 mb-4">
             <Badge className="bg-green-100 text-green-800">
               <CheckCircle className="h-3 w-3 mr-1" />
-              {concern.taskType === 'differentiation' ? 'Research-Based' : 'Tier 2 Evidence-Based'}
+              {concern.taskType === 'differentiation' ? 'Research-Based' : 'Evidence-Based Strategies'}
             </Badge>
           </div>
           

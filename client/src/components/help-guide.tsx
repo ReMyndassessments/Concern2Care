@@ -187,7 +187,7 @@ export default function HelpGuide() {
                 </p>
               </div>
               <div className="bg-purple-50 p-4 rounded-lg">
-                <h5 className="font-medium text-purple-800 mb-2">🎯 Tier 2 Intervention Strategies</h5>
+                <h5 className="font-medium text-purple-800 mb-2">🎯 Behavior Support Strategies</h5>
                 <p className="text-sm text-purple-700">
                   Evidence-based intervention approaches for students requiring additional support beyond regular classroom instruction.
                 </p>
@@ -297,7 +297,7 @@ export default function HelpGuide() {
               </div>
               <div className="bg-purple-50 p-3 rounded-lg">
                 <h6 className="font-medium text-purple-800 text-sm mb-1">🎯 Intervention Requests</h6>
-                <p className="text-xs text-purple-700">Tier 2 intervention strategies and support plans</p>
+                <p className="text-xs text-purple-700">Behavior support strategies and learning plans</p>
               </div>
             </div>
           </SubSection>
