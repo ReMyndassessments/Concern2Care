@@ -19,7 +19,7 @@ export async function generateConcernReport(
 
       // Header
       doc.fontSize(20).fillColor('#2563eb').text('Concern2Care', 50, 50);
-      doc.fontSize(16).fillColor('#000000').text('Student Concern Report', 50, 80);
+      doc.fontSize(16).fillColor('#000000').text('Your Personalized Teaching Support Guide', 50, 80);
       
       // Date
       const currentDate = new Date().toLocaleDateString('en-US', {
@@ -67,7 +67,7 @@ export async function generateConcernReport(
       }
 
       // AI-Generated Interventions
-      doc.fontSize(14).fillColor('#000000').text('AI-Generated Strategy Recommendations', 50, yPosition);
+      doc.fontSize(14).fillColor('#000000').text('Your Learning-Focused Strategy Toolkit', 50, yPosition);
       yPosition += 25;
 
       interventions.forEach((intervention, index) => {
@@ -238,18 +238,18 @@ export function parseMarkdownToPDF(doc: any, text: string, startY: number): numb
       continue;
     }
     
-    // Handle # headers (single #)
-    if (trimmedLine.match(/^#\s+(.+)/)) {
-      const title = trimmedLine.replace(/^#\s+/, '');
+    // Handle # headers (single #) - including those without spaces  
+    if (trimmedLine.match(/^#\s*(.+)/) || trimmedLine.startsWith('#')) {
+      const title = trimmedLine.replace(/^#\s*/, '');
       yPosition += 5;
       const height = addText(title, leftMargin, 16, '#1e40af', { align: 'left' });
       yPosition += height + 8;
       continue;
     }
     
-    // Handle ## headers (double ##)
-    if (trimmedLine.match(/^##\s+(.+)/)) {
-      const title = trimmedLine.replace(/^##\s+/, '');
+    // Handle ## headers (double ##) - including those without spaces
+    if (trimmedLine.match(/^##\s*(.+)/) || trimmedLine.startsWith('##')) {
+      const title = trimmedLine.replace(/^##\s*/, '');
       yPosition += 3;
       const height = addText(title, leftMargin, 14, '#1e40af', { align: 'left' });
       yPosition += height + 6;
