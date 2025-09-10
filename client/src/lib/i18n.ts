@@ -310,9 +310,11 @@ const resources = {
       'auth.error': 'Login failed. Please check your credentials.',
       
       // Landing Page
-      'landing.tagline': 'A Teacher Tool for Differentiation and Classroom Interventions',
-      'landing.mainHeading': 'Adapt Any Lesson. Support Every Learner.',
-      'landing.description': 'Trusted, AI-powered, strategies for academic, behavioral, and social-emotional needs. Teachers get practical tools to adapt instruction in the moment. Administrators get stronger capacity, consistent support, and better outcomes for every student.',
+      'landing.tagline': 'Your AI Teaching Companion for Differentiation and Tier 2 Support',
+      'landing.mainHeading': 'Learn evidence-based strategies through guided practice and exploration.',
+      'landing.description': 'Concern2Care is designed to support teachers—not overwhelm them. Discover practical, research-backed strategies for academic, behavioral, and social-emotional needs. Build your confidence step by step, with clear explanations and classroom-friendly guidance.',
+      'landing.forTeachers': '🌱 For teachers: Turn documentation into professional growth. Learn at your own pace, grow your toolkit, and feel supported—not judged.',
+      'landing.forAdmins': '📘 For administrators: Strengthen teacher capacity, ensure consistent support, and improve outcomes through scalable, evidence-based practice.',
       'landing.secureLogin': 'Secure Teacher Login',
       'landing.ferpaCompliant': 'FERPA compliant • Evidence-based strategies • Trusted by educators',
       'landing.individualTeacher': 'Individual teacher? Try Concern2Care for $10/month:',
@@ -911,9 +913,11 @@ const resources = {
       'auth.error': '登录失败，请检查您的凭据。',
       
       // Landing Page
-      'landing.tagline': '教师差异化教学和课堂干预工具',
-      'landing.mainHeading': '适应任何课程。支持每个学习者。',
-      'landing.description': '值得信赖的AI驱动策略，用于学业、行为和社交情感需求。教师可获得在关键时刻调整教学的实用工具。管理者可获得更强的能力、一致的支持，以及为每个学生带来更好的结果。',
+      'landing.tagline': '您的AI教学伙伴，专注差异化教学和二级支持',
+      'landing.mainHeading': '通过引导实践和探索学习循证策略。',
+      'landing.description': 'Concern2Care旨在支持教师—而非让他们不知所措。发现实用的、基于研究的学业、行为和社交情感需求策略。通过清晰的解释和课堂友好的指导，逐步建立您的信心。',
+      'landing.forTeachers': '🌱 对教师：将文档工作转化为专业成长。按自己的节奏学习，增强工具箱，感受支持—而非评判。',
+      'landing.forAdmins': '📘 对管理者：通过可扩展的循证实践加强教师能力，确保一致支持，改善成果。',
       'landing.secureLogin': '安全教师登录',
       'landing.ferpaCompliant': 'FERPA符合性 • 基于证据的策略 • 教育者信赖',
       'landing.individualTeacher': '个人教师？试用Concern2Care，每月10美元：',

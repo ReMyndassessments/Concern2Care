@@ -132,6 +132,20 @@ export default function Landing() {
               {t('landing.description')}
             </p>
             
+            {/* For Teachers and Administrators */}
+            <div className="grid md:grid-cols-2 gap-6 mb-8 text-left">
+              <div className="bg-green-50 p-6 rounded-xl border border-green-200">
+                <p className="text-base text-gray-700 leading-relaxed">
+                  {t('landing.forTeachers')}
+                </p>
+              </div>
+              <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <p className="text-base text-gray-700 leading-relaxed">
+                  {t('landing.forAdmins')}
+                </p>
+              </div>
+            </div>
+            
             <Button 
               size="lg"
               onClick={() => window.location.href = '/login'}
