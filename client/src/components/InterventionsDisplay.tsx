@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sparkles, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 // Function to format markdown-like text to HTML
@@ -40,6 +42,7 @@ interface InterventionsDisplayProps {
 
 export default function InterventionsDisplay({ concernId }: InterventionsDisplayProps) {
   const { t } = useTranslation();
+  const [showAllStrategies, setShowAllStrategies] = useState(false);
   const { data: concern, isLoading, error } = useQuery<any>({
     queryKey: ['/api/concerns', concernId],
   });
@@ -103,7 +106,10 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
         </div>
         
         <div className="space-y-4">
-          {concern.interventions.map((intervention: any, index: number) => (
+          {/* Progressive Disclosure: Show first 2 strategies, then option to expand */}
+          {concern.interventions
+            .slice(0, showAllStrategies ? concern.interventions.length : 2)
+            .map((intervention: any, index: number) => (
             <Card key={intervention.id} className="border-l-4 border-l-blue-500 bg-white">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
@@ -218,6 +224,41 @@ export default function InterventionsDisplay({ concernId }: InterventionsDisplay
               </CardContent>
             </Card>
           ))}
+          
+          {/* Progressive Disclosure Button */}
+          {concern.interventions.length > 2 && (
+            <div className="text-center pt-4">
+              {!showAllStrategies ? (
+                <div className="space-y-3">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-blue-800 mb-2">
+                      {t('confidence.learnAtPace', 'Learn at your own pace. Every step forward counts.')}
+                    </p>
+                    <p className="text-xs text-blue-700">
+                      Ready to explore {concern.interventions.length - 2} more advanced strategies?
+                    </p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowAllStrategies(true)}
+                    className="w-full"
+                  >
+                    <ChevronDown className="h-4 w-4 mr-2" />
+                    {t('confidence.deepDive', 'Deep Dive (15 min)')} - Show {concern.interventions.length - 2} More Strategies
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setShowAllStrategies(false)}
+                  className="text-blue-600"
+                >
+                  <ChevronUp className="h-4 w-4 mr-2" />
+                  Show Key Strategies Only
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
