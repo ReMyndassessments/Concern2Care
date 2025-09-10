@@ -75,10 +75,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     rolling: true,
     name: 'concern2care_session',
     cookie: {
-      secure: false, // Keep false for both dev and production since we're handling this at the load balancer level
+      secure: process.env.NODE_ENV === 'production', // Must be true in production when using sameSite: 'none'
       maxAge: 24 * 60 * 60 * 1000, // 24 hours instead of 4 - more user friendly
       httpOnly: true,
-      sameSite: 'none' // Changed from 'lax' to 'none' to fix cross-origin issues in production
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // Use 'lax' in dev, 'none' in production
     }
   }));
   
