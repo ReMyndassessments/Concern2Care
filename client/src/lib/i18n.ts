@@ -327,7 +327,7 @@ const resources = {
       'confidence.deepDive': 'Deep Dive (15 min)',
       
       // Landing Page
-      'landing.tagline': 'Your AI Teaching Companion for Differentiation and Behavior Support',
+      'landing.tagline': 'AI-Enhanced Guided Practice for Differentiation and Behavior Support',
       'landing.mainHeading': 'Learn evidence-based strategies through guided practice and exploration.',
       'landing.description': 'Concern2Care is designed to support teachers—not overwhelm them. Discover practical, research-backed strategies for academic, behavioral, and social-emotional needs. Build your confidence step by step, with clear explanations and classroom-friendly guidance.',
       'landing.forTeachers': '🌱 For teachers: Turn documentation into professional growth. Learn at your own pace, grow your toolkit, and feel supported—not judged.',
