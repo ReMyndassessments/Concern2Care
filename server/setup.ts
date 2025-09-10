@@ -110,9 +110,9 @@ async function ensureEssentialUsers() {
   const passwordHash = await bcrypt.hash('password123', 10);
   console.log('🔒 Password hash generated');
   
-  // Admin user (with dot)
+  // Admin user - ONLY the correct email without dot
   try {
-    const adminEmail = 'noel.roberts43@gmail.com';
+    const adminEmail = 'noelroberts43@gmail.com';
     const adminId = 'admin-prod-' + Date.now();
     
     await db.execute(sql`
@@ -124,28 +124,9 @@ async function ensureEssentialUsers() {
         role = EXCLUDED.role,
         updated_at = EXCLUDED.updated_at
     `);
-    console.log('✅ Admin user (with dot) ensured via SQL upsert');
+    console.log('✅ Admin user ensured via SQL upsert');
   } catch (error) {
-    console.log('ℹ️ Admin user (with dot) operation result:', error instanceof Error ? error.message : String(error));
-  }
-
-  // Admin user (without dot) - Alternative login
-  try {
-    const adminEmail2 = 'noelroberts43@gmail.com';
-    const adminId2 = 'admin-prod-nodot-' + Date.now();
-    
-    await db.execute(sql`
-      INSERT INTO users (id, email, password, first_name, last_name, school, is_admin, role, is_active, support_requests_limit, created_at, updated_at) 
-      VALUES (${adminId2}, ${adminEmail2}, ${passwordHash}, ${'Noel'}, ${'Roberts'}, ${'Production School District'}, ${true}, ${'admin'}, ${true}, ${100}, ${new Date()}, ${new Date()})
-      ON CONFLICT (email) DO UPDATE SET
-        password = EXCLUDED.password,
-        is_admin = EXCLUDED.is_admin,
-        role = EXCLUDED.role,
-        updated_at = EXCLUDED.updated_at
-    `);
-    console.log('✅ Admin user (without dot) ensured via SQL upsert');
-  } catch (error) {
-    console.log('ℹ️ Admin user (without dot) operation result:', error instanceof Error ? error.message : String(error));
+    console.log('ℹ️ Admin user operation result:', error instanceof Error ? error.message : String(error));
   }
   
   // Teacher user
