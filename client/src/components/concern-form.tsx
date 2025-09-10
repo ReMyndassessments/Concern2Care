@@ -1036,34 +1036,36 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
             </>
             )}
             
-            {/* Submit Button */}
-            <div className="flex justify-center sm:justify-end pt-4 sm:pt-6">
-              <Button 
-                type="submit" 
-                disabled={createConcernMutation.isPending || isAtLimit}
-                className="w-full sm:w-auto bg-brand-blue hover:bg-brand-dark-blue px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg min-h-[48px] sm:min-h-[52px] font-semibold"
-                size="lg"
-              >
-                {createConcernMutation.isPending ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    {t('form.generatingRecommendations', 'Generating Research-Based Recommendations')}
-                  </>
-                ) : isAtLimit ? (
-                  <>
-                    <AlertTriangle className="h-5 w-5 mr-2" />
-                    {t('form.requestLimitReached', 'Request Limit Reached')}
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="h-5 w-5 mr-2" />
-                    {form.watch('taskType') === 'differentiation' 
-                      ? t('form.generateDifferentiationStrategies', 'Generate Differentiation Strategies')
-                      : t('form.generateTier2Strategies', 'Generate Tier 2 Intervention Strategies')}
-                  </>
-                )}
-              </Button>
-            </div>
+            {/* Submit Button - Only show after task type is selected */}
+            {form.watch('taskType') && (
+              <div className="flex justify-center sm:justify-end pt-4 sm:pt-6">
+                <Button 
+                  type="submit" 
+                  disabled={createConcernMutation.isPending || isAtLimit}
+                  className="w-full sm:w-auto bg-brand-blue hover:bg-brand-dark-blue px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg min-h-[48px] sm:min-h-[52px] font-semibold"
+                  size="lg"
+                >
+                  {createConcernMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      {t('form.generatingRecommendations', 'Generating Research-Based Recommendations')}
+                    </>
+                  ) : isAtLimit ? (
+                    <>
+                      <AlertTriangle className="h-5 w-5 mr-2" />
+                      {t('form.requestLimitReached', 'Request Limit Reached')}
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="h-5 w-5 mr-2" />
+                      {form.watch('taskType') === 'differentiation' 
+                        ? t('form.generateDifferentiationStrategies', 'Generate Differentiation Strategies')
+                        : t('form.generateTier2Strategies', 'Explore Behavior Support Strategies')}
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
           </form>
         </Form>
       </CardContent>
