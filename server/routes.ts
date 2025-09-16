@@ -891,6 +891,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const baseUrl = req.protocol + '://' + req.get('host');
       const reportLink = generateSecureReportLink(concernId, baseUrl);
       
+      console.log(`📧 Attempting to send email with attachment: ${report.pdfPath}`);
+      console.log(`📧 File exists: ${report.pdfPath ? fs.existsSync(report.pdfPath) : 'no path'}`);
+      
       const emailSuccess = await sendReportEmail({
         recipients,
         subject: `Student Concern Report - ${concern.studentFirstName} ${concern.studentLastInitial}.`,

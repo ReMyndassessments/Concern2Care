@@ -175,7 +175,14 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('❌ Email sending failed:');
+    console.error('   Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    console.error('   Error message:', error instanceof Error ? error.message : String(error));
+    console.error('   Error details:', error);
+    if (options.attachmentPath) {
+      console.error('   Attachment path:', options.attachmentPath);
+      console.error('   Attachment exists:', require('fs').existsSync(options.attachmentPath));
+    }
     return false;
   }
 }
