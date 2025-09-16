@@ -27,25 +27,6 @@ console.log('🌍 Should use production config:', shouldUseProductionConfig);
 console.log('🌍 REPL_SLUG:', process.env.REPL_SLUG);
 console.log('🌍 REPLIT_DOMAINS:', process.env.REPLIT_DOMAINS);
 
-// Global error handlers to prevent crashes
-process.on('uncaughtException', (error) => {
-  console.error('🚨 Uncaught Exception:', error);
-  console.error('Stack trace:', error.stack);
-  // Don't exit in development for better debugging
-  if (process.env.NODE_ENV === 'production') {
-    process.exit(1);
-  }
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('🚨 Unhandled Promise Rejection at:', promise);
-  console.error('Reason:', reason);
-  // Don't exit in development for better debugging
-  if (process.env.NODE_ENV === 'production') {
-    process.exit(1);
-  }
-});
-
 const app = express();
 
 // Trust proxy for accurate IP addresses behind reverse proxy

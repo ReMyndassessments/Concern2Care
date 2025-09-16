@@ -86,17 +86,12 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
         fromAddress = emailConfig.fromAddress;
         fromName = emailConfig.fromName;
         console.log(`✅ Transporter created successfully`);
-        console.log(`🔍 DEBUG LINE 1: About to continue with email sending logic...`);
-        console.log(`🔍 DEBUG LINE 2: fromAddress = ${fromAddress}`);
-        console.log(`🔍 DEBUG LINE 3: fromName = ${fromName}`);
       } else {
         console.log(`❌ No email config found for user ${options.userId}`);
       }
     } else {
       console.log(`⚠️ No userId provided to sendReportEmail`);
     }
-
-    console.log(`🔍 Checking transporter status: ${transporter ? 'EXISTS' : 'NOT_EXISTS'}`);
 
     // Fallback to environment variables or dev mode
     if (!transporter) {
@@ -169,33 +164,10 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
       }] : undefined,
     };
 
-    console.log('📧 About to send email with options:', {
-      from: mailOptions.from,
-      to: mailOptions.to,
-      subject: mailOptions.subject,
-      hasAttachment: !!options.attachmentPath,
-      attachmentPath: options.attachmentPath || 'none'
-    });
-
-    console.log('🚀 Calling transporter.sendMail...');
     await transporter.sendMail(mailOptions);
-    console.log('✅ Email sent successfully!');
     return true;
   } catch (error) {
-    console.error('🚨 ERROR SENDING EMAIL:', error);
-    console.error('🔍 Error Details:', {
-      name: (error as any)?.name,
-      message: (error as any)?.message,
-      code: (error as any)?.code,
-      response: (error as any)?.response,
-      command: (error as any)?.command
-    });
-    console.error('📧 Email Options:', {
-      recipientCount: options.recipients?.length,
-      hasAttachment: !!options.attachmentPath,
-      attachmentPath: options.attachmentPath || 'none',
-      userId: options.userId
-    });
+    console.error('Error sending email:', error);
     return false;
   }
 }

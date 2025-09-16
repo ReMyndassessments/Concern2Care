@@ -11,32 +11,13 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-// Configure pool with safer defaults and error handling
+// Configure pool with safer defaults
 export const pool = new Pool({ 
   connectionString: process.env.DATABASE_URL,
   max: 10,
   maxUses: Infinity,
   allowExitOnIdle: false,
   idleTimeoutMillis: 10000
-});
-
-// Add error handling to prevent crashes
-pool.on('error', (err) => {
-  console.error('Database pool error:', err);
-  // Don't crash the application, just log the error
-});
-
-// Handle process cleanup
-process.on('SIGINT', async () => {
-  console.log('Closing database pool...');
-  await pool.end();
-  process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-  console.log('Closing database pool...');
-  await pool.end();
-  process.exit(0);
 });
 
 export const db = drizzle({ client: pool, schema });
