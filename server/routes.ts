@@ -831,13 +831,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const filename = `concern-${concernId}-${Date.now()}.html`;
         const filePath = path.join(reportsDir, filename);
 
-        await generateConcernHTMLReport(concern, concern.interventions, filePath);
+        console.log(`📝 Generating HTML report: ${filename}`);
+        try {
+          await generateConcernHTMLReport(concern, concern.interventions, filePath);
+          
+          // Verify the file was actually created
+          if (!fs.existsSync(filePath)) {
+            throw new Error(`HTML report file was not created: ${filePath}`);
+          }
+          
+          console.log(`✅ HTML report generated successfully: ${filename}`);
+        } catch (reportError) {
+          console.error(`❌ Failed to generate HTML report:`, reportError);
+          throw new Error(`Failed to generate HTML report: ${reportError instanceof Error ? reportError.message : 'Unknown error'}`);
+        }
         
         report = await storage.createReport({
           concernId,
           pdfPath: filePath, // Keep field name for compatibility
           sharedWith: recipients.map((r: any) => r.email),
         });
+      }
+
+      // Double-check that the report file exists before sending email
+      if (report.pdfPath && !fs.existsSync(report.pdfPath)) {
+        console.error(`❌ Report file missing: ${report.pdfPath}`);
+        return res.status(500).json({ message: "Report file not found. Please try generating the report again." });
       }
 
       // Send email
