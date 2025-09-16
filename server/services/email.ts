@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import path from 'path';
 import { emailConfigService } from './emailConfig';
 
 if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
@@ -158,10 +159,17 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
       to: recipientEmails,
       subject: options.subject,
       html: htmlContent,
-      attachments: options.attachmentPath ? [{
-        filename: 'concern-report.pdf',
-        path: options.attachmentPath,
-      }] : undefined,
+      attachments: options.attachmentPath ? (() => {
+        const fileExt = path.extname(options.attachmentPath).toLowerCase();
+        const isHtml = fileExt === '.html' || fileExt === '.htm';
+        const isPdf = fileExt === '.pdf';
+        
+        return [{
+          filename: `concern-report${fileExt}`,
+          path: options.attachmentPath,
+          contentType: isHtml ? 'text/html' : isPdf ? 'application/pdf' : 'application/octet-stream',
+        }];
+      })() : undefined,
     };
 
     await transporter.sendMail(mailOptions);
