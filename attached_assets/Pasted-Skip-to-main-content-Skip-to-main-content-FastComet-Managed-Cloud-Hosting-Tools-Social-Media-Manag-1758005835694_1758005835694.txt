@@ -1,0 +1,51 @@
+Skip to main content
+Skip to main content
+FastComet - Managed Cloud Hosting
+Tools
+Social Media Management
+WordPress Management
+Search Tools (/)
+
+Set Up Mail Client for “generated_reports@concern2care.com”
+When you access an email account through a desktop email application such as “Mozilla Thunderbird®”, the email application will require specific information about your email account. You can use the auto-configure options below to attempt to automatically configure your email application. If the available options are not compatible with your application, you will need to use the Manual Settings information.
+
+Mail Client Automatic Configuration Scripts
+Listed below are the available mail client automatic configuration scripts. Select the script for your mail client and operating system.
+
+Application	Protocols
+iOS for iPhone/iPad/iPod and MacOS® Mail.app®	IMAP over SSL/TLS IMAP
+Mozilla Thunderbird®	Auto Config
+KDE Kmail	Auto Config
+Mail for Windows® 10	Auto Discovery
+Microsoft Outlook 2010® for Windows®	Auto Discovery
+Windows Live Mail® 	IMAP over SSL/TLS POP3 over SSL/TLS IMAP POP3 (Post Office Protocol v3)
+Microsoft Outlook 2007® for Windows®	Auto Discovery
+Mail Client Manual Settings
+If you do not see an auto-configuration script for your client in the list above, you can manually configure your mail client using the settings below. We recommend that you use IMAP and SMTP for your email account rather than ActiveSync unless you are on Android and need calendar and contacts support or push updates.
+
+Secure SSL/TLS Settings (Recommended)
+Username:	generated_reports@concern2care.com
+Password:	Use the email account’s password.
+Incoming Server:	mail.concern2care.com
+IMAP Port: 993 POP3 Port: 995
+Outgoing Server:	mail.concern2care.com
+SMTP Port: 465
+IMAP, POP3, and SMTP require authentication.
+Show Non SSL/TLS Settings 
+Email Instructions
+Send configuration information for “generated_reports@concern2care.com” to the following email address:
+Email
+ 
+Notes:
+IMAP email access coordinates between the server and your mail application. Messages that have been read/deleted/replied to will show up as such, both on the server and in the mail application.
+POP3 does not coordinate with the server. Messages marked as read/deleted/replied to in the mail application will not show up as such on the server. This means that future mail downloads with POP3 will show all messages as unread.
+Outgoing mail is sent using SMTP.
+We recommend using POP3 over SSL/TLS or IMAP over SSL/TLS since they provide increased security for your interactions with the remote mail server.
+ Go Back
+cPanel logo
+128.0.21
+Home
+Trademarks
+Privacy Policy
+Documentation
+Give Feedback
