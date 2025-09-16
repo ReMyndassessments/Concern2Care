@@ -86,12 +86,15 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
         fromAddress = emailConfig.fromAddress;
         fromName = emailConfig.fromName;
         console.log(`✅ Transporter created successfully`);
+        console.log(`🔍 About to continue with email sending logic...`);
       } else {
         console.log(`❌ No email config found for user ${options.userId}`);
       }
     } else {
       console.log(`⚠️ No userId provided to sendReportEmail`);
     }
+
+    console.log(`🔍 Checking transporter status: ${transporter ? 'EXISTS' : 'NOT_EXISTS'}`);
 
     // Fallback to environment variables or dev mode
     if (!transporter) {
