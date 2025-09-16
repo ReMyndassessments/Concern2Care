@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tier 2 Intervention Report - jay R</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Tier 2 Intervention Report</h2>
+                <h3 class="student-name">Student: jay R.</h3>
+                <p class="report-date">Generated on September 16, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">jay R.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Behavior, Academic</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/16/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    Jay needs support for his inability to maintain attention and focus
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>
