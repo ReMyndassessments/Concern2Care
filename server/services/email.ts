@@ -167,7 +167,20 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('🚨 ERROR SENDING EMAIL:', error);
+    console.error('🔍 Error Details:', {
+      name: (error as any)?.name,
+      message: (error as any)?.message,
+      code: (error as any)?.code,
+      response: (error as any)?.response,
+      command: (error as any)?.command
+    });
+    console.error('📧 Email Options:', {
+      recipientCount: options.recipients?.length,
+      hasAttachment: !!options.attachmentPath,
+      attachmentExists: options.attachmentPath ? require('fs').existsSync(options.attachmentPath) : false,
+      userId: options.userId
+    });
     return false;
   }
 }
