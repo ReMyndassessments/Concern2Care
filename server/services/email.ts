@@ -174,7 +174,7 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
       to: mailOptions.to,
       subject: mailOptions.subject,
       hasAttachment: !!options.attachmentPath,
-      attachmentExists: options.attachmentPath ? require('fs').existsSync(options.attachmentPath) : false
+      attachmentPath: options.attachmentPath || 'none'
     });
 
     console.log('🚀 Calling transporter.sendMail...');
@@ -193,7 +193,7 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
     console.error('📧 Email Options:', {
       recipientCount: options.recipients?.length,
       hasAttachment: !!options.attachmentPath,
-      attachmentExists: options.attachmentPath ? require('fs').existsSync(options.attachmentPath) : false,
+      attachmentPath: options.attachmentPath || 'none',
       userId: options.userId
     });
     return false;
