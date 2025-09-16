@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tier 2 Intervention Report - NOEL R</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Tier 2 Intervention Report</h2>
+                <h3 class="student-name">Student: NOEL R.</h3>
+                <p class="report-date">Generated on September 16, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">NOEL R.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Calabar High School</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Behavior, Academic</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/16/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    Noel is unable to self-regulate and focus on school work. he is unable to remain seated 
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p>Of course. It's always a privilege to collaborate with a fellow educator on supporting a student. Noel's profile presents a classic challenge we often see, and I know you're already bringing your significant counseling expertise to bear. Building on the foundational work you've already done with parent contact and individual conversations, here is a comprehensive analysis and set of strategies we can consider together.</p><p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Detailed Analysis:</strong> Given your professional expertise, you've likely identified that Noel's primary barrier is not a lack of willingness but a neurodevelopmental one rooted in his ADHD diagnosis. The inability to self-regulate, focus beyond 2-3 minutes, and remain seated are core symptoms. This creates a cascade effect: missed instructional time leads to academic gaps, which increases frustration and can manifest as off-task or disruptive behavior.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Connection to Data:</strong> Your initial interventions are key data points. The fact that talking with him and contacting home (Tier 1 strategies) haven't yielded sufficient change indicates a need for more targeted, Tier 2 supports. This aligns perfectly with the Response to Intervention (RTI) framework.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Risk & Protective Factors:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Risk:</strong> Academic failure, negative school identity, peer rejection due to behavior, low self-esteem.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Protective:</strong> A diagnosed ADHD means we have a clear understanding of the *why*, not just the *what*. This is a huge advantage. Parent contact has already been initiated, indicating a potential home-school partnership. Your involvement as a counselor is itself a major protective factor.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Primary Approach:</strong> A dual-pronged approach combining <strong>Behavioral Intervention</strong> (using PBIS strategies to shape on-task behavior) and <strong>Academic Intervention</strong> (using Universal Design for Learning to increase access to instruction).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Theoretical Foundation:</strong> This is grounded in <strong>CAST's UDL framework</strong> (providing multiple means of engagement, representation, and action/expression) and <strong>PBIS</strong> (positively reinforcing desired behaviors). Research by DuPaul & Stoner (2014) and the <strong>MTA Cooperative Group</strong> strongly supports the combination of environmental accommodations and behavioral strategies for students with ADHD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Expected Outcomes:</strong> Increase in sustained, on-task behavior during independent work; reduction in unauthorized movement; improved completion of classwork. Success indicators will be a measurable increase in these observable behaviors.</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p>This plan is designed to be implemented in collaboration with Noel's classroom teachers, with you providing the coaching and support.</p><p><h4 class="bold-heading">Strategy 1: Structured Movement Breaks & Non-Verbal Cue System</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> PBIS; research on incorporating movement to improve focus in students with ADHD (e.g., Rapport et al., 2008).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> A "Break Pass" (a laminated card with his name on it); a pre-arranged signal (e.g., a colored sticky note on his desk from the teacher); a timer; a designated "break zone" in the classroom (e.g., a quiet corner to stand and stretch, a short walk to the water fountain and back).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Day 1-2 (You & Teacher):</strong> Meet with Noel. Say: *"Noel, we want to help you succeed. Your brain learns better when it gets a quick move. We're going to try a system. When you feel restless, you can show your teacher this Break Pass. She might also give you this signal [demonstrate] to let you know it's a good time for a 2-minute movement break. This isn't a punishment; it's a tool."*<br>    2.  <strong>Day 3-14 (Teacher implements, you monitor):</strong> Teacher integrates this. *Before* a long period of seated work, the teacher proactively says, "Noel, your break time is in 10 minutes. Let's see how much you can get done before then." The timer is set for 2 minutes. This is predictable and non-disruptive.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Teacher tracks frequency of break use and a simple +/- for whether he returns to task successfully.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> Noel uses the break appropriately 80% of the time without escalating behavior; he returns to task and engages for at least a 5-minute period post-break.</li></ul></p><p><h4 class="bold-heading">Strategy 2: Chunking & Visual Work Organizer</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> Executive Function skill scaffolding (Dawson & Guare, 2018); UDL Checkpoint 6.1 (Guide appropriate goal-setting).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> A pocket folder; sticky notes; a "Work Map" graphic organizer that breaks assignments into 3-4 clear steps.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Preparation (You & Teacher):</strong> The teacher pre-chunks any worksheet or assignment into smaller parts (e.g., "Part A: Questions 1-3," "Part B: Chart").<br>    2.  <strong>Implementation (Teacher):</strong> When assigning work, the teacher gives Noel his "Work Map" and a sticky note for each chunk. As he finishes each chunk, he moves the sticky note to the "Done" side. This provides constant visual feedback and a sense of accomplishment.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Percentage of chunked assignments completed per class period.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> Increase from baseline in the percentage of assigned work chunks completed within the class period.</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Self-Monitoring of On-Task Behavior</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Intervention Program:</strong> Simple Self-Monitoring Checklist.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Frequency:</strong> 3 times per week, during one challenging academic period.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Create a simple sheet with 5-minute intervals. Use a vibrating timer app on a school iPad or phone. When it vibrates, Noel asks himself, "Was I on task?" and marks yes/no. The teacher also marks at the same time. They compare marks at the end of the period—the goal is for his accuracy to match the teacher's.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adaptation Protocol:</strong> If after 2 weeks his accuracy is below 70%, increase the frequency of the vibration (e.g., every 3 minutes). If accuracy is high, increase the interval time (e.g., every 7 minutes).</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Skill Transfer Plans:</strong> Begin fading the self-monitoring checklist to once per week, then bi-weekly, encouraging him to internalize the question ("Am I on task?") without the sheet.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Independence Building:</strong> Transition from the teacher-initiated break signal to Noel independently recognizing his need and using the Break Pass appropriately.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Family Engagement:</strong> Share the successful strategies with parents. Suggest they implement a similar "chunking" and "movement break" system for homework. A simple timer and a checklist can be powerful tools at home too.</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Daily Data:</strong> Teacher anecdotal note on Break Pass usage and work completion.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Weekly Assessment:</strong> Review of the self-monitoring accuracy sheets and work completion percentages.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Monthly Review:</strong> Compare behavioral referral data (office discipline referrals) from previous months to the current month. Is there a decrease?</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Decision Points:</strong> If after 4 weeks there is less than a 20% improvement in work completion and/or no reduction in disruptive behaviors, we may need to escalate to a formal Tier 3 problem-solving team or evaluate the need for a 504 Plan to formalize these accommodations.</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Team Members:</strong> You (Counselor), Noel's core teachers, parents, and potentially the school psychologist for further assessment if needed.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Meeting Schedule:</strong> A brief 10-minute check-in with the teaching team every other week (perhaps during a planning period) for the first month.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation Requirements:</strong> All data sheets (break log, self-monitoring, work completion) should be collected in a folder you hold.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Parent Communication:</strong> A bi-weekly email or call from you or the primary teacher to report progress, share successes, and problem-solve challenges.</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Warning Signs:</strong> Increase in elopement (leaving class), refusal to use strategies, verbal aggression.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Immediate Response:</strong> Pre-arranged safe space for Noel to go (e.g., your office) to de-escalate with a preferred calming activity.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Referral Criteria:</strong> If strategies are consistently ineffective after 6 weeks of faithful implementation, refer to the Child Study Team for a possible 504 Plan or special education evaluation.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Emergency Contacts:</strong> Yourself as first point of contact, then school administrator.</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Professional Development:</strong> The book *Smart but Scattered* by Dawson and Guare is fantastic for understanding executive function. The CHADD website (chadd.org) is an invaluable resource for everything ADHD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Educational Materials:</strong> "Work Maps" and visual schedules are readily available on Teachers Pay Teachers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Technology Tools:</strong> Free timer apps; text-to-speech software (like Microsoft Immersive Reader) for reading assignments; speech-to-text for written responses.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Community Resources:</strong> Provide parents with information on local CHADD chapters or clinicians who specialize in ADHD coaching for adolescents.</li></ul></p><p>This is a lot to consider, and you may already be doing some of this intuitively. Please take what resonates and adapt it to your professional judgment and knowledge of Noel. I'm here to support you and the classroom team in any way I can. Let's touch base next week to see how the initial rollout is going.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>

@@ -164,7 +164,17 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
       }] : undefined,
     };
 
+    console.log('📧 About to send email with options:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject,
+      hasAttachment: !!options.attachmentPath,
+      attachmentExists: options.attachmentPath ? require('fs').existsSync(options.attachmentPath) : false
+    });
+
+    console.log('🚀 Calling transporter.sendMail...');
     await transporter.sendMail(mailOptions);
+    console.log('✅ Email sent successfully!');
     return true;
   } catch (error) {
     console.error('🚨 ERROR SENDING EMAIL:', error);
