@@ -86,7 +86,9 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
         fromAddress = emailConfig.fromAddress;
         fromName = emailConfig.fromName;
         console.log(`✅ Transporter created successfully`);
-        console.log(`🔍 About to continue with email sending logic...`);
+        console.log(`🔍 DEBUG LINE 1: About to continue with email sending logic...`);
+        console.log(`🔍 DEBUG LINE 2: fromAddress = ${fromAddress}`);
+        console.log(`🔍 DEBUG LINE 3: fromName = ${fromName}`);
       } else {
         console.log(`❌ No email config found for user ${options.userId}`);
       }
