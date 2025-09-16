@@ -122,6 +122,7 @@ export interface IStorage {
   createReport(report: InsertReport): Promise<Report>;
   getReportById(id: string): Promise<Report | undefined>;
   getReportByConcernId(concernId: string): Promise<Report | undefined>;
+  updateReport(id: string, updates: Partial<Omit<InsertReport, 'concernId'>>): Promise<Report | undefined>;
   
   // Progress Note operations
   createProgressNote(progressNote: InsertProgressNote): Promise<ProgressNote>;
@@ -675,6 +676,19 @@ export class DatabaseStorage implements IStorage {
     };
     const [newReport] = await db.insert(reports).values(dataWithProcessedSharedWith).returning();
     return newReport;
+  }
+
+  async updateReport(id: string, updates: Partial<Omit<InsertReport, 'concernId'>>): Promise<Report | undefined> {
+    const dataWithProcessedSharedWith = {
+      ...updates,
+      sharedWith: updates.sharedWith ? (updates.sharedWith as any) : undefined // Cast to any for jsonb storage
+    };
+    const [updatedReport] = await db
+      .update(reports)
+      .set(dataWithProcessedSharedWith)
+      .where(eq(reports.id, id))
+      .returning();
+    return updatedReport;
   }
 
   async getReportById(id: string): Promise<Report | undefined> {

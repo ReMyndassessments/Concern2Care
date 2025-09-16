@@ -825,8 +825,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get or create report
       let report = await storage.getReportByConcernId(concernId);
       
+      // Check if report exists AND the file actually exists
+      let needsRegeneration = false;
       if (!report) {
-        // Generate HTML report if it doesn't exist
+        needsRegeneration = true;
+        console.log(`📝 No report found for concern ${concernId}, will generate new one`);
+      } else if (!report.pdfPath || report.pdfPath.trim() === '') {
+        needsRegeneration = true;
+        console.log(`📝 Report has empty file path, will regenerate`);
+      } else if (!fs.existsSync(report.pdfPath)) {
+        needsRegeneration = true;
+        console.log(`📝 Report file missing: ${report.pdfPath}, will regenerate`);
+      }
+
+      if (needsRegeneration) {
+        // Generate HTML report
         const reportsDir = ensureReportsDirectory();
         const filename = `concern-${concernId}-${Date.now()}.html`;
         const filePath = path.join(reportsDir, filename);
@@ -846,17 +859,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
           throw new Error(`Failed to generate HTML report: ${reportError instanceof Error ? reportError.message : 'Unknown error'}`);
         }
         
-        report = await storage.createReport({
-          concernId,
-          pdfPath: filePath, // Keep field name for compatibility
-          sharedWith: recipients.map((r: any) => r.email),
-        });
+        if (report) {
+          // Update existing report with new file path
+          const updatedReport = await storage.updateReport(report.id, {
+            pdfPath: filePath,
+            sharedWith: recipients.map((r: any) => r.email),
+          });
+          if (updatedReport) {
+            report = updatedReport;
+            console.log(`📝 Updated existing report ${report.id} with new file: ${filename}`);
+          } else {
+            throw new Error('Failed to update report');
+          }
+        } else {
+          // Create new report
+          report = await storage.createReport({
+            concernId,
+            pdfPath: filePath, // Keep field name for compatibility
+            sharedWith: recipients.map((r: any) => r.email),
+          });
+          console.log(`📝 Created new report ${report.id} with file: ${filename}`);
+        }
       }
 
-      // Double-check that the report file exists before sending email
-      if (report.pdfPath && !fs.existsSync(report.pdfPath)) {
-        console.error(`❌ Report file missing: ${report.pdfPath}`);
-        return res.status(500).json({ message: "Report file not found. Please try generating the report again." });
+      // Ensure report exists before sending email
+      if (!report) {
+        return res.status(500).json({ message: "Failed to create or update report" });
       }
 
       // Send email
