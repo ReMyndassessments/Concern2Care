@@ -258,7 +258,60 @@ export const classroomEnrolledTeachers = pgTable("classroom_enrolled_teachers", 
   enrolledAt: timestamp("enrolled_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-});
+}, (table) => ({
+  emailIdx: index("classroom_enrolled_teachers_email_idx").on(table.email),
+  activeIdx: index("classroom_enrolled_teachers_active_idx").on(table.isActive),
+}));
+
+// Teacher Limits: Tracks monthly usage quota (5 per month)
+export const teacherLimits = pgTable("teacher_limits", {
+  teacherId: varchar("teacher_id").references(() => classroomEnrolledTeachers.id).primaryKey(),
+  monthYear: varchar("month_year", { length: 7 }).notNull(), // Format YYYY-MM
+  submissionsUsed: integer("submissions_used").default(0),
+  limit: integer("limit").default(5), // Configurable limit
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  monthIdx: index("teacher_limits_month_idx").on(table.monthYear),
+}));
+
+// Admin Notifications: Stores pings for urgent cases & follow-ups
+export const adminNotifications = pgTable("admin_notifications", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  submissionId: varchar("submission_id").references(() => classroomSubmissions.id).notNull(), // Related case
+  adminId: varchar("admin_id").references(() => users.id), // If assigned to specific admin
+  type: varchar("type").notNull(), // 'urgent' | 'reminder' | 'followup'
+  status: varchar("status").notNull().default('unread'), // 'unread' | 'read' | 'resolved'
+  title: varchar("title").notNull(),
+  message: text("message"),
+  priority: varchar("priority").default('normal'), // 'low' | 'normal' | 'high' | 'urgent'
+  createdAt: timestamp("created_at").defaultNow(),
+  readAt: timestamp("read_at"),
+  resolvedAt: timestamp("resolved_at"),
+}, (table) => ({
+  submissionIdx: index("admin_notifications_submission_idx").on(table.submissionId),
+  statusIdx: index("admin_notifications_status_idx").on(table.status),
+  priorityIdx: index("admin_notifications_priority_idx").on(table.priority),
+  createdAtIdx: index("admin_notifications_created_at_idx").on(table.createdAt),
+}));
+
+// Classroom Reports: Pre-computed reporting for dashboards
+export const classroomReports = pgTable("classroom_reports", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  monthYear: varchar("month_year", { length: 7 }).notNull(), // Reporting cycle YYYY-MM
+  totalSubmissions: integer("total_submissions").default(0),
+  differentiationRequests: integer("differentiation_requests").default(0),
+  tier2Requests: integer("tier2_requests").default(0),
+  mildCases: integer("mild_cases").default(0),
+  moderateCases: integer("moderate_cases").default(0),
+  urgentCases: integer("urgent_cases").default(0),
+  autoSentRate: integer("auto_sent_rate").default(0), // Percentage (0-100)
+  avgReviewTimeMinutes: integer("avg_review_time_minutes").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  monthIdx: index("classroom_reports_month_idx").on(table.monthYear),
+}));
 
 // Classroom Solutions: Form Submissions
 export const classroomSubmissions = pgTable("classroom_submissions", {
@@ -271,36 +324,60 @@ export const classroomSubmissions = pgTable("classroom_submissions", {
   teacherPosition: varchar("teacher_position").notNull(),
   teacherEmail: varchar("teacher_email").notNull(),
   
-  // Student Info (anonymized)
-  studentAge: varchar("student_age").notNull(),
-  studentGrade: varchar("student_grade").notNull(),
+  // Student Info (anonymized) - enhanced for privacy
+  firstName: varchar("first_name", { length: 50 }).notNull(), // Student first name or initials
+  lastInitial: varchar("last_initial", { length: 1 }).notNull(), // Student last initial
+  studentAge: integer("student_age").notNull(),
+  studentGrade: varchar("student_grade", { length: 10 }).notNull(),
   
-  // Form Data
+  // Form Data - enhanced with required enums
   taskType: varchar("task_type").notNull(), // 'differentiation' | 'tier2_intervention'
-  learningProfile: text("learning_profile").notNull(), // JSON array of selected options
+  learningProfile: jsonb("learning_profile").notNull().default('[]'), // Array of profile tags
   
   // Additional details for specific learning profile items
   englishAsAdditionalLanguageDetails: text("english_as_additional_language_details"),
   diagnosedDisabilityDetails: text("diagnosed_disability_details"),
   otherLearningNeedsDetails: text("other_learning_needs_details"),
   
-  concernTypes: text("concern_types").notNull(), // JSON array of selected types
+  concernTypes: jsonb("concern_types").notNull().default('[]'), // Array of selected concern categories
   concernDescription: text("concern_description").notNull(),
   severityLevel: varchar("severity_level").notNull(), // 'mild' | 'moderate' | 'urgent'
-  actionsTaken: text("actions_taken").notNull(), // JSON array of actions
+  actionsTaken: jsonb("actions_taken").notNull().default('[]'), // Array of teacher's actions
   
-  // Workflow Status
-  status: varchar("status").notNull().default('pending'), // 'pending' | 'ai_generated' | 'reviewed' | 'sent'
-  aiDraftGenerated: boolean("ai_draft_generated").default(false),
-  aiDraftContent: text("ai_draft_content"),
-  adminReviewedBy: varchar("admin_reviewed_by").references(() => users.id),
+  // Enhanced Workflow Status
+  status: varchar("status").notNull().default('pending'), // 'pending' | 'reviewed' | 'auto_sent' | 'urgent_flagged' | 'completed'
+  
+  // AI Content Management - separated for clarity
+  aiDraft: text("ai_draft"), // Auto-generated intervention text
+  reviewedText: text("reviewed_text"), // Admin-updated intervention text
+  sentText: text("sent_text"), // Final version sent to teacher
+  disclaimerAttached: boolean("disclaimer_attached").default(true), // Always TRUE for sent outputs
+  
+  // Urgent Case Handling
+  urgentFlag: boolean("urgent_flag").default(false), // Auto-set if keyword trigger or teacher marked urgent
+  
+  // Delayed Delivery System
+  autoSendTime: timestamp("auto_send_time"), // When draft will be auto-sent (created_at + 30min by default)
+  sentAt: timestamp("sent_at"), // When actually sent to teacher
+  
+  // Admin Review Tracking
+  adminReviewedBy: varchar("admin_reviewed_by").references(() => users.id), // Null if auto-sent
   adminNotes: text("admin_notes"),
-  finalContent: text("final_content"), // Admin-approved content to send
-  sentAt: timestamp("sent_at"),
+  
+  // Legacy fields for backward compatibility
+  aiDraftGenerated: boolean("ai_draft_generated").default(false),
+  aiDraftContent: text("ai_draft_content"), // Keep for backward compatibility
+  finalContent: text("final_content"), // Keep for backward compatibility
   
   submittedAt: timestamp("submitted_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-});
+}, (table) => ({
+  teacherIdIdx: index("classroom_submissions_teacher_id_idx").on(table.teacherId),
+  statusIdx: index("classroom_submissions_status_idx").on(table.status),
+  urgentIdx: index("classroom_submissions_urgent_idx").on(table.urgentFlag),
+  autoSendIdx: index("classroom_submissions_auto_send_idx").on(table.autoSendTime),
+  createdAtIdx: index("classroom_submissions_created_at_idx").on(table.submittedAt),
+}));
 
 // Relations
 export const schoolRelations = relations(schools, ({ one, many }) => ({
@@ -488,6 +565,46 @@ export const schoolEmailConfigRelations = relations(schoolEmailConfigs, ({ one }
   }),
 }));
 
+// Classroom Solutions Relations
+export const classroomEnrolledTeacherRelations = relations(classroomEnrolledTeachers, ({ one, many }) => ({
+  enrolledByUser: one(users, {
+    fields: [classroomEnrolledTeachers.enrolledBy],
+    references: [users.id],
+  }),
+  submissions: many(classroomSubmissions),
+  limits: many(teacherLimits),
+}));
+
+export const classroomSubmissionRelations = relations(classroomSubmissions, ({ one, many }) => ({
+  teacher: one(classroomEnrolledTeachers, {
+    fields: [classroomSubmissions.teacherId],
+    references: [classroomEnrolledTeachers.id],
+  }),
+  reviewedByAdmin: one(users, {
+    fields: [classroomSubmissions.adminReviewedBy],
+    references: [users.id],
+  }),
+  notifications: many(adminNotifications),
+}));
+
+export const teacherLimitRelations = relations(teacherLimits, ({ one }) => ({
+  teacher: one(classroomEnrolledTeachers, {
+    fields: [teacherLimits.teacherId],
+    references: [classroomEnrolledTeachers.id],
+  }),
+}));
+
+export const adminNotificationRelations = relations(adminNotifications, ({ one }) => ({
+  submission: one(classroomSubmissions, {
+    fields: [adminNotifications.submissionId],
+    references: [classroomSubmissions.id],
+  }),
+  admin: one(users, {
+    fields: [adminNotifications.adminId],
+    references: [users.id],
+  }),
+}));
+
 // Types
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
@@ -547,7 +664,7 @@ export type AdminLogWithDetails = AdminLog & {
   targetSchool: School | null;
 };
 
-// Classroom Solutions schemas
+// Enhanced Classroom Solutions schemas
 export const insertClassroomEnrolledTeacherSchema = createInsertSchema(classroomEnrolledTeachers).omit({
   id: true,
   requestsUsed: true,
@@ -561,23 +678,90 @@ export const insertClassroomSubmissionSchema = createInsertSchema(classroomSubmi
   id: true,
   teacherId: true,
   status: true,
-  aiDraftGenerated: true,
-  aiDraftContent: true,
+  aiDraft: true,
+  reviewedText: true,
+  sentText: true,
+  disclaimerAttached: true,
+  urgentFlag: true,
+  autoSendTime: true,
+  sentAt: true,
   adminReviewedBy: true,
   adminNotes: true,
+  aiDraftGenerated: true,
+  aiDraftContent: true,
   finalContent: true,
-  sentAt: true,
   submittedAt: true,
+  updatedAt: true,
+}).extend({
+  taskType: z.enum(['differentiation', 'tier2_intervention']),
+  severityLevel: z.enum(['mild', 'moderate', 'urgent']),
+  learningProfile: z.array(z.string()).default([]),
+  concernTypes: z.array(z.string()).min(1, "At least one concern type is required"),
+  actionsTaken: z.array(z.string()).default([]),
+});
+
+export const insertTeacherLimitSchema = createInsertSchema(teacherLimits).omit({
+  createdAt: true,
   updatedAt: true,
 });
 
-// Classroom Solutions types
+export const insertAdminNotificationSchema = createInsertSchema(adminNotifications).omit({
+  id: true,
+  createdAt: true,
+  readAt: true,
+  resolvedAt: true,
+});
+
+export const insertClassroomReportSchema = createInsertSchema(classroomReports).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Enhanced Classroom Solutions types
 export type InsertClassroomEnrolledTeacher = z.infer<typeof insertClassroomEnrolledTeacherSchema>;
 export type ClassroomEnrolledTeacher = typeof classroomEnrolledTeachers.$inferSelect;
 export type InsertClassroomSubmission = z.infer<typeof insertClassroomSubmissionSchema>;
 export type ClassroomSubmission = typeof classroomSubmissions.$inferSelect;
+export type InsertTeacherLimit = z.infer<typeof insertTeacherLimitSchema>;
+export type TeacherLimit = typeof teacherLimits.$inferSelect;
+export type InsertAdminNotification = z.infer<typeof insertAdminNotificationSchema>;
+export type AdminNotification = typeof adminNotifications.$inferSelect;
+export type InsertClassroomReport = z.infer<typeof insertClassroomReportSchema>;
+export type ClassroomReport = typeof classroomReports.$inferSelect;
 
-// Extended types for Classroom Solutions
+// Extended types for Classroom Solutions with relations
 export type ClassroomSubmissionWithTeacher = ClassroomSubmission & {
   teacher: ClassroomEnrolledTeacher;
 };
+
+export type ClassroomSubmissionWithDetails = ClassroomSubmission & {
+  teacher: ClassroomEnrolledTeacher;
+  reviewedByAdmin?: User;
+  notifications: AdminNotification[];
+};
+
+export type ClassroomEnrolledTeacherWithLimits = ClassroomEnrolledTeacher & {
+  limits: TeacherLimit[];
+  submissions: ClassroomSubmission[];
+};
+
+export type AdminNotificationWithDetails = AdminNotification & {
+  submission: ClassroomSubmission;
+  admin?: User;
+};
+
+// Severity and status enums for type safety
+export const CLASSROOM_TASK_TYPES = ['differentiation', 'tier2_intervention'] as const;
+export const CLASSROOM_SEVERITY_LEVELS = ['mild', 'moderate', 'urgent'] as const;
+export const CLASSROOM_SUBMISSION_STATUSES = ['pending', 'reviewed', 'auto_sent', 'urgent_flagged', 'completed'] as const;
+export const ADMIN_NOTIFICATION_TYPES = ['urgent', 'reminder', 'followup'] as const;
+export const ADMIN_NOTIFICATION_STATUSES = ['unread', 'read', 'resolved'] as const;
+export const ADMIN_NOTIFICATION_PRIORITIES = ['low', 'normal', 'high', 'urgent'] as const;
+
+export type ClassroomTaskType = typeof CLASSROOM_TASK_TYPES[number];
+export type ClassroomSeverityLevel = typeof CLASSROOM_SEVERITY_LEVELS[number];
+export type ClassroomSubmissionStatus = typeof CLASSROOM_SUBMISSION_STATUSES[number];
+export type AdminNotificationType = typeof ADMIN_NOTIFICATION_TYPES[number];
+export type AdminNotificationStatus = typeof ADMIN_NOTIFICATION_STATUSES[number];
+export type AdminNotificationPriority = typeof ADMIN_NOTIFICATION_PRIORITIES[number];
