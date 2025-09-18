@@ -68,7 +68,7 @@ export default function ClassroomSubmit() {
         const response = await fetch('/api/feature-flags/enabled');
         const data = await response.json();
         const isEnabled = data.flags.some((flag: any) => 
-          flag.flagName === 'classroom_solutions_enabled' && flag.isEnabled
+          flag.flagName === 'classroom_solutions_enabled' && flag.isGloballyEnabled
         );
         setIsFeatureEnabled(isEnabled);
       } catch (error) {
