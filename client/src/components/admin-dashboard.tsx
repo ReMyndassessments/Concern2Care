@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import TeacherManagement from "@/components/teacher-management";
 import ClassroomTeacherEnrollment from "@/components/classroom-teacher-enrollment";
+import ClassroomSubmissionsManagement from "@/components/classroom-submissions-management";
 import ApiKeyManagement from "@/components/api-key-management";
 import SchoolExport from "@/components/school-export";
 import SchoolEmailSettings from "@/components/school-email-settings";
@@ -288,6 +289,7 @@ export default function AdminDashboard() {
         {isFeatureEnabled('classroom_solutions_enabled') && (
           <TabsContent value="classroom-solutions" className="space-y-6">
             <ClassroomTeacherEnrollment />
+            <ClassroomSubmissionsManagement />
           </TabsContent>
         )}
 
