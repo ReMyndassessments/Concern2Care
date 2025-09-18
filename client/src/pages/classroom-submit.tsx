@@ -26,6 +26,10 @@ const classroomSubmissionSchema = z.object({
     required_error: 'Please select a request type',
   }),
   learningProfile: z.array(z.string()).min(1, 'Please select at least one learning profile item'),
+  // Additional text fields for specific learning profile items
+  englishAsAdditionalLanguageDetails: z.string().optional(),
+  diagnosedDisabilityDetails: z.string().optional(),
+  otherLearningNeedsDetails: z.string().optional(),
   concernTypes: z.array(z.string()).min(1, 'Please select at least one concern type'),
   concernDescription: z.string().min(10, 'Please provide a detailed description (minimum 10 characters)'),
   severityLevel: z.enum(['mild', 'moderate', 'urgent'], {
@@ -54,6 +58,9 @@ export default function ClassroomSubmit() {
       studentGrade: '',
       taskType: undefined,
       learningProfile: [],
+      englishAsAdditionalLanguageDetails: '',
+      diagnosedDisabilityDetails: '',
+      otherLearningNeedsDetails: '',
       concernTypes: [],
       concernDescription: '',
       severityLevel: undefined,
@@ -468,53 +475,220 @@ export default function ClassroomSubmit() {
                   Student Learning Profile
                 </CardTitle>
                 <CardDescription>
-                  Select all that apply to this student
+                  Select all that apply to this student and provide additional details where applicable
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
                   name="learningProfile"
                   render={() => (
                     <FormItem>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {[
-                          'Has IEP / 504 Plan',
-                          'Has Diagnosed Disability',
-                          'English as an Additional Language',
-                          'Gifted / Talented',
-                          'Struggling Academically',
-                          'Other Learning Needs or Notes'
-                        ].map((item) => (
+                      <div className="space-y-4">
+                        {/* Has IEP / 504 Plan */}
+                        <FormField
+                          control={form.control}
+                          name="learningProfile"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes('Has IEP / 504 Plan')}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, 'Has IEP / 504 Plan'])
+                                      : field.onChange(field.value?.filter((value) => value !== 'Has IEP / 504 Plan'))
+                                  }}
+                                  data-testid="checkbox-learning-has-iep-504-plan"
+                                />
+                              </FormControl>
+                              <FormLabel className="text-sm font-normal">
+                                Has IEP / 504 Plan
+                              </FormLabel>
+                            </FormItem>
+                          )}
+                        />
+
+                        {/* Has Diagnosed Disability */}
+                        <div className="space-y-2">
                           <FormField
-                            key={item}
                             control={form.control}
                             name="learningProfile"
                             render={({ field }) => (
-                              <FormItem
-                                key={item}
-                                className="flex flex-row items-start space-x-3 space-y-0"
-                              >
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                                 <FormControl>
                                   <Checkbox
-                                    checked={field.value?.includes(item)}
+                                    checked={field.value?.includes('Has Diagnosed Disability')}
                                     onCheckedChange={(checked) => {
                                       return checked
-                                        ? field.onChange([...field.value, item])
-                                        : field.onChange(
-                                            field.value?.filter((value) => value !== item)
-                                          )
+                                        ? field.onChange([...field.value, 'Has Diagnosed Disability'])
+                                        : field.onChange(field.value?.filter((value) => value !== 'Has Diagnosed Disability'))
                                     }}
-                                    data-testid={`checkbox-learning-${item.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+                                    data-testid="checkbox-learning-has-diagnosed-disability"
                                   />
                                 </FormControl>
                                 <FormLabel className="text-sm font-normal">
-                                  {item}
+                                  Has Diagnosed Disability
                                 </FormLabel>
                               </FormItem>
                             )}
                           />
-                        ))}
+                          {form.watch('learningProfile')?.includes('Has Diagnosed Disability') && (
+                            <FormField
+                              control={form.control}
+                              name="diagnosedDisabilityDetails"
+                              render={({ field }) => (
+                                <FormItem className="ml-6">
+                                  <FormControl>
+                                    <Input
+                                      placeholder="Please specify the disability (e.g., ADHD, Autism, Learning Disability)"
+                                      {...field}
+                                      data-testid="input-diagnosed-disability-details"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          )}
+                        </div>
+
+                        {/* English as an Additional Language */}
+                        <div className="space-y-2">
+                          <FormField
+                            control={form.control}
+                            name="learningProfile"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes('English as an Additional Language')}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([...field.value, 'English as an Additional Language'])
+                                        : field.onChange(field.value?.filter((value) => value !== 'English as an Additional Language'))
+                                    }}
+                                    data-testid="checkbox-learning-english-as-an-additional-language"
+                                  />
+                                </FormControl>
+                                <FormLabel className="text-sm font-normal">
+                                  English as an Additional Language
+                                </FormLabel>
+                              </FormItem>
+                            )}
+                          />
+                          {form.watch('learningProfile')?.includes('English as an Additional Language') && (
+                            <FormField
+                              control={form.control}
+                              name="englishAsAdditionalLanguageDetails"
+                              render={({ field }) => (
+                                <FormItem className="ml-6">
+                                  <FormControl>
+                                    <Input
+                                      placeholder="Please specify the student's first language and English proficiency level"
+                                      {...field}
+                                      data-testid="input-english-additional-language-details"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          )}
+                        </div>
+
+                        {/* Gifted / Talented */}
+                        <FormField
+                          control={form.control}
+                          name="learningProfile"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes('Gifted / Talented')}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, 'Gifted / Talented'])
+                                      : field.onChange(field.value?.filter((value) => value !== 'Gifted / Talented'))
+                                  }}
+                                  data-testid="checkbox-learning-gifted-talented"
+                                />
+                              </FormControl>
+                              <FormLabel className="text-sm font-normal">
+                                Gifted / Talented
+                              </FormLabel>
+                            </FormItem>
+                          )}
+                        />
+
+                        {/* Struggling Academically */}
+                        <FormField
+                          control={form.control}
+                          name="learningProfile"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes('Struggling Academically')}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, 'Struggling Academically'])
+                                      : field.onChange(field.value?.filter((value) => value !== 'Struggling Academically'))
+                                  }}
+                                  data-testid="checkbox-learning-struggling-academically"
+                                />
+                              </FormControl>
+                              <FormLabel className="text-sm font-normal">
+                                Struggling Academically
+                              </FormLabel>
+                            </FormItem>
+                          )}
+                        />
+
+                        {/* Other Learning Needs or Notes */}
+                        <div className="space-y-2">
+                          <FormField
+                            control={form.control}
+                            name="learningProfile"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes('Other Learning Needs or Notes')}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([...field.value, 'Other Learning Needs or Notes'])
+                                        : field.onChange(field.value?.filter((value) => value !== 'Other Learning Needs or Notes'))
+                                    }}
+                                    data-testid="checkbox-learning-other-learning-needs-or-notes"
+                                  />
+                                </FormControl>
+                                <FormLabel className="text-sm font-normal">
+                                  Other Learning Needs or Notes
+                                </FormLabel>
+                              </FormItem>
+                            )}
+                          />
+                          {form.watch('learningProfile')?.includes('Other Learning Needs or Notes') && (
+                            <FormField
+                              control={form.control}
+                              name="otherLearningNeedsDetails"
+                              render={({ field }) => (
+                                <FormItem className="ml-6">
+                                  <FormControl>
+                                    <Textarea
+                                      placeholder="Please describe any other learning needs, accommodations, or important notes about this student"
+                                      className="min-h-[80px]"
+                                      {...field}
+                                      data-testid="textarea-other-learning-needs-details"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          )}
+                        </div>
                       </div>
                       <FormMessage />
                     </FormItem>

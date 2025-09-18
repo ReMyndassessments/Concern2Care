@@ -278,6 +278,12 @@ export const classroomSubmissions = pgTable("classroom_submissions", {
   // Form Data
   taskType: varchar("task_type").notNull(), // 'differentiation' | 'tier2_intervention'
   learningProfile: text("learning_profile").notNull(), // JSON array of selected options
+  
+  // Additional details for specific learning profile items
+  englishAsAdditionalLanguageDetails: text("english_as_additional_language_details"),
+  diagnosedDisabilityDetails: text("diagnosed_disability_details"),
+  otherLearningNeedsDetails: text("other_learning_needs_details"),
+  
   concernTypes: text("concern_types").notNull(), // JSON array of selected types
   concernDescription: text("concern_description").notNull(),
   severityLevel: varchar("severity_level").notNull(), // 'mild' | 'moderate' | 'urgent'
