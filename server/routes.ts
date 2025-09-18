@@ -203,6 +203,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (req.session && req.session.isAuthenticated === true && req.session.user) {
       console.log('✅ Authentication successful for:', req.session.user.email);
       try {
+        // Check and reset usage if needed (automatic monthly reset)
+        await storage.checkAndResetUsageIfNeeded(req.session.user.id);
+        
         // Get updated user data with usage statistics from database
         const userWithUsage = await storage.getUser(req.session.user.id);
         
