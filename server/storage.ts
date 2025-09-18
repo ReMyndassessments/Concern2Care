@@ -979,21 +979,23 @@ export class DatabaseStorage implements IStorage {
   }
 
   async incrementClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher> {
-    const teacher = await this.getClassroomEnrolledTeacher(teacherId);
-    if (!teacher) {
-      throw new Error(`Classroom teacher ${teacherId} not found`);
-    }
-
-    const newCount = (teacher.requestsUsed || 0) + 1;
-    
+    // Atomic increment: only increment if usage is under limit and teacher is active
     const [updatedTeacher] = await db
       .update(classroomEnrolledTeachers)
       .set({ 
-        requestsUsed: newCount,
+        requestsUsed: sql`COALESCE(${classroomEnrolledTeachers.requestsUsed}, 0) + 1`,
         updatedAt: new Date()
       })
-      .where(eq(classroomEnrolledTeachers.id, teacherId))
+      .where(and(
+        eq(classroomEnrolledTeachers.id, teacherId),
+        sql`COALESCE(${classroomEnrolledTeachers.requestsUsed}, 0) < COALESCE(${classroomEnrolledTeachers.requestsLimit}, 5)`,
+        eq(classroomEnrolledTeachers.isActive, true)
+      ))
       .returning();
+    
+    if (!updatedTeacher) {
+      throw new Error('Usage limit exceeded, teacher inactive, or teacher not found');
+    }
     
     return updatedTeacher;
   }

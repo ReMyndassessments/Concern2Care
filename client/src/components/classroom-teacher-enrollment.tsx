@@ -63,8 +63,35 @@ export default function ClassroomTeacherEnrollment() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showQrDialog, setShowQrDialog] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [qrCodeImage, setQrCodeImage] = useState("");
+  const [isGeneratingQr, setIsGeneratingQr] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Function to generate QR code
+  const generateQrCode = async () => {
+    setIsGeneratingQr(true);
+    try {
+      const response = await apiRequest('/api/admin/classroom/qr-code');
+      setQrCodeImage(response.qrCode);
+      setQrCodeUrl(response.url);
+      setShowQrDialog(true);
+      
+      toast({
+        title: "QR Code Generated",
+        description: "Teachers can now use this QR code to access the submission form"
+      });
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate QR code. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingQr(false);
+    }
+  };
 
   // TanStack Query for data fetching
   const { data: teachers = [], isLoading } = useQuery<ClassroomEnrolledTeacher[]>({
@@ -226,20 +253,6 @@ export default function ClassroomTeacherEnrollment() {
     resetUsageMutation.mutate(teacher.id);
   };
 
-  const handleGenerateQrCode = async () => {
-    try {
-      const response = await apiRequest('/api/admin/classroom/qr-code');
-      setQrCodeUrl(response.formUrl);
-      setShowQrDialog(true);
-    } catch (error: any) {
-      console.error("Error generating QR code:", error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to generate QR code",
-        variant: "destructive"
-      });
-    }
-  };
 
   const handleEditClick = (teacher: ClassroomEnrolledTeacher) => {
     setSelectedTeacher(teacher);
@@ -277,9 +290,13 @@ export default function ClassroomTeacherEnrollment() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={handleGenerateQrCode} variant="outline" data-testid="button-generate-qr">
-            <QrCode className="h-4 w-4 mr-2" />
-            QR Code
+          <Button onClick={generateQrCode} variant="outline" data-testid="button-generate-qr" disabled={isGeneratingQr}>
+            {isGeneratingQr ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <QrCode className="h-4 w-4 mr-2" />
+            )}
+            {isGeneratingQr ? "Generating..." : "QR Code"}
           </Button>
           <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
             <DialogTrigger asChild>
@@ -741,13 +758,24 @@ export default function ClassroomTeacherEnrollment() {
               </p>
               
               <div className="bg-gray-100 p-4 rounded-lg mb-4">
-                <div className="w-48 h-48 bg-white mx-auto flex items-center justify-center border-2 border-dashed border-gray-300">
-                  <div className="text-center">
-                    <QrCode className="h-12 w-12 mx-auto mb-2 text-gray-400" />
-                    <p className="text-xs text-gray-500">QR Code would display here</p>
-                    <p className="text-xs text-gray-400 mt-1">QR generation will be implemented</p>
+                {qrCodeImage ? (
+                  <div className="w-64 h-64 mx-auto flex items-center justify-center">
+                    <img 
+                      src={qrCodeImage} 
+                      alt="QR Code for Classroom Solutions" 
+                      className="w-full h-full object-contain"
+                      data-testid="img-qr-code"
+                    />
                   </div>
-                </div>
+                ) : (
+                  <div className="w-48 h-48 bg-white mx-auto flex items-center justify-center border-2 border-dashed border-gray-300">
+                    <div className="text-center">
+                      <QrCode className="h-12 w-12 mx-auto mb-2 text-gray-400" />
+                      <p className="text-xs text-gray-500">QR Code would display here</p>
+                      <p className="text-xs text-gray-400 mt-1">QR generation will be implemented</p>
+                    </div>
+                  </div>
+                )}
               </div>
               
               {qrCodeUrl && (

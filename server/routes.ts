@@ -3213,6 +3213,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   };
 
+  // Generate QR code for classroom solutions
+  app.get('/api/admin/classroom/qr-code', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const QRCode = await import('qrcode');
+      
+      // Get the base URL from environment or construct it
+      const baseUrl = process.env.REPLIT_DOMAINS 
+        ? `https://${process.env.REPLIT_DOMAINS}` 
+        : process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+      
+      const submissionUrl = `${baseUrl}/classroom/submit`;
+      
+      // Generate QR code as data URL
+      const qrCodeDataURL = await QRCode.toDataURL(submissionUrl, {
+        errorCorrectionLevel: 'M',
+        type: 'image/png',
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF',
+        },
+        width: 256,
+      });
+      
+      res.json({ 
+        success: true, 
+        qrCode: qrCodeDataURL, 
+        url: submissionUrl 
+      });
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      res.status(500).json({ message: 'Failed to generate QR code' });
+    }
+  });
+
   // Admin: Get all enrolled teachers
   app.get('/api/admin/classroom/teachers', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
     try {
@@ -3326,9 +3361,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Helper function to sanitize PII from free-text fields
+  const sanitizePII = (text: string): string => {
+    if (!text) return text;
+    
+    // Remove email addresses
+    text = text.replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/gi, '[EMAIL REMOVED]');
+    
+    // Remove phone numbers (various formats)
+    text = text.replace(/(\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{4}/g, '[PHONE REMOVED]');
+    
+    // Remove potential names (basic heuristic - capitalized sequences)
+    text = text.replace(/\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/g, '[NAME REMOVED]');
+    
+    // Limit length to prevent excessive content
+    if (text.length > 2000) {
+      text = text.substring(0, 2000) + '... [TRUNCATED]';
+    }
+    
+    return text;
+  };
+
   // Public: Submit form (no auth required - accessed via QR code)
   app.post('/api/classroom/submit', requireClassroomSolutions, async (req, res) => {
     try {
+      // Import the schema for validation
+      const { insertClassroomSubmissionSchema } = await import('@shared/schema');
+      
+      // Validate request body with Zod
+      const validationResult = insertClassroomSubmissionSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: 'Invalid request data',
+          errors: validationResult.error.issues
+        });
+      }
+      
       const {
         teacherFirstName,
         teacherLastInitial,
@@ -3342,14 +3410,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         concernDescription,
         severityLevel,
         actionsTaken
-      } = req.body;
-
-      // Validate required fields
-      if (!teacherFirstName || !teacherLastInitial || !teacherPosition || !teacherEmail ||
-          !studentAge || !studentGrade || !taskType || !learningProfile || !concernTypes ||
-          !concernDescription || !severityLevel || !actionsTaken) {
-        return res.status(400).json({ message: 'All fields are required' });
-      }
+      } = validationResult.data;
 
       // Find enrolled teacher by email
       const enrolledTeacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
@@ -3357,33 +3418,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: 'Teacher not enrolled in the program or inactive' });
       }
 
-      // Check usage limits
-      const usageCheck = await storage.checkClassroomTeacherUsageLimit(enrolledTeacher.id);
-      if (!usageCheck.canSubmit) {
-        return res.status(429).json({ 
-          message: `Monthly limit reached. You have used ${usageCheck.used}/${usageCheck.limit} requests this month.`
+      // Atomic submission creation with usage increment in transaction
+      let submission;
+      let updatedTeacher;
+      
+      try {
+        // Use atomic increment that only succeeds if usage limit allows
+        updatedTeacher = await storage.incrementClassroomTeacherUsage(enrolledTeacher.id);
+        
+        // Create submission only after successful usage increment (with PII sanitization)
+        submission = await storage.createClassroomSubmission({
+          teacherId: enrolledTeacher.id,
+          teacherFirstName,
+          teacherLastInitial,
+          teacherPosition,
+          teacherEmail,
+          studentAge,
+          studentGrade,
+          taskType,
+          learningProfile: JSON.stringify(learningProfile),
+          concernTypes: JSON.stringify(concernTypes),
+          concernDescription: sanitizePII(concernDescription),
+          severityLevel,
+          actionsTaken: JSON.stringify(actionsTaken)
         });
+      } catch (error: any) {
+        if (error.message.includes('Usage limit exceeded')) {
+          return res.status(429).json({ 
+            message: 'Monthly limit reached. Please try again next month.'
+          });
+        }
+        throw error; // Re-throw other errors
       }
-
-      // Create submission
-      const submission = await storage.createClassroomSubmission({
-        teacherId: enrolledTeacher.id,
-        teacherFirstName,
-        teacherLastInitial,
-        teacherPosition,
-        teacherEmail,
-        studentAge,
-        studentGrade,
-        taskType,
-        learningProfile: JSON.stringify(learningProfile),
-        concernTypes: JSON.stringify(concernTypes),
-        concernDescription,
-        severityLevel,
-        actionsTaken: JSON.stringify(actionsTaken)
-      });
-
-      // Increment teacher usage
-      await storage.incrementClassroomTeacherUsage(enrolledTeacher.id);
 
       // Generate AI draft in the background
       try {
@@ -3408,8 +3474,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // Update submission with AI draft
         await storage.updateClassroomSubmission(submission.id, {
-          aiDraft: aiResult.draft,
-          aiDraftSource: aiResult.source,
+          aiDraftContent: aiResult.draft,
+          aiDraftGenerated: true,
           status: 'pending_review'
         });
 
@@ -3419,16 +3485,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Don't fail the submission if AI generation fails
         await storage.updateClassroomSubmission(submission.id, {
           status: 'pending_review',
-          aiDraft: 'Error generating AI draft - manual review required',
-          aiDraftSource: 'error'
+          aiDraftContent: 'Error generating AI draft - manual review required',
+          aiDraftGenerated: false
         });
       }
 
-      res.json({ 
+      res.status(201).json({ 
         success: true, 
         message: 'Your request has been submitted successfully. You will receive a response via email within 24-48 hours.',
         submissionId: submission.id,
-        remainingRequests: usageCheck.limit - usageCheck.used - 1
+        remainingRequests: (updatedTeacher.requestsLimit || 5) - (updatedTeacher.requestsUsed || 0)
       });
     } catch (error) {
       console.error('Error submitting classroom form:', error);
