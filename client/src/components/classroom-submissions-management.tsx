@@ -337,7 +337,8 @@ export default function ClassroomSubmissionsManagement() {
     queryKey: ['/api/admin/classroom/submissions', statusFilter],
     queryFn: async () => {
       const params = statusFilter !== 'all' ? `?status=${statusFilter}` : '';
-      return apiRequest('GET', `/api/admin/classroom/submissions${params}`);
+      const response = await apiRequest('GET', `/api/admin/classroom/submissions${params}`);
+      return response.submissions || [];
     }
   });
 
