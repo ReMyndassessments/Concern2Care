@@ -3235,12 +3235,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const teacher = await storage.createClassroomEnrolledTeacher(teacherData);
       
-      // Log admin action
+      // Log admin action (no targetUserId since classroom teachers aren't users)
       await storage.logAdminAction({
         adminId,
         action: 'enroll_classroom_teacher',
-        targetUserId: teacher.id,
-        details: { email: teacher.email, position: teacher.position }
+        details: { teacherId: teacher.id, email: teacher.email, position: teacher.position }
       });
       
       res.json({ success: true, teacher });
@@ -3258,12 +3257,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const updatedTeacher = await storage.updateClassroomEnrolledTeacher(id, req.body);
       
-      // Log admin action
+      // Log admin action (no targetUserId since classroom teachers aren't users)
       await storage.logAdminAction({
         adminId,
         action: 'update_classroom_teacher',
-        targetUserId: id,
-        details: { updates: req.body }
+        details: { teacherId: id, updates: req.body }
       });
       
       res.json({ success: true, teacher: updatedTeacher });
@@ -3286,12 +3284,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       await storage.deleteClassroomEnrolledTeacher(id);
       
-      // Log admin action
+      // Log admin action (no targetUserId since classroom teachers aren't users)
       await storage.logAdminAction({
         adminId,
         action: 'delete_classroom_teacher',
-        targetUserId: id,
-        details: { email: teacher.email, position: teacher.position }
+        details: { teacherId: id, email: teacher.email, position: teacher.position }
       });
       
       res.json({ success: true, message: 'Teacher removed from program' });
