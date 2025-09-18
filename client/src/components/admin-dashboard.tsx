@@ -21,6 +21,7 @@ import {
   LogOut
 } from "lucide-react";
 import TeacherManagement from "@/components/teacher-management";
+import ClassroomTeacherEnrollment from "@/components/classroom-teacher-enrollment";
 import ApiKeyManagement from "@/components/api-key-management";
 import SchoolExport from "@/components/school-export";
 import SchoolEmailSettings from "@/components/school-email-settings";
@@ -225,6 +226,14 @@ export default function AdminDashboard() {
             >
               Teachers
             </TabsTrigger>
+            {isFeatureEnabled('classroom_solutions_enabled') && (
+              <TabsTrigger 
+                value="classroom-solutions" 
+                className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
+              >
+                Classroom Solutions
+              </TabsTrigger>
+            )}
             <TabsTrigger 
               value="email" 
               className="flex-shrink-0 px-3 py-2 text-xs sm:text-sm font-medium whitespace-nowrap"
@@ -275,6 +284,12 @@ export default function AdminDashboard() {
         <TabsContent value="teachers" className="space-y-6">
           <TeacherManagement />
         </TabsContent>
+
+        {isFeatureEnabled('classroom_solutions_enabled') && (
+          <TabsContent value="classroom-solutions" className="space-y-6">
+            <ClassroomTeacherEnrollment />
+          </TabsContent>
+        )}
 
         <TabsContent value="email" className="space-y-6">
           <SchoolEmailSettings />
