@@ -178,9 +178,36 @@ export default function ClassroomSubmit() {
                 </p>
               )}
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 mb-6">
               Submission ID: {submissionResult.submissionId}
             </p>
+            
+            {/* Navigation buttons */}
+            <div className="space-y-3">
+              {submissionResult.remainingRequests > 0 && (
+                <Button 
+                  onClick={() => {
+                    setIsSubmitted(false);
+                    setSubmissionResult(null);
+                    form.reset();
+                  }}
+                  className="w-full"
+                  data-testid="button-submit-another-request"
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  Submit Another Request
+                </Button>
+              )}
+              
+              <Button 
+                variant="outline"
+                onClick={() => window.location.href = '/'}
+                className="w-full"
+                data-testid="button-back-to-home"
+              >
+                Back to Home
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

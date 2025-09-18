@@ -3389,17 +3389,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { insertClassroomSubmissionSchema } = await import('@shared/schema');
       const { z } = await import('zod');
       
-      // Create a custom schema that accepts arrays for JSON fields from frontend
-      const frontendSchema = insertClassroomSubmissionSchema.extend({
-        learningProfile: z.array(z.string()),
-        concernTypes: z.array(z.string()),
-        actionsTaken: z.array(z.string())
-      }).omit({
-        // Remove the database fields that aren't in the frontend
-        learningProfile: false,
-        concernTypes: false, 
-        actionsTaken: false
-      });
+      // We'll use a simple frontend-specific validation schema instead
       
       // Use a more permissive validation for frontend
       const validationSchema = z.object({
