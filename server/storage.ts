@@ -15,6 +15,7 @@ import {
   schoolEmailConfigs,
   classroomEnrolledTeachers,
   classroomSubmissions,
+  adminNotifications,
   type User,
   type UpsertUser,
   type InsertSchool,
@@ -44,6 +45,8 @@ import {
   type InsertClassroomSubmission,
   type ClassroomSubmission,
   type ClassroomSubmissionWithTeacher,
+  type InsertAdminNotification,
+  type AdminNotification,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, inArray, sql } from "drizzle-orm";
@@ -160,6 +163,17 @@ export interface IStorage {
   getClassroomSubmission(id: string): Promise<ClassroomSubmissionWithTeacher | undefined>;
   updateClassroomSubmission(id: string, updates: Partial<ClassroomSubmission>): Promise<ClassroomSubmission>;
   getClassroomSubmissionsByStatus(status: string): Promise<ClassroomSubmissionWithTeacher[]>;
+  
+  // Delayed delivery system methods
+  getSubmissionsReadyForAutoSend(): Promise<ClassroomSubmissionWithTeacher[]>;
+  markSubmissionAsSent(id: string, sentText: string): Promise<ClassroomSubmission>;
+  getUrgentSubmissions(): Promise<ClassroomSubmissionWithTeacher[]>;
+  setSubmissionAutoSendTime(id: string, autoSendTime: Date): Promise<ClassroomSubmission>;
+  
+  // Admin notification methods
+  createAdminNotification(notification: { submissionId: string; type: string; status: string; title: string; message?: string; priority?: string; adminId?: string }): Promise<any>;
+  getAdminNotifications(adminId?: string): Promise<any[]>;
+  markNotificationAsRead(id: string): Promise<any>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1092,6 +1106,179 @@ export class DatabaseStorage implements IStorage {
       ...classroom_submissions,
       teacher: classroom_enrolled_teachers!
     }));
+  }
+
+  // Delayed delivery system methods
+  async getSubmissionsReadyForAutoSend(): Promise<ClassroomSubmissionWithTeacher[]> {
+    const now = new Date();
+    const submissions = await db
+      .select()
+      .from(classroomSubmissions)
+      .leftJoin(classroomEnrolledTeachers, eq(classroomSubmissions.teacherId, classroomEnrolledTeachers.id))
+      .where(
+        and(
+          // Only process submissions that are pending or approved (not hold, cancelled, urgent_flagged, or already sent)
+          inArray(classroomSubmissions.status, ['pending', 'approved']),
+          sql`${classroomSubmissions.autoSendTime} <= ${now}`,
+          eq(classroomSubmissions.urgentFlag, false) // Only auto-send non-urgent submissions
+        )
+      )
+      .orderBy(classroomSubmissions.autoSendTime);
+
+    return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
+      ...classroom_submissions,
+      teacher: classroom_enrolled_teachers!
+    }));
+  }
+
+  async markSubmissionAsSent(id: string, sentText: string): Promise<ClassroomSubmission> {
+    const [updatedSubmission] = await db
+      .update(classroomSubmissions)
+      .set({
+        status: 'auto_sent',
+        sentText,
+        sentAt: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(classroomSubmissions.id, id))
+      .returning();
+    return updatedSubmission;
+  }
+
+  async getUrgentSubmissions(): Promise<ClassroomSubmissionWithTeacher[]> {
+    const submissions = await db
+      .select()
+      .from(classroomSubmissions)
+      .leftJoin(classroomEnrolledTeachers, eq(classroomSubmissions.teacherId, classroomEnrolledTeachers.id))
+      .where(
+        and(
+          eq(classroomSubmissions.urgentFlag, true),
+          inArray(classroomSubmissions.status, ['pending', 'urgent_flagged'])
+        )
+      )
+      .orderBy(desc(classroomSubmissions.submittedAt));
+
+    return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
+      ...classroom_submissions,
+      teacher: classroom_enrolled_teachers!
+    }));
+  }
+
+  async setSubmissionAutoSendTime(id: string, autoSendTime: Date): Promise<ClassroomSubmission> {
+    const [updatedSubmission] = await db
+      .update(classroomSubmissions)
+      .set({
+        autoSendTime,
+        updatedAt: new Date()
+      })
+      .where(eq(classroomSubmissions.id, id))
+      .returning();
+    return updatedSubmission;
+  }
+
+  // Admin notification methods
+  async createAdminNotification(notification: Omit<InsertAdminNotification, 'id' | 'createdAt'>): Promise<AdminNotification> {
+    const [newNotification] = await db
+      .insert(adminNotifications)
+      .values(notification)
+      .returning();
+    console.log('📢 Created admin notification:', newNotification.id, 'for submission:', notification.submissionId);
+    return newNotification;
+  }
+
+  async getAdminNotifications(adminId?: string): Promise<AdminNotification[]> {
+    const query = db
+      .select()
+      .from(adminNotifications)
+      .orderBy(desc(adminNotifications.createdAt));
+    
+    if (adminId) {
+      return await query.where(eq(adminNotifications.adminId, adminId));
+    }
+    
+    return await query;
+  }
+
+  async markNotificationAsRead(id: string): Promise<AdminNotification> {
+    const [updatedNotification] = await db
+      .update(adminNotifications)
+      .set({ 
+        status: 'read',
+        readAt: new Date()
+      })
+      .where(eq(adminNotifications.id, id))
+      .returning();
+    return updatedNotification;
+  }
+
+  async markNotificationAsResolved(id: string): Promise<AdminNotification> {
+    const [updatedNotification] = await db
+      .update(adminNotifications)
+      .set({ 
+        status: 'resolved',
+        resolvedAt: new Date()
+      })
+      .where(eq(adminNotifications.id, id))
+      .returning();
+    return updatedNotification;
+  }
+
+  // Atomic job claiming methods for auto-send processor
+  async claimSubmissionForSending(id: string): Promise<ClassroomSubmissionWithTeacher | null> {
+    // Atomically claim a submission by setting status to 'sending'
+    // Only claim if it's currently in a sendable state
+    const [claimedSubmission] = await db
+      .update(classroomSubmissions)
+      .set({ 
+        status: 'sending',
+        updatedAt: new Date()
+      })
+      .where(
+        and(
+          eq(classroomSubmissions.id, id),
+          inArray(classroomSubmissions.status, ['pending', 'approved']),
+          sql`${classroomSubmissions.autoSendTime} <= ${new Date()}`,
+          eq(classroomSubmissions.urgentFlag, false)
+        )
+      )
+      .returning();
+
+    if (!claimedSubmission) {
+      return null; // Already claimed or no longer eligible
+    }
+
+    // Fetch the full submission with teacher details to ensure we have complete data
+    const fullSubmission = await this.getClassroomSubmission(id);
+    if (!fullSubmission) {
+      console.error(`❌ Failed to fetch full submission details after claiming ${id}`);
+      return null;
+    }
+    
+    // Verify we have teacher data
+    if (!fullSubmission.teacher) {
+      console.error(`❌ Claimed submission ${id} missing teacher data`);
+      await this.revertSubmissionClaim(id); // Revert claim if data is incomplete
+      return null;
+    }
+    
+    return fullSubmission;
+  }
+
+  async revertSubmissionClaim(id: string): Promise<void> {
+    // Revert a submission back to pending if sending failed
+    // Only revert if it's currently in 'sending' status
+    await db
+      .update(classroomSubmissions)
+      .set({ 
+        status: 'pending',
+        updatedAt: new Date()
+      })
+      .where(
+        and(
+          eq(classroomSubmissions.id, id),
+          eq(classroomSubmissions.status, 'sending')
+        )
+      );
   }
 }
 

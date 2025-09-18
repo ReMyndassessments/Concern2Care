@@ -754,7 +754,7 @@ export type AdminNotificationWithDetails = AdminNotification & {
 // Severity and status enums for type safety
 export const CLASSROOM_TASK_TYPES = ['differentiation', 'tier2_intervention'] as const;
 export const CLASSROOM_SEVERITY_LEVELS = ['mild', 'moderate', 'urgent'] as const;
-export const CLASSROOM_SUBMISSION_STATUSES = ['pending', 'reviewed', 'auto_sent', 'urgent_flagged', 'completed'] as const;
+export const CLASSROOM_SUBMISSION_STATUSES = ['pending', 'approved', 'sending', 'hold', 'cancelled', 'auto_sent', 'urgent_flagged', 'completed'] as const;
 export const ADMIN_NOTIFICATION_TYPES = ['urgent', 'reminder', 'followup'] as const;
 export const ADMIN_NOTIFICATION_STATUSES = ['unread', 'read', 'resolved'] as const;
 export const ADMIN_NOTIFICATION_PRIORITIES = ['low', 'normal', 'high', 'urgent'] as const;

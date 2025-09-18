@@ -1066,6 +1066,116 @@ Contact your student support team if:
 **Note:** This is demonstration assistance. In a real implementation, the guidance would be more specifically tailored to your exact question and situation.`;
 }
 
+// Urgent keyword detection for safeguard logic
+const URGENT_KEYWORDS = [
+  'suicide', 'suicidal', 'kill myself', 'end my life', 'want to die',
+  'self-harm', 'self harm', 'cutting', 'hurting myself', 'hurt myself',
+  'kill', 'killing', 'murder', 'violent', 'weapon', 'gun', 'knife',
+  'harm others', 'hurt others', 'hurt someone', 'violence', 'attack',
+  'death threats', 'threatening', 'abuse', 'sexual abuse', 'physical abuse'
+];
+
+export interface UrgentSafeguardResult {
+  isUrgent: boolean;
+  triggeredKeywords: string[];
+  requiresImmediateAttention: boolean;
+  bypassDelay: boolean;
+}
+
+/**
+ * Scans text for urgent keywords that require immediate safeguard protocols
+ */
+export function detectUrgentKeywords(text: string): UrgentSafeguardResult {
+  if (!text || typeof text !== 'string') {
+    return {
+      isUrgent: false,
+      triggeredKeywords: [],
+      requiresImmediateAttention: false,
+      bypassDelay: false
+    };
+  }
+
+  const lowerText = text.toLowerCase();
+  const triggeredKeywords: string[] = [];
+
+  for (const keyword of URGENT_KEYWORDS) {
+    if (lowerText.includes(keyword.toLowerCase())) {
+      triggeredKeywords.push(keyword);
+    }
+  }
+
+  const isUrgent = triggeredKeywords.length > 0;
+  const requiresImmediateAttention = isUrgent;
+  const bypassDelay = isUrgent; // Bypass 30-minute delay for urgent cases
+
+  console.log('🔍 Urgent keyword detection:', {
+    hasKeywords: isUrgent,
+    keywords: triggeredKeywords,
+    textLength: text.length
+  });
+
+  return {
+    isUrgent,
+    triggeredKeywords,
+    requiresImmediateAttention,
+    bypassDelay
+  };
+}
+
+/**
+ * Generates urgent safeguard message for teachers
+ */
+export function generateUrgentSafeguardMessage(): string {
+  return `**🚨 URGENT: This case involves potential harm. Consult your school's child protection protocol immediately. Initial strategies are provided here for reference only.**
+
+**IMMEDIATE ACTIONS REQUIRED:**
+1. **Contact your school's student support department immediately**
+2. **Follow your school's child protection protocols**
+3. **Do not delay - this case requires urgent professional intervention**
+4. **Document all interactions and concerns**
+5. **Ensure student safety is the top priority**
+
+**Note:** The intervention strategies below are provided as general guidance only. Professional assessment and intervention are required for this case.`;
+}
+
+/**
+ * Generates messaging for teacher when urgent case is detected but admin review is required
+ */
+export function generateUrgentReviewPendingMessage(): string {
+  return `**🚨 URGENT CASE - IMMEDIATE SUPPORT REQUIRED**
+
+**An urgent case requires rapid support. Initial strategies are provided now. Please notify your student support department immediately.**
+
+**IMMEDIATE ACTIONS:**
+• Contact your school's student support team or administration today
+• Follow your school's emergency protocols for student welfare concerns  
+• Document all observations and interactions
+• Do not delay seeking professional support
+
+**Professional Review:** Your submission has been flagged for immediate administrative review due to the urgent nature of the concerns. Additional professional guidance will follow.
+
+**Remember:** Student safety is the absolute priority. When in doubt, seek immediate help from qualified professionals.`;
+}
+
+/**
+ * Generates universal disclaimer required for all AI outputs
+ */
+export function generateUniversalDisclaimer(severityLevel: 'mild' | 'moderate' | 'urgent'): string {
+  let severitySpecificMessage = '';
+  
+  switch (severityLevel) {
+    case 'mild':
+    case 'moderate':
+      severitySpecificMessage = '• For Mild/Moderate concerns: Please review and adapt recommendations according to your classroom and school context.';
+      break;
+    case 'urgent':
+      severitySpecificMessage = '• For Urgent concerns: Notify your student support department immediately.\n• For any indication of suicide, self-harm, or harm to others: Consult your school\'s child protection protocol immediately.';
+      break;
+  }
+  
+  return `\n\n---\n\n**DISCLAIMER**\n\nThe strategies provided here are AI-assisted suggestions intended to support your professional practice. They are not a substitute for your school's policies, student support team, or child protection protocols.\n\n${severitySpecificMessage}`;
+}
+
 // Classroom Solutions AI Draft Generation
 export interface GenerateClassroomSolutionRequest {
   teacherFirstName: string;
@@ -1087,13 +1197,18 @@ export async function generateClassroomSolutionDraft(req: GenerateClassroomSolut
   console.log("📝 Teacher:", req.teacherFirstName, req.teacherLastInitial);
   console.log("📝 Task type:", req.taskType);
   console.log("📝 Concern types:", req.concernTypes);
+  console.log("📝 Severity level:", req.severityLevel);
+  
+  // URGENT KEYWORD DETECTION - Check for safeguard triggers
+  const urgentCheck = detectUrgentKeywords(req.concernDescription);
+  console.log("🚨 Urgent keyword check result:", urgentCheck);
   
   const apiClient = await getApiClient();
   console.log("🔑 API client available:", !!apiClient);
   
   if (!apiClient) {
     console.log("No active API key found, returning mock classroom solution data.");
-    return generateMockClassroomSolution(req);
+    return generateMockClassroomSolution(req, urgentCheck);
   }
 
   // Build learning profile details
@@ -1306,26 +1421,44 @@ ${actionsTakenInfo}
     }
 
     // Sanitize the response for database storage
-    const sanitizedResponse = sanitizeForDatabase(aiResponse);
+    let sanitizedResponse = sanitizeForDatabase(aiResponse);
+    
+    // Add urgent safeguard messaging if urgent keywords detected
+    if (urgentCheck.isUrgent) {
+      const urgentMessage = generateUrgentSafeguardMessage();
+      sanitizedResponse = urgentMessage + "\n\n" + sanitizedResponse;
+    }
+    
+    // Add universal disclaimer to all outputs
+    const disclaimer = generateUniversalDisclaimer(req.severityLevel);
+    sanitizedResponse += disclaimer;
 
     return {
       draft: sanitizedResponse,
       source: 'deepseek',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      urgentSafeguard: urgentCheck
     };
 
   } catch (error) {
     console.error("❌ Error calling DeepSeek API:", error);
     console.log("Falling back to mock data due to error.");
-    return generateMockClassroomSolution(req);
+    return generateMockClassroomSolution(req, urgentCheck);
   }
 }
 
-function generateMockClassroomSolution(req: GenerateClassroomSolutionRequest) {
+function generateMockClassroomSolution(req: GenerateClassroomSolutionRequest, urgentCheck?: UrgentSafeguardResult) {
   console.log("📝 Generating mock classroom solution for:", req.taskType);
   
   const isUrgent = req.severityLevel === 'urgent';
-  const urgentNote = isUrgent ? "\n\n⚠️ **URGENT CASE:** This case requires immediate attention. Please share with student support services or administration." : "";
+  const hasUrgentKeywords = urgentCheck?.isUrgent || false;
+  
+  let urgentNote = "";
+  if (hasUrgentKeywords) {
+    urgentNote = "\n\n" + generateUrgentSafeguardMessage();
+  } else if (isUrgent) {
+    urgentNote = "\n\n⚠️ **URGENT CASE:** This case requires immediate attention. Please share with student support services or administration.";
+  }
 
   let mockData;
   
@@ -1377,6 +1510,10 @@ function generateMockClassroomSolution(req: GenerateClassroomSolutionRequest) {
 - Use simple progress charts
 - Communicate with parents monthly
 - Adjust strategies based on data${urgentNote}`;
+    
+    // Add universal disclaimer to differentiation mock data
+    const disclaimer = generateUniversalDisclaimer(req.severityLevel);
+    mockData += disclaimer;
 
   } else {
     mockData = `# Tier 2 Intervention Plan for ${req.studentAge}-year-old Student
@@ -1427,12 +1564,22 @@ function generateMockClassroomSolution(req: GenerateClassroomSolutionRequest) {
 **Move to Tier 3:** Less than 25% improvement after 8 weeks of intervention
 **Timeline:** Review every 6 weeks for placement decisions
 **Transition:** Gradual fade of supports when appropriate${urgentNote}`;
+    
+    // Add universal disclaimer to tier2 mock data
+    const disclaimer = generateUniversalDisclaimer(req.severityLevel);
+    mockData += disclaimer;
   }
 
   return {
     draft: sanitizeForDatabase(mockData),
     source: 'mock',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    urgentSafeguard: urgentCheck || {
+      isUrgent: false,
+      triggeredKeywords: [],
+      requiresImmediateAttention: false,
+      bypassDelay: false
+    }
   };
 }
 

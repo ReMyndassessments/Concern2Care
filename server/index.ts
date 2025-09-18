@@ -151,6 +151,20 @@ app.use((req, res, next) => {
   // Initialize the application (create essential users, etc.)
   await initializeApp();
   
+  // Start the auto-send processor for delayed delivery system at server boot (not per-request)
+  console.log('🤖 Starting auto-send processor for delayed delivery...');
+  try {
+    // Import and start the processor at boot time to ensure it runs
+    const { autoSendProcessor } = await import('./auto-send-processor');
+    if (!autoSendProcessor) {
+      throw new Error('Auto-send processor failed to initialize');
+    }
+    console.log('✅ Auto-send processor initialized and started at server boot');
+  } catch (error) {
+    console.error('❌ Failed to initialize auto-send processor:', error);
+    // Continue without auto-send processor in case of initialization failure
+  }
+  
   const server = await registerRoutes(app);
 
   // Enhanced error handling middleware

@@ -3459,17 +3459,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
           teacherLastInitial,
           teacherPosition,
           teacherEmail,
-          studentAge,
+          // Student info (anonymized)
+          firstName: 'Student', // Anonymized student first name 
+          lastInitial: 'S', // Anonymized student last initial
+          studentAge: parseInt(studentAge), // Convert to number
           studentGrade,
           taskType,
-          learningProfile: JSON.stringify(learningProfile),
+          learningProfile: learningProfile, // Keep as array for schema compatibility
           englishAsAdditionalLanguageDetails: englishAsAdditionalLanguageDetails ? sanitizePII(englishAsAdditionalLanguageDetails) : null,
           diagnosedDisabilityDetails: diagnosedDisabilityDetails ? sanitizePII(diagnosedDisabilityDetails) : null,
           otherLearningNeedsDetails: otherLearningNeedsDetails ? sanitizePII(otherLearningNeedsDetails) : null,
-          concernTypes: JSON.stringify(concernTypes),
+          concernTypes: concernTypes, // Keep as array for schema compatibility
           concernDescription: sanitizePII(concernDescription),
           severityLevel,
-          actionsTaken: JSON.stringify(actionsTaken)
+          actionsTaken: actionsTaken // Keep as array for schema compatibility
         });
       } catch (error: any) {
         if (error.message.includes('Usage limit exceeded')) {
@@ -3480,7 +3483,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         throw error; // Re-throw other errors
       }
 
-      // Generate AI draft in the background
+      // Generate AI draft in the background with urgent keyword detection
+      let urgentSafeguard = null;
+      let finalStatus = 'pending';
+      let responseMessage = 'Your personalized strategies are being prepared and will be delivered shortly.';
+      
       try {
         console.log("🤖 Generating AI draft for submission:", submission.id);
         const { generateClassroomSolutionDraft } = await import('./services/ai');
@@ -3492,38 +3499,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
           studentAge,
           studentGrade,
           taskType: taskType as 'differentiation' | 'tier2_intervention',
-          learningProfile: typeof learningProfile === 'string' ? JSON.parse(learningProfile) : learningProfile,
-          concernTypes: typeof concernTypes === 'string' ? JSON.parse(concernTypes) : concernTypes,
+          learningProfile: Array.isArray(learningProfile) ? learningProfile : JSON.parse(learningProfile),
+          concernTypes: Array.isArray(concernTypes) ? concernTypes : JSON.parse(concernTypes),
           concernDescription,
           severityLevel: severityLevel as 'mild' | 'moderate' | 'urgent',
-          actionsTaken: typeof actionsTaken === 'string' ? JSON.parse(actionsTaken) : actionsTaken
+          actionsTaken: Array.isArray(actionsTaken) ? actionsTaken : JSON.parse(actionsTaken)
         };
 
         const aiResult = await generateClassroomSolutionDraft(aiRequest);
+        urgentSafeguard = aiResult.urgentSafeguard;
         
-        // Update submission with AI draft
+        console.log('🚨 Urgent safeguard check:', urgentSafeguard);
+        
+        // Calculate auto-send time based on urgency
+        const now = new Date();
+        let autoSendTime: Date;
+        let urgentFlag = false;
+        
+        if (urgentSafeguard?.isUrgent) {
+          // Urgent case: Bypass delay, mark as urgent flagged, require admin approval
+          urgentFlag = true;
+          finalStatus = 'urgent_flagged';
+          autoSendTime = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000); // Far future to prevent auto-send
+          responseMessage = 'URGENT: This case involves potential harm. Initial strategies have been provided. Please consult your school\'s child protection protocol immediately.';
+          
+          // Create urgent admin notification
+          await storage.createAdminNotification({
+            submissionId: submission.id,
+            type: 'urgent',
+            status: 'unread',
+            title: `URGENT: High-priority submission requires immediate review`,
+            message: `Submission ID ${submission.id} contains urgent keywords: ${urgentSafeguard.triggeredKeywords.join(', ')}. Immediate admin review required.`,
+            priority: 'urgent'
+          });
+          
+          console.log('🚨 URGENT case detected - admin notification created');
+        } else if (severityLevel === 'urgent') {
+          // Urgent severity but no keywords: Still needs quick attention
+          autoSendTime = new Date(now.getTime() + 15 * 60 * 1000); // 15 minutes
+          responseMessage = 'An urgent case requires rapid support. Initial strategies are provided now. Please notify your student support department immediately.';
+        } else {
+          // Normal case: 30-minute delay
+          autoSendTime = new Date(now.getTime() + 30 * 60 * 1000); // 30 minutes
+        }
+        
+        // Update submission with AI draft and delayed delivery settings
         await storage.updateClassroomSubmission(submission.id, {
-          aiDraftContent: aiResult.draft,
+          aiDraft: aiResult.draft, // Use new field name
+          aiDraftContent: aiResult.draft, // Keep legacy field for compatibility
           aiDraftGenerated: true,
-          status: 'pending_review'
+          status: finalStatus,
+          urgentFlag,
+          autoSendTime,
+          disclaimerAttached: true
         });
 
-        console.log("✅ AI draft generated successfully for submission:", submission.id);
+        console.log("✅ AI draft generated successfully for submission:", submission.id, 'Status:', finalStatus);
       } catch (error) {
         console.error("❌ Error generating AI draft for submission:", submission.id, error);
         // Don't fail the submission if AI generation fails
+        const autoSendTime = new Date(Date.now() + 30 * 60 * 1000); // Default 30 min delay
         await storage.updateClassroomSubmission(submission.id, {
-          status: 'pending_review',
+          status: 'pending',
+          aiDraft: 'Error generating AI draft - manual review required',
           aiDraftContent: 'Error generating AI draft - manual review required',
-          aiDraftGenerated: false
+          aiDraftGenerated: false,
+          autoSendTime
         });
       }
 
       res.status(201).json({ 
         success: true, 
-        message: 'Your request has been submitted successfully. You will receive a response via email within 24-48 hours.',
+        message: responseMessage,
         submissionId: submission.id,
-        remainingRequests: (updatedTeacher.requestsLimit || 5) - (updatedTeacher.requestsUsed || 0)
+        remainingRequests: (updatedTeacher.requestsLimit || 5) - (updatedTeacher.requestsUsed || 0),
+        urgentCase: urgentSafeguard?.isUrgent || false
       });
     } catch (error) {
       console.error('Error submitting classroom form:', error);
@@ -3583,6 +3633,179 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error updating submission:', error);
       res.status(500).json({ message: 'Failed to update submission' });
+    }
+  });
+
+  // Admin Review Actions for Delayed Delivery System
+  
+  // Admin: Approve and force send submission immediately
+  app.post('/api/admin/classroom/submissions/:id/approve', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      
+      const submission = await storage.getClassroomSubmission(id);
+      if (!submission) {
+        return res.status(404).json({ message: 'Submission not found' });
+      }
+      
+      // Force immediate send by setting auto_send_time to now and status to approved
+      await storage.updateClassroomSubmission(id, {
+        status: 'approved',
+        adminReviewedBy: adminId,
+        adminReviewedAt: new Date(),
+        autoSendTime: new Date() // Send immediately
+      });
+      
+      res.json({ success: true, message: 'Submission approved and will be sent immediately' });
+    } catch (error) {
+      console.error('Error approving submission:', error);
+      res.status(500).json({ message: 'Failed to approve submission' });
+    }
+  });
+
+  // Admin: Hold submission (pause auto-send)
+  app.post('/api/admin/classroom/submissions/:id/hold', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      const { reason } = req.body;
+      
+      const submission = await storage.getClassroomSubmission(id);
+      if (!submission) {
+        return res.status(404).json({ message: 'Submission not found' });
+      }
+      
+      // Set status to hold - auto-send processor will skip these
+      await storage.updateClassroomSubmission(id, {
+        status: 'hold',
+        adminReviewedBy: adminId,
+        adminReviewedAt: new Date(),
+        autoSendTime: new Date('2099-12-31'), // Far future to prevent auto-send
+        adminNotes: reason || 'Submission placed on hold for review'
+      });
+      
+      res.json({ success: true, message: 'Submission placed on hold' });
+    } catch (error) {
+      console.error('Error holding submission:', error);
+      res.status(500).json({ message: 'Failed to hold submission' });
+    }
+  });
+
+  // Admin: Cancel submission
+  app.post('/api/admin/classroom/submissions/:id/cancel', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      const { reason } = req.body;
+      
+      const submission = await storage.getClassroomSubmission(id);
+      if (!submission) {
+        return res.status(404).json({ message: 'Submission not found' });
+      }
+      
+      await storage.updateClassroomSubmission(id, {
+        status: 'cancelled',
+        adminReviewedBy: adminId,
+        adminReviewedAt: new Date(),
+        adminNotes: reason || 'Submission cancelled by admin'
+      });
+      
+      res.json({ success: true, message: 'Submission cancelled' });
+    } catch (error) {
+      console.error('Error cancelling submission:', error);
+      res.status(500).json({ message: 'Failed to cancel submission' });
+    }
+  });
+
+  // Admin: Escalate submission for higher-level review
+  app.post('/api/admin/classroom/submissions/:id/escalate', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      const { reason, escalateToEmail } = req.body;
+      
+      const submission = await storage.getClassroomSubmission(id);
+      if (!submission) {
+        return res.status(404).json({ message: 'Submission not found' });
+      }
+      
+      // Create escalation notification for senior admin/supervisor
+      await storage.createAdminNotification({
+        submissionId: id,
+        type: 'urgent',
+        status: 'unread',
+        priority: 'urgent',
+        title: `Escalated Submission: ${submission.taskType} - ${submission.severityLevel}`,
+        message: `Submission escalated by admin. Reason: ${reason || 'Requires higher-level review'}. Original concern: ${submission.concernDescription?.substring(0, 100)}...`,
+        adminId: escalateToEmail ? undefined : adminId // If specific email provided, don't assign to current admin
+      });
+      
+      await storage.updateClassroomSubmission(id, {
+        status: 'urgent_flagged',
+        adminReviewedBy: adminId,
+        adminReviewedAt: new Date(),
+        adminNotes: `Escalated: ${reason || 'Requires higher-level review'}`,
+        autoSendTime: new Date('2099-12-31') // Prevent auto-send until manually reviewed
+      });
+      
+      res.json({ success: true, message: 'Submission escalated for higher-level review' });
+    } catch (error) {
+      console.error('Error escalating submission:', error);
+      res.status(500).json({ message: 'Failed to escalate submission' });
+    }
+  });
+
+  // Admin: Get urgent submissions requiring immediate attention
+  app.get('/api/admin/classroom/urgent', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const urgentSubmissions = await storage.getUrgentSubmissions();
+      res.json({ submissions: urgentSubmissions });
+    } catch (error) {
+      console.error('Error getting urgent submissions:', error);
+      res.status(500).json({ message: 'Failed to get urgent submissions' });
+    }
+  });
+
+  // Admin: Get all admin notifications
+  app.get('/api/admin/notifications', requireAdmin, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const notifications = await storage.getAdminNotifications(adminId);
+      res.json({ notifications });
+    } catch (error) {
+      console.error('Error getting admin notifications:', error);
+      res.status(500).json({ message: 'Failed to get notifications' });
+    }
+  });
+
+  // Admin: Mark notification as read
+  app.post('/api/admin/notifications/:id/read', requireAdmin, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const updatedNotification = await storage.markNotificationAsRead(id);
+      res.json({ success: true, notification: updatedNotification });
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+      res.status(500).json({ message: 'Failed to mark notification as read' });
+    }
+  });
+
+  // Admin: Trigger immediate processing of approved submissions
+  app.post('/api/admin/classroom/process-now', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { autoSendProcessor } = await import('./auto-send-processor');
+      const result = await autoSendProcessor.triggerImmediateProcessing();
+      
+      res.json({ 
+        success: true, 
+        message: `Processed ${result.processed} submissions immediately`,
+        processed: result.processed,
+        errors: result.errors
+      });
+    } catch (error) {
+      console.error('Error triggering immediate processing:', error);
+      res.status(500).json({ message: 'Failed to trigger immediate processing' });
     }
   });
 
