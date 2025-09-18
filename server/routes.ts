@@ -2199,6 +2199,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Reset teacher's monthly usage
+  app.post('/api/admin/teachers/:id/reset-usage', requireAdmin, async (req: any, res) => {
+    try {
+      const teacherId = req.params.id;
+      const adminId = req.user.claims.sub;
+      
+      const teacher = await storage.getUser(teacherId);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      // Reset the teacher's usage
+      const updatedTeacher = await storage.resetUserUsage(teacherId);
+      
+      // Log admin action (non-blocking - don't fail the reset if logging fails)
+      let logged = true;
+      try {
+        await storage.logAdminAction({
+          adminId,
+          action: 'reset_monthly_usage',
+          targetUserId: teacherId,
+          details: {
+            previousUsage: teacher.supportRequestsUsed || 0,
+            resetDate: new Date().toISOString()
+          }
+        });
+      } catch (logError) {
+        console.warn('Failed to log admin action for usage reset:', logError);
+        logged = false;
+      }
+
+      res.json({ 
+        success: true, 
+        message: `Monthly usage reset for ${teacher.firstName} ${teacher.lastName}`,
+        teacher: updatedTeacher,
+        logged
+      });
+    } catch (error) {
+      console.error('Error resetting usage:', error);
+      res.status(500).json({ message: 'Failed to reset usage' });
+    }
+  });
+
   // Admin: Delete individual teacher
   app.delete('/api/admin/teachers/:id', requireAdmin, async (req: any, res) => {
     try {

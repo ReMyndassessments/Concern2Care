@@ -26,7 +26,8 @@ import {
   Key,
   Upload,
   Eye,
-  EyeOff
+  EyeOff,
+  RotateCcw
 } from "lucide-react";
 
 interface Teacher {
@@ -42,6 +43,7 @@ interface Teacher {
   supportRequestsLimit: number;
   supportRequestsUsed: number;
   additionalRequests: number;
+  lastUsageReset?: string;
   isAdmin: boolean;
   role?: string;
   isActive: boolean;
@@ -87,6 +89,7 @@ export default function TeacherManagement() {
   });
   const [selectedTeachers, setSelectedTeachers] = useState<string[]>([]);
   const [exportLoading, setExportLoading] = useState<string | null>(null);
+  const [resetLoading, setResetLoading] = useState<string | null>(null);
   const [showBulkExport, setShowBulkExport] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [revealedPasswords, setRevealedPasswords] = useState<{[key: string]: string}>({});
@@ -428,6 +431,37 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
         description: error.message || "Failed to change password",
         variant: "destructive"
       });
+    }
+  };
+
+  const handleResetUsage = async (teacher: Teacher) => {
+    if (!confirm(`Reset monthly usage for ${teacher.firstName} ${teacher.lastName}? This will set their usage count to 0.`)) {
+      return;
+    }
+
+    try {
+      setResetLoading(teacher.id);
+      const response = await apiRequest(`/api/admin/teachers/${teacher.id}/reset-usage`, {
+        method: "POST"
+      });
+
+      if (response.success) {
+        toast({
+          title: "Usage Reset",
+          description: `Monthly usage reset for ${teacher.firstName} ${teacher.lastName}`,
+        });
+        
+        // Refresh teachers list
+        loadTeachers();
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to reset usage",
+        variant: "destructive"
+      });
+    } finally {
+      setResetLoading(null);
     }
   };
 
@@ -877,6 +911,11 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                           `${teacher.supportRequestsUsed}/${teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}`
                         )}
                       </div>
+                      {!teacher.isAdmin && teacher.lastUsageReset && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Last reset: {new Date(teacher.lastUsageReset).toLocaleDateString()}
+                        </div>
+                      )}
                     </div>
                     <div>
                       <span className="text-muted-foreground">Joined:</span>
@@ -1001,10 +1040,17 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                         {teacher.isAdmin ? (
                           <span className="text-gray-500">N/A</span>
                         ) : (
-                          <>
-                            <span className="font-medium">{teacher.supportRequestsUsed || 0}</span>
-                            <span className="text-gray-500"> / {teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}</span>
-                          </>
+                          <div className="flex flex-col items-center">
+                            <div>
+                              <span className="font-medium">{teacher.supportRequestsUsed || 0}</span>
+                              <span className="text-gray-500"> / {teacher.supportRequestsLimit + (teacher.additionalRequests || 0)}</span>
+                            </div>
+                            {teacher.lastUsageReset && (
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Reset: {new Date(teacher.lastUsageReset).toLocaleDateString()}
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
                     </TableCell>
@@ -1055,6 +1101,21 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
                           title="Change password"
                         >
                           <Key className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleResetUsage(teacher)}
+                          disabled={resetLoading === teacher.id}
+                          className="h-6 w-6 p-0 text-green-600 hover:text-green-700 hover:border-green-300"
+                          data-testid={`button-reset-${teacher.id}`}
+                          title="Reset monthly usage"
+                        >
+                          {resetLoading === teacher.id ? (
+                            <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full" />
+                          ) : (
+                            <RotateCcw className="h-3 w-3" />
+                          )}
                         </Button>
                         <Button
                           variant="outline"
