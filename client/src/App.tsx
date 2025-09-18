@@ -15,6 +15,7 @@ import ConcernDetail from "@/pages/concern-detail";
 import TeacherMeetingPrep from "@/pages/teacher-meeting-prep";
 import Settings from "@/pages/settings";
 import AdminPage from "@/pages/admin-page";
+import ClassroomSubmit from "@/pages/classroom-submit";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -40,6 +41,7 @@ function Router() {
           <Route path="/" component={Landing} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/classroom/submit" component={ClassroomSubmit} />
           {/* Redirect all authenticated routes to login */}
           <Route path="/admin" component={() => { window.location.href = '/login'; return null; }} />
           <Route path="/admin/*" component={() => { window.location.href = '/login'; return null; }} />

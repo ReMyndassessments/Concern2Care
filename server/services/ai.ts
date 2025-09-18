@@ -1066,6 +1066,376 @@ Contact your student support team if:
 **Note:** This is demonstration assistance. In a real implementation, the guidance would be more specifically tailored to your exact question and situation.`;
 }
 
+// Classroom Solutions AI Draft Generation
+export interface GenerateClassroomSolutionRequest {
+  teacherFirstName: string;
+  teacherLastInitial: string;
+  teacherPosition: string;
+  studentAge: string;
+  studentGrade: string;
+  taskType: 'differentiation' | 'tier2_intervention';
+  learningProfile: string[]; // JSON parsed array
+  concernTypes: string[]; // JSON parsed array  
+  concernDescription: string;
+  severityLevel: 'mild' | 'moderate' | 'urgent';
+  actionsTaken: string[]; // JSON parsed array
+  language?: string;
+}
+
+export async function generateClassroomSolutionDraft(req: GenerateClassroomSolutionRequest) {
+  console.log("🚀 Starting classroom solution draft generation...");
+  console.log("📝 Teacher:", req.teacherFirstName, req.teacherLastInitial);
+  console.log("📝 Task type:", req.taskType);
+  console.log("📝 Concern types:", req.concernTypes);
+  
+  const apiClient = await getApiClient();
+  console.log("🔑 API client available:", !!apiClient);
+  
+  if (!apiClient) {
+    console.log("No active API key found, returning mock classroom solution data.");
+    return generateMockClassroomSolution(req);
+  }
+
+  // Build learning profile details
+  const learningProfileInfo = [];
+  if (req.learningProfile.includes('Has IEP / 504 Plan')) {
+    learningProfileInfo.push('- Student has an Individualized Education Program (IEP) or 504 Plan');
+  }
+  if (req.learningProfile.includes('Has Diagnosed Disability')) {
+    learningProfileInfo.push('- Student has a diagnosed disability');
+  }
+  if (req.learningProfile.includes('English as an Additional Language')) {
+    learningProfileInfo.push('- Student is an English as an Additional Language (EAL) learner');
+  }
+  if (req.learningProfile.includes('Gifted / Talented')) {
+    learningProfileInfo.push('- Student is identified as gifted/talented');
+  }
+  if (req.learningProfile.includes('Struggling Academically')) {
+    learningProfileInfo.push('- Student is struggling academically');
+  }
+  if (req.learningProfile.includes('Other Learning Needs or Notes')) {
+    learningProfileInfo.push('- Student has other learning needs or special considerations');
+  }
+
+  // Build actions taken
+  const actionsTakenInfo = req.actionsTaken.map(action => `- ${action}`).join('\n');
+
+  let prompt;
+  
+  if (req.taskType === 'differentiation') {
+    prompt = `You are an educational differentiation specialist AI assistant. Create evidence-based differentiation strategies for a student based on the information provided.
+
+**Student Information:**
+- Age: ${req.studentAge}
+- Grade: ${req.studentGrade}
+- Teacher: ${req.teacherPosition}
+
+**Student Learning Profile:**
+${learningProfileInfo.join('\n')}
+
+**Concern Details:**
+- Concern Types: ${req.concernTypes.join(', ')}
+- Severity Level: ${req.severityLevel}
+- Detailed Description: ${req.concernDescription}
+
+**Actions Already Taken:**
+${actionsTakenInfo}
+
+**YOUR TASK:** Provide comprehensive, evidence-based differentiation strategies specifically tailored to this student's needs. Structure your response as follows:
+
+1. **Learning Objectives Modifications:**
+   - Tiered objectives appropriate for the student's level
+   - Clear, measurable goals that match their abilities
+   - Scaffolded progression steps
+
+2. **Content Differentiation:**
+   - Modified explanation methods
+   - Visual supports and graphic organizers  
+   - Chunked information presentation
+   - Alternative vocabulary or simplified language
+   - Multi-sensory approaches
+
+3. **Process Differentiation:**
+   - Alternative ways to engage with content
+   - Scaffolded practice opportunities
+   - Choice options for learning preferences
+   - Technology integration strategies
+   - Collaborative learning adaptations
+
+4. **Product Differentiation:**
+   - Alternative assessment methods
+   - Multiple ways to demonstrate understanding
+   - Portfolio-based assessments
+   - Performance tasks adapted to strengths
+
+5. **Environmental Modifications:**
+   - Classroom setup considerations
+   - Seating arrangements
+   - Noise management
+   - Materials accessibility
+   - Technology accommodations
+
+6. **Implementation Timeline:**
+   - Short-term strategies (1-2 weeks)
+   - Medium-term adaptations (1 month)
+   - Long-term support plan (semester)
+
+7. **Progress Monitoring:**
+   - Data collection methods
+   - Frequency of assessment
+   - Success indicators
+   - When to adjust strategies
+
+**Format:** Use clear headings, bullet points, and specific examples. Be practical and actionable.`;
+
+  } else { // tier2_intervention
+    prompt = `You are a Tier 2 intervention specialist with expertise in Response to Intervention (RTI) and evidence-based classroom interventions. Create a comprehensive Tier 2 intervention plan for the student described below.
+
+**Student Information:**
+- Age: ${req.studentAge}  
+- Grade: ${req.studentGrade}
+- Teacher: ${req.teacherPosition}
+
+**Student Learning Profile:**
+${learningProfileInfo.join('\n')}
+
+**Concern Details:**
+- Concern Types: ${req.concernTypes.join(', ')}
+- Severity Level: ${req.severityLevel}
+- Detailed Description: ${req.concernDescription}
+
+**Actions Already Taken (Tier 1):**
+${actionsTakenInfo}
+
+**YOUR TASK:** Design a structured Tier 2 intervention plan with research-based strategies. Structure your response as follows:
+
+1. **Intervention Goals:**
+   - Specific, measurable objectives
+   - Target behaviors or skills to address
+   - Expected outcomes within 6-8 weeks
+
+2. **Evidence-Based Interventions:**
+   - Research-backed strategies for identified concerns
+   - Specific programs or protocols to implement  
+   - Frequency and duration of interventions
+   - Group size and composition recommendations
+
+3. **Data Collection Plan:**
+   - Baseline data requirements
+   - Progress monitoring tools and schedule
+   - Who will collect data and when
+   - Decision-making criteria for success/changes
+
+4. **Implementation Details:**
+   - Daily/weekly schedule for interventions
+   - Materials and resources needed
+   - Staff responsibilities and training needs
+   - Location and setup requirements
+
+5. **Behavioral Supports (if applicable):**
+   - Behavior intervention strategies
+   - Positive reinforcement systems
+   - Environmental modifications
+   - Crisis prevention and response
+
+6. **Family Communication:**
+   - Parent notification and involvement
+   - Home-school collaboration strategies
+   - Progress reporting schedule
+
+7. **Exit Criteria and Next Steps:**
+   - Conditions for returning to Tier 1 only
+   - Indicators for intensifying to Tier 3
+   - Timeline for decision-making
+   - Transition planning
+
+**Format:** Use clear headings, specific timeframes, and actionable steps. Include research references where possible.`;
+  }
+
+  // Add language instruction if needed
+  if (req.language === 'Chinese') {
+    prompt = `**IMPORTANT LANGUAGE REQUIREMENT: Please provide your entire response in simplified Chinese (中文). All text, headers, strategies, and recommendations should be written in Chinese.**\n\n${prompt}`;
+  }
+
+  // Add urgency note for urgent cases
+  if (req.severityLevel === 'urgent') {
+    prompt += `\n\n**URGENT CASE NOTE:** This case has been marked as urgent requiring immediate follow-up. Please include a note in your response recommending that the teacher share this case with student support services or administration as appropriate.`;
+  }
+
+  try {
+    console.log("🤖 Making API request to DeepSeek...");
+    
+    const response = await fetch(`${apiClient.baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiClient.apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert educational specialist providing evidence-based classroom solutions.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 4000,
+        stream: false
+      })
+    });
+
+    if (!response.ok) {
+      console.error("❌ DeepSeek API error:", response.status, response.statusText);
+      console.log("Falling back to mock data due to API error.");
+      return generateMockClassroomSolution(req);
+    }
+
+    const data = await response.json();
+    console.log("✅ DeepSeek API response received");
+    
+    const aiResponse = data.choices?.[0]?.message?.content || '';
+    
+    if (!aiResponse.trim()) {
+      console.warn("Empty response from DeepSeek API, using mock data.");
+      return generateMockClassroomSolution(req);
+    }
+
+    // Sanitize the response for database storage
+    const sanitizedResponse = sanitizeForDatabase(aiResponse);
+
+    return {
+      draft: sanitizedResponse,
+      source: 'deepseek',
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    console.error("❌ Error calling DeepSeek API:", error);
+    console.log("Falling back to mock data due to error.");
+    return generateMockClassroomSolution(req);
+  }
+}
+
+function generateMockClassroomSolution(req: GenerateClassroomSolutionRequest) {
+  console.log("📝 Generating mock classroom solution for:", req.taskType);
+  
+  const isUrgent = req.severityLevel === 'urgent';
+  const urgentNote = isUrgent ? "\n\n⚠️ **URGENT CASE:** This case requires immediate attention. Please share with student support services or administration." : "";
+
+  let mockData;
+  
+  if (req.taskType === 'differentiation') {
+    mockData = `# Differentiation Strategies for ${req.studentAge}-year-old Student
+
+## Learning Objectives Modifications
+- Break down complex tasks into smaller, manageable steps
+- Provide multiple entry points for different skill levels
+- Use visual and verbal learning objectives
+- Create tiered assignments with varying complexity
+
+## Content Differentiation  
+- Use graphic organizers and visual supports
+- Provide information in multiple formats (text, audio, visual)
+- Chunk information into smaller segments
+- Use simplified vocabulary when appropriate
+- Incorporate hands-on learning activities
+
+## Process Differentiation
+- Offer choice in learning activities and materials
+- Use flexible grouping strategies
+- Provide additional time when needed
+- Incorporate technology tools for engagement
+- Use peer tutoring and collaborative learning
+
+## Product Differentiation
+- Allow multiple ways to demonstrate learning
+- Use portfolio-based assessment
+- Provide choice in final products
+- Use formative assessments regularly
+- Adapt rubrics to student needs
+
+## Environmental Modifications
+- Create quiet work spaces
+- Use preferential seating
+- Minimize distractions
+- Provide access to support materials
+- Ensure comfortable learning environment
+
+## Implementation Timeline
+**Week 1-2:** Establish baseline and introduce initial strategies
+**Week 3-4:** Monitor progress and adjust as needed  
+**Month 2:** Evaluate effectiveness and expand successful strategies
+
+## Progress Monitoring
+- Weekly check-ins with student
+- Collect work samples biweekly
+- Use simple progress charts
+- Communicate with parents monthly
+- Adjust strategies based on data${urgentNote}`;
+
+  } else {
+    mockData = `# Tier 2 Intervention Plan for ${req.studentAge}-year-old Student
+
+## Intervention Goals
+- Increase targeted skill development by 50% within 6 weeks
+- Improve classroom engagement and participation
+- Develop self-regulation strategies
+- Strengthen academic foundation in identified areas
+
+## Evidence-Based Interventions
+- **Check-In/Check-Out (CICO):** Daily structured support system
+- **Small group instruction:** 3-4 students, 20 minutes daily
+- **Behavior intervention support:** Token economy system
+- **Academic support:** Targeted skill building sessions
+- **Social skills training:** Weekly 30-minute sessions
+
+## Data Collection Plan
+- **Baseline:** Current performance levels in target areas
+- **Daily:** Behavior tracking sheets and academic performance
+- **Weekly:** Progress monitoring assessments  
+- **Biweekly:** Review and analysis of collected data
+- **Decision point:** 6-week comprehensive review
+
+## Implementation Details
+- **Schedule:** Monday-Friday, 20 minutes after lunch
+- **Location:** Resource room or quiet classroom space
+- **Materials:** Specialized curriculum, tracking sheets, rewards
+- **Staff:** Special education teacher or trained paraprofessional
+- **Group size:** 3-4 students with similar needs
+
+## Behavioral Supports
+- Clear expectations and consistent routines
+- Positive reinforcement system with daily rewards
+- Break cards and coping strategies
+- Parent communication system
+- Crisis prevention plan with de-escalation techniques
+
+## Family Communication  
+- Initial meeting to explain intervention plan
+- Weekly progress reports sent home
+- Monthly parent conferences
+- Home-school collaboration strategies
+- Regular updates on student progress
+
+## Exit Criteria and Next Steps
+**Return to Tier 1:** 80% improvement in target behaviors for 3 consecutive weeks
+**Move to Tier 3:** Less than 25% improvement after 8 weeks of intervention
+**Timeline:** Review every 6 weeks for placement decisions
+**Transition:** Gradual fade of supports when appropriate${urgentNote}`;
+  }
+
+  return {
+    draft: sanitizeForDatabase(mockData),
+    source: 'mock',
+    timestamp: new Date().toISOString()
+  };
+}
+
 // Legacy function for backward compatibility
 export async function generateInterventions(
   concernType: string,

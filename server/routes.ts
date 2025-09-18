@@ -3200,6 +3200,318 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ===========================================
+  // CLASSROOM SOLUTIONS (Feature Flagged)
+  // ===========================================
+
+  // Helper function to check classroom solutions feature flag
+  const requireClassroomSolutions = async (req: any, res: any, next: any) => {
+    const isEnabled = await storage.isFeatureEnabled('classroom_solutions_enabled');
+    if (!isEnabled) {
+      return res.status(404).json({ message: 'Feature not available' });
+    }
+    next();
+  };
+
+  // Admin: Get all enrolled teachers
+  app.get('/api/admin/classroom/teachers', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const teachers = await storage.getClassroomEnrolledTeachers();
+      res.json({ teachers });
+    } catch (error) {
+      console.error('Error getting enrolled teachers:', error);
+      res.status(500).json({ message: 'Failed to get enrolled teachers' });
+    }
+  });
+
+  // Admin: Enroll a new teacher
+  app.post('/api/admin/classroom/teachers', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const adminId = req.user.claims.sub;
+      const teacherData = {
+        ...req.body,
+        enrolledBy: adminId
+      };
+      
+      const teacher = await storage.createClassroomEnrolledTeacher(teacherData);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'enroll_classroom_teacher',
+        targetUserId: teacher.id,
+        details: { email: teacher.email, position: teacher.position }
+      });
+      
+      res.json({ success: true, teacher });
+    } catch (error) {
+      console.error('Error enrolling teacher:', error);
+      res.status(500).json({ message: 'Failed to enroll teacher' });
+    }
+  });
+
+  // Admin: Update enrolled teacher
+  app.put('/api/admin/classroom/teachers/:id', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      
+      const updatedTeacher = await storage.updateClassroomEnrolledTeacher(id, req.body);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'update_classroom_teacher',
+        targetUserId: id,
+        details: { updates: req.body }
+      });
+      
+      res.json({ success: true, teacher: updatedTeacher });
+    } catch (error) {
+      console.error('Error updating teacher:', error);
+      res.status(500).json({ message: 'Failed to update teacher' });
+    }
+  });
+
+  // Admin: Delete enrolled teacher
+  app.delete('/api/admin/classroom/teachers/:id', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      
+      const teacher = await storage.getClassroomEnrolledTeacher(id);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+      
+      await storage.deleteClassroomEnrolledTeacher(id);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'delete_classroom_teacher',
+        targetUserId: id,
+        details: { email: teacher.email, position: teacher.position }
+      });
+      
+      res.json({ success: true, message: 'Teacher removed from program' });
+    } catch (error) {
+      console.error('Error deleting teacher:', error);
+      res.status(500).json({ message: 'Failed to delete teacher' });
+    }
+  });
+
+  // Admin: Reset teacher usage
+  app.post('/api/admin/classroom/teachers/:id/reset-usage', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      
+      const teacher = await storage.getClassroomEnrolledTeacher(id);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+      
+      const updatedTeacher = await storage.resetClassroomTeacherUsage(id);
+      
+      // Log admin action
+      await storage.logAdminAction({
+        adminId,
+        action: 'reset_classroom_teacher_usage',
+        targetUserId: id,
+        details: { previousUsage: teacher.requestsUsed || 0 }
+      });
+      
+      res.json({ success: true, teacher: updatedTeacher });
+    } catch (error) {
+      console.error('Error resetting teacher usage:', error);
+      res.status(500).json({ message: 'Failed to reset teacher usage' });
+    }
+  });
+
+  // Public: Submit form (no auth required - accessed via QR code)
+  app.post('/api/classroom/submit', requireClassroomSolutions, async (req, res) => {
+    try {
+      const {
+        teacherFirstName,
+        teacherLastInitial,
+        teacherPosition,
+        teacherEmail,
+        studentAge,
+        studentGrade,
+        taskType,
+        learningProfile,
+        concernTypes,
+        concernDescription,
+        severityLevel,
+        actionsTaken
+      } = req.body;
+
+      // Validate required fields
+      if (!teacherFirstName || !teacherLastInitial || !teacherPosition || !teacherEmail ||
+          !studentAge || !studentGrade || !taskType || !learningProfile || !concernTypes ||
+          !concernDescription || !severityLevel || !actionsTaken) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+
+      // Find enrolled teacher by email
+      const enrolledTeacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
+      if (!enrolledTeacher || !enrolledTeacher.isActive) {
+        return res.status(403).json({ message: 'Teacher not enrolled in the program or inactive' });
+      }
+
+      // Check usage limits
+      const usageCheck = await storage.checkClassroomTeacherUsageLimit(enrolledTeacher.id);
+      if (!usageCheck.canSubmit) {
+        return res.status(429).json({ 
+          message: `Monthly limit reached. You have used ${usageCheck.used}/${usageCheck.limit} requests this month.`
+        });
+      }
+
+      // Create submission
+      const submission = await storage.createClassroomSubmission({
+        teacherId: enrolledTeacher.id,
+        teacherFirstName,
+        teacherLastInitial,
+        teacherPosition,
+        teacherEmail,
+        studentAge,
+        studentGrade,
+        taskType,
+        learningProfile: JSON.stringify(learningProfile),
+        concernTypes: JSON.stringify(concernTypes),
+        concernDescription,
+        severityLevel,
+        actionsTaken: JSON.stringify(actionsTaken)
+      });
+
+      // Increment teacher usage
+      await storage.incrementClassroomTeacherUsage(enrolledTeacher.id);
+
+      // Generate AI draft in the background
+      try {
+        console.log("🤖 Generating AI draft for submission:", submission.id);
+        const { generateClassroomSolutionDraft } = await import('./services/ai');
+        
+        const aiRequest = {
+          teacherFirstName,
+          teacherLastInitial,
+          teacherPosition,
+          studentAge,
+          studentGrade,
+          taskType: taskType as 'differentiation' | 'tier2_intervention',
+          learningProfile: typeof learningProfile === 'string' ? JSON.parse(learningProfile) : learningProfile,
+          concernTypes: typeof concernTypes === 'string' ? JSON.parse(concernTypes) : concernTypes,
+          concernDescription,
+          severityLevel: severityLevel as 'mild' | 'moderate' | 'urgent',
+          actionsTaken: typeof actionsTaken === 'string' ? JSON.parse(actionsTaken) : actionsTaken
+        };
+
+        const aiResult = await generateClassroomSolutionDraft(aiRequest);
+        
+        // Update submission with AI draft
+        await storage.updateClassroomSubmission(submission.id, {
+          aiDraft: aiResult.draft,
+          aiDraftSource: aiResult.source,
+          status: 'pending_review'
+        });
+
+        console.log("✅ AI draft generated successfully for submission:", submission.id);
+      } catch (error) {
+        console.error("❌ Error generating AI draft for submission:", submission.id, error);
+        // Don't fail the submission if AI generation fails
+        await storage.updateClassroomSubmission(submission.id, {
+          status: 'pending_review',
+          aiDraft: 'Error generating AI draft - manual review required',
+          aiDraftSource: 'error'
+        });
+      }
+
+      res.json({ 
+        success: true, 
+        message: 'Your request has been submitted successfully. You will receive a response via email within 24-48 hours.',
+        submissionId: submission.id,
+        remainingRequests: usageCheck.limit - usageCheck.used - 1
+      });
+    } catch (error) {
+      console.error('Error submitting classroom form:', error);
+      res.status(500).json({ message: 'Failed to submit form. Please try again.' });
+    }
+  });
+
+  // Admin: Get all submissions
+  app.get('/api/admin/classroom/submissions', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { status } = req.query;
+      
+      let submissions;
+      if (status) {
+        submissions = await storage.getClassroomSubmissionsByStatus(status as string);
+      } else {
+        submissions = await storage.getClassroomSubmissions();
+      }
+      
+      res.json({ submissions });
+    } catch (error) {
+      console.error('Error getting submissions:', error);
+      res.status(500).json({ message: 'Failed to get submissions' });
+    }
+  });
+
+  // Admin: Get single submission
+  app.get('/api/admin/classroom/submissions/:id', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const submission = await storage.getClassroomSubmission(id);
+      
+      if (!submission) {
+        return res.status(404).json({ message: 'Submission not found' });
+      }
+      
+      res.json({ submission });
+    } catch (error) {
+      console.error('Error getting submission:', error);
+      res.status(500).json({ message: 'Failed to get submission' });
+    }
+  });
+
+  // Admin: Update submission (for review/approval)
+  app.put('/api/admin/classroom/submissions/:id', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      const updates = {
+        ...req.body,
+        adminReviewedBy: adminId
+      };
+      
+      const updatedSubmission = await storage.updateClassroomSubmission(id, updates);
+      
+      res.json({ success: true, submission: updatedSubmission });
+    } catch (error) {
+      console.error('Error updating submission:', error);
+      res.status(500).json({ message: 'Failed to update submission' });
+    }
+  });
+
+  // Generate QR code for enrollment
+  app.get('/api/admin/classroom/qr-code', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+      const formUrl = `${baseUrl}/classroom/submit`;
+      
+      // For now, return the URL - QR code generation will be added in frontend
+      res.json({ 
+        success: true, 
+        formUrl,
+        qrCodeData: formUrl
+      });
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      res.status(500).json({ message: 'Failed to generate QR code' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
