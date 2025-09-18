@@ -3385,12 +3385,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Public: Submit form (no auth required - accessed via QR code)
   app.post('/api/classroom/submit', requireClassroomSolutions, async (req, res) => {
     try {
-      // Import the schema for validation
+      // Import the schema for validation - extend it to handle frontend array fields
       const { insertClassroomSubmissionSchema } = await import('@shared/schema');
+      const { z } = await import('zod');
       
-      // Validate request body with Zod
-      const validationResult = insertClassroomSubmissionSchema.safeParse(req.body);
+      // Create a custom schema that accepts arrays for JSON fields from frontend
+      const frontendSchema = insertClassroomSubmissionSchema.extend({
+        learningProfile: z.array(z.string()),
+        concernTypes: z.array(z.string()),
+        actionsTaken: z.array(z.string())
+      }).omit({
+        // Remove the database fields that aren't in the frontend
+        learningProfile: false,
+        concernTypes: false, 
+        actionsTaken: false
+      });
+      
+      // Use a more permissive validation for frontend
+      const validationSchema = z.object({
+        teacherFirstName: z.string().min(1),
+        teacherLastInitial: z.string().min(1).max(1),
+        teacherPosition: z.string().min(1),
+        teacherEmail: z.string().email(),
+        studentAge: z.string().min(1),
+        studentGrade: z.string().min(1),
+        taskType: z.enum(['differentiation', 'tier2_intervention']),
+        learningProfile: z.array(z.string()).min(1),
+        englishAsAdditionalLanguageDetails: z.string().optional(),
+        diagnosedDisabilityDetails: z.string().optional(),
+        otherLearningNeedsDetails: z.string().optional(),
+        concernTypes: z.array(z.string()).min(1),
+        concernDescription: z.string().min(10),
+        severityLevel: z.enum(['mild', 'moderate', 'urgent']),
+        actionsTaken: z.array(z.string()).min(1)
+      });
+      
+      // Validate request body with the frontend-compatible schema
+      const validationResult = validationSchema.safeParse(req.body);
       if (!validationResult.success) {
+        console.error('Validation failed:', validationResult.error.issues);
         return res.status(400).json({ 
           message: 'Invalid request data',
           errors: validationResult.error.issues
