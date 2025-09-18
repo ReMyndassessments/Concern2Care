@@ -15,6 +15,9 @@ import ConcernDetail from "@/pages/concern-detail";
 import TeacherMeetingPrep from "@/pages/teacher-meeting-prep";
 import Settings from "@/pages/settings";
 import AdminPage from "@/pages/admin-page";
+import AdminProgramSelector from "@/pages/admin-program-selector";
+import AdminC2CDashboard from "@/pages/admin-c2c-dashboard";
+import AdminClassroomDashboard from "@/pages/admin-classroom-dashboard";
 import ClassroomSubmit from "@/pages/classroom-submit";
 import NotFound from "@/pages/not-found";
 
@@ -53,8 +56,11 @@ function AuthenticatedRouter() {
       {/* Admin routes */}
       {user?.isAdmin ? (
         <>
-          <Route path="/admin" component={AdminPage} />
-          <Route path="/admin/*" component={AdminPage} />
+          <Route path="/admin" component={AdminProgramSelector} />
+          <Route path="/admin/c2c-dashboard" component={AdminC2CDashboard} />
+          <Route path="/admin/classroom-dashboard" component={AdminClassroomDashboard} />
+          {/* Legacy admin route for backward compatibility */}
+          <Route path="/admin/dashboard" component={AdminPage} />
           {/* Block teacher-only routes for admins */}
           <Route path="/new-request" component={() => { window.location.href = '/'; return null; }} />
           <Route path="/my-support-requests" component={() => { window.location.href = '/'; return null; }} />
