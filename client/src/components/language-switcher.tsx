@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Globe } from 'lucide-react';
-import { apiRequest } from '@/lib/queryClient';
+import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 
 interface LanguageSwitcherProps {
   className?: string;
@@ -10,26 +9,10 @@ interface LanguageSwitcherProps {
 
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const { i18n, t } = useTranslation();
+  const { isFeatureEnabled } = useFeatureFlags();
   
   // Check if Chinese localization feature is enabled
-  const { data: enabledFlags = [] } = useQuery({
-    queryKey: ['/api/feature-flags/enabled'],
-    queryFn: async () => {
-      try {
-        const response = await apiRequest('/api/feature-flags/enabled');
-        return response.flags || [];
-      } catch (error) {
-        console.error('Error fetching feature flags:', error);
-        return [];
-      }
-    },
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-
-  const isChineseEnabled = enabledFlags.some((flag: any) => 
-    flag.flagName === 'chinese_localization' && flag.isGloballyEnabled
-  );
+  const isChineseEnabled = isFeatureEnabled('chinese_localization');
 
   // Don't render if Chinese localization is not enabled
   if (!isChineseEnabled) {
