@@ -52,6 +52,7 @@ export const users = pgTable("users", {
   supportRequestsUsed: integer("support_requests_used").default(0),
   supportRequestsLimit: integer("support_requests_limit").default(20),
   additionalRequests: integer("additional_requests").default(0), // Bonus requests granted by admin
+  lastUsageReset: timestamp("last_usage_reset").defaultNow(), // Track monthly usage reset
   isAdmin: boolean("is_admin").default(false),
   role: varchar("role").default('teacher'), // 'teacher' | 'admin' | 'super_admin'
   isActive: boolean("is_active").default(true),
