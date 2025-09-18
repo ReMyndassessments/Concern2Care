@@ -13,6 +13,8 @@ import {
   apiKeys,
   userEmailConfigs,
   schoolEmailConfigs,
+  classroomEnrolledTeachers,
+  classroomSubmissions,
   type User,
   type UpsertUser,
   type InsertSchool,
@@ -37,6 +39,11 @@ import {
   type AdminLogWithDetails,
   type InsertProgressNote,
   type ProgressNote,
+  type InsertClassroomEnrolledTeacher,
+  type ClassroomEnrolledTeacher,
+  type InsertClassroomSubmission,
+  type ClassroomSubmission,
+  type ClassroomSubmissionWithTeacher,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, inArray, sql } from "drizzle-orm";
@@ -135,6 +142,24 @@ export interface IStorage {
   // Soft deletion alternatives
   markSchoolInactive(id: string): Promise<School>;
   markUserInactive(id: string): Promise<User>;
+  
+  // Classroom Solutions operations
+  getClassroomEnrolledTeachers(): Promise<ClassroomEnrolledTeacher[]>;
+  getClassroomEnrolledTeacher(id: string): Promise<ClassroomEnrolledTeacher | undefined>;
+  getClassroomEnrolledTeacherByEmail(email: string): Promise<ClassroomEnrolledTeacher | undefined>;
+  createClassroomEnrolledTeacher(teacher: InsertClassroomEnrolledTeacher): Promise<ClassroomEnrolledTeacher>;
+  updateClassroomEnrolledTeacher(id: string, updates: Partial<InsertClassroomEnrolledTeacher>): Promise<ClassroomEnrolledTeacher>;
+  deleteClassroomEnrolledTeacher(id: string): Promise<void>;
+  checkClassroomTeacherUsageLimit(teacherId: string): Promise<{ canSubmit: boolean; used: number; limit: number; }>;
+  incrementClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher>;
+  resetClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher>;
+  checkAndResetClassroomUsageIfNeeded(teacherId: string): Promise<boolean>;
+  
+  createClassroomSubmission(submission: InsertClassroomSubmission & { teacherId: string }): Promise<ClassroomSubmission>;
+  getClassroomSubmissions(): Promise<ClassroomSubmissionWithTeacher[]>;
+  getClassroomSubmission(id: string): Promise<ClassroomSubmissionWithTeacher | undefined>;
+  updateClassroomSubmission(id: string, updates: Partial<ClassroomSubmission>): Promise<ClassroomSubmission>;
+  getClassroomSubmissionsByStatus(status: string): Promise<ClassroomSubmissionWithTeacher[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -885,6 +910,186 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, id))
       .returning();
     return updatedUser;
+  }
+
+  // Classroom Solutions operations
+  async getClassroomEnrolledTeachers(): Promise<ClassroomEnrolledTeacher[]> {
+    return await db
+      .select()
+      .from(classroomEnrolledTeachers)
+      .orderBy(classroomEnrolledTeachers.lastName, classroomEnrolledTeachers.firstName);
+  }
+
+  async getClassroomEnrolledTeacher(id: string): Promise<ClassroomEnrolledTeacher | undefined> {
+    const [teacher] = await db
+      .select()
+      .from(classroomEnrolledTeachers)
+      .where(eq(classroomEnrolledTeachers.id, id));
+    return teacher;
+  }
+
+  async getClassroomEnrolledTeacherByEmail(email: string): Promise<ClassroomEnrolledTeacher | undefined> {
+    const [teacher] = await db
+      .select()
+      .from(classroomEnrolledTeachers)
+      .where(eq(classroomEnrolledTeachers.email, email));
+    return teacher;
+  }
+
+  async createClassroomEnrolledTeacher(teacher: InsertClassroomEnrolledTeacher): Promise<ClassroomEnrolledTeacher> {
+    const [newTeacher] = await db
+      .insert(classroomEnrolledTeachers)
+      .values(teacher)
+      .returning();
+    return newTeacher;
+  }
+
+  async updateClassroomEnrolledTeacher(id: string, updates: Partial<InsertClassroomEnrolledTeacher>): Promise<ClassroomEnrolledTeacher> {
+    const [updatedTeacher] = await db
+      .update(classroomEnrolledTeachers)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(classroomEnrolledTeachers.id, id))
+      .returning();
+    return updatedTeacher;
+  }
+
+  async deleteClassroomEnrolledTeacher(id: string): Promise<void> {
+    await db
+      .delete(classroomEnrolledTeachers)
+      .where(eq(classroomEnrolledTeachers.id, id));
+  }
+
+  async checkClassroomTeacherUsageLimit(teacherId: string): Promise<{ canSubmit: boolean; used: number; limit: number; }> {
+    // Check and reset usage if needed
+    await this.checkAndResetClassroomUsageIfNeeded(teacherId);
+    
+    const teacher = await this.getClassroomEnrolledTeacher(teacherId);
+    if (!teacher) {
+      throw new Error(`Classroom teacher ${teacherId} not found`);
+    }
+
+    const used = teacher.requestsUsed || 0;
+    const limit = teacher.requestsLimit || 5;
+    
+    return {
+      canSubmit: used < limit && (teacher.isActive ?? true),
+      used,
+      limit
+    };
+  }
+
+  async incrementClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher> {
+    const teacher = await this.getClassroomEnrolledTeacher(teacherId);
+    if (!teacher) {
+      throw new Error(`Classroom teacher ${teacherId} not found`);
+    }
+
+    const newCount = (teacher.requestsUsed || 0) + 1;
+    
+    const [updatedTeacher] = await db
+      .update(classroomEnrolledTeachers)
+      .set({ 
+        requestsUsed: newCount,
+        updatedAt: new Date()
+      })
+      .where(eq(classroomEnrolledTeachers.id, teacherId))
+      .returning();
+    
+    return updatedTeacher;
+  }
+
+  async resetClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher> {
+    const [updatedTeacher] = await db
+      .update(classroomEnrolledTeachers)
+      .set({ 
+        requestsUsed: 0,
+        lastUsageReset: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(classroomEnrolledTeachers.id, teacherId))
+      .returning();
+    
+    return updatedTeacher;
+  }
+
+  async checkAndResetClassroomUsageIfNeeded(teacherId: string): Promise<boolean> {
+    const teacher = await this.getClassroomEnrolledTeacher(teacherId);
+    if (!teacher) {
+      return false;
+    }
+
+    const now = new Date();
+    const lastReset = teacher.lastUsageReset || teacher.createdAt || now;
+    
+    // Check if we've moved to a new month (calendar month boundary)
+    const needsReset = now.getFullYear() > lastReset.getFullYear() || 
+                      (now.getFullYear() === lastReset.getFullYear() && now.getMonth() > lastReset.getMonth());
+    
+    if (needsReset && (teacher.requestsUsed || 0) > 0) {
+      await this.resetClassroomTeacherUsage(teacherId);
+      return true;
+    }
+    
+    return false;
+  }
+
+  async createClassroomSubmission(submission: InsertClassroomSubmission & { teacherId: string }): Promise<ClassroomSubmission> {
+    const [newSubmission] = await db
+      .insert(classroomSubmissions)
+      .values(submission)
+      .returning();
+    return newSubmission;
+  }
+
+  async getClassroomSubmissions(): Promise<ClassroomSubmissionWithTeacher[]> {
+    const submissions = await db
+      .select()
+      .from(classroomSubmissions)
+      .leftJoin(classroomEnrolledTeachers, eq(classroomSubmissions.teacherId, classroomEnrolledTeachers.id))
+      .orderBy(desc(classroomSubmissions.submittedAt));
+
+    return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
+      ...classroom_submissions,
+      teacher: classroom_enrolled_teachers!
+    }));
+  }
+
+  async getClassroomSubmission(id: string): Promise<ClassroomSubmissionWithTeacher | undefined> {
+    const [result] = await db
+      .select()
+      .from(classroomSubmissions)
+      .leftJoin(classroomEnrolledTeachers, eq(classroomSubmissions.teacherId, classroomEnrolledTeachers.id))
+      .where(eq(classroomSubmissions.id, id));
+
+    if (!result) return undefined;
+
+    return {
+      ...result.classroom_submissions,
+      teacher: result.classroom_enrolled_teachers!
+    };
+  }
+
+  async updateClassroomSubmission(id: string, updates: Partial<ClassroomSubmission>): Promise<ClassroomSubmission> {
+    const [updatedSubmission] = await db
+      .update(classroomSubmissions)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(classroomSubmissions.id, id))
+      .returning();
+    return updatedSubmission;
+  }
+
+  async getClassroomSubmissionsByStatus(status: string): Promise<ClassroomSubmissionWithTeacher[]> {
+    const submissions = await db
+      .select()
+      .from(classroomSubmissions)
+      .leftJoin(classroomEnrolledTeachers, eq(classroomSubmissions.teacherId, classroomEnrolledTeachers.id))
+      .where(eq(classroomSubmissions.status, status))
+      .orderBy(desc(classroomSubmissions.submittedAt));
+
+    return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
+      ...classroom_submissions,
+      teacher: classroom_enrolled_teachers!
+    }));
   }
 }
 

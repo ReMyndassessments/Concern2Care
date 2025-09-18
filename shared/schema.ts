@@ -242,6 +242,60 @@ export const schoolEmailConfigs = pgTable("school_email_configs", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Classroom Solutions: Enrolled Teachers
+export const classroomEnrolledTeachers = pgTable("classroom_enrolled_teachers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  email: varchar("email").notNull().unique(),
+  position: varchar("position").notNull(), // e.g., "3rd Grade Teacher"
+  school: varchar("school"),
+  requestsUsed: integer("requests_used").default(0),
+  requestsLimit: integer("requests_limit").default(5),
+  lastUsageReset: timestamp("last_usage_reset"),
+  isActive: boolean("is_active").default(true),
+  enrolledBy: varchar("enrolled_by").references(() => users.id).notNull(),
+  enrolledAt: timestamp("enrolled_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Classroom Solutions: Form Submissions
+export const classroomSubmissions = pgTable("classroom_submissions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  teacherId: varchar("teacher_id").references(() => classroomEnrolledTeachers.id).notNull(),
+  
+  // Teacher Info (from form)
+  teacherFirstName: varchar("teacher_first_name").notNull(),
+  teacherLastInitial: varchar("teacher_last_initial").notNull(),
+  teacherPosition: varchar("teacher_position").notNull(),
+  teacherEmail: varchar("teacher_email").notNull(),
+  
+  // Student Info (anonymized)
+  studentAge: varchar("student_age").notNull(),
+  studentGrade: varchar("student_grade").notNull(),
+  
+  // Form Data
+  taskType: varchar("task_type").notNull(), // 'differentiation' | 'tier2_intervention'
+  learningProfile: text("learning_profile").notNull(), // JSON array of selected options
+  concernTypes: text("concern_types").notNull(), // JSON array of selected types
+  concernDescription: text("concern_description").notNull(),
+  severityLevel: varchar("severity_level").notNull(), // 'mild' | 'moderate' | 'urgent'
+  actionsTaken: text("actions_taken").notNull(), // JSON array of actions
+  
+  // Workflow Status
+  status: varchar("status").notNull().default('pending'), // 'pending' | 'ai_generated' | 'reviewed' | 'sent'
+  aiDraftGenerated: boolean("ai_draft_generated").default(false),
+  aiDraftContent: text("ai_draft_content"),
+  adminReviewedBy: varchar("admin_reviewed_by").references(() => users.id),
+  adminNotes: text("admin_notes"),
+  finalContent: text("final_content"), // Admin-approved content to send
+  sentAt: timestamp("sent_at"),
+  
+  submittedAt: timestamp("submitted_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const schoolRelations = relations(schools, ({ one, many }) => ({
   users: many(users),
@@ -485,4 +539,39 @@ export type AdminLogWithDetails = AdminLog & {
   admin: User;
   targetUser: User | null;
   targetSchool: School | null;
+};
+
+// Classroom Solutions schemas
+export const insertClassroomEnrolledTeacherSchema = createInsertSchema(classroomEnrolledTeachers).omit({
+  id: true,
+  requestsUsed: true,
+  lastUsageReset: true,
+  enrolledAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertClassroomSubmissionSchema = createInsertSchema(classroomSubmissions).omit({
+  id: true,
+  teacherId: true,
+  status: true,
+  aiDraftGenerated: true,
+  aiDraftContent: true,
+  adminReviewedBy: true,
+  adminNotes: true,
+  finalContent: true,
+  sentAt: true,
+  submittedAt: true,
+  updatedAt: true,
+});
+
+// Classroom Solutions types
+export type InsertClassroomEnrolledTeacher = z.infer<typeof insertClassroomEnrolledTeacherSchema>;
+export type ClassroomEnrolledTeacher = typeof classroomEnrolledTeachers.$inferSelect;
+export type InsertClassroomSubmission = z.infer<typeof insertClassroomSubmissionSchema>;
+export type ClassroomSubmission = typeof classroomSubmissions.$inferSelect;
+
+// Extended types for Classroom Solutions
+export type ClassroomSubmissionWithTeacher = ClassroomSubmission & {
+  teacher: ClassroomEnrolledTeacher;
 };
