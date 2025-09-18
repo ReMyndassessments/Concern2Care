@@ -52,6 +52,8 @@ export interface IStorage {
   incrementUserRequestCount(id: string): Promise<User>;
   checkUserUsageLimit(id: string): Promise<{ canCreate: boolean; used: number; limit: number; }>;
   grantAdditionalRequests(id: string, amount: number, adminId: string): Promise<User>;
+  checkAndResetUsageIfNeeded(id: string): Promise<boolean>;
+  resetUserUsage(id: string): Promise<User>;
   
   // Admin-specific methods
   createSchool(school: InsertSchool): Promise<School>;
@@ -195,6 +197,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async checkUserUsageLimit(id: string): Promise<{ canCreate: boolean; used: number; limit: number; }> {
+    // Check and perform monthly reset if needed
+    await this.checkAndResetUsageIfNeeded(id);
+    
     const user = await this.getUser(id);
     
     if (!user) {
@@ -257,6 +262,48 @@ export class DatabaseStorage implements IStorage {
     
     console.log(`✅ Granted ${amount} additional requests to user ${id} by admin ${adminId}. Total additional: ${newAdditionalRequests}`);
     
+    return user;
+  }
+
+  async checkAndResetUsageIfNeeded(id: string): Promise<boolean> {
+    const user = await this.getUser(id);
+    if (!user) {
+      return false;
+    }
+
+    const now = new Date();
+    const lastReset = user.lastUsageReset || user.createdAt || new Date(0);
+    
+    // Check if we're in a new month since last reset
+    const needsReset = 
+      now.getFullYear() > lastReset.getFullYear() || 
+      (now.getFullYear() === lastReset.getFullYear() && 
+       now.getMonth() > lastReset.getMonth());
+
+    if (needsReset) {
+      await this.resetUserUsage(id);
+      console.log(`🔄 Monthly usage reset performed for user ${id}`);
+      return true;
+    }
+
+    return false;
+  }
+
+  async resetUserUsage(id: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({ 
+        supportRequestsUsed: 0,
+        lastUsageReset: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!user) {
+      throw new Error(`User ${id} not found during reset`);
+    }
+
     return user;
   }
 
