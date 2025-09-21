@@ -3540,6 +3540,7 @@ Submitted: ${new Date().toLocaleString()}
         teacherLastInitial: z.string().min(1).max(1),
         teacherPosition: z.string().min(1),
         teacherEmail: z.string().email(),
+        securityPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only'),
         studentFirstName: z.string().min(1),
         studentLastInitial: z.string().min(1).max(1),
         studentAge: z.string().min(1),
@@ -3570,6 +3571,7 @@ Submitted: ${new Date().toLocaleString()}
         teacherLastInitial,
         teacherPosition,
         teacherEmail,
+        securityPin,
         studentFirstName,
         studentLastInitial,
         studentAge,
@@ -3591,6 +3593,9 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(403).json({ message: 'Teacher not enrolled in the program or inactive' });
       }
 
+      // Hash the security PIN for secure storage
+      const hashedPin = await bcrypt.hash(securityPin, 10);
+
       // Atomic submission creation with usage increment in transaction
       let submission;
       let updatedTeacher;
@@ -3606,6 +3611,7 @@ Submitted: ${new Date().toLocaleString()}
           teacherLastInitial,
           teacherPosition,
           teacherEmail,
+          securityPin: hashedPin,
           // Student info (from teacher input)
           firstName: studentFirstName, // Student first name or initials as provided by teacher
           lastInitial: studentLastInitial, // Student last initial as provided by teacher
@@ -4073,10 +4079,10 @@ Submitted: ${new Date().toLocaleString()}
   // Teacher lookup endpoint for landing page (no auth required)
   app.post('/api/teacher/lookup', requireClassroomSolutions, async (req: any, res) => {
     try {
-      const { email } = req.body;
+      const { email, securityPin } = req.body;
       
-      if (!email) {
-        return res.status(400).json({ message: 'Email is required' });
+      if (!email || !securityPin) {
+        return res.status(400).json({ message: 'Email and security PIN are required' });
       }
 
       // Email validation
@@ -4085,9 +4091,13 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(400).json({ message: 'Invalid email format' });
       }
 
+      // PIN validation
+      if (!/^\d{4}$/.test(securityPin)) {
+        return res.status(400).json({ message: 'Security PIN must be exactly 4 digits' });
+      }
+
       // Get submissions by teacher email
       const submissions = await storage.getClassroomSubmissionsByEmail(email);
-      
       
       if (submissions.length === 0) {
         return res.json({ 
@@ -4096,6 +4106,26 @@ Submitted: ${new Date().toLocaleString()}
           submissions: [],
           message: 'No submissions found for this email address. You may need to register first.' 
         });
+      }
+
+      // Verify PIN against any of the user's submissions (all submissions should have the same PIN)
+      let pinVerified = false;
+      for (const submission of submissions) {
+        if (submission.securityPin) {
+          try {
+            const isValidPin = await bcrypt.compare(securityPin, submission.securityPin);
+            if (isValidPin) {
+              pinVerified = true;
+              break;
+            }
+          } catch (error) {
+            console.error('PIN verification error:', error);
+          }
+        }
+      }
+
+      if (!pinVerified) {
+        return res.status(401).json({ message: 'Invalid email or security PIN' });
       }
 
       // Sort submissions by most recent first
