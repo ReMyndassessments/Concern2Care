@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useLocation } from 'wouter';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +13,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
-import { FileText, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home } from 'lucide-react';
 
 // Form validation schema
 const classroomSubmissionSchema = z.object({
@@ -43,6 +44,7 @@ const classroomSubmissionSchema = z.object({
 type ClassroomSubmissionForm = z.infer<typeof classroomSubmissionSchema>;
 
 export default function ClassroomSubmit() {
+  const [location, setLocation] = useLocation();
   const [isFeatureEnabled, setIsFeatureEnabled] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -203,6 +205,15 @@ export default function ClassroomSubmit() {
                 </Button>
               )}
               
+              <Button 
+                onClick={() => setLocation('/')}
+                variant="outline"
+                className="w-full"
+                data-testid="button-back-to-home"
+              >
+                <Home className="mr-2 h-4 w-4" />
+                Back to Home
+              </Button>
             </div>
           </CardContent>
         </Card>
