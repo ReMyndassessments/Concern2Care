@@ -4115,7 +4115,7 @@ Submitted: ${new Date().toLocaleString()}
         adminReviewedAt: submission.adminReviewedAt
       }));
 
-      const approvedCount = submissions.filter(s => s.status === 'approved').length;
+      const readyCount = submissions.filter(s => s.status === 'approved' || s.status === 'auto_sent').length;
       const pendingCount = submissions.filter(s => s.status === 'pending').length;
 
       res.json({ 
@@ -4127,7 +4127,7 @@ Submitted: ${new Date().toLocaleString()}
         submissions: formattedSubmissions,
         summary: {
           total: submissions.length,
-          approved: approvedCount,
+          ready: readyCount,
           pending: pendingCount
         }
       });

@@ -95,25 +95,25 @@ function TeacherLookup() {
   };
 
   const getStatusBadge = (status: string) => {
-    if (status === 'approved') {
+    if (status === 'approved' || status === 'auto_sent') {
       return (
         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
           <CheckCircle2 className="w-3 h-3 mr-1" />
-          Approved
+          Ready
         </span>
       );
     } else if (status === 'pending') {
       return (
         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
           <Clock className="w-3 h-3 mr-1" />
-          Pending
+          Processing
         </span>
       );
     } else {
       return (
-        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
           <AlertCircle className="w-3 h-3 mr-1" />
-          {status}
+          Submitted
         </span>
       );
     }
@@ -162,7 +162,7 @@ function TeacherLookup() {
               <h4 className="font-semibold text-blue-900 mb-2">Welcome, {teacherData.teacher.firstName}!</h4>
               <div className="text-sm text-blue-800">
                 <p>Total submissions: {teacherData.summary.total}</p>
-                <p>Approved: {teacherData.summary.approved} | Pending: {teacherData.summary.pending}</p>
+                <p>Ready: {teacherData.summary.ready} | Processing: {teacherData.summary.pending}</p>
               </div>
             </div>
           )}
@@ -170,12 +170,12 @@ function TeacherLookup() {
           {teacherData.submissions.length > 0 ? (
             <div className="space-y-4">
               <h4 className="font-semibold text-gray-900">Your Submissions</h4>
-              {teacherData.submissions.map((submission: any) => (
+              {teacherData.submissions.map((submission: any, index: number) => (
                 <div key={submission.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <h5 className="font-medium text-gray-900">
-                        {submission.studentFirstName} {submission.studentLastInitial}. (Grade {submission.studentGrade})
+                        Student Request #{teacherData.submissions.length - index}
                       </h5>
                       <p className="text-sm text-gray-600">
                         {submission.taskType === 'tier2_intervention' ? 'Tier 2 Intervention' : 'Differentiation'} - {submission.severityLevel} priority
@@ -190,10 +190,10 @@ function TeacherLookup() {
                     </div>
                   </div>
                   
-                  {submission.status === 'approved' && submission.aiResponse && (
+                  {(submission.status === 'approved' || submission.status === 'auto_sent') && submission.aiResponse && (
                     <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded-md">
                       <div className="flex items-center justify-between mb-3">
-                        <h6 className="font-medium text-green-900">✅ AI-Generated Response</h6>
+                        <h6 className="font-medium text-green-900">✅ Your Personalized Response</h6>
                         <Button
                           size="sm"
                           variant="outline"
@@ -220,7 +220,7 @@ function TeacherLookup() {
                   {submission.status === 'pending' && (
                     <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                       <p className="text-sm text-yellow-800">
-                        Your submission is being reviewed. You'll receive the response once it's approved.
+                        Your request is being processed. The personalized response will be available here once ready.
                       </p>
                     </div>
                   )}
