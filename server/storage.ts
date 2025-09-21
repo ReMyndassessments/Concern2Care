@@ -1102,6 +1102,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteClassroomSubmission(id: string): Promise<void> {
+    // First delete any related admin notifications to avoid foreign key constraint violations
+    await db
+      .delete(adminNotifications)
+      .where(eq(adminNotifications.submissionId, id));
+    
+    // Then delete the submission
     await db
       .delete(classroomSubmissions)
       .where(eq(classroomSubmissions.id, id));
