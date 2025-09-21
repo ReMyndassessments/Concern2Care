@@ -21,6 +21,7 @@ const classroomSubmissionSchema = z.object({
   teacherLastInitial: z.string().min(1, 'Last initial is required').max(1, 'Only one letter allowed'),
   teacherPosition: z.string().min(1, 'Position is required'),
   teacherEmail: z.string().email('Valid email is required'),
+  securityPin: z.string().min(4, 'PIN must be exactly 4 digits').max(4, 'PIN must be exactly 4 digits').regex(/^\d{4}$/, 'PIN must be 4 digits only'),
   studentFirstName: z.string().min(1, 'Student first name or initials are required'),
   studentLastInitial: z.string().min(1, 'Student last initial is required').max(1, 'Only one letter allowed'),
   studentAge: z.string().min(1, 'Student age is required'),
@@ -58,6 +59,7 @@ export default function ClassroomSubmit() {
       teacherLastInitial: '',
       teacherPosition: '',
       teacherEmail: '',
+      securityPin: '',
       studentFirstName: '',
       studentLastInitial: '',
       studentAge: '',
@@ -326,6 +328,33 @@ export default function ClassroomSubmit() {
                       </FormControl>
                       <FormDescription>
                         Response will be sent to this email address
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="securityPin"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Security PIN</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="password" 
+                          placeholder="4-digit PIN" 
+                          maxLength={4} 
+                          {...field}
+                          data-testid="input-security-pin"
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                            field.onChange(value);
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Create a 4-digit PIN to access your responses later
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
