@@ -192,11 +192,7 @@ export default function ClassroomSubmit() {
             <div className="space-y-3">
               {submissionResult.remainingRequests > 0 && (
                 <Button 
-                  onClick={() => {
-                    setIsSubmitted(false);
-                    setSubmissionResult(null);
-                    form.reset();
-                  }}
+                  onClick={() => setLocation('/')}
                   className="w-full"
                   data-testid="button-submit-another-request"
                 >
