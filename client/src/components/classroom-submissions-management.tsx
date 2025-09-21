@@ -40,6 +40,28 @@ import {
 } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+// Safe date formatting utility
+function formatSafeDate(dateInput: string | Date | null | undefined, format: 'full' | 'date' | 'time' = 'full'): string {
+  if (!dateInput) return 'Not set';
+  
+  try {
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return 'Invalid date';
+    
+    switch (format) {
+      case 'date':
+        return date.toLocaleDateString();
+      case 'time':
+        return date.toLocaleTimeString();
+      case 'full':
+      default:
+        return date.toLocaleString();
+    }
+  } catch (error) {
+    return 'Invalid date';
+  }
+}
+
 // Professional AI Response Formatter
 function formatProfessionalAIResponse(text: string): JSX.Element {
   if (!text) return <div>No content available</div>;
@@ -337,7 +359,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, on
                 <p><strong>Email:</strong> {submission.teacher.email}</p>
                 <p><strong>Position:</strong> {submission.teacher.position}</p>
                 {submission.teacher.school && <p><strong>School:</strong> {submission.teacher.school}</p>}
-                <p><strong>Submitted:</strong> {new Date(submission.createdAt).toLocaleString()}</p>
+                <p><strong>Submitted:</strong> {formatSafeDate(submission.createdAt)}</p>
               </CardContent>
             </Card>
           </div>
@@ -383,7 +405,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, on
           </Card>
 
           {/* AI Generated Content */}
-          {(submission.aiDraft || submission.ai_draft) && (
+          {submission.aiDraft && (
             <Card>
               <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -394,7 +416,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, on
               </CardHeader>
               <CardContent className="p-0">
                 <div className="p-6">
-                  {formatProfessionalAIResponse(submission.aiDraft || submission.ai_draft)}
+                  {formatProfessionalAIResponse(submission.aiDraft)}
                 </div>
                   
                 {submission.aiDisclaimer && (
@@ -419,12 +441,12 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, on
             </CardHeader>
             <CardContent className="space-y-2">
               {submission.autoSendTime && (
-                <p><strong>Scheduled Send:</strong> {new Date(submission.autoSendTime).toLocaleString()}</p>
+                <p><strong>Scheduled Send:</strong> {formatSafeDate(submission.autoSendTime)}</p>
               )}
               {submission.sentAt && (
-                <p><strong>Sent At:</strong> {new Date(submission.sentAt).toLocaleString()}</p>
+                <p><strong>Sent At:</strong> {formatSafeDate(submission.sentAt)}</p>
               )}
-              <p><strong>Last Updated:</strong> {new Date(submission.updatedAt).toLocaleString()}</p>
+              <p><strong>Last Updated:</strong> {formatSafeDate(submission.updatedAt)}</p>
             </CardContent>
           </Card>
 
@@ -788,7 +810,15 @@ export default function ClassroomSubmissionsManagement() {
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Sent Today</p>
                 <p className="text-2xl font-bold">
-                  {submissions.filter(s => s.sentAt && new Date(s.sentAt).toDateString() === new Date().toDateString()).length}
+                  {submissions.filter(s => {
+                    if (!s.sentAt) return false;
+                    try {
+                      const sentDate = new Date(s.sentAt);
+                      return !isNaN(sentDate.getTime()) && sentDate.toDateString() === new Date().toDateString();
+                    } catch {
+                      return false;
+                    }
+                  }).length}
                 </p>
               </div>
             </div>
@@ -897,8 +927,8 @@ export default function ClassroomSubmissionsManagement() {
                     
                     <TableCell>
                       <div className="text-sm">
-                        <p>{new Date(submission.createdAt).toLocaleDateString()}</p>
-                        <p className="text-gray-500">{new Date(submission.createdAt).toLocaleTimeString()}</p>
+                        <p>{formatSafeDate(submission.createdAt, 'date')}</p>
+                        <p className="text-gray-500">{formatSafeDate(submission.createdAt, 'time')}</p>
                       </div>
                     </TableCell>
                     
