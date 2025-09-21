@@ -282,28 +282,78 @@ function TeacherLookup() {
                               <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                                 <div className="flex items-center justify-between mb-3">
                                   <h4 className="font-medium text-green-900">🤖 Your Personalized AI Response</h4>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-xs"
-                                    onClick={() => {
-                                      const responseText = submission.aiResponse || submission.ai_draft_content || "No response available";
-                                      navigator.clipboard.writeText(responseText);
-                                      toast({
-                                        title: "Copied!",
-                                        description: "Response copied to clipboard",
-                                        variant: "default",
-                                      });
-                                    }}
-                                    data-testid={`button-copy-modal-response-${submission.id}`}
-                                  >
-                                    Copy Response
-                                  </Button>
+                                  <div className="flex gap-2">
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="text-xs"
+                                      onClick={() => {
+                                        const responseContent = document.querySelector(`[data-response-id="${submission.id}"]`);
+                                        if (responseContent) {
+                                          const printWindow = window.open('', '_blank');
+                                          if (printWindow) {
+                                            printWindow.document.write(`
+                                              <html>
+                                                <head>
+                                                  <title>AI Response - ${submission.studentFirstName} ${submission.studentLastInitial}</title>
+                                                  <style>
+                                                    body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; color: #333; }
+                                                    .header { border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+                                                    .content { max-width: 800px; }
+                                                    h1, h2, h3, h4 { color: #2d3748; margin-top: 1.5em; margin-bottom: 0.5em; }
+                                                    h1 { font-size: 1.5em; } h2 { font-size: 1.3em; } h3 { font-size: 1.1em; }
+                                                    ul, ol { margin: 10px 0; padding-left: 20px; }
+                                                    li { margin: 5px 0; }
+                                                    hr { margin: 20px 0; border: none; border-top: 1px solid #ddd; }
+                                                    strong { color: #2d3748; }
+                                                    @media print { body { margin: 0; } }
+                                                  </style>
+                                                </head>
+                                                <body>
+                                                  <div class="header">
+                                                    <h1>Personalized AI Response</h1>
+                                                    <p><strong>Student:</strong> ${submission.studentFirstName} ${submission.studentLastInitial}</p>
+                                                    <p><strong>Date:</strong> ${formatDate(submission.submittedAt)}</p>
+                                                  </div>
+                                                  <div class="content">
+                                                    ${responseContent.innerHTML}
+                                                  </div>
+                                                </body>
+                                              </html>
+                                            `);
+                                            printWindow.document.close();
+                                            printWindow.print();
+                                          }
+                                        }
+                                      }}
+                                      data-testid={`button-print-response-${submission.id}`}
+                                    >
+                                      Print Response
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="text-xs"
+                                      onClick={() => {
+                                        const responseText = submission.aiResponse || submission.ai_draft_content || "No response available";
+                                        navigator.clipboard.writeText(responseText);
+                                        toast({
+                                          title: "Copied!",
+                                          description: "Response copied to clipboard",
+                                          variant: "default",
+                                        });
+                                      }}
+                                      data-testid={`button-copy-modal-response-${submission.id}`}
+                                    >
+                                      Copy Response
+                                    </Button>
+                                  </div>
                                 </div>
                                 <div className="text-sm text-gray-700 bg-white p-4 rounded border leading-relaxed max-h-96 overflow-y-auto">
                                   {submission.aiResponse || submission.ai_draft_content ? (
                                     <div 
                                       className="professional-ai-response"
+                                      data-response-id={submission.id}
                                       dangerouslySetInnerHTML={{ 
                                         __html: formatProfessionalAIResponse(submission.aiResponse || submission.ai_draft_content)
                                       }}
