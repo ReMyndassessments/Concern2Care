@@ -495,18 +495,6 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, on
                     Cancel Submission
                   </Button>
                   
-                  {isUrgent && (
-                    <Button 
-                      onClick={() => handleStatusUpdate('escalated')}
-                      disabled={isUpdating}
-                      variant="outline"
-                      className="border-orange-500 text-orange-600"
-                      data-testid="button-escalate-submission"
-                    >
-                      <ArrowUp className="h-4 w-4 mr-2" />
-                      Escalate
-                    </Button>
-                  )}
                 </div>
               </CardContent>
             </Card>
@@ -586,8 +574,7 @@ export default function ClassroomSubmissionsManagement() {
       const endpoints = {
         'approved': `/api/admin/classroom/submissions/${id}/approve`,
         'hold': `/api/admin/classroom/submissions/${id}/hold`,
-        'cancelled': `/api/admin/classroom/submissions/${id}/cancel`,
-        'escalated': `/api/admin/classroom/submissions/${id}/escalate`
+        'cancelled': `/api/admin/classroom/submissions/${id}/cancel`
       };
       
       const endpoint = endpoints[status as keyof typeof endpoints];
