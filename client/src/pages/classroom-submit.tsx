@@ -200,16 +200,6 @@ export default function ClassroomSubmit() {
                   Submit Another Request
                 </Button>
               )}
-              
-              <Button 
-                onClick={() => setLocation('/')}
-                variant="outline"
-                className="w-full"
-                data-testid="button-back-to-home"
-              >
-                <Home className="mr-2 h-4 w-4" />
-                Back to Home
-              </Button>
             </div>
           </CardContent>
         </Card>
