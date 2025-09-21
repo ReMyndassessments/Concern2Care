@@ -75,10 +75,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     rolling: true,
     name: 'concern2care_session',
     cookie: {
-      secure: process.env.NODE_ENV === 'production', // Must be true in production when using sameSite: 'none'
+      secure: false, // Set to false for Replit development environment
       maxAge: 24 * 60 * 60 * 1000, // 24 hours instead of 4 - more user friendly
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // Use 'lax' in dev, 'none' in production
+      sameSite: 'lax' // Use 'lax' for Replit environment compatibility
     }
   }));
   
