@@ -828,8 +828,8 @@ export default function Landing() {
           {/* QR Code for Teacher Submissions */}
           <div className="mt-12 text-center">
             <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Teacher Portal Access</h3>
-              <p className="text-gray-600 mb-6">Submit student concern forms and receive AI-powered intervention strategies. Scan the QR code below or click "Access Submission Form" to get started:</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Access for Classroom Solutions Registered Teachers</h3>
+              <p className="text-gray-600 mb-6">Scan the QR code or click the "Access Submission Form" button below.</p>
               
               <div className="mb-6">
                 <div className="bg-gray-100 rounded-lg p-4 inline-block">
