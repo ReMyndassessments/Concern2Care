@@ -35,11 +35,15 @@ args = "npm run dev"
 waitForPort = 5000
 
 [agent]
-integrations = ["javascript_auth_all_persistance:1.0.0", "outlook:1.0.0"]
+integrations = ["javascript_auth_all_persistance:1.0.0", "outlook:1.0.0", "javascript_sendgrid:1.0.0"]
 
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 33995
+externalPort = 3001
 
 [[ports]]
 localPort = 37903

@@ -235,54 +235,22 @@ ${message}
 Submitted: ${new Date().toLocaleString()}
       `.trim();
 
-      // Send email using direct SMTP configuration that bypasses the broken decryption
+      // Send email using SendGrid service
       try {
-        const nodemailer = require('nodemailer');
+        const { sendContactFormEmail } = await import('./services/sendgridService');
         
-        // Create direct transporter with the working Gmail configuration
-        const transporter = nodemailer.createTransporter({
-          host: 'smtp.gmail.com',
-          port: 587,
-          secure: false,
-          auth: {
-            user: 'noelroberts43@gmail.com',
-            pass: 'gqev zjxf xrhw nbmm', // Working app password
-          },
+        const success = await sendContactFormEmail({
+          name: formData.name,
+          email: formData.email,
+          inquiryType: formData.inquiryType,
+          message: formData.message
         });
 
-        const mailOptions = {
-          from: 'Concern2Care <noelroberts43@gmail.com>',
-          to: 'ne_roberts@yahoo.com',
-          subject: subject,
-          html: `
-            <!DOCTYPE html>
-            <html>
-              <head>
-                <meta charset="utf-8">
-                <style>
-                  body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                  .header { background-color: #2563eb; color: white; padding: 20px; text-align: center; }
-                  .content { padding: 20px; }
-                  .footer { background-color: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #666; }
-                </style>
-              </head>
-              <body>
-                <div class="header">
-                  <h1>Concern2Care Contact Request</h1>
-                </div>
-                <div class="content">
-                  ${emailContent.replace(/\n/g, '<br>')}
-                </div>
-                <div class="footer">
-                  <p>This message was sent from the Concern2Care contact form.</p>
-                </div>
-              </body>
-            </html>
-          `,
-        };
+        if (!success) {
+          throw new Error('SendGrid email service failed');
+        }
 
-        await transporter.sendMail(mailOptions);
-        console.log('✅ Contact form email sent successfully using direct SMTP configuration');
+        console.log('✅ Contact form email sent successfully via SendGrid');
         res.json({ success: true, message: 'Your request has been submitted successfully' });
       } catch (emailError) {
         console.error('❌ Failed to send contact form email:', emailError);
