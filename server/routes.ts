@@ -235,37 +235,26 @@ ${message}
 Submitted: ${new Date().toLocaleString()}
       `.trim();
 
-      // Send email notification using Gmail SMTP configuration
+      // Log contact form submission for manual follow-up
       try {
-        console.log('📧 Sending contact form notification email');
-        
-        // Get email configuration from admin settings
-        const emailConfig = await emailConfigService.getAdminEmailConfiguration();
-        
-        if (!emailConfig) {
-          console.log('⚠️ No Gmail SMTP configuration found');
-          res.json({ success: true, message: 'Your request has been submitted successfully. Please configure email settings in the admin dashboard to receive notifications.' });
-          return;
-        }
-
-        // Send email using Gmail SMTP settings
-        const success = await sendReportEmail({
-          recipients: [{ email: emailConfig.toEmail || 'ne_roberts@yahoo.com', name: 'Concern2Care Admin' }],
-          subject: subject,
-          message: emailContent,
-          userId: 'admin'
+        console.log('📝 Contact form submission received:', {
+          name,
+          email,
+          organization,
+          inquiryType,
+          timestamp: new Date().toISOString()
         });
-
-        if (success) {
-          console.log('✅ Contact form notification email sent successfully via Gmail SMTP');
-          res.json({ success: true, message: 'Your request has been submitted successfully and a notification has been sent.' });
-        } else {
-          console.log('⚠️ Failed to send notification email via Gmail SMTP');
-          res.json({ success: true, message: 'Your request has been submitted successfully. Email notification failed - please check Gmail SMTP configuration.' });
-        }
+        
+        res.json({ 
+          success: true, 
+          message: 'Thank you for your interest! Please contact ne_roberts@yahoo.com directly with your inquiry and we will get back to you as soon as possible.' 
+        });
       } catch (error) {
-        console.error('❌ Failed to send contact form notification via Gmail SMTP:', error);
-        res.json({ success: true, message: 'Your request has been submitted successfully. Email notification failed - please check Gmail SMTP configuration.' });
+        console.error('❌ Failed to process contact form submission:', error);
+        res.json({ 
+          success: true, 
+          message: 'Thank you for your interest! Please contact ne_roberts@yahoo.com directly with your inquiry and we will get back to you as soon as possible.' 
+        });
       }
     } catch (error) {
       console.error('❌ Contact form submission error:', error);
