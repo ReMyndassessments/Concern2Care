@@ -44,18 +44,24 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 function formatProfessionalAIResponse(text: string): JSX.Element {
   if (!text) return <div>No content available</div>;
 
-  // Split content into sections
-  const sections = text.split(/(?=###\s*\*\*)/);
+  // Clean up the text first by removing formatting artifacts and normalizing
+  const cleanedText = text
+    .replace(/---+/g, '') // Remove horizontal rules
+    .replace(/\*\*\*/g, '*') // Convert triple asterisks to single
+    .trim();
+
+  // Split content into sections using various markdown patterns
+  const sections = cleanedText.split(/(?=###\s*(?:\*\*)?[^*\n]+(?:\*\*)?\s*$)/m);
   
   return (
     <div className="space-y-6">
       {sections.map((section, sectionIndex) => {
         if (!section.trim()) return null;
         
-        // Extract title from section
-        const titleMatch = section.match(/###\s*\*\*(.*?)\*\*/);
+        // Extract title from section - handle both ### **Title** and ### Title formats
+        const titleMatch = section.match(/###\s*(?:\*\*)?(.*?)(?:\*\*)?\s*$/m);
         const title = titleMatch ? titleMatch[1].trim() : null;
-        const content = titleMatch ? section.replace(/###\s*\*\*.*?\*\*/, '').trim() : section.trim();
+        const content = titleMatch ? section.replace(/###\s*(?:\*\*)?.*?(?:\*\*)?\s*$/m, '').trim() : section.trim();
         
         // Special handling for different section types
         const getSectionIcon = (title: string) => {

@@ -1202,7 +1202,7 @@ export function detectUrgentKeywords(text: string): UrgentSafeguardResult {
  */
 export function generateUrgentSafeguardMessage(triggeredKeywords: string[] = []): string {
   const keywordText = triggeredKeywords.length > 0 
-    ? `\n**SAFETY CONCERNS DETECTED:** This case contains indicators related to: ${triggeredKeywords.join(', ')}`
+    ? `\n**SAFETY KEYWORDS DETECTED:** The following words in your submission triggered this alert: "${triggeredKeywords.join('", "')}"`
     : '';
   
   return `🚨 **IMMEDIATE SAFETY CONCERN DETECTED** 🚨
