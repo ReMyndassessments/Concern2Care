@@ -163,6 +163,7 @@ export interface IStorage {
   getClassroomSubmission(id: string): Promise<ClassroomSubmissionWithTeacher | undefined>;
   updateClassroomSubmission(id: string, updates: Partial<ClassroomSubmission>): Promise<ClassroomSubmission>;
   getClassroomSubmissionsByStatus(status: string): Promise<ClassroomSubmissionWithTeacher[]>;
+  getClassroomSubmissionsByEmail(email: string): Promise<ClassroomSubmissionWithTeacher[]>;
   
   // Delayed delivery system methods
   getSubmissionsReadyForAutoSend(): Promise<ClassroomSubmissionWithTeacher[]>;
@@ -1137,6 +1138,31 @@ export class DatabaseStorage implements IStorage {
       studentLastInitial: classroom_submissions.last_initial,
       studentAge: classroom_submissions.student_age,
       studentGrade: classroom_submissions.student_grade,
+      // Ensure arrays are safe for map() calls
+      learningProfile: classroom_submissions.learning_profile || [],
+      actionsTaken: classroom_submissions.actions_taken || [],
+      teacher: classroom_enrolled_teachers!
+    }));
+  }
+
+  async getClassroomSubmissionsByEmail(email: string): Promise<ClassroomSubmissionWithTeacher[]> {
+    const submissions = await db
+      .select()
+      .from(classroomSubmissions)
+      .leftJoin(classroomEnrolledTeachers, eq(classroomSubmissions.teacherId, classroomEnrolledTeachers.id))
+      .where(eq(classroomEnrolledTeachers.email, email))
+      .orderBy(desc(classroomSubmissions.submittedAt));
+
+    return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
+      ...classroom_submissions,
+      // Frontend expects these specific camelCase field names
+      studentFirstName: classroom_submissions.first_name,
+      studentLastInitial: classroom_submissions.last_initial,
+      studentAge: classroom_submissions.student_age,
+      studentGrade: classroom_submissions.student_grade,
+      // Teacher information for display
+      teacherFirstName: classroom_enrolled_teachers?.firstName || '',
+      teacherEmail: classroom_enrolled_teachers?.email || email,
       // Ensure arrays are safe for map() calls
       learningProfile: classroom_submissions.learning_profile || [],
       actionsTaken: classroom_submissions.actions_taken || [],

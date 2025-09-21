@@ -4070,6 +4070,73 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
+  // Teacher lookup endpoint for landing page (no auth required)
+  app.post('/api/teacher/lookup', requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: 'Email is required' });
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email format' });
+      }
+
+      // Get submissions by teacher email
+      const submissions = await storage.getClassroomSubmissionsByEmail(email);
+      
+      if (submissions.length === 0) {
+        return res.json({ 
+          success: true, 
+          teacher: null,
+          submissions: [],
+          message: 'No submissions found for this email address. You may need to register first.' 
+        });
+      }
+
+      // Sort submissions by most recent first
+      submissions.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+
+      // Format responses for display
+      const formattedSubmissions = submissions.map(submission => ({
+        id: submission.id,
+        studentFirstName: submission.studentFirstName,
+        studentLastInitial: submission.studentLastInitial,
+        studentGrade: submission.studentGrade,
+        taskType: submission.taskType,
+        severityLevel: submission.severityLevel,
+        status: submission.status,
+        submittedAt: submission.submittedAt,
+        aiResponse: submission.aiResponse,
+        adminReviewedBy: submission.adminReviewedBy,
+        adminReviewedAt: submission.adminReviewedAt
+      }));
+
+      const approvedCount = submissions.filter(s => s.status === 'approved').length;
+      const pendingCount = submissions.filter(s => s.status === 'pending').length;
+
+      res.json({ 
+        success: true,
+        teacher: {
+          firstName: submissions[0].teacherFirstName,
+          email: submissions[0].teacherEmail
+        },
+        submissions: formattedSubmissions,
+        summary: {
+          total: submissions.length,
+          approved: approvedCount,
+          pending: pendingCount
+        }
+      });
+    } catch (error) {
+      console.error('Error looking up teacher submissions:', error);
+      res.status(500).json({ message: 'Failed to look up submissions' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

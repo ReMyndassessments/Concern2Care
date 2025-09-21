@@ -4,7 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, FileText, Users, Clock, Check, Mail, LogOut, Info } from "lucide-react";
+import { Sparkles, FileText, Users, Clock, Check, Mail, LogOut, Info, Search, AlertCircle, CheckCircle2, Calendar } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
@@ -28,6 +28,13 @@ const contactFormSchema = z.object({
 });
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
+
+// Teacher lookup schema
+const teacherLookupSchema = z.object({
+  email: z.string().email('Valid email is required'),
+});
+
+type TeacherLookupData = z.infer<typeof teacherLookupSchema>;
 
 export default function Landing() {
   const { t } = useTranslation();
@@ -499,6 +506,16 @@ export default function Landing() {
             </div>
           </div>
         </div>
+
+        {/* Teacher Response Lookup Section */}
+        <div className="mt-12 max-w-2xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">View Your Responses</h3>
+            <p className="text-gray-600 mb-6 text-center">Enter your email to check your submitted requests and view approved responses.</p>
+            
+            <TeacherLookup />
+          </div>
+        </div>
       </section>
 
       {/* CTA Section */}
@@ -522,6 +539,193 @@ export default function Landing() {
           <p className="text-gray-500 text-sm sm:text-base">{t('footer.poweredBy')}</p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+// Teacher Lookup Component
+function TeacherLookup() {
+  const { toast } = useToast();
+  const [isLookingUp, setIsLookingUp] = useState(false);
+  const [teacherData, setTeacherData] = useState<any>(null);
+
+  const lookupForm = useForm<TeacherLookupData>({
+    resolver: zodResolver(teacherLookupSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const onLookupSubmit = async (data: TeacherLookupData) => {
+    setIsLookingUp(true);
+    try {
+      const response = await apiRequest({
+        url: '/api/teacher/lookup',
+        method: 'POST',
+        data: { email: data.email },
+      });
+
+      if (response.success) {
+        setTeacherData(response);
+        if (response.submissions.length === 0) {
+          toast({
+            title: "No submissions found",
+            description: response.message,
+            variant: "default",
+          });
+        } else {
+          toast({
+            title: "Submissions found",
+            description: `Found ${response.submissions.length} submission(s)`,
+            variant: "default",
+          });
+        }
+      }
+    } catch (error: any) {
+      console.error('Teacher lookup error:', error);
+      toast({
+        title: "Lookup failed",
+        description: error.message || "Failed to look up submissions",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLookingUp(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  const getStatusBadge = (status: string) => {
+    if (status === 'approved') {
+      return (
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          <CheckCircle2 className="w-3 h-3 mr-1" />
+          Approved
+        </span>
+      );
+    } else if (status === 'pending') {
+      return (
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+          <Clock className="w-3 h-3 mr-1" />
+          Pending
+        </span>
+      );
+    } else {
+      return (
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          <AlertCircle className="w-3 h-3 mr-1" />
+          {status}
+        </span>
+      );
+    }
+  };
+
+  return (
+    <div>
+      <Form {...lookupForm}>
+        <form onSubmit={lookupForm.handleSubmit(onLookupSubmit)} className="space-y-4">
+          <FormField
+            control={lookupForm.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email Address</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email address"
+                    {...field}
+                    data-testid="input-teacher-lookup-email"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <Button
+            type="submit"
+            disabled={isLookingUp}
+            className="w-full"
+            data-testid="button-lookup-submissions"
+          >
+            <Search className="w-4 h-4 mr-2" />
+            {isLookingUp ? 'Looking up...' : 'View My Submissions'}
+          </Button>
+        </form>
+      </Form>
+
+      {/* Results */}
+      {teacherData && (
+        <div className="mt-6 space-y-4">
+          {teacherData.teacher && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="font-semibold text-blue-900 mb-2">Welcome, {teacherData.teacher.firstName}!</h4>
+              <div className="text-sm text-blue-800">
+                <p>Total submissions: {teacherData.summary.total}</p>
+                <p>Approved: {teacherData.summary.approved} | Pending: {teacherData.summary.pending}</p>
+              </div>
+            </div>
+          )}
+
+          {teacherData.submissions.length > 0 ? (
+            <div className="space-y-4">
+              <h4 className="font-semibold text-gray-900">Your Submissions</h4>
+              {teacherData.submissions.map((submission: any) => (
+                <div key={submission.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h5 className="font-medium text-gray-900">
+                        {submission.studentFirstName} {submission.studentLastInitial}. (Grade {submission.studentGrade})
+                      </h5>
+                      <p className="text-sm text-gray-600">
+                        {submission.taskType === 'tier2_intervention' ? 'Tier 2 Intervention' : 'Differentiation'} - {submission.severityLevel} priority
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end space-y-2">
+                      {getStatusBadge(submission.status)}
+                      <div className="flex items-center text-xs text-gray-500">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        {formatDate(submission.submittedAt)}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {submission.status === 'approved' && submission.aiResponse && (
+                    <div className="mt-3 p-3 bg-white border border-gray-200 rounded-md">
+                      <h6 className="font-medium text-gray-900 mb-2">AI-Generated Response:</h6>
+                      <div className="text-sm text-gray-700 whitespace-pre-wrap max-h-40 overflow-y-auto">
+                        {submission.aiResponse.substring(0, 500)}
+                        {submission.aiResponse.length > 500 && '...'}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {submission.status === 'pending' && (
+                    <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                      <p className="text-sm text-yellow-800">
+                        Your submission is being reviewed. You'll receive the response once it's approved.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : teacherData.teacher && (
+            <div className="text-center py-6 text-gray-500">
+              <FileText className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>No submissions found for your email address.</p>
+              <p className="text-sm mt-1">You may need to register first.</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
