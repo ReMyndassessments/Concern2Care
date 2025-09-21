@@ -48,7 +48,7 @@ interface ClassroomSubmission {
     flaggedKeywords: string[];
     requiresImmediateReview: boolean;
   };
-  aiResponseDraft?: string;
+  aiDraft?: string;
   aiDisclaimer?: string;
   autoSendTime?: string;
   sentAt?: string;
@@ -217,7 +217,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate }: 
           </Card>
 
           {/* AI Generated Content */}
-          {submission.aiResponseDraft && (
+          {submission.aiDraft && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">AI Generated Response</CardTitle>
@@ -225,7 +225,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate }: 
               <CardContent>
                 <div className="space-y-4">
                   <div className="p-4 bg-blue-50 rounded border">
-                    <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{ __html: submission.aiResponseDraft }} />
+                    <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{ __html: submission.aiDraft }} />
                   </div>
                   
                   {submission.aiDisclaimer && (
