@@ -373,7 +373,7 @@ export default function Landing() {
               
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm font-medium text-blue-900">For Schools & Districts</p>
-                <p className="text-sm text-blue-700">Contact us to enroll your teachers in our Classroom Solutions program and generate revenue through our partner network.</p>
+                <p className="text-sm text-blue-700">Contact us to enroll your teachers in our Classroom Solutions program.</p>
               </div>
             </div>
           </div>
