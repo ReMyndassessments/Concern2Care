@@ -299,6 +299,86 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Classroom Solutions Program */}
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-6">
+              <Users className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Classroom Solutions Program
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Specialized intervention support for K-12 teachers worldwide, delivered through our expert review process
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">How It Works</h3>
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">1</div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">Submit Your Request</h4>
+                    <p className="text-gray-600">Teachers access our form via QR code to submit student concerns and intervention requests</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">2</div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">Expert Review</h4>
+                    <p className="text-gray-600">Our administrators review AI-generated strategies for quality and safety</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">3</div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">Receive Interventions</h4>
+                    <p className="text-gray-600">Approved, evidence-based Tier 2 intervention strategies delivered directly to teachers</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Program Features</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start">
+                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span>Evidence-based Tier 2 intervention strategies</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span>Expert review and quality assurance</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span>Safety keyword monitoring and alerts</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span>QR code access for easy teacher submission</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span>Professional report generation and delivery</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                  <span>Global reach for K-12 educators</span>
+                </li>
+              </ul>
+              
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm font-medium text-blue-900">For Schools & Districts</p>
+                <p className="text-sm text-blue-700">Contact us to enroll your teachers in our Classroom Solutions program and generate revenue through our partner network.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-br from-purple-600 to-blue-600">
