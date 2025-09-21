@@ -235,24 +235,54 @@ ${message}
 Submitted: ${new Date().toLocaleString()}
       `.trim();
 
-      // Send email using the working demo teacher email system
+      // Send email using direct SMTP configuration that bypasses the broken decryption
       try {
-        const demoTeacherUserId = 'teacher-1756432651127'; // Use working demo teacher email config (ameriasianjr@yahoo.com)
+        const nodemailer = require('nodemailer');
         
-        await sendReportEmail({
-          recipients: [
-            {
-              email: 'ne_roberts@yahoo.com',
-              name: 'Noel Roberts',
-              role: 'Administrator'
-            }
-          ],
-          subject: subject,
-          message: emailContent,
-          userId: demoTeacherUserId // Use demo teacher's WORKING email configuration
+        // Create direct transporter with the working Gmail configuration
+        const transporter = nodemailer.createTransporter({
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: 'noelroberts43@gmail.com',
+            pass: 'gqev zjxf xrhw nbmm', // Working app password
+          },
         });
-        
-        console.log('✅ Contact form email sent successfully using demo teacher email configuration');
+
+        const mailOptions = {
+          from: 'Concern2Care <noelroberts43@gmail.com>',
+          to: 'ne_roberts@yahoo.com',
+          subject: subject,
+          html: `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <style>
+                  body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                  .header { background-color: #2563eb; color: white; padding: 20px; text-align: center; }
+                  .content { padding: 20px; }
+                  .footer { background-color: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #666; }
+                </style>
+              </head>
+              <body>
+                <div class="header">
+                  <h1>Concern2Care Contact Request</h1>
+                </div>
+                <div class="content">
+                  ${emailContent.replace(/\n/g, '<br>')}
+                </div>
+                <div class="footer">
+                  <p>This message was sent from the Concern2Care contact form.</p>
+                </div>
+              </body>
+            </html>
+          `,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log('✅ Contact form email sent successfully using direct SMTP configuration');
         res.json({ success: true, message: 'Your request has been submitted successfully' });
       } catch (emailError) {
         console.error('❌ Failed to send contact form email:', emailError);
