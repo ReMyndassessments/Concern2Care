@@ -235,9 +235,9 @@ ${message}
 Submitted: ${new Date().toLocaleString()}
       `.trim();
 
-      // Send email using admin user's configured email system
+      // Send email using the working demo teacher email system
       try {
-        const adminUserId = 'admin-prod-nodot-1757375851498'; // Use existing admin user with email config
+        const demoTeacherUserId = 'teacher-1756432651127'; // Use working demo teacher email config (ameriasianjr@yahoo.com)
         
         await sendReportEmail({
           recipients: [
@@ -249,10 +249,10 @@ Submitted: ${new Date().toLocaleString()}
           ],
           subject: subject,
           message: emailContent,
-          userId: adminUserId // Use admin's email configuration
+          userId: demoTeacherUserId // Use demo teacher's WORKING email configuration
         });
         
-        console.log('✅ Contact form email sent successfully using admin email configuration');
+        console.log('✅ Contact form email sent successfully using demo teacher email configuration');
         res.json({ success: true, message: 'Your request has been submitted successfully' });
       } catch (emailError) {
         console.error('❌ Failed to send contact form email:', emailError);
