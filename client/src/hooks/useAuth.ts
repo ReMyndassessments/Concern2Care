@@ -4,9 +4,9 @@ export function useAuth() {
   const { data: user, isLoading, error } = useQuery({
     queryKey: ["/api/auth/user"],
     retry: false, // Don't retry auth failures
-    staleTime: 5000, // Shorter cache for auth state
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    staleTime: 300000, // Cache auth state for 5 minutes
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       try {
         const response = await fetch(`${window.location.origin}/api/auth/user`, {
