@@ -98,10 +98,18 @@ function TeacherLookup() {
     if (!markdown) return '';
 
     let html = markdown
-      // Headers with proper styling
+      // Remove horizontal rule lines
+      .replace(/^---+$/gm, '<hr class="my-4 border-gray-300">')
+      
+      // Headers with numbers and proper styling
+      .replace(/^### (\d+)\.\s*(.*?)$/gm, '<h3 class="text-lg font-semibold text-gray-900 mt-6 mb-3 border-b pb-2">$1. $2</h3>')
       .replace(/^### \*\*(.*?)\*\*/gm, '<h3 class="text-lg font-semibold text-gray-900 mt-6 mb-3 border-b pb-2">$1</h3>')
+      .replace(/^### (.*?)$/gm, '<h3 class="text-lg font-semibold text-gray-900 mt-6 mb-3 border-b pb-2">$1</h3>')
+      .replace(/^## (\d+)\.\s*(.*?)$/gm, '<h2 class="text-xl font-bold text-gray-900 mt-8 mb-4">$1. $2</h2>')
       .replace(/^## \*\*(.*?)\*\*/gm, '<h2 class="text-xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
+      .replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
       .replace(/^# \*\*(.*?)\*\*/gm, '<h1 class="text-2xl font-bold text-gray-900 mt-6 mb-4">$1</h1>')
+      .replace(/^# (.*?)$/gm, '<h1 class="text-2xl font-bold text-gray-900 mt-6 mb-4">$1</h1>')
       
       // Sub-headers with professional styling
       .replace(/^\*\*([^:*]+):\*\*/gm, '<h4 class="text-base font-semibold text-gray-800 mt-4 mb-2">$1:</h4>')
@@ -128,12 +136,12 @@ function TeacherLookup() {
     // Clean up empty paragraphs
     html = html.replace(/<p class="[^"]*"><\/p>/g, '').replace(/<p class="[^"]*"><br><\/p>/g, '');
     
-    // Convert bullet lists to proper UL elements
-    html = html.replace(/(<li class="[^"]*mb-2[^"]*">.*?<\/li>)/gs, '<ul class="space-y-2 mb-4">$1</ul>');
-    html = html.replace(/(<li class="[^"]*mb-1[^"]*">.*?<\/li>)/gs, '<ul class="space-y-1 mb-3 ml-4">$1</ul>');
+    // Convert bullet lists to proper UL elements (without 's' flag)
+    html = html.replace(/(<li class="[^"]*mb-2[^"]*">.*?<\/li>)/g, '<ul class="space-y-2 mb-4">$1</ul>');
+    html = html.replace(/(<li class="[^"]*mb-1[^"]*">.*?<\/li>)/g, '<ul class="space-y-1 mb-3 ml-4">$1</ul>');
     
     // Convert numbered lists to proper OL elements  
-    html = html.replace(/(<li class="mb-2[^"]*"><span[^>]*>\d+\.<\/span>.*?<\/li>)/gs, '<ol class="space-y-2 mb-4 list-decimal list-inside">$1</ol>');
+    html = html.replace(/(<li class="mb-2[^"]*"><span[^>]*>\d+\.<\/span>.*?<\/li>)/g, '<ol class="space-y-2 mb-4 list-decimal list-inside">$1</ol>');
 
     return html;
   };
