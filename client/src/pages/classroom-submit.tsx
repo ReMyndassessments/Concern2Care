@@ -213,12 +213,23 @@ export default function ClassroomSubmit() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center">
-            <FileText className="h-6 w-6 text-blue-600 mr-2" />
-            <div>
-              <h1 className="text-xl font-semibold text-gray-900">C2C Classroom Solutions</h1>
-              <p className="text-sm text-gray-600">Request Differentiation & Intervention Support</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <FileText className="h-6 w-6 text-blue-600 mr-2" />
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">C2C Classroom Solutions</h1>
+                <p className="text-sm text-gray-600">Request Differentiation & Intervention Support</p>
+              </div>
             </div>
+            <Button
+              onClick={() => setLocation('/')}
+              variant="outline"
+              className="flex items-center"
+              data-testid="button-back-home"
+            >
+              <Home className="h-4 w-4 mr-2" />
+              Back to Home
+            </Button>
           </div>
         </div>
       </header>
