@@ -393,46 +393,44 @@ export default function Landing() {
           <div className="mt-12 text-center">
             <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Access for Registered Teachers</h3>
-              <p className="text-gray-600 mb-6">Scan the QR code or visit the URL to submit intervention requests:</p>
+              <p className="text-gray-600 mb-6">Click the link below or copy the URL to submit intervention requests:</p>
               
               <div className="mb-6">
-                <div className="bg-gray-100 rounded-lg p-4 inline-block">
-                  {qrLoading ? (
-                    <div className="w-48 h-48 mx-auto flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    </div>
-                  ) : qrCodeData?.qrCode ? (
-                    <img 
-                      src={qrCodeData.qrCode} 
-                      alt="Classroom Solutions QR Code" 
-                      className="w-48 h-48 mx-auto"
-                    />
-                  ) : (
-                    <div className="w-48 h-48 mx-auto flex items-center justify-center text-gray-500">
-                      QR Code unavailable
-                    </div>
-                  )}
+                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                  <p className="text-sm text-gray-600 font-mono break-all text-center">
+                    {qrCodeData?.submissionUrl || 'Loading...'}
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <Button 
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    onClick={() => {
+                      if (qrCodeData?.submissionUrl) {
+                        window.open(qrCodeData.submissionUrl, '_blank');
+                      }
+                    }}
+                    data-testid="button-access-form"
+                    disabled={qrLoading || !qrCodeData?.submissionUrl}
+                  >
+                    {qrLoading ? 'Loading...' : 'Access Submission Form'}
+                  </Button>
+                  
+                  <Button 
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      if (qrCodeData?.submissionUrl) {
+                        navigator.clipboard.writeText(qrCodeData.submissionUrl);
+                      }
+                    }}
+                    data-testid="button-copy-url"
+                    disabled={qrLoading || !qrCodeData?.submissionUrl}
+                  >
+                    Copy URL
+                  </Button>
                 </div>
               </div>
-              
-              <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                <p className="text-sm text-gray-600 font-mono break-all">
-                  {qrCodeData?.submissionUrl || 'Loading...'}
-                </p>
-              </div>
-              
-              <Button 
-                className="w-full bg-blue-600 hover:bg-blue-700"
-                onClick={() => {
-                  if (qrCodeData?.submissionUrl) {
-                    navigator.clipboard.writeText(qrCodeData.submissionUrl);
-                  }
-                }}
-                data-testid="button-copy-url"
-                disabled={!qrCodeData?.submissionUrl}
-              >
-                Copy URL
-              </Button>
             </div>
           </div>
         </div>
