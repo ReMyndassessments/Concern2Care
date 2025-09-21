@@ -89,7 +89,7 @@ export default function Landing() {
     try {
       await apiRequest('/api/contact-request', {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: data,
       });
 
       toast({
