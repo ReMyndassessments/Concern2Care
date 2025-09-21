@@ -447,129 +447,19 @@ export default function Landing() {
                 </li>
               </ul>
               
-              <div className="mt-6">
-                <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
-                  <DialogTrigger asChild>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" data-testid="button-contact-info">
-                      <Info className="mr-2 h-4 w-4" />
-                      Get More Information
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Request Information</DialogTitle>
-                    </DialogHeader>
-                    <Form {...contactForm}>
-                      <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-4">
-                        <FormField
-                          control={contactForm.control}
-                          name="name"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Name *</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Your full name" {...field} data-testid="input-contact-name" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={contactForm.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Email *</FormLabel>
-                              <FormControl>
-                                <Input type="email" placeholder="your.email@example.com" {...field} data-testid="input-contact-email" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={contactForm.control}
-                          name="organization"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Organization</FormLabel>
-                              <FormControl>
-                                <Input placeholder="School, district, or organization name" {...field} data-testid="input-contact-organization" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={contactForm.control}
-                          name="inquiryType"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Inquiry Type *</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger data-testid="select-contact-inquiry-type">
-                                    <SelectValue placeholder="Select inquiry type" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="information">General Information</SelectItem>
-                                  <SelectItem value="individual_registration">Individual Teacher Registration</SelectItem>
-                                  <SelectItem value="school_registration">School Registration</SelectItem>
-                                  <SelectItem value="district_registration">District Registration</SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={contactForm.control}
-                          name="message"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Message *</FormLabel>
-                              <FormControl>
-                                <Textarea 
-                                  placeholder="Please describe your needs, questions, or how we can help you..."
-                                  rows={4}
-                                  {...field}
-                                  data-testid="textarea-contact-message"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <div className="flex gap-3 pt-4">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => setIsContactModalOpen(false)}
-                            className="flex-1"
-                            data-testid="button-contact-cancel"
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            type="submit"
-                            disabled={isSubmittingContact}
-                            className="flex-1"
-                            data-testid="button-contact-submit"
-                          >
-                            {isSubmittingContact ? 'Sending...' : 'Send Request'}
-                          </Button>
-                        </div>
-                      </form>
-                    </Form>
-                  </DialogContent>
-                </Dialog>
+              <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="text-center">
+                  <h4 className="font-semibold text-blue-900 mb-2">Contact Information</h4>
+                  <p className="text-blue-800 text-sm mb-2">
+                    For more information about our Classroom Solutions program, please contact us directly:
+                  </p>
+                  <p className="text-blue-900 font-medium">
+                    📧 ne_roberts@yahoo.com
+                  </p>
+                  <p className="text-blue-700 text-sm mt-2">
+                    We will respond to your inquiry as soon as possible.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
