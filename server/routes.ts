@@ -219,14 +219,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'other': 'Other'
       };
 
-      const subject = `Concern2Care Contact Request - ${inquiryTypeLabels[inquiryType] || 'General Inquiry'}`;
+      const subject = `Concern2Care Contact Request - ${inquiryTypeLabels[inquiryType as keyof typeof inquiryTypeLabels] || 'General Inquiry'}`;
       const emailContent = `
 New contact form submission from Concern2Care:
 
 Name: ${name}
 Email: ${email}
 Organization: ${organization || 'Not specified'}
-Inquiry Type: ${inquiryTypeLabels[inquiryType] || inquiryType}
+Inquiry Type: ${inquiryTypeLabels[inquiryType as keyof typeof inquiryTypeLabels] || inquiryType}
 
 Message:
 ${message}
@@ -237,12 +237,17 @@ Submitted: ${new Date().toLocaleString()}
 
       // Send email using existing email service
       try {
-        await sendReportEmail(
-          'ne_roberts@yahoo.com',
-          subject,
-          emailContent,
-          null // No attachment for contact forms
-        );
+        await sendReportEmail({
+          recipients: [
+            {
+              email: 'ne_roberts@yahoo.com',
+              name: 'Noel Roberts',
+              role: 'Administrator'
+            }
+          ],
+          subject: subject,
+          message: emailContent
+        });
         
         console.log('✅ Contact form email sent successfully');
         res.json({ success: true, message: 'Your request has been submitted successfully' });
