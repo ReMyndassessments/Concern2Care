@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { queryClient } from '@/lib/queryClient';
 import { useEffect } from 'react';
-import classroomQrCodeImg from '@assets/image_1758446487507.png';
+import classroomQrCodeImg from '@assets/image_1758446686658.png';
 
 export default function Landing() {
   const { t } = useTranslation();
