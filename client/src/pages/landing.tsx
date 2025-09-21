@@ -32,6 +32,7 @@ type ContactFormData = z.infer<typeof contactFormSchema>;
 // Teacher lookup schema
 const teacherLookupSchema = z.object({
   email: z.string().email('Valid email is required'),
+  securityPin: z.string().min(4, 'PIN must be exactly 4 digits').max(4, 'PIN must be exactly 4 digits').regex(/^\d{4}$/, 'PIN must be 4 digits only'),
 });
 
 type TeacherLookupData = z.infer<typeof teacherLookupSchema>;
@@ -46,6 +47,7 @@ function TeacherLookup() {
     resolver: zodResolver(teacherLookupSchema),
     defaultValues: {
       email: '',
+      securityPin: '',
     },
   });
 
@@ -55,7 +57,7 @@ function TeacherLookup() {
       const response = await apiRequest({
         url: '/api/teacher/lookup',
         method: 'POST',
-        body: { email: data.email },
+        body: { email: data.email, securityPin: data.securityPin },
       });
 
       if (response.success) {
@@ -187,6 +189,30 @@ function TeacherLookup() {
                     placeholder="Enter your email address"
                     {...field}
                     data-testid="input-teacher-lookup-email"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={lookupForm.control}
+            name="securityPin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Security PIN</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter your 4-digit PIN"
+                    maxLength={4}
+                    {...field}
+                    data-testid="input-teacher-lookup-pin"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                      field.onChange(value);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
