@@ -481,6 +481,50 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate }: 
               </CardContent>
             </Card>
           )}
+
+          {/* Resend Actions - for already sent submissions */}
+          {submission.status === 'auto_sent' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <Send className="h-4 w-4" />
+                  Resend Options
+                </CardTitle>
+                <p className="text-xs text-gray-600">This submission has already been sent to the teacher</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Textarea
+                  placeholder="Reason for resending (optional)..."
+                  value={actionReason}
+                  onChange={(e) => setActionReason(e.target.value)}
+                  data-testid="textarea-resend-reason"
+                />
+                
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => handleResendSubmission(submission.id, actionReason)}
+                    disabled={resendSubmissionMutation.isPending}
+                    className="bg-blue-600 hover:bg-blue-700"
+                    data-testid="button-resend-submission"
+                  >
+                    {resendSubmissionMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4 mr-2" />
+                    )}
+                    Resend to Teacher
+                  </Button>
+                </div>
+                
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded">
+                  <p className="text-sm text-blue-800">
+                    <strong>Note:</strong> Resending will deliver the same intervention report to the teacher again. 
+                    This is useful if the teacher lost access to their original report or needs to reference it again.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </DialogContent>
     </Dialog>
@@ -538,6 +582,26 @@ export default function ClassroomSubmissionsManagement() {
     },
   });
 
+  const resendSubmissionMutation = useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason?: string }) => {
+      return apiRequest('POST', `/api/admin/classroom/submissions/${id}/resend`, { reason });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/classroom/submissions'] });
+      toast({
+        title: "Resend Scheduled",
+        description: "The submission has been scheduled for resending to the teacher.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to resend submission.",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Process immediate send mutation
   const processImmediateMutation = useMutation({
     mutationFn: async () => {
@@ -561,6 +625,10 @@ export default function ClassroomSubmissionsManagement() {
 
   const handleStatusUpdate = async (id: string, status: string, reason?: string) => {
     updateStatusMutation.mutate({ id, status, reason });
+  };
+
+  const handleResendSubmission = async (id: string, reason?: string) => {
+    resendSubmissionMutation.mutate({ id, reason });
   };
 
   const handleViewDetails = (submission: ClassroomSubmission) => {

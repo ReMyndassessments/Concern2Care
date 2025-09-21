@@ -3756,6 +3756,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Resend submission (for already sent submissions)
+  app.post('/api/admin/classroom/submissions/:id/resend', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const adminId = req.user.claims.sub;
+      const { reason } = req.body;
+      
+      const submission = await storage.getClassroomSubmission(id);
+      if (!submission) {
+        return res.status(404).json({ message: 'Submission not found' });
+      }
+      
+      // Only allow resending submissions that have been sent
+      if (submission.status !== 'auto_sent') {
+        return res.status(400).json({ message: 'Can only resend submissions that have already been sent' });
+      }
+      
+      // Reset submission for resending - set it to approved and schedule for immediate send
+      const updatedSubmission = await storage.updateClassroomSubmission(id, {
+        status: 'approved',
+        autoSendTime: new Date(), // Send immediately
+        adminReviewedBy: adminId,
+        adminNotes: reason ? `Resent by admin: ${reason}` : 'Resent by admin',
+        updatedAt: new Date()
+      });
+      
+      console.log(`📤 Admin ${adminId} scheduled resend for submission ${id}`);
+      
+      res.json({ 
+        message: 'Submission scheduled for resend',
+        submission: updatedSubmission 
+      });
+    } catch (error) {
+      console.error('❌ Failed to resend submission:', error);
+      res.status(500).json({ message: 'Failed to resend submission' });
+    }
+  });
+
   // Admin: Delete submission
   app.delete('/api/admin/classroom/submissions/:id', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
     try {
