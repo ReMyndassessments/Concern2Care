@@ -187,7 +187,7 @@ function TeacherLookup() {
                         <Calendar className="w-3 h-3 mr-1" />
                         {formatDate(submission.submittedAt)}
                       </div>
-                      {submission.aiResponse && (
+                      {(submission.status === 'approved' || submission.status === 'auto_sent') && (
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
