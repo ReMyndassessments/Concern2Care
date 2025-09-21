@@ -190,7 +190,7 @@ function TeacherLookup() {
                     </div>
                   </div>
                   
-                  {(submission.status === 'approved' || submission.status === 'auto_sent') && submission.aiResponse && (
+                  {submission.aiResponse && (
                     <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded-md">
                       <div className="flex items-center justify-between mb-3">
                         <h6 className="font-medium text-green-900">✅ Your Personalized Response</h6>
