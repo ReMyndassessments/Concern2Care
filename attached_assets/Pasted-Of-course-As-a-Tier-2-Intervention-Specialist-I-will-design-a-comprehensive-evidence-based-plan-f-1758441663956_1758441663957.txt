@@ -1,0 +1,121 @@
+Of course. As a Tier 2 Intervention Specialist, I will design a comprehensive, evidence-based plan for James, integrating his unique learning profile.
+
+***
+
+### **Tier 2 Intervention Plan for James**
+
+**Student:** James (Age 13, 6th Grade)
+**Primary Interventionist:** Special Education Teacher
+**Plan Duration:** 8 Weeks (with bi-weekly progress monitoring)
+
+---
+
+### 1. Intervention Goals
+
+*   **Academic Performance Goal:** James will increase his on-task behavior during independent work time from a baseline of <5 minutes to 10 consecutive minutes on 4 out of 5 opportunities, as measured by momentary time sampling.
+*   **Homework Completion Goal:** James will improve his weekly homework completion rate from a baseline of <20% to 70% of assigned tasks, as tracked via a homework agenda and teacher verification.
+*   **Behavioral Goal:** James will reduce offtask behaviors (e.g., calling out, fidgeting with non-approved objects) from a baseline of X occurrences per class period to X-50% occurrences, as measured by direct behavior rating.
+
+**Expected Outcome in 6-8 Weeks:** James will demonstrate improved self-monitoring skills, increased academic engagement, and more consistent work completion, leading to a measurable improvement in his grades on classroom-based assessments.
+
+---
+
+### 2. Evidence-Based Interventions
+
+*   **For Focus & Academic Performance:**
+    *   **Strategy:** Explicit Instruction in a Small Group Setting. This involves clear modeling, guided practice with immediate corrective feedback, and independent practice (Hughes, Morris, Therrien, & Benson, 2017).
+    *   **Program:** Incorporate aspects of the **"Do Now" / "Launch"** protocol to structure the start of each session and the **"I Do, We Do, You Do"** instructional sequence.
+    *   **Frequency/Duration:** 4 times per week for 25-30 minutes per session.
+    *   **Group Size/Composition:** Small, homogeneous group of 3-5 students with similar academic and attentional needs. This ensures high opportunities for response and feedback.
+
+*   **For Organization & Homework Completion:**
+    *   **Strategy:** Use of an **Organizational Skills Intervention**, specifically a structured homework agenda with a home-school communication component (Langberg, Epstein, Becker, Girio-Herrera, & Vaughn, 2012).
+    *   **Protocol:** Implementation of the **"SPORTS" Checklist** for end-of-day organization:
+        *   **S**upplies: Do I have what I need?
+        *   **P**lan: Do I know my plan for homework?
+        *   **O**rganize: Is my backpack organized?
+        *   **R**eward: Did I check my chart for rewards?
+        *   **T**eacher Signature: Did I get my agenda signed?
+        *   **S**hare: Will I share this with my parent?
+    *   **Frequency:** Daily, at the end of the school day.
+
+---
+
+### 3. Data Collection Plan
+
+*   **Baseline Data:** Collect for one week prior to intervention start.
+    *   **On-Task Behavior:** 3-5 momentary time samples per day (record if James is on/off task at the moment).
+    *   **Homework Completion:** Percentage of assignments turned in and completed accurately.
+    *   **Behavioral Incidents:** Tally of specific offtask behaviors (e.g., call-outs, out-of-seat).
+
+*   **Progress Monitoring:**
+    *   **Tools:**
+        *   **Academic:** Curriculum-Based Measurement (CBM) probes (e.g., Maze Passages for reading comprehension, Math Computation probes) aligned with classroom instruction.
+        *   **Behavior:** Daily Behavior Report Card (DBRC) with 3-5 target behaviors (e.g., "Began work immediately," "Stayed in seat," "Completed work") rated on a 1-5 scale.
+    *   **Schedule:** CBM probes administered bi-weekly. DBRC completed daily and reviewed with James at the end of each session.
+    *   **Data Collector:** Special Education Teacher (Interventionist).
+
+*   **Decision-Making Criteria:**
+    *   **Success (Return to Tier 1):** James meets all three intervention goals for three consecutive data points and maintains average scores on CBM probes.
+    *   **Continue Tier 2:** Steady, incremental progress is observed. Continue the plan.
+    *   **Intensify to Tier 3:** After 8 weeks, if data shows minimal or no progress (e.g., flat or descending trend line on CBM graph), refer to the school's multidisciplinary team for a comprehensive evaluation for Special Education.
+
+---
+
+### 4. Implementation Details
+
+*   **Schedule:** Interventions will take place during a designated "Intervention Block" in the master schedule (e.g., during a guided study hall or elective period), Monday-Thursday.
+*   **Materials/Resources Needed:**
+    *   Timer for structured work periods
+    *   Structured homework agenda/planner
+    *   Graph paper for visual tracking of CBM data
+    *   DBRC forms
+    *   Folders with color-coded subjects
+    *   Fidget tools (non-disruptive)
+*   **Staff Responsibilities:**
+    *   **Special Ed Teacher:** Lead all Tier 2 intervention sessions, collect and graph all data, manage the DBRC system, and communicate with family.
+    *   **General Ed Teacher:** Provide weekly assignment overviews, sign the homework agenda daily, and implement agreed-upon classroom accommodations (e.g., preferential seating).
+*   **Location/Setup:** A quiet resource room or small classroom free from major distractions. Desk arrangement will be a small horseshoe or table to facilitate interaction and monitoring.
+
+---
+
+### 5. Behavioral Supports
+
+*   **Behavior Intervention Strategy:** **Check-In/Check-Out (CICO)**. James will check in with the interventionist at the start of the day to review goals and receive his DBRC. He will check out at the end of the day to review points, discuss successes/challenges, and get the agenda signed (Crone, Hawken, & Horner, 2010).
+*   **Positive Reinforcement:** Points earned on the DBRC are tied to a daily or weekly reward menu (e.g., computer time, positive note home, choice of activity). Focus on immediate and frequent reinforcement.
+*   **Environmental Modifications:**
+    *   Preferential seating near the teacher and away from high-traffic areas.
+    *   Access to permissible fidget tools.
+    *   Use of a desktop divider or study carrel during independent work to reduce visual distractions.
+*   **Crisis Prevention:** If James becomes frustrated, a pre-taught "Break Card" strategy will be used. He can hand the card to the teacher for a pre-approved 2-minute break at a designated quiet corner.
+
+---
+
+### 6. Family Communication
+
+*   **Initial Notification:** Formal meeting (phone or in-person) to review the Tier 2 plan, explain the DBRC and homework agenda system, and secure parent buy-in.
+*   **Home-School Collaboration:** The **homework agenda serves as the primary daily communication tool**. Parent signature is required. Parents are asked to provide a quiet space and set a consistent time for homework, using the agenda as a guide.
+*   **Progress Reporting:** A weekly progress report (a summary of the DBRC and homework completion graph) will be emailed or sent home every Friday. A follow-up phone call is scheduled at the 4-week mark to discuss progress.
+
+---
+
+### 7. Exit Criteria and Next Steps
+
+*   **Conditions for Returning to Tier 1:** James consistently meets his goals (as defined in Section 3) for three consecutive weeks. Tier 1 supports (seating, behavioral chart) will remain in place. Data will be monitored for an additional 4 weeks to ensure success without Tier 2 intensity.
+*   **Indicators for Intensifying to Tier 3:** A lack of response to this targeted intervention after 8 weeks, evidenced by a flat or negative trend line on CBM data and no improvement in DBRC scores. This would trigger a referral for a special education evaluation to determine eligibility for more intensive, individualized services.
+*   **Timeline for Decision-Making:** A formal data review meeting will be held at the end of the 8-week intervention period to decide on next steps (exit, continue, or intensify).
+*   **Transition Planning:** If exiting Tier 2, James will be taught to self-manage the skills he learned (e.g., self-monitoring his on-task time). The general education teacher will be provided with a summary of effective strategies to ensure a smooth transition.
+
+***
+**Research References:**
+*   Hughes, C. A., Morris, J. R., Therrien, W. J., & Benson, S. K. (2017). Explicit Instruction: Historical and Contemporary Contexts. *Learning Disabilities Research & Practice*.
+*   Langberg, J. M., Epstein, J. N., Becker, S. P., Girio-Herrera, E., & Vaughn, A. J. (2012). Evaluation of the Homework, Organization, and Planning Skills (HOPS) Intervention for Middle School Students with ADHD as Implemented by School Mental Health Providers. *School Psychology Review*.
+*   Crone, D. A., Hawken, L. S., & Horner, R. H. (2010). *Responding to problem behavior in schools: The behavior education program* (2nd ed.). Guilford Press.
+
+---
+
+**DISCLAIMER**
+
+The strategies provided here are AI-assisted suggestions intended to support your professional practice. They are not a substitute for your school's policies, student support team, or child protection protocols.
+
+• For Mild/Moderate concerns: Please review and adapt recommendations according to your classroom and school context.

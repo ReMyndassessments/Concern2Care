@@ -27,9 +27,166 @@ import {
   Ban,
   ArrowUp,
   Loader2,
-  Trash2
+  Trash2,
+  BookOpen,
+  Target,
+  BarChart3,
+  Users,
+  Home,
+  Lightbulb,
+  GraduationCap,
+  ClipboardList,
+  Star
 } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
+
+// Professional AI Response Formatter
+function formatProfessionalAIResponse(text: string): JSX.Element {
+  if (!text) return <div>No content available</div>;
+
+  // Split content into sections
+  const sections = text.split(/(?=###\s*\*\*)/);
+  
+  return (
+    <div className="space-y-6">
+      {sections.map((section, sectionIndex) => {
+        if (!section.trim()) return null;
+        
+        // Extract title from section
+        const titleMatch = section.match(/###\s*\*\*(.*?)\*\*/);
+        const title = titleMatch ? titleMatch[1].trim() : null;
+        const content = titleMatch ? section.replace(/###\s*\*\*.*?\*\*/, '').trim() : section.trim();
+        
+        // Special handling for different section types
+        const getSectionIcon = (title: string) => {
+          if (title?.includes('Goal') || title?.includes('Outcome')) return <Target className="h-5 w-5 text-blue-600" />;
+          if (title?.includes('Intervention') || title?.includes('Strategy')) return <Lightbulb className="h-5 w-5 text-green-600" />;
+          if (title?.includes('Data') || title?.includes('Monitor')) return <BarChart3 className="h-5 w-5 text-purple-600" />;
+          if (title?.includes('Implementation') || title?.includes('Detail')) return <ClipboardList className="h-5 w-5 text-orange-600" />;
+          if (title?.includes('Behavioral') || title?.includes('Support')) return <Users className="h-5 w-5 text-indigo-600" />;
+          if (title?.includes('Family') || title?.includes('Communication')) return <Home className="h-5 w-5 text-pink-600" />;
+          if (title?.includes('Exit') || title?.includes('Criteria')) return <GraduationCap className="h-5 w-5 text-teal-600" />;
+          return <BookOpen className="h-5 w-5 text-gray-600" />;
+        };
+        
+        const getSectionColor = (title: string) => {
+          if (title?.includes('Goal') || title?.includes('Outcome')) return 'border-l-blue-500 bg-blue-50';
+          if (title?.includes('Intervention') || title?.includes('Strategy')) return 'border-l-green-500 bg-green-50';
+          if (title?.includes('Data') || title?.includes('Monitor')) return 'border-l-purple-500 bg-purple-50';
+          if (title?.includes('Implementation') || title?.includes('Detail')) return 'border-l-orange-500 bg-orange-50';
+          if (title?.includes('Behavioral') || title?.includes('Support')) return 'border-l-indigo-500 bg-indigo-50';
+          if (title?.includes('Family') || title?.includes('Communication')) return 'border-l-pink-500 bg-pink-50';
+          if (title?.includes('Exit') || title?.includes('Criteria')) return 'border-l-teal-500 bg-teal-50';
+          return 'border-l-gray-500 bg-gray-50';
+        };
+        
+        return (
+          <div key={sectionIndex} className={`border-l-4 rounded-r-lg p-6 ${getSectionColor(title || '')}`}>
+            {title && (
+              <div className="flex items-center gap-3 mb-4">
+                {getSectionIcon(title)}
+                <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+              </div>
+            )}
+            
+            <div className="prose max-w-none">
+              <ProfessionalContent content={content} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// Component to render individual content sections with professional formatting
+function ProfessionalContent({ content }: { content: string }) {
+  // Split content into paragraphs and process each
+  const lines = content.split('\n').filter(line => line.trim());
+  
+  return (
+    <div className="space-y-4">
+      {lines.map((line, index) => {
+        const trimmedLine = line.trim();
+        
+        // Headers
+        if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
+          const headerText = trimmedLine.replace(/\*\*/g, '');
+          return (
+            <h4 key={index} className="text-lg font-semibold text-gray-800 mt-6 mb-3 flex items-center gap-2">
+              <Star className="h-4 w-4 text-yellow-500" />
+              {headerText}
+            </h4>
+          );
+        }
+        
+        // Bullet points
+        if (trimmedLine.startsWith('*') && !trimmedLine.startsWith('**')) {
+          const bulletText = trimmedLine.substring(1).trim();
+          return (
+            <div key={index} className="flex items-start gap-3 ml-4">
+              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+              <p className="text-gray-700 leading-relaxed">{formatInlineText(bulletText)}</p>
+            </div>
+          );
+        }
+        
+        // Sub-bullet points (nested)
+        if (trimmedLine.startsWith('    *') || trimmedLine.startsWith('        *')) {
+          const subBulletText = trimmedLine.replace(/^\s*\*\s*/, '');
+          return (
+            <div key={index} className="flex items-start gap-3 ml-8">
+              <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2.5 flex-shrink-0"></div>
+              <p className="text-gray-600 leading-relaxed text-sm">{formatInlineText(subBulletText)}</p>
+            </div>
+          );
+        }
+        
+        // Special formatting for research references
+        if (trimmedLine.includes('Research References') || trimmedLine.includes('References:')) {
+          return (
+            <div key={index} className="mt-8 p-4 bg-white border rounded-lg">
+              <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <BookOpen className="h-4 w-4" />
+                Research References
+              </h5>
+            </div>
+          );
+        }
+        
+        // Research citations
+        if (trimmedLine.includes('&') && (trimmedLine.includes('(') && trimmedLine.includes(')'))) {
+          return (
+            <div key={index} className="ml-4 p-3 bg-gray-50 border-l-2 border-gray-300 rounded-r">
+              <p className="text-sm text-gray-700 italic">{formatInlineText(trimmedLine)}</p>
+            </div>
+          );
+        }
+        
+        // Regular paragraphs
+        if (trimmedLine && !trimmedLine.startsWith('*')) {
+          return (
+            <p key={index} className="text-gray-700 leading-relaxed">
+              {formatInlineText(trimmedLine)}
+            </p>
+          );
+        }
+        
+        return null;
+      })}
+    </div>
+  );
+}
+
+// Helper function to format inline text (bold, italic, etc.)
+function formatInlineText(text: string): JSX.Element {
+  // Handle inline formatting
+  const formatted = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
+  
+  return <span dangerouslySetInnerHTML={{ __html: formatted }} />;
+}
 
 interface ClassroomSubmission {
   id: string;
@@ -220,23 +377,29 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate }: 
           {/* AI Generated Content */}
           {(submission.aiDraft || submission.ai_draft) && (
             <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">AI Generated Response</CardTitle>
+              <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <GraduationCap className="h-6 w-6" />
+                  Professional Intervention Strategy
+                </CardTitle>
+                <p className="text-blue-100 text-sm mt-1">AI-Generated Educational Plan</p>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded border">
-                    <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{ __html: submission.aiDraft || submission.ai_draft }} />
-                  </div>
-                  
-                  {submission.aiDisclaimer && (
-                    <div className="p-3 bg-amber-50 border border-amber-200 rounded">
-                      <p className="text-sm text-amber-800">
-                        <strong>Disclaimer:</strong> {submission.aiDisclaimer}
-                      </p>
-                    </div>
-                  )}
+              <CardContent className="p-0">
+                <div className="p-6">
+                  {formatProfessionalAIResponse(submission.aiDraft || submission.ai_draft)}
                 </div>
+                  
+                {submission.aiDisclaimer && (
+                  <div className="mx-6 mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-amber-800 mb-1">Professional Disclaimer</p>
+                        <p className="text-sm text-amber-700">{submission.aiDisclaimer}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
