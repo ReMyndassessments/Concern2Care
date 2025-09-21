@@ -20,6 +20,8 @@ const classroomSubmissionSchema = z.object({
   teacherLastInitial: z.string().min(1, 'Last initial is required').max(1, 'Only one letter allowed'),
   teacherPosition: z.string().min(1, 'Position is required'),
   teacherEmail: z.string().email('Valid email is required'),
+  studentFirstName: z.string().min(1, 'Student first name or initials are required'),
+  studentLastInitial: z.string().min(1, 'Student last initial is required').max(1, 'Only one letter allowed'),
   studentAge: z.string().min(1, 'Student age is required'),
   studentGrade: z.string().min(1, 'Grade level is required'),
   taskType: z.enum(['differentiation', 'tier2_intervention'], {
@@ -54,6 +56,8 @@ export default function ClassroomSubmit() {
       teacherLastInitial: '',
       teacherPosition: '',
       teacherEmail: '',
+      studentFirstName: '',
+      studentLastInitial: '',
       studentAge: '',
       studentGrade: '',
       taskType: undefined,
@@ -334,6 +338,49 @@ export default function ClassroomSubmit() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="studentFirstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Student First Name or Initials</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="e.g., Alex or A.J." 
+                          {...field}
+                          data-testid="input-student-first-name"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Use first name or initials for privacy
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="studentLastInitial"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Student Last Initial</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="e.g., M" 
+                          maxLength={1}
+                          {...field}
+                          data-testid="input-student-last-initial"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        One letter only for privacy
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="studentAge"

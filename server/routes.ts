@@ -3397,6 +3397,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         teacherLastInitial: z.string().min(1).max(1),
         teacherPosition: z.string().min(1),
         teacherEmail: z.string().email(),
+        studentFirstName: z.string().min(1),
+        studentLastInitial: z.string().min(1).max(1),
         studentAge: z.string().min(1),
         studentGrade: z.string().min(1),
         taskType: z.enum(['differentiation', 'tier2_intervention']),
@@ -3425,6 +3427,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         teacherLastInitial,
         teacherPosition,
         teacherEmail,
+        studentFirstName,
+        studentLastInitial,
         studentAge,
         studentGrade,
         taskType,
@@ -3459,9 +3463,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           teacherLastInitial,
           teacherPosition,
           teacherEmail,
-          // Student info (anonymized)
-          firstName: 'Student', // Anonymized student first name 
-          lastInitial: 'S', // Anonymized student last initial
+          // Student info (from teacher input)
+          firstName: studentFirstName, // Student first name or initials as provided by teacher
+          lastInitial: studentLastInitial, // Student last initial as provided by teacher
           studentAge: parseInt(studentAge), // Convert to number
           studentGrade,
           taskType,
@@ -3496,6 +3500,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           teacherFirstName,
           teacherLastInitial,
           teacherPosition,
+          studentFirstName,
+          studentLastInitial,
           studentAge,
           studentGrade,
           taskType: taskType as 'differentiation' | 'tier2_intervention',
