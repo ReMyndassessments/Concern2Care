@@ -235,16 +235,37 @@ ${message}
 Submitted: ${new Date().toLocaleString()}
       `.trim();
 
-      // Store contact request in database (email system will be configured separately)
+      // Send email notification using Gmail SMTP configuration
       try {
-        console.log('📧 Storing contact form submission for manual processing');
-        // TODO: Add database storage for contact requests when email is configured
+        console.log('📧 Sending contact form notification email');
         
-        console.log('✅ Contact form submission received and stored');
-        res.json({ success: true, message: 'Your request has been submitted successfully and will be processed soon.' });
+        // Get email configuration from admin settings
+        const emailConfig = await emailConfigService.getAdminEmailConfiguration();
+        
+        if (!emailConfig) {
+          console.log('⚠️ No Gmail SMTP configuration found');
+          res.json({ success: true, message: 'Your request has been submitted successfully. Please configure email settings in the admin dashboard to receive notifications.' });
+          return;
+        }
+
+        // Send email using Gmail SMTP settings
+        const success = await sendReportEmail({
+          recipients: [{ email: emailConfig.toEmail || 'ne_roberts@yahoo.com', name: 'Concern2Care Admin' }],
+          subject: subject,
+          message: emailContent,
+          userId: 'admin'
+        });
+
+        if (success) {
+          console.log('✅ Contact form notification email sent successfully via Gmail SMTP');
+          res.json({ success: true, message: 'Your request has been submitted successfully and a notification has been sent.' });
+        } else {
+          console.log('⚠️ Failed to send notification email via Gmail SMTP');
+          res.json({ success: true, message: 'Your request has been submitted successfully. Email notification failed - please check Gmail SMTP configuration.' });
+        }
       } catch (error) {
-        console.error('❌ Failed to store contact form submission:', error);
-        res.status(500).json({ message: 'Failed to submit your request. Please try again later.' });
+        console.error('❌ Failed to send contact form notification via Gmail SMTP:', error);
+        res.json({ success: true, message: 'Your request has been submitted successfully. Email notification failed - please check Gmail SMTP configuration.' });
       }
     } catch (error) {
       console.error('❌ Contact form submission error:', error);
@@ -333,19 +354,30 @@ Submitted: ${new Date().toLocaleString()}
       }
 
       const emailConfig = req.body;
-      console.log('📧 Saving email configuration for contact form notifications');
+      console.log('📧 Saving Gmail SMTP email configuration for contact form notifications');
       
-      // TODO: Store email configuration in database
-      // For now, just validate and return success
+      // Validate required fields
       if (!emailConfig.smtpHost || !emailConfig.smtpUser || !emailConfig.toEmail) {
-        return res.status(400).json({ message: 'Required email configuration fields missing' });
+        return res.status(400).json({ message: 'Required Gmail SMTP configuration fields missing' });
       }
 
-      console.log('✅ Email configuration saved successfully');
-      res.json({ success: true, message: 'Email configuration saved' });
+      // Save email configuration using emailConfigService for admin user
+      await emailConfigService.saveUserEmailConfig(user.id, {
+        smtpHost: emailConfig.smtpHost,
+        smtpPort: parseInt(emailConfig.smtpPort) || 587,
+        smtpUser: emailConfig.smtpUser,
+        smtpPassword: emailConfig.smtpPassword,
+        fromAddress: emailConfig.fromEmail || emailConfig.smtpUser,
+        fromName: 'Concern2Care',
+        toEmail: emailConfig.toEmail,
+        isActive: true
+      });
+
+      console.log('✅ Gmail SMTP email configuration saved successfully');
+      res.json({ success: true, message: 'Gmail SMTP email configuration saved' });
     } catch (error) {
-      console.error('❌ Failed to save email configuration:', error);
-      res.status(500).json({ message: 'Failed to save email configuration' });
+      console.error('❌ Failed to save Gmail SMTP email configuration:', error);
+      res.status(500).json({ message: 'Failed to save Gmail SMTP email configuration' });
     }
   });
 
@@ -356,21 +388,34 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(403).json({ message: 'Admin access required' });
       }
 
-      // TODO: Retrieve email configuration from database
-      // For now, return empty config
-      const emailConfig = {
-        smtpHost: '',
-        smtpPort: '587',
-        smtpUser: '',
-        smtpPassword: '',
-        fromEmail: '',
-        toEmail: 'ne_roberts@yahoo.com'
-      };
-
-      res.json(emailConfig);
+      // Retrieve Gmail SMTP email configuration from database
+      const config = await emailConfigService.getUserEmailConfig(user.id);
+      
+      if (config) {
+        const emailConfig = {
+          smtpHost: config.smtpHost,
+          smtpPort: config.smtpPort.toString(),
+          smtpUser: config.smtpUser,
+          smtpPassword: '', // Don't return password for security
+          fromEmail: config.fromAddress,
+          toEmail: config.toEmail || 'ne_roberts@yahoo.com'
+        };
+        res.json(emailConfig);
+      } else {
+        // Return default empty config
+        const emailConfig = {
+          smtpHost: '',
+          smtpPort: '587',
+          smtpUser: '',
+          smtpPassword: '',
+          fromEmail: '',
+          toEmail: 'ne_roberts@yahoo.com'
+        };
+        res.json(emailConfig);
+      }
     } catch (error) {
-      console.error('❌ Failed to retrieve email configuration:', error);
-      res.status(500).json({ message: 'Failed to retrieve email configuration' });
+      console.error('❌ Failed to retrieve Gmail SMTP email configuration:', error);
+      res.status(500).json({ message: 'Failed to retrieve Gmail SMTP email configuration' });
     }
   });
 

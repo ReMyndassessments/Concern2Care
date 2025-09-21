@@ -377,6 +377,32 @@ export class EmailConfigurationService {
       };
     }
   }
+
+  async getAdminEmailConfiguration(): Promise<EmailConfiguration | null> {
+    try {
+      // Check for admin user's email configuration (admin-prod-nodot-1757375851498)
+      const adminConfig = await this.getUserEmailConfig('admin-prod-nodot-1757375851498');
+      if (adminConfig && adminConfig.isActive) {
+        const decryptedPassword = await decryptPassword(adminConfig.smtpPassword);
+        return {
+          smtpHost: adminConfig.smtpHost,
+          smtpPort: adminConfig.smtpPort,
+          smtpSecure: adminConfig.smtpPort === 465,
+          smtpUser: adminConfig.smtpUser,
+          smtpPassword: decryptedPassword,
+          fromAddress: adminConfig.fromAddress,
+          fromName: adminConfig.fromName,
+          source: 'user'
+        } as EmailConfiguration & { toEmail?: string };
+      }
+      
+      console.log('No admin email configuration found');
+      return null;
+    } catch (error) {
+      console.error('Error getting admin email configuration:', error);
+      return null;
+    }
+  }
 }
 
 export const emailConfigService = new EmailConfigurationService();
