@@ -450,14 +450,8 @@ export default function Landing() {
               <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="text-center">
                   <h4 className="font-semibold text-blue-900 mb-2">Contact Information</h4>
-                  <p className="text-blue-800 text-sm mb-2">
-                    For more information about our Classroom Solutions program, please contact us directly:
-                  </p>
-                  <p className="text-blue-900 font-medium">
-                    📧 ne_roberts@yahoo.com
-                  </p>
-                  <p className="text-blue-700 text-sm mt-2">
-                    We will respond to your inquiry as soon as possible.
+                  <p className="text-blue-800 text-sm">
+                    For more information on the Classroom Solutions Program, Individual, School, and District Teacher Registration, Contact us at info@remynd.online
                   </p>
                 </div>
               </div>
