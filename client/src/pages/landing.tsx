@@ -372,8 +372,7 @@ export default function Landing() {
               </ul>
               
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm font-medium text-blue-900">For Schools & Districts</p>
-                <p className="text-sm text-blue-700">Contact us to enroll your teachers in our Classroom Solutions Program.</p>
+                <p className="text-sm text-blue-700">For More Information on the Classroom Solutions Program, as well as Individual Teacher, School & District Registration, contact us at info@remynd.online</p>
               </div>
             </div>
           </div>
