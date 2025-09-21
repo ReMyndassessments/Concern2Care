@@ -1220,7 +1220,7 @@ ${keywordText}
 **⚠️ CRITICAL SAFETY PROTOCOL:**
 This situation requires immediate professional intervention beyond classroom strategies. The safety concerns identified require specialized support from trained professionals.
 
-**If there is imminent danger, contact emergency services immediately.**
+**If there is imminent danger, follow your local emergency protocols immediately.**
 
 **Educational strategies are provided below ONLY after safety measures are in place:**
 
