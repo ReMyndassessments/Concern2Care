@@ -97,6 +97,7 @@ function Router() {
       <Route path="/" component={Landing} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
+      <Route path="/classroom" component={ClassroomSubmit} />
       <Route path="/classroom/submit" component={ClassroomSubmit} />
       
       {/* All other routes require authentication */}
