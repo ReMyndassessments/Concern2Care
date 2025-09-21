@@ -415,23 +415,17 @@ export default function Landing() {
                 </div>
               </div>
               
-              <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                <p className="text-sm text-gray-600 font-mono break-all">
-                  {qrCodeData?.submissionUrl || 'Loading...'}
-                </p>
-              </div>
-              
               <Button 
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 onClick={() => {
                   if (qrCodeData?.submissionUrl) {
-                    navigator.clipboard.writeText(qrCodeData.submissionUrl);
+                    window.open(qrCodeData.submissionUrl, '_blank');
                   }
                 }}
-                data-testid="button-copy-url"
-                disabled={!qrCodeData?.submissionUrl}
+                data-testid="button-access-form"
+                disabled={qrLoading || !qrCodeData?.submissionUrl}
               >
-                Copy URL
+                {qrLoading ? 'Loading...' : 'Access Submission Form'}
               </Button>
             </div>
           </div>
