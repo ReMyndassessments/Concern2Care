@@ -582,6 +582,17 @@ export default function ClassroomSubmissionsManagement() {
     }
   });
 
+  // Fetch email configuration
+  const { data: fetchedEmailConfig } = useQuery({
+    queryKey: ['/api/admin/email-config'],
+    queryFn: async () => {
+      return apiRequest('GET', '/api/admin/email-config');
+    },
+    onSuccess: (data) => {
+      setEmailConfig(data);
+    }
+  });
+
   // Update submission status mutation
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status, reason }: { id: string; status: string; reason?: string }) => {
