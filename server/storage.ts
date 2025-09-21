@@ -1085,6 +1085,12 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
+  async deleteClassroomSubmission(id: string): Promise<void> {
+    await db
+      .delete(classroomSubmissions)
+      .where(eq(classroomSubmissions.id, id));
+  }
+
   async updateClassroomSubmission(id: string, updates: Partial<ClassroomSubmission>): Promise<ClassroomSubmission> {
     const [updatedSubmission] = await db
       .update(classroomSubmissions)

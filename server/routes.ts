@@ -3756,6 +3756,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Delete submission
+  app.delete('/api/admin/classroom/submissions/:id', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Check if submission exists
+      const submission = await storage.getClassroomSubmission(id);
+      if (!submission) {
+        return res.status(404).json({ message: 'Submission not found' });
+      }
+
+      // Delete the submission
+      await storage.deleteClassroomSubmission(id);
+
+      res.json({ success: true, message: 'Submission deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting submission:', error);
+      res.status(500).json({ message: 'Failed to delete submission' });
+    }
+  });
+
   // Admin: Get urgent submissions requiring immediate attention
   app.get('/api/admin/classroom/urgent', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
     try {

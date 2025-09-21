@@ -26,7 +26,8 @@ import {
   Pause,
   Ban,
   ArrowUp,
-  Loader2
+  Loader2,
+  Trash2
 } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -404,6 +405,35 @@ export default function ClassroomSubmissionsManagement() {
     setShowDetailModal(true);
   };
 
+  // Delete submission mutation
+  const deleteSubmissionMutation = useMutation({
+    mutationFn: (submissionId: string) =>
+      apiRequest(`/api/admin/classroom/submissions/${submissionId}`, {
+        method: 'DELETE',
+      }),
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Submission deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/classroom/submissions'] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete submission",
+        variant: "destructive",
+      });
+      console.error('Delete submission error:', error);
+    },
+  });
+
+  const handleDeleteSubmission = (submissionId: string) => {
+    if (confirm('Are you sure you want to delete this submission? This action cannot be undone.')) {
+      deleteSubmissionMutation.mutate(submissionId);
+    }
+  };
+
   const getStatusBadge = (status: string, urgentSafeguard?: any) => {
     const isUrgent = status === 'urgent_flagged' || urgentSafeguard?.requiresImmediateReview;
     
@@ -644,15 +674,27 @@ export default function ClassroomSubmissionsManagement() {
                     </TableCell>
                     
                     <TableCell>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleViewDetails(submission)}
-                        data-testid={`button-view-details-${submission.id}`}
-                      >
-                        <Eye className="h-4 w-4 mr-1" />
-                        View
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewDetails(submission)}
+                          data-testid={`button-view-details-${submission.id}`}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteSubmission(submission.id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          data-testid={`button-delete-${submission.id}`}
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Delete
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
