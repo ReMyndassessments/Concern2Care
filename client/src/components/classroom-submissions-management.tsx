@@ -513,16 +513,6 @@ export default function ClassroomSubmissionsManagement() {
               </AlertDescription>
             </Alert>
           )}
-          
-          <Button 
-            onClick={() => processImmediateMutation.mutate()}
-            disabled={processImmediateMutation.isPending}
-            className="bg-blue-600 hover:bg-blue-700"
-            data-testid="button-process-immediate"
-          >
-            <Send className="h-4 w-4 mr-2" />
-            Process Approved Now
-          </Button>
         </div>
       </div>
 
