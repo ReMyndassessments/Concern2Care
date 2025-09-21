@@ -323,6 +323,7 @@ export const classroomSubmissions = pgTable("classroom_submissions", {
   teacherLastInitial: varchar("teacher_last_initial").notNull(),
   teacherPosition: varchar("teacher_position").notNull(),
   teacherEmail: varchar("teacher_email").notNull(),
+  securityPin: varchar("security_pin", { length: 64 }), // Hashed 4-digit PIN for response access
   
   // Student Info (anonymized) - enhanced for privacy
   firstName: varchar("first_name", { length: 50 }).notNull(), // Student first name or initials
