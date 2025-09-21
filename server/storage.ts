@@ -1161,7 +1161,7 @@ export class DatabaseStorage implements IStorage {
       studentAge: classroom_submissions.student_age,
       studentGrade: classroom_submissions.student_grade,
       // Map AI response content for frontend display
-      aiResponse: classroom_submissions.ai_draft_content,
+      aiResponse: classroom_submissions.aiDraftContent,
       // Teacher information for display
       teacherFirstName: classroom_enrolled_teachers?.firstName || '',
       teacherEmail: classroom_enrolled_teachers?.email || email,
