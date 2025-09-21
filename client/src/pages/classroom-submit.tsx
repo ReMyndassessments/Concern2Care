@@ -199,14 +199,6 @@ export default function ClassroomSubmit() {
                 </Button>
               )}
               
-              <Button 
-                variant="outline"
-                onClick={() => window.location.href = '/'}
-                className="w-full"
-                data-testid="button-back-to-home"
-              >
-                Back to Home
-              </Button>
             </div>
           </CardContent>
         </Card>
