@@ -4,12 +4,23 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { queryClient } from '@/lib/queryClient';
-import { useEffect } from 'react';
-import classroomQrCodeImg from '@assets/image_1758446686658.png';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Landing() {
   const { t } = useTranslation();
   const { isAuthenticated, user, isLoading } = useAuth();
+
+  // Fetch QR code from API
+  const { data: qrCodeData, isLoading: qrLoading } = useQuery<{
+    success: boolean;
+    qrCode: string;
+    submissionUrl: string;
+  }>({
+    queryKey: ['/api/classroom/qr-code'],
+    enabled: true,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   // Redirect authenticated users to their dashboard
   useEffect(() => {
@@ -386,26 +397,39 @@ export default function Landing() {
               
               <div className="mb-6">
                 <div className="bg-gray-100 rounded-lg p-4 inline-block">
-                  <img 
-                    src={classroomQrCodeImg} 
-                    alt="Classroom Solutions QR Code" 
-                    className="w-48 h-48 mx-auto"
-                  />
+                  {qrLoading ? (
+                    <div className="w-48 h-48 mx-auto flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    </div>
+                  ) : qrCodeData?.qrCode ? (
+                    <img 
+                      src={qrCodeData.qrCode} 
+                      alt="Classroom Solutions QR Code" 
+                      className="w-48 h-48 mx-auto"
+                    />
+                  ) : (
+                    <div className="w-48 h-48 mx-auto flex items-center justify-center text-gray-500">
+                      QR Code unavailable
+                    </div>
+                  )}
                 </div>
               </div>
               
               <div className="bg-gray-50 rounded-lg p-4 mb-4">
                 <p className="text-sm text-gray-600 font-mono break-all">
-                  https://6a265d41-90c3-4e25-85a5-95e4fc8fc1e9-00-22k42y8w3vgkt.worf.replit.dev/classroom/submit
+                  {qrCodeData?.submissionUrl || 'Loading...'}
                 </p>
               </div>
               
               <Button 
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 onClick={() => {
-                  navigator.clipboard.writeText('https://6a265d41-90c3-4e25-85a5-95e4fc8fc1e9-00-22k42y8w3vgkt.worf.replit.dev/classroom/submit');
+                  if (qrCodeData?.submissionUrl) {
+                    navigator.clipboard.writeText(qrCodeData.submissionUrl);
+                  }
                 }}
                 data-testid="button-copy-url"
+                disabled={!qrCodeData?.submissionUrl}
               >
                 Copy URL
               </Button>

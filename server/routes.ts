@@ -3892,6 +3892,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public QR code endpoint for landing page (no auth required)
+  app.get('/api/classroom/qr-code', requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const QRCode = await import('qrcode');
+      
+      // Get the base URL from environment or construct it
+      const baseUrl = process.env.REPLIT_DOMAINS 
+        ? `https://${process.env.REPLIT_DOMAINS}` 
+        : process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+      
+      const submissionUrl = `${baseUrl}/classroom/submit`;
+      
+      // Generate QR code as data URL
+      const qrCodeDataURL = await QRCode.toDataURL(submissionUrl, {
+        errorCorrectionLevel: 'M',
+        type: 'image/png',
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF',
+        },
+        width: 256,
+      });
+      
+      res.json({ 
+        success: true, 
+        qrCode: qrCodeDataURL,
+        submissionUrl 
+      });
+    } catch (error) {
+      console.error('Error generating public QR code:', error);
+      res.status(500).json({ message: 'Failed to generate QR code' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
