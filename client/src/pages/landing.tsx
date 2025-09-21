@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { queryClient } from '@/lib/queryClient';
 import { useEffect } from 'react';
+import classroomQrCodeImg from '@assets/image_1758446487507.png';
 
 export default function Landing() {
   const { t } = useTranslation();
@@ -374,6 +375,40 @@ export default function Landing() {
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm text-blue-700">For More Information on the Classroom Solutions Program, as well as Individual Teacher, School & District Registration, contact us at info@remynd.online</p>
               </div>
+            </div>
+          </div>
+
+          {/* QR Code for Teacher Submissions */}
+          <div className="mt-12 text-center">
+            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Access for Registered Teachers</h3>
+              <p className="text-gray-600 mb-6">Scan the QR code or visit the URL to submit intervention requests:</p>
+              
+              <div className="mb-6">
+                <div className="bg-gray-100 rounded-lg p-4 inline-block">
+                  <img 
+                    src={classroomQrCodeImg} 
+                    alt="Classroom Solutions QR Code" 
+                    className="w-48 h-48 mx-auto"
+                  />
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                <p className="text-sm text-gray-600 font-mono break-all">
+                  https://6a265d41-90c3-4e25-85a5-95e4fc8fc1e9-00-22k42y8w3vgkt.worf.replit.dev/classroom/submit
+                </p>
+              </div>
+              
+              <Button 
+                className="w-full bg-blue-600 hover:bg-blue-700"
+                onClick={() => {
+                  navigator.clipboard.writeText('https://6a265d41-90c3-4e25-85a5-95e4fc8fc1e9-00-22k42y8w3vgkt.worf.replit.dev/classroom/submit');
+                }}
+                data-testid="button-copy-url"
+              >
+                Copy URL
+              </Button>
             </div>
           </div>
         </div>
