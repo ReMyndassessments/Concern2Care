@@ -187,35 +187,59 @@ function TeacherLookup() {
                         <Calendar className="w-3 h-3 mr-1" />
                         {formatDate(submission.submittedAt)}
                       </div>
+                      {submission.aiResponse && (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              size="sm"
+                              className="text-xs"
+                              data-testid={`button-view-response-${submission.id}`}
+                            >
+                              View Response
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                            <DialogHeader>
+                              <DialogTitle>Student Request #{teacherData.submissions.length - index} - AI Response</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                              <div className="p-4 bg-gray-50 rounded-lg">
+                                <h4 className="font-medium text-gray-900 mb-2">Request Details:</h4>
+                                <p className="text-sm text-gray-600">
+                                  {submission.taskType === 'tier2_intervention' ? 'Tier 2 Intervention' : 'Differentiation'} - {submission.severityLevel} priority
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1">Submitted on {formatDate(submission.submittedAt)}</p>
+                              </div>
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="font-medium text-green-900">✅ Your Personalized Response</h4>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-xs"
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(submission.aiResponse);
+                                      toast({
+                                        title: "Copied!",
+                                        description: "Response copied to clipboard",
+                                        variant: "default",
+                                      });
+                                    }}
+                                    data-testid={`button-copy-modal-response-${submission.id}`}
+                                  >
+                                    Copy Response
+                                  </Button>
+                                </div>
+                                <div className="text-sm text-gray-700 whitespace-pre-wrap bg-white p-4 rounded border leading-relaxed max-h-96 overflow-y-auto">
+                                  {submission.aiResponse}
+                                </div>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      )}
                     </div>
                   </div>
-                  
-                  {submission.aiResponse && (
-                    <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded-md">
-                      <div className="flex items-center justify-between mb-3">
-                        <h6 className="font-medium text-green-900">✅ Your Personalized Response</h6>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-xs"
-                          onClick={() => {
-                            navigator.clipboard.writeText(submission.aiResponse);
-                            toast({
-                              title: "Copied!",
-                              description: "Response copied to clipboard",
-                              variant: "default",
-                            });
-                          }}
-                          data-testid={`button-copy-response-${submission.id}`}
-                        >
-                          Copy Response
-                        </Button>
-                      </div>
-                      <div className="text-sm text-green-800 whitespace-pre-wrap bg-white p-3 rounded border max-h-60 overflow-y-auto leading-relaxed">
-                        {submission.aiResponse}
-                      </div>
-                    </div>
-                  )}
                   
                   {submission.status === 'pending' && (
                     <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
