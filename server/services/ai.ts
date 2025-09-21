@@ -101,6 +101,10 @@ export async function generateRecommendations(
   console.log("📝 Student:", req.studentFirstName, req.studentLastInitial);
   console.log("📝 Concern types:", req.concernTypes);
   
+  // CRITICAL SAFETY DETECTION - Check for safety concerns FIRST
+  const safetyCheck = detectUrgentKeywords(req.concernDescription);
+  console.log("🚨 Safety check result:", safetyCheck);
+  
   // Debug environment variable access
   console.log("🔍 Environment Debug:");
   console.log("  - DEEPSEEK_API_KEY exists:", !!process.env.DEEPSEEK_API_KEY);
@@ -155,8 +159,10 @@ export async function generateRecommendations(
     // Sanitize mock data too
     mockRecommendations = sanitizeForDatabase(mockRecommendations);
     
-    // Add urgent case message for mock data too
-    if (req.severityLevel === 'urgent') {
+    // Add safety alert for mock data if safety concerns detected
+    if (safetyCheck.isUrgent) {
+      mockRecommendations = generateUrgentSafeguardMessage(safetyCheck.triggeredKeywords) + '\n\n' + mockRecommendations;
+    } else if (req.severityLevel === 'urgent') {
       mockRecommendations += `\n\n### **🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED**
 
 **Share this case with Student Support immediately:**
@@ -520,8 +526,32 @@ For the identified learning profile (${differentiationText}), provide:
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
     
     const systemPrompt = targetLanguage 
-      ? `You are a respectful colleague speaking with a professional educator. You are fluent in ${targetLanguage} and will provide all responses in ${targetLanguage}. **VOICE**: Acknowledge the teacher's existing expertise and professional knowledge. Use phrases that honor their experience like "building on your classroom insights," "adding to your professional toolkit," "you likely already know," and "your experience suggests." **APPROACH**: Present ideas as collaborative suggestions between professionals, not instructions. Recognize their competence while offering additional resources and strategies they can consider integrating into their practice. All content must be in ${targetLanguage}.`
-      : "You are a respectful colleague speaking with a professional educator. **VOICE**: Acknowledge the teacher's existing expertise and professional knowledge. Use phrases that honor their experience like 'building on your classroom insights,' 'adding to your professional toolkit,' 'you likely already know,' and 'your experience suggests.' **APPROACH**: Present ideas as collaborative suggestions between professionals, not instructions. Recognize their competence while offering additional resources and strategies they can consider integrating into their practice.";
+      ? `You are a respectful colleague speaking with a professional educator. You are fluent in ${targetLanguage} and will provide all responses in ${targetLanguage}. 
+
+**CRITICAL SAFETY PROTOCOL:** Before generating any intervention suggestions, analyze the teacher's input for ANY indicators of:
+1. Direct mentions: suicide, self-harm, self-injury, cutting, harm to others, violence
+2. Concerning patterns: withdrawal, giving away possessions, saying goodbye, threats, aggression
+3. Risk indicators: hopelessness, worthlessness, isolation, concerning drawings/writing
+
+IF ANY SAFETY CONCERNS ARE DETECTED:
+- IMMEDIATELY flag this as HIGH PRIORITY SAFETY CONCERN
+- Override normal intervention suggestions with emergency response protocol
+- Provide clear action steps for immediate professional intervention
+
+**VOICE**: Acknowledge the teacher's existing expertise and professional knowledge. Use phrases that honor their experience like "building on your classroom insights," "adding to your professional toolkit," "you likely already know," and "your experience suggests." **APPROACH**: Present ideas as collaborative suggestions between professionals, not instructions. Recognize their competence while offering additional resources and strategies they can consider integrating into their practice. All content must be in ${targetLanguage}.`
+      : `You are a respectful colleague speaking with a professional educator. 
+
+**CRITICAL SAFETY PROTOCOL:** Before generating any intervention suggestions, analyze the teacher's input for ANY indicators of:
+1. Direct mentions: suicide, self-harm, self-injury, cutting, harm to others, violence
+2. Concerning patterns: withdrawal, giving away possessions, saying goodbye, threats, aggression toward peers
+3. Risk indicators: hopelessness, worthlessness, isolation, sudden mood changes, concerning drawings/writing
+
+IF ANY SAFETY CONCERNS ARE DETECTED:
+- IMMEDIATELY flag this as HIGH PRIORITY SAFETY CONCERN
+- Override normal intervention suggestions with emergency response protocol
+- Provide clear action steps for immediate professional intervention
+
+**VOICE**: Acknowledge the teacher's existing expertise and professional knowledge. Use phrases that honor their experience like 'building on your classroom insights,' 'adding to your professional toolkit,' 'you likely already know,' and 'your experience suggests.' **APPROACH**: Present ideas as collaborative suggestions between professionals, not instructions. Recognize their competence while offering additional resources and strategies they can consider integrating into their practice.`;
     
     const response = await fetch(`${apiClient.baseURL}/chat/completions`, {
       method: 'POST',
@@ -562,9 +592,11 @@ For the identified learning profile (${differentiationText}), provide:
     // Sanitize the response to prevent database encoding errors
     recommendations = sanitizeForDatabase(recommendations);
 
-    // Automatically add student support sharing message for urgent cases
-    console.log('🚨 Checking severity level:', req.severityLevel, 'Type:', typeof req.severityLevel);
-    if (req.severityLevel === 'urgent') {
+    // Check for safety concerns and add critical safety alert if needed
+    if (safetyCheck.isUrgent) {
+      console.log('🚨 CRITICAL SAFETY ALERT! Adding safety warning...');
+      recommendations = generateUrgentSafeguardMessage(safetyCheck.triggeredKeywords) + '\n\n' + recommendations;
+    } else if (req.severityLevel === 'urgent') {
       console.log('🚨 URGENT DETECTED! Adding urgent case message...');
       recommendations += `\n\n### **🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED**
 
@@ -578,7 +610,7 @@ For the identified learning profile (${differentiationText}), provide:
 **Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.**`;
       console.log('🚨 Urgent message appended. Final recommendations length:', recommendations.length);
     } else {
-      console.log('🚨 Severity is not urgent, no special message added');
+      console.log('🚨 No safety concerns or urgency detected');
     }
 
     const disclaimer = "⚠️ IMPORTANT DISCLAIMER: These AI-generated recommendations are for informational purposes only and should not replace professional educational assessment. Please refer this student to your school's student support department for proper evaluation and vetting. All AI-generated suggestions must be reviewed and approved by qualified educational professionals before implementation.";
@@ -597,8 +629,10 @@ For the identified learning profile (${differentiationText}), provide:
         // Fall back to mock data instead of throwing error
         let mockRecommendations = generateMockRecommendations(req, assessmentContent, lessonPlanContent);
         
-        // Add urgent case message for mock data too
-        if (req.severityLevel === 'urgent') {
+        // Add safety alert if safety concerns detected
+        if (safetyCheck.isUrgent) {
+          mockRecommendations = generateUrgentSafeguardMessage(safetyCheck.triggeredKeywords) + '\n\n' + mockRecommendations;
+        } else if (req.severityLevel === 'urgent') {
           mockRecommendations += `\n\n### **🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED**
 
 **Share this case with Student Support immediately:**
@@ -660,11 +694,21 @@ export interface FollowUpAssistanceResponse {
 export async function followUpAssistance(
   req: FollowUpAssistanceRequest
 ): Promise<FollowUpAssistanceResponse> {
+  // CRITICAL SAFETY DETECTION - Check for safety concerns in follow-up questions
+  const safetyCheck = detectUrgentKeywords(req.specificQuestion);
+  console.log("🚨 Follow-up safety check result:", safetyCheck);
+  
   const apiClient = await getApiClient();
   
   if (!apiClient) {
     console.log("No active API key found in database, returning mock data.");
-    const mockAssistance = generateMockFollowUpAssistance(req);
+    let mockAssistance = generateMockFollowUpAssistance(req);
+    
+    // Add safety alert for mock follow-up assistance if needed
+    if (safetyCheck.isUrgent) {
+      mockAssistance = generateUrgentSafeguardMessage(safetyCheck.triggeredKeywords) + '\n\n' + mockAssistance;
+    }
+    
     const disclaimer = "";
     return { assistance: mockAssistance, disclaimer };
   }
@@ -752,7 +796,13 @@ Focus on actionable advice that a classroom teacher can realistically implement.
     }
 
     const data = await response.json();
-    const assistance = data.choices[0]?.message?.content || 'Unable to generate follow-up assistance at this time.';
+    let assistance = data.choices[0]?.message?.content || 'Unable to generate follow-up assistance at this time.';
+
+    // Add safety alert if safety concerns detected in follow-up question
+    if (safetyCheck.isUrgent) {
+      console.log('🚨 CRITICAL SAFETY ALERT in follow-up! Adding safety warning...');
+      assistance = generateUrgentSafeguardMessage(safetyCheck.triggeredKeywords) + '\n\n' + assistance;
+    }
 
     const disclaimer = "";
 
@@ -764,7 +814,13 @@ Focus on actionable advice that a classroom teacher can realistically implement.
     console.error('❌ Error calling DeepSeek API for follow-up assistance:', error);
     
     console.log('🔄 Follow-up assistance API failed, falling back to mock data');
-    const mockAssistance = generateMockFollowUpAssistance(req);
+    let mockAssistance = generateMockFollowUpAssistance(req);
+    
+    // Add safety alert for mock follow-up assistance if needed
+    if (safetyCheck.isUrgent) {
+      mockAssistance = generateUrgentSafeguardMessage(safetyCheck.triggeredKeywords) + '\n\n' + mockAssistance;
+    }
+    
     const disclaimer = "";
     return { assistance: mockAssistance, disclaimer };
   }
@@ -1066,13 +1122,32 @@ Contact your student support team if:
 **Note:** This is demonstration assistance. In a real implementation, the guidance would be more specifically tailored to your exact question and situation.`;
 }
 
-// Urgent keyword detection for safeguard logic
+// CRITICAL SAFETY DETECTION - Enhanced keyword detection for student protection
 const URGENT_KEYWORDS = [
-  'suicide', 'suicidal', 'kill myself', 'end my life', 'want to die',
-  'self-harm', 'self harm', 'cutting', 'hurting myself', 'hurt myself',
-  'kill', 'killing', 'murder', 'violent', 'weapon', 'gun', 'knife',
-  'harm others', 'hurt others', 'hurt someone', 'violence', 'attack',
-  'death threats', 'threatening', 'abuse', 'sexual abuse', 'physical abuse'
+  // Self-harm and suicide indicators
+  'suicide', 'suicidal', 'kill myself', 'end my life', 'want to die', 'better off dead',
+  'no reason to live', 'can\'t go on', 'worthless', 'hopeless', 'giving up',
+  'self-harm', 'self harm', 'cutting', 'hurting myself', 'hurt myself', 'self-injury',
+  'burning myself', 'scratching', 'hitting myself', 'punching myself',
+  
+  // Concerning behavioral patterns
+  'giving away belongings', 'saying goodbye', 'sudden mood change', 'withdrawing',
+  'talking about death', 'death wish', 'funeral plans', 'writing will',
+  
+  // Violence and harm to others
+  'kill', 'killing', 'murder', 'violent', 'weapon', 'gun', 'knife', 'bomb',
+  'harm others', 'hurt others', 'hurt someone', 'violence', 'attack', 'fight',
+  'death threats', 'threatening', 'going to hurt', 'make them pay',
+  'revenge', 'get back at', 'shooting', 'stabbing', 'beating up',
+  
+  // Abuse indicators
+  'abuse', 'sexual abuse', 'physical abuse', 'emotional abuse', 'neglect',
+  'touching inappropriately', 'inappropriate behavior', 'molesting', 'rape',
+  'hitting at home', 'bruises', 'scared to go home', 'family violence',
+  
+  // Crisis language
+  'emergency', 'crisis', 'can\'t cope', 'breaking point', 'losing control',
+  'dangerous thoughts', 'scary thoughts', 'voices telling me'
 ];
 
 export interface UrgentSafeguardResult {
@@ -1123,17 +1198,31 @@ export function detectUrgentKeywords(text: string): UrgentSafeguardResult {
 }
 
 /**
- * Generates urgent safeguard message for teachers
+ * Generates critical safety alert message for teachers
  */
-export function generateUrgentSafeguardMessage(): string {
-  return `**🚨 URGENT: This case involves potential harm. Consult your school's child protection protocol immediately. Initial strategies are provided here for reference only.**
+export function generateUrgentSafeguardMessage(triggeredKeywords: string[] = []): string {
+  const keywordText = triggeredKeywords.length > 0 
+    ? `\n**SAFETY CONCERNS DETECTED:** This case contains indicators related to: ${triggeredKeywords.join(', ')}`
+    : '';
+  
+  return `🚨 **IMMEDIATE SAFETY CONCERN DETECTED** 🚨
 
-**IMMEDIATE ACTIONS REQUIRED:**
-1. **Contact your school's student support department immediately**
-2. **Follow your school's child protection protocols**
-3. **Do not delay - this case requires urgent professional intervention**
-4. **Document all interactions and concerns**
-5. **Ensure student safety is the top priority**
+**URGENT ACTION REQUIRED - DO NOT DELAY:**
+
+1. **CONTACT STUDENT SUPPORT SERVICES IMMEDIATELY**
+2. **NOTIFY SENIOR MANAGEMENT TEAM TODAY**  
+3. **FOLLOW YOUR SCHOOL'S CHILD PROTECTION POLICY**
+4. **DO NOT LEAVE THIS STUDENT UNSUPERVISED**
+5. **DOCUMENT THIS CONCERN FORMALLY**
+
+${keywordText}
+
+**⚠️ CRITICAL SAFETY PROTOCOL:**
+This situation requires immediate professional intervention beyond classroom strategies. The safety concerns identified require specialized support from trained professionals.
+
+**If there is imminent danger, contact emergency services immediately.**
+
+**Educational strategies are provided below ONLY after safety measures are in place:**
 
 **Note:** The intervention strategies below are provided as general guidance only. Professional assessment and intervention are required for this case.`;
 }
