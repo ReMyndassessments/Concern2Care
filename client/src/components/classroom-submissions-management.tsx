@@ -228,9 +228,11 @@ interface SubmissionDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   onStatusUpdate: (id: string, status: string, reason?: string) => void;
+  onResendSubmission: (id: string, reason?: string) => void;
+  isResending: boolean;
 }
 
-function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate }: SubmissionDetailModalProps) {
+function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, onResendSubmission, isResending }: SubmissionDetailModalProps) {
   const [actionReason, setActionReason] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -502,12 +504,12 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate }: 
                 
                 <div className="flex gap-2">
                   <Button 
-                    onClick={() => handleResendSubmission(submission.id, actionReason)}
-                    disabled={resendSubmissionMutation.isPending}
+                    onClick={() => onResendSubmission(submission.id, actionReason)}
+                    disabled={isResending}
                     className="bg-blue-600 hover:bg-blue-700"
                     data-testid="button-resend-submission"
                   >
-                    {resendSubmissionMutation.isPending ? (
+                    {isResending ? (
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     ) : (
                       <Send className="h-4 w-4 mr-2" />
@@ -931,6 +933,8 @@ export default function ClassroomSubmissionsManagement() {
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
         onStatusUpdate={handleStatusUpdate}
+        onResendSubmission={handleResendSubmission}
+        isResending={resendSubmissionMutation.isPending}
       />
     </div>
   );
