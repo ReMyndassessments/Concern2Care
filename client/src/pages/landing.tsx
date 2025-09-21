@@ -94,6 +94,50 @@ function TeacherLookup() {
     });
   };
 
+  const formatProfessionalAIResponse = (markdown: string): string => {
+    if (!markdown) return '';
+
+    let html = markdown
+      // Headers with proper styling
+      .replace(/^### \*\*(.*?)\*\*/gm, '<h3 class="text-lg font-semibold text-gray-900 mt-6 mb-3 border-b pb-2">$1</h3>')
+      .replace(/^## \*\*(.*?)\*\*/gm, '<h2 class="text-xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
+      .replace(/^# \*\*(.*?)\*\*/gm, '<h1 class="text-2xl font-bold text-gray-900 mt-6 mb-4">$1</h1>')
+      
+      // Sub-headers with professional styling
+      .replace(/^\*\*([^:*]+):\*\*/gm, '<h4 class="text-base font-semibold text-gray-800 mt-4 mb-2">$1:</h4>')
+      .replace(/^\*\*([^*]+)\*\*/gm, '<h4 class="text-base font-semibold text-gray-800 mt-3 mb-2">$1</h4>')
+      
+      // Bold text
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
+      
+      // Bullet points with proper indentation and styling
+      .replace(/^    [-*•] (.*)/gm, '<li class="ml-8 mb-1 text-gray-700">$1</li>')
+      .replace(/^  [-*•] (.*)/gm, '<li class="ml-4 mb-1 text-gray-700">$1</li>')
+      .replace(/^[-*•] (.*)/gm, '<li class="mb-2 text-gray-700">$1</li>')
+      
+      // Convert numbered lists
+      .replace(/^(\d+)\. (.*)/gm, '<li class="mb-2 text-gray-700"><span class="font-medium text-gray-900">$1.</span> $2</li>')
+      
+      // Line breaks and paragraphs
+      .replace(/\n\n/g, '</p><p class="mb-3 text-gray-700 leading-relaxed">')
+      .replace(/\n/g, '<br>');
+
+    // Wrap in paragraphs
+    html = '<div class="professional-content"><p class="mb-3 text-gray-700 leading-relaxed">' + html + '</p></div>';
+    
+    // Clean up empty paragraphs
+    html = html.replace(/<p class="[^"]*"><\/p>/g, '').replace(/<p class="[^"]*"><br><\/p>/g, '');
+    
+    // Convert bullet lists to proper UL elements
+    html = html.replace(/(<li class="[^"]*mb-2[^"]*">.*?<\/li>)/gs, '<ul class="space-y-2 mb-4">$1</ul>');
+    html = html.replace(/(<li class="[^"]*mb-1[^"]*">.*?<\/li>)/gs, '<ul class="space-y-1 mb-3 ml-4">$1</ul>');
+    
+    // Convert numbered lists to proper OL elements  
+    html = html.replace(/(<li class="mb-2[^"]*"><span[^>]*>\d+\.<\/span>.*?<\/li>)/gs, '<ol class="space-y-2 mb-4 list-decimal list-inside">$1</ol>');
+
+    return html;
+  };
+
   const getStatusBadge = (status: string) => {
     if (status === 'approved' || status === 'auto_sent') {
       return (
@@ -248,14 +292,18 @@ function TeacherLookup() {
                                     Copy Response
                                   </Button>
                                 </div>
-                                <div className="text-sm text-gray-700 whitespace-pre-wrap bg-white p-4 rounded border leading-relaxed max-h-96 overflow-y-auto">
-                                  {submission.aiResponse || submission.ai_draft_content || (
+                                <div className="text-sm text-gray-700 bg-white p-4 rounded border leading-relaxed max-h-96 overflow-y-auto">
+                                  {submission.aiResponse || submission.ai_draft_content ? (
+                                    <div 
+                                      className="professional-ai-response"
+                                      dangerouslySetInnerHTML={{ 
+                                        __html: formatProfessionalAIResponse(submission.aiResponse || submission.ai_draft_content)
+                                      }}
+                                    />
+                                  ) : (
                                     <div className="text-center py-8 text-gray-500">
                                       <p className="mb-2">⏳ Your personalized response is being generated...</p>
                                       <p className="text-xs">This typically takes a few minutes. Please check back shortly.</p>
-                                      <div className="mt-3 text-xs bg-gray-100 p-2 rounded">
-                                        Debug: Status = {submission.status}, AI Response = {submission.aiResponse ? 'present' : 'null'}, AI Draft = {submission.ai_draft_content ? 'present' : 'null'}
-                                      </div>
                                     </div>
                                   )}
                                 </div>
