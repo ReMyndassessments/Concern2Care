@@ -235,8 +235,10 @@ ${message}
 Submitted: ${new Date().toLocaleString()}
       `.trim();
 
-      // Send email using SMTP service
+      // Send email using admin user's configured email system
       try {
+        const adminUserId = 'admin-prod-nodot-1757375851498'; // Use existing admin user with email config
+        
         await sendReportEmail({
           recipients: [
             {
@@ -246,13 +248,14 @@ Submitted: ${new Date().toLocaleString()}
             }
           ],
           subject: subject,
-          message: emailContent
+          message: emailContent,
+          userId: adminUserId // Use admin's email configuration
         });
         
-        console.log('✅ Contact form email sent successfully via SMTP');
+        console.log('✅ Contact form email sent successfully using admin email configuration');
         res.json({ success: true, message: 'Your request has been submitted successfully' });
       } catch (emailError) {
-        console.error('❌ Failed to send contact form email via SMTP:', emailError);
+        console.error('❌ Failed to send contact form email:', emailError);
         res.status(500).json({ message: 'Failed to send your request. Please try again later.' });
       }
     } catch (error) {
