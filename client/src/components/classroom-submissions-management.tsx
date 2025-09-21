@@ -218,7 +218,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate }: 
           </Card>
 
           {/* AI Generated Content */}
-          {submission.aiDraft && (
+          {(submission.aiDraft || submission.ai_draft) && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">AI Generated Response</CardTitle>
@@ -226,7 +226,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate }: 
               <CardContent>
                 <div className="space-y-4">
                   <div className="p-4 bg-blue-50 rounded border">
-                    <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{ __html: submission.aiDraft }} />
+                    <div className="whitespace-pre-wrap text-sm" dangerouslySetInnerHTML={{ __html: submission.aiDraft || submission.ai_draft }} />
                   </div>
                   
                   {submission.aiDisclaimer && (
