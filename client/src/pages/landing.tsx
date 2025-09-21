@@ -200,25 +200,43 @@ function TeacherLookup() {
                           </DialogTrigger>
                           <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                             <DialogHeader>
-                              <DialogTitle>Student Request #{teacherData.submissions.length - index} - AI Response</DialogTitle>
+                              <DialogTitle>Student Request #{teacherData.submissions.length - index} - Complete Details</DialogTitle>
                             </DialogHeader>
-                            <div className="space-y-4">
-                              <div className="p-4 bg-gray-50 rounded-lg">
-                                <h4 className="font-medium text-gray-900 mb-2">Request Details:</h4>
-                                <p className="text-sm text-gray-600">
-                                  {submission.taskType === 'tier2_intervention' ? 'Tier 2 Intervention' : 'Differentiation'} - {submission.severityLevel} priority
-                                </p>
-                                <p className="text-xs text-gray-500 mt-1">Submitted on {formatDate(submission.submittedAt)}</p>
+                            <div className="space-y-6">
+                              {/* Original Teacher Submission */}
+                              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                <h4 className="font-medium text-blue-900 mb-3">📝 Your Original Submission</h4>
+                                <div className="space-y-2 text-sm">
+                                  <div><strong>Type:</strong> {submission.taskType === 'tier2_intervention' ? 'Tier 2 Intervention' : 'Differentiation'}</div>
+                                  <div><strong>Priority:</strong> {submission.severityLevel}</div>
+                                  <div><strong>Subject:</strong> {submission.primarySubject || 'Not specified'}</div>
+                                  {submission.behaviors && submission.behaviors.length > 0 && (
+                                    <div><strong>Behaviors:</strong> {submission.behaviors.join(', ')}</div>
+                                  )}
+                                  {submission.concerns && (
+                                    <div><strong>Specific Concerns:</strong> {submission.concerns}</div>
+                                  )}
+                                  {submission.actionsTaken && submission.actionsTaken.length > 0 && (
+                                    <div><strong>Actions Already Taken:</strong> {submission.actionsTaken.join(', ')}</div>
+                                  )}
+                                  {submission.learningProfile && submission.learningProfile.length > 0 && (
+                                    <div><strong>Learning Profile:</strong> {submission.learningProfile.join(', ')}</div>
+                                  )}
+                                  <div><strong>Submitted:</strong> {formatDate(submission.submittedAt)}</div>
+                                </div>
                               </div>
-                              <div className="space-y-3">
-                                <div className="flex items-center justify-between">
-                                  <h4 className="font-medium text-green-900">✅ Your Personalized Response</h4>
+
+                              {/* AI Response */}
+                              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <div className="flex items-center justify-between mb-3">
+                                  <h4 className="font-medium text-green-900">🤖 Your Personalized AI Response</h4>
                                   <Button
                                     size="sm"
                                     variant="outline"
                                     className="text-xs"
                                     onClick={() => {
-                                      navigator.clipboard.writeText(submission.aiResponse);
+                                      const responseText = submission.aiResponse || submission.ai_draft_content || "No response available";
+                                      navigator.clipboard.writeText(responseText);
                                       toast({
                                         title: "Copied!",
                                         description: "Response copied to clipboard",
@@ -231,7 +249,15 @@ function TeacherLookup() {
                                   </Button>
                                 </div>
                                 <div className="text-sm text-gray-700 whitespace-pre-wrap bg-white p-4 rounded border leading-relaxed max-h-96 overflow-y-auto">
-                                  {submission.aiResponse}
+                                  {submission.aiResponse || submission.ai_draft_content || (
+                                    <div className="text-center py-8 text-gray-500">
+                                      <p className="mb-2">⏳ Your personalized response is being generated...</p>
+                                      <p className="text-xs">This typically takes a few minutes. Please check back shortly.</p>
+                                      <div className="mt-3 text-xs bg-gray-100 p-2 rounded">
+                                        Debug: Status = {submission.status}, AI Response = {submission.aiResponse ? 'present' : 'null'}, AI Draft = {submission.ai_draft_content ? 'present' : 'null'}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
