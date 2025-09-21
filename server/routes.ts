@@ -4088,6 +4088,20 @@ Submitted: ${new Date().toLocaleString()}
       // Get submissions by teacher email
       const submissions = await storage.getClassroomSubmissionsByEmail(email);
       
+      // DEBUG: Check what we're getting from storage
+      console.log('📊 Teacher lookup debug for email:', email);
+      console.log('📊 Number of submissions found:', submissions.length);
+      submissions.forEach((sub, i) => {
+        console.log(`📊 Submission ${i + 1}:`, {
+          id: sub.id,
+          status: sub.status,
+          hasAiResponse: !!sub.aiResponse,
+          aiResponseLength: sub.aiResponse?.length || 0,
+          hasAiDraftContent: !!sub.ai_draft_content,
+          aiDraftLength: sub.ai_draft_content?.length || 0
+        });
+      });
+      
       if (submissions.length === 0) {
         return res.json({ 
           success: true, 
