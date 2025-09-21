@@ -3688,8 +3688,8 @@ Submitted: ${new Date().toLocaleString()}
           autoSendTime = new Date(now.getTime() + 15 * 60 * 1000); // 15 minutes
           responseMessage = 'An urgent case requires rapid support. Initial strategies are provided now. Please notify your student support department immediately.';
         } else {
-          // Normal case: 30-minute delay
-          autoSendTime = new Date(now.getTime() + 30 * 60 * 1000); // 30 minutes
+          // Normal case: 10-minute delay
+          autoSendTime = new Date(now.getTime() + 10 * 60 * 1000); // 10 minutes
         }
         
         // Update submission with AI draft and delayed delivery settings
@@ -3707,7 +3707,7 @@ Submitted: ${new Date().toLocaleString()}
       } catch (error) {
         console.error("❌ Error generating AI draft for submission:", submission.id, error);
         // Don't fail the submission if AI generation fails
-        const autoSendTime = new Date(Date.now() + 30 * 60 * 1000); // Default 30 min delay
+        const autoSendTime = new Date(Date.now() + 10 * 60 * 1000); // Default 10 min delay
         await storage.updateClassroomSubmission(submission.id, {
           status: 'pending',
           aiDraft: 'Error generating AI draft - manual review required',

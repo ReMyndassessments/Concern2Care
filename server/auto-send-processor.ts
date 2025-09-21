@@ -100,7 +100,7 @@ export class AutoSendProcessor {
           // For critical errors, we might want to retry later or flag for manual review
           await storage.updateClassroomSubmission(submission.id, { 
             status: 'pending',
-            autoSendTime: new Date(Date.now() + 30 * 60 * 1000) // Retry in 30 minutes
+            autoSendTime: new Date(Date.now() + 10 * 60 * 1000) // Retry in 10 minutes
           });
         }
       }
