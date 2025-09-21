@@ -191,11 +191,28 @@ function TeacherLookup() {
                   </div>
                   
                   {submission.status === 'approved' && submission.aiResponse && (
-                    <div className="mt-3 p-3 bg-white border border-gray-200 rounded-md">
-                      <h6 className="font-medium text-gray-900 mb-2">AI-Generated Response:</h6>
-                      <div className="text-sm text-gray-700 whitespace-pre-wrap max-h-40 overflow-y-auto">
-                        {submission.aiResponse.substring(0, 500)}
-                        {submission.aiResponse.length > 500 && '...'}
+                    <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded-md">
+                      <div className="flex items-center justify-between mb-3">
+                        <h6 className="font-medium text-green-900">✅ AI-Generated Response</h6>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs"
+                          onClick={() => {
+                            navigator.clipboard.writeText(submission.aiResponse);
+                            toast({
+                              title: "Copied!",
+                              description: "Response copied to clipboard",
+                              variant: "default",
+                            });
+                          }}
+                          data-testid={`button-copy-response-${submission.id}`}
+                        >
+                          Copy Response
+                        </Button>
+                      </div>
+                      <div className="text-sm text-green-800 whitespace-pre-wrap bg-white p-3 rounded border max-h-60 overflow-y-auto leading-relaxed">
+                        {submission.aiResponse}
                       </div>
                     </div>
                   )}
