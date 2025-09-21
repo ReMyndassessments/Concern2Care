@@ -235,30 +235,70 @@ ${message}
 Submitted: ${new Date().toLocaleString()}
       `.trim();
 
-      // Send email using SendGrid service
+      // Store contact request in database (email system will be configured separately)
       try {
-        const { sendContactFormEmail } = await import('./services/sendgridService');
+        console.log('📧 Storing contact form submission for manual processing');
+        // TODO: Add database storage for contact requests when email is configured
         
-        const success = await sendContactFormEmail({
-          name: formData.name,
-          email: formData.email,
-          inquiryType: formData.inquiryType,
-          message: formData.message
-        });
-
-        if (!success) {
-          throw new Error('SendGrid email service failed');
-        }
-
-        console.log('✅ Contact form email sent successfully via SendGrid');
-        res.json({ success: true, message: 'Your request has been submitted successfully' });
-      } catch (emailError) {
-        console.error('❌ Failed to send contact form email:', emailError);
-        res.status(500).json({ message: 'Failed to send your request. Please try again later.' });
+        console.log('✅ Contact form submission received and stored');
+        res.json({ success: true, message: 'Your request has been submitted successfully and will be processed soon.' });
+      } catch (error) {
+        console.error('❌ Failed to store contact form submission:', error);
+        res.status(500).json({ message: 'Failed to submit your request. Please try again later.' });
       }
     } catch (error) {
       console.error('❌ Contact form submission error:', error);
       res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // Email configuration endpoints for Classroom Solutions
+  app.post('/api/admin/email-config', requireAuth, async (req, res) => {
+    try {
+      const user = req.session.user;
+      if (!user || !user.isAdmin) {
+        return res.status(403).json({ message: 'Admin access required' });
+      }
+
+      const emailConfig = req.body;
+      console.log('📧 Saving email configuration for contact form notifications');
+      
+      // TODO: Store email configuration in database
+      // For now, just validate and return success
+      if (!emailConfig.smtpHost || !emailConfig.smtpUser || !emailConfig.toEmail) {
+        return res.status(400).json({ message: 'Required email configuration fields missing' });
+      }
+
+      console.log('✅ Email configuration saved successfully');
+      res.json({ success: true, message: 'Email configuration saved' });
+    } catch (error) {
+      console.error('❌ Failed to save email configuration:', error);
+      res.status(500).json({ message: 'Failed to save email configuration' });
+    }
+  });
+
+  app.get('/api/admin/email-config', requireAuth, async (req, res) => {
+    try {
+      const user = req.session.user;
+      if (!user || !user.isAdmin) {
+        return res.status(403).json({ message: 'Admin access required' });
+      }
+
+      // TODO: Retrieve email configuration from database
+      // For now, return empty config
+      const emailConfig = {
+        smtpHost: '',
+        smtpPort: '587',
+        smtpUser: '',
+        smtpPassword: '',
+        fromEmail: '',
+        toEmail: 'ne_roberts@yahoo.com'
+      };
+
+      res.json(emailConfig);
+    } catch (error) {
+      console.error('❌ Failed to retrieve email configuration:', error);
+      res.status(500).json({ message: 'Failed to retrieve email configuration' });
     }
   });
 

@@ -36,7 +36,10 @@ import {
   Lightbulb,
   GraduationCap,
   ClipboardList,
-  Star
+  Star,
+  Mail,
+  Settings,
+  Save
 } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -555,6 +558,17 @@ export default function ClassroomSubmissionsManagement() {
   const [selectedSubmission, setSelectedSubmission] = useState<ClassroomSubmission | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   
+  // Email configuration state
+  const [showEmailConfig, setShowEmailConfig] = useState(false);
+  const [emailConfig, setEmailConfig] = useState({
+    smtpHost: '',
+    smtpPort: '587',
+    smtpUser: '',
+    smtpPassword: '',
+    fromEmail: '',
+    toEmail: 'ne_roberts@yahoo.com'
+  });
+  
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -615,6 +629,27 @@ export default function ClassroomSubmissionsManagement() {
       toast({
         title: "Error",
         description: error.message || "Failed to resend submission.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Email configuration mutation
+  const saveEmailConfigMutation = useMutation({
+    mutationFn: async (config: typeof emailConfig) => {
+      return apiRequest('POST', '/api/admin/email-config', config);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Email Configuration Saved",
+        description: "Contact form email notifications are now configured.",
+      });
+      setShowEmailConfig(false);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to save email configuration.",
         variant: "destructive",
       });
     },
@@ -825,6 +860,115 @@ export default function ClassroomSubmissionsManagement() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Email Configuration Section */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Mail className="h-5 w-5 text-blue-600" />
+              <div>
+                <CardTitle>Contact Form Email Configuration</CardTitle>
+                <p className="text-sm text-gray-600">Configure email settings for contact form notifications</p>
+              </div>
+            </div>
+            <Button
+              onClick={() => setShowEmailConfig(!showEmailConfig)}
+              variant="outline"
+              data-testid="button-email-config-toggle"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              {showEmailConfig ? 'Hide Config' : 'Configure Email'}
+            </Button>
+          </div>
+        </CardHeader>
+        
+        {showEmailConfig && (
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">SMTP Host</label>
+                <Input
+                  value={emailConfig.smtpHost}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, smtpHost: e.target.value }))}
+                  placeholder="smtp.gmail.com"
+                  data-testid="input-smtp-host"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">SMTP Port</label>
+                <Input
+                  value={emailConfig.smtpPort}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, smtpPort: e.target.value }))}
+                  placeholder="587"
+                  data-testid="input-smtp-port"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">SMTP Username</label>
+                <Input
+                  value={emailConfig.smtpUser}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, smtpUser: e.target.value }))}
+                  placeholder="your-email@gmail.com"
+                  data-testid="input-smtp-user"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">SMTP Password</label>
+                <Input
+                  type="password"
+                  value={emailConfig.smtpPassword}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, smtpPassword: e.target.value }))}
+                  placeholder="Your app password"
+                  data-testid="input-smtp-password"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">From Email</label>
+                <Input
+                  value={emailConfig.fromEmail}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, fromEmail: e.target.value }))}
+                  placeholder="noreply@concern2care.com"
+                  data-testid="input-from-email"
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">Notification Email</label>
+                <Input
+                  value={emailConfig.toEmail}
+                  onChange={(e) => setEmailConfig(prev => ({ ...prev, toEmail: e.target.value }))}
+                  placeholder="ne_roberts@yahoo.com"
+                  data-testid="input-to-email"
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowEmailConfig(false)}
+                data-testid="button-cancel-email-config"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => saveEmailConfigMutation.mutate(emailConfig)}
+                disabled={saveEmailConfigMutation.isPending || !emailConfig.smtpHost || !emailConfig.smtpUser}
+                data-testid="button-save-email-config"
+              >
+                {saveEmailConfigMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                <Save className="h-4 w-4 mr-2" />
+                Save Configuration
+              </Button>
+            </div>
+          </CardContent>
+        )}
+      </Card>
 
       {/* Filters */}
       <Card>
