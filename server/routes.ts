@@ -252,56 +252,6 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
-  // Email configuration endpoints for Classroom Solutions
-  app.post('/api/admin/email-config', requireAuth, async (req, res) => {
-    try {
-      const user = req.session.user;
-      if (!user || !user.isAdmin) {
-        return res.status(403).json({ message: 'Admin access required' });
-      }
-
-      const emailConfig = req.body;
-      console.log('📧 Saving email configuration for contact form notifications');
-      
-      // TODO: Store email configuration in database
-      // For now, just validate and return success
-      if (!emailConfig.smtpHost || !emailConfig.smtpUser || !emailConfig.toEmail) {
-        return res.status(400).json({ message: 'Required email configuration fields missing' });
-      }
-
-      console.log('✅ Email configuration saved successfully');
-      res.json({ success: true, message: 'Email configuration saved' });
-    } catch (error) {
-      console.error('❌ Failed to save email configuration:', error);
-      res.status(500).json({ message: 'Failed to save email configuration' });
-    }
-  });
-
-  app.get('/api/admin/email-config', requireAuth, async (req, res) => {
-    try {
-      const user = req.session.user;
-      if (!user || !user.isAdmin) {
-        return res.status(403).json({ message: 'Admin access required' });
-      }
-
-      // TODO: Retrieve email configuration from database
-      // For now, return empty config
-      const emailConfig = {
-        smtpHost: '',
-        smtpPort: '587',
-        smtpUser: '',
-        smtpPassword: '',
-        fromEmail: '',
-        toEmail: 'ne_roberts@yahoo.com'
-      };
-
-      res.json(emailConfig);
-    } catch (error) {
-      console.error('❌ Failed to retrieve email configuration:', error);
-      res.status(500).json({ message: 'Failed to retrieve email configuration' });
-    }
-  });
-
 
   // Get current teacher with usage data
   app.get('/api/auth/user', async (req: any, res) => {
@@ -374,6 +324,55 @@ Submitted: ${new Date().toLocaleString()}
     }
   };
 
+  // Email configuration endpoints for Classroom Solutions
+  app.post('/api/admin/email-config', requireAuth, async (req, res) => {
+    try {
+      const user = req.session.user;
+      if (!user || !user.isAdmin) {
+        return res.status(403).json({ message: 'Admin access required' });
+      }
+
+      const emailConfig = req.body;
+      console.log('📧 Saving email configuration for contact form notifications');
+      
+      // TODO: Store email configuration in database
+      // For now, just validate and return success
+      if (!emailConfig.smtpHost || !emailConfig.smtpUser || !emailConfig.toEmail) {
+        return res.status(400).json({ message: 'Required email configuration fields missing' });
+      }
+
+      console.log('✅ Email configuration saved successfully');
+      res.json({ success: true, message: 'Email configuration saved' });
+    } catch (error) {
+      console.error('❌ Failed to save email configuration:', error);
+      res.status(500).json({ message: 'Failed to save email configuration' });
+    }
+  });
+
+  app.get('/api/admin/email-config', requireAuth, async (req, res) => {
+    try {
+      const user = req.session.user;
+      if (!user || !user.isAdmin) {
+        return res.status(403).json({ message: 'Admin access required' });
+      }
+
+      // TODO: Retrieve email configuration from database
+      // For now, return empty config
+      const emailConfig = {
+        smtpHost: '',
+        smtpPort: '587',
+        smtpUser: '',
+        smtpPassword: '',
+        fromEmail: '',
+        toEmail: 'ne_roberts@yahoo.com'
+      };
+
+      res.json(emailConfig);
+    } catch (error) {
+      console.error('❌ Failed to retrieve email configuration:', error);
+      res.status(500).json({ message: 'Failed to retrieve email configuration' });
+    }
+  });
 
   // Update user profile - PROTECTED
   app.put('/api/user/profile', requireAuth, async (req: any, res) => {
