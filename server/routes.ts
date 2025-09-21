@@ -192,6 +192,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Contact form endpoint for information requests
+  app.post('/api/contact-request', async (req, res) => {
+    try {
+      console.log('📧 Contact form submission received:', req.body);
+      
+      const { name, email, organization, inquiryType, message } = req.body;
+      
+      // Basic validation
+      if (!name || !email || !inquiryType || !message) {
+        return res.status(400).json({ message: 'Required fields are missing' });
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email format' });
+      }
+
+      // Prepare email content
+      const inquiryTypeLabels = {
+        'information': 'General Information',
+        'individual_registration': 'Individual Teacher Registration',
+        'school_registration': 'School Registration',
+        'district_registration': 'District Registration',
+        'other': 'Other'
+      };
+
+      const subject = `Concern2Care Contact Request - ${inquiryTypeLabels[inquiryType] || 'General Inquiry'}`;
+      const emailContent = `
+New contact form submission from Concern2Care:
+
+Name: ${name}
+Email: ${email}
+Organization: ${organization || 'Not specified'}
+Inquiry Type: ${inquiryTypeLabels[inquiryType] || inquiryType}
+
+Message:
+${message}
+
+---
+Submitted: ${new Date().toLocaleString()}
+      `.trim();
+
+      // Send email using existing email service
+      try {
+        await sendReportEmail(
+          'ne_roberts@yahoo.com',
+          subject,
+          emailContent,
+          null // No attachment for contact forms
+        );
+        
+        console.log('✅ Contact form email sent successfully');
+        res.json({ success: true, message: 'Your request has been submitted successfully' });
+      } catch (emailError) {
+        console.error('❌ Failed to send contact form email:', emailError);
+        res.status(500).json({ message: 'Failed to send your request. Please try again later.' });
+      }
+    } catch (error) {
+      console.error('❌ Contact form submission error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
 
   // Get current teacher with usage data
   app.get('/api/auth/user', async (req: any, res) => {

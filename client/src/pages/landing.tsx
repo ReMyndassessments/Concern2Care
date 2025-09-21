@@ -1,15 +1,52 @@
 import { Button } from "@/components/ui/button";
-import { Sparkles, FileText, Users, Clock, Check, Mail, LogOut } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sparkles, FileText, Users, Clock, Check, Mail, LogOut, Info } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
-import { queryClient } from '@/lib/queryClient';
+import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useToast } from "@/hooks/use-toast";
+
+// Contact form schema
+const contactFormSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Valid email is required'),
+  organization: z.string().optional(),
+  inquiryType: z.enum(['information', 'individual_registration', 'school_registration', 'district_registration', 'other'], {
+    required_error: 'Please select an inquiry type',
+  }),
+  message: z.string().min(10, 'Please provide a detailed message (minimum 10 characters)'),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
 
 export default function Landing() {
   const { t } = useTranslation();
   const { isAuthenticated, user, isLoading } = useAuth();
+  const { toast } = useToast();
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isSubmittingContact, setIsSubmittingContact] = useState(false);
+
+  // Contact form
+  const contactForm = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      organization: '',
+      inquiryType: undefined,
+      message: '',
+    },
+  });
 
   // Fetch QR code from API
   const { data: qrCodeData, isLoading: qrLoading } = useQuery<{
@@ -44,6 +81,33 @@ export default function Landing() {
       window.location.reload();
     } catch (error) {
       console.error('Logout error:', error);
+    }
+  };
+
+  const onContactSubmit = async (data: ContactFormData) => {
+    setIsSubmittingContact(true);
+    try {
+      await apiRequest('/api/contact-request', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+
+      toast({
+        title: "Request Submitted",
+        description: "Thank you for your inquiry. We'll get back to you within 24-48 hours.",
+      });
+
+      contactForm.reset();
+      setIsContactModalOpen(false);
+    } catch (error) {
+      console.error('Contact form submission failed:', error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error sending your request. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingContact(false);
     }
   };
   
@@ -383,8 +447,129 @@ export default function Landing() {
                 </li>
               </ul>
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-700">For More Information on the Classroom Solutions Program, as well as Individual Teacher, School & District Registration, contact us at info@remynd.online</p>
+              <div className="mt-6">
+                <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" data-testid="button-contact-info">
+                      <Info className="mr-2 h-4 w-4" />
+                      Get More Information
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Request Information</DialogTitle>
+                    </DialogHeader>
+                    <Form {...contactForm}>
+                      <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-4">
+                        <FormField
+                          control={contactForm.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Name *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Your full name" {...field} data-testid="input-contact-name" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={contactForm.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email *</FormLabel>
+                              <FormControl>
+                                <Input type="email" placeholder="your.email@example.com" {...field} data-testid="input-contact-email" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={contactForm.control}
+                          name="organization"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Organization</FormLabel>
+                              <FormControl>
+                                <Input placeholder="School, district, or organization name" {...field} data-testid="input-contact-organization" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={contactForm.control}
+                          name="inquiryType"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Inquiry Type *</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-contact-inquiry-type">
+                                    <SelectValue placeholder="Select inquiry type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="information">General Information</SelectItem>
+                                  <SelectItem value="individual_registration">Individual Teacher Registration</SelectItem>
+                                  <SelectItem value="school_registration">School Registration</SelectItem>
+                                  <SelectItem value="district_registration">District Registration</SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={contactForm.control}
+                          name="message"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Message *</FormLabel>
+                              <FormControl>
+                                <Textarea 
+                                  placeholder="Please describe your needs, questions, or how we can help you..."
+                                  rows={4}
+                                  {...field}
+                                  data-testid="textarea-contact-message"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <div className="flex gap-3 pt-4">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsContactModalOpen(false)}
+                            className="flex-1"
+                            data-testid="button-contact-cancel"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="submit"
+                            disabled={isSubmittingContact}
+                            className="flex-1"
+                            data-testid="button-contact-submit"
+                          >
+                            {isSubmittingContact ? 'Sending...' : 'Send Request'}
+                          </Button>
+                        </div>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>
