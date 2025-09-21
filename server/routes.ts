@@ -6,6 +6,7 @@ import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { generateConcernReport, ensureReportsDirectory, parseMarkdownToPDF } from "./services/pdf";
 import { generateConcernHTMLReport, generateMeetingHTMLReport } from "./services/htmlReport";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
+import { sendOutlookEmail } from "./services/outlookEmail";
 import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports, schools, featureFlags, schoolFeatureOverrides } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, sql } from "drizzle-orm";
@@ -235,24 +236,19 @@ ${message}
 Submitted: ${new Date().toLocaleString()}
       `.trim();
 
-      // Send email using existing email service
+      // Send email using Outlook service
       try {
-        await sendReportEmail({
-          recipients: [
-            {
-              email: 'ne_roberts@yahoo.com',
-              name: 'Noel Roberts',
-              role: 'Administrator'
-            }
-          ],
+        await sendOutlookEmail({
+          toEmail: 'ne_roberts@yahoo.com',
+          toName: 'Noel Roberts',
           subject: subject,
-          message: emailContent
+          content: emailContent
         });
         
-        console.log('✅ Contact form email sent successfully');
+        console.log('✅ Contact form email sent successfully via Outlook');
         res.json({ success: true, message: 'Your request has been submitted successfully' });
       } catch (emailError) {
-        console.error('❌ Failed to send contact form email:', emailError);
+        console.error('❌ Failed to send contact form email via Outlook:', emailError);
         res.status(500).json({ message: 'Failed to send your request. Please try again later.' });
       }
     } catch (error) {
