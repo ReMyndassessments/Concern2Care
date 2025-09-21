@@ -1066,21 +1066,14 @@ export class DatabaseStorage implements IStorage {
 
     return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
       ...classroom_submissions,
-      // Map database column names to frontend expected names with safe defaults
+      // Frontend expects these specific camelCase field names
       studentFirstName: classroom_submissions.first_name,
       studentLastInitial: classroom_submissions.last_initial,
       studentAge: classroom_submissions.student_age,
       studentGrade: classroom_submissions.student_grade,
+      // Ensure arrays are safe for map() calls
       learningProfile: classroom_submissions.learning_profile || [],
-      concernDescription: classroom_submissions.concern_description,
       actionsTaken: classroom_submissions.actions_taken || [],
-      taskType: classroom_submissions.task_type,
-      aiDraft: classroom_submissions.ai_draft,
-      autoSendTime: classroom_submissions.auto_send_time,
-      sentAt: classroom_submissions.sent_at,
-      submittedAt: classroom_submissions.submitted_at,
-      updatedAt: classroom_submissions.updated_at,
-      createdAt: classroom_submissions.submitted_at, // Use submitted_at as createdAt
       teacher: classroom_enrolled_teachers!
     }));
   }
@@ -1096,21 +1089,14 @@ export class DatabaseStorage implements IStorage {
 
     return {
       ...result.classroom_submissions,
-      // Map database column names to frontend expected names with safe defaults
+      // Frontend expects these specific camelCase field names
       studentFirstName: result.classroom_submissions.first_name,
       studentLastInitial: result.classroom_submissions.last_initial,
       studentAge: result.classroom_submissions.student_age,
       studentGrade: result.classroom_submissions.student_grade,
+      // Ensure arrays are safe for map() calls
       learningProfile: result.classroom_submissions.learning_profile || [],
-      concernDescription: result.classroom_submissions.concern_description,
       actionsTaken: result.classroom_submissions.actions_taken || [],
-      taskType: result.classroom_submissions.task_type,
-      aiDraft: result.classroom_submissions.ai_draft,
-      autoSendTime: result.classroom_submissions.auto_send_time,
-      sentAt: result.classroom_submissions.sent_at,
-      submittedAt: result.classroom_submissions.submitted_at,
-      updatedAt: result.classroom_submissions.updated_at,
-      createdAt: result.classroom_submissions.submitted_at, // Use submitted_at as createdAt
       teacher: result.classroom_enrolled_teachers!
     };
   }
@@ -1140,21 +1126,14 @@ export class DatabaseStorage implements IStorage {
 
     return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
       ...classroom_submissions,
-      // Map database column names to frontend expected names with safe defaults
+      // Frontend expects these specific camelCase field names
       studentFirstName: classroom_submissions.first_name,
       studentLastInitial: classroom_submissions.last_initial,
       studentAge: classroom_submissions.student_age,
       studentGrade: classroom_submissions.student_grade,
+      // Ensure arrays are safe for map() calls
       learningProfile: classroom_submissions.learning_profile || [],
-      concernDescription: classroom_submissions.concern_description,
       actionsTaken: classroom_submissions.actions_taken || [],
-      taskType: classroom_submissions.task_type,
-      aiDraft: classroom_submissions.ai_draft,
-      autoSendTime: classroom_submissions.auto_send_time,
-      sentAt: classroom_submissions.sent_at,
-      submittedAt: classroom_submissions.submitted_at,
-      updatedAt: classroom_submissions.updated_at,
-      createdAt: classroom_submissions.submitted_at, // Use submitted_at as createdAt
       teacher: classroom_enrolled_teachers!
     }));
   }
