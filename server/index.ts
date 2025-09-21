@@ -8,6 +8,16 @@ import { setupVite, serveStatic, log } from "./vite";
 import { env } from "./services/environment";
 import { initializeApp } from "./setup";
 
+// Configure Gmail SMTP settings if not already set
+if (!process.env.SMTP_HOST) {
+  process.env.SMTP_HOST = 'smtp.gmail.com';
+  process.env.SMTP_PORT = '587';
+  process.env.SMTP_USER = 'noelroberts43@gmail.com';
+  process.env.SMTP_PASS = '8qwQBwx[pNc)kNFO';
+  process.env.SMTP_FROM = 'noelroberts43@gmail.com';
+  console.log('📧 Gmail SMTP configuration set');
+}
+
 // Smart environment detection - use production settings when needed
 const shouldUseProductionConfig = (
   process.env.NODE_ENV === 'production' || 
