@@ -586,7 +586,8 @@ export default function ClassroomSubmissionsManagement() {
       const endpoints = {
         'approved': `/api/admin/classroom/submissions/${id}/approve`,
         'hold': `/api/admin/classroom/submissions/${id}/hold`,
-        'cancelled': `/api/admin/classroom/submissions/${id}/cancel`
+        'cancelled': `/api/admin/classroom/submissions/${id}/cancel`,
+        'escalated': `/api/admin/classroom/submissions/${id}/escalate`
       };
       
       const endpoint = endpoints[status as keyof typeof endpoints];
