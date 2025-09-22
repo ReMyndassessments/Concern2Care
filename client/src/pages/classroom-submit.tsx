@@ -325,7 +325,7 @@ export default function ClassroomSubmit() {
                         />
                       </FormControl>
                       <FormDescription>
-                        Response will be sent to this email address
+                        Used for account identification and security
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
