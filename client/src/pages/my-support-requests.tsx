@@ -379,7 +379,7 @@ export default function MySupportRequests() {
                 </TabsTrigger>
                 <TabsTrigger value="classroom_management" className="text-xs sm:text-sm">
                   <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                  Classroom Management ({classroomManagementCount})
+                  {t('supportRequests.wholeClassManagement', 'Classroom Management')} ({classroomManagementCount})
                 </TabsTrigger>
               </TabsList>
 
@@ -406,19 +406,19 @@ export default function MySupportRequests() {
               <History className="h-10 w-10 text-gray-400" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              {studentFilter ? 'No matching support requests' : 'No support requests yet'}
+              {studentFilter ? t('supportRequests.noMatchingRequests', 'No matching support requests') : t('supportRequests.noRequestsYet', 'No support requests yet')}
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
               {studentFilter 
-                ? 'Try adjusting your search criteria or clear the filter to see all requests'
-                : 'Create your first student support request to get started with AI-powered interventions'
+                ? t('supportRequests.tryAdjusting', 'Try adjusting your search criteria or clear the filter to see all requests')
+                : t('supportRequests.createFirst', 'Create your first student support request to get started with AI-powered interventions')
               }
             </p>
             {!studentFilter && (
               <Link href="/dashboard">
                 <Button className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white px-8 py-3 text-lg">
                   <Sparkles className="h-5 w-5 mr-2" />
-                  Create Support Request
+                  {t('supportRequests.createSupportRequest', 'Create Support Request')}
                 </Button>
               </Link>
             )}
@@ -428,11 +428,14 @@ export default function MySupportRequests() {
             {/* Results summary */}
             <div className="flex items-center justify-between mb-6">
               <p className="text-gray-600">
-                Found <strong>{filteredConcerns.length}</strong> support request{filteredConcerns.length !== 1 ? 's' : ''}
-                {studentFilter && ` matching "${studentFilter}"`}
+                {t('supportRequests.foundRequests', 'Found <strong>{{count}}</strong> support request{{plural}}', { 
+                  count: filteredConcerns.length,
+                  plural: filteredConcerns.length !== 1 ? 's' : ''
+                })}
+                {studentFilter && ` ${t('supportRequests.matchingFilter', 'matching "{{filter}}"', { filter: studentFilter })}`}
               </p>
               <Badge variant="secondary">
-                Total: {concerns?.length || 0} requests
+                {t('supportRequests.totalRequests', 'Total: {{count}} requests', { count: concerns?.length || 0 })}
               </Badge>
             </div>
 
@@ -449,7 +452,7 @@ export default function MySupportRequests() {
                         <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3 mb-2">
                           <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
                             {concern.taskType === 'classroom_management' 
-                              ? 'Classroom Management Strategies'
+                              ? t('supportRequests.wholeClassManagementStrategies', 'Classroom Management Strategies')
                               : `${concern.studentFirstName} ${concern.studentLastInitial}.`
                             }
                           </h3>
@@ -477,7 +480,7 @@ export default function MySupportRequests() {
                             ) : concern.taskType === "classroom_management" ? (
                               <>
                                 <Users className="h-3 w-3 mr-1" />
-                                Classroom Management
+                                {t('supportRequests.wholeClassManagement', 'Classroom Management')}
                               </>
                             ) : (
                               <>
@@ -510,7 +513,7 @@ export default function MySupportRequests() {
                           </div>
                           <div className="flex items-center space-x-1 sm:space-x-2">
                             <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" />
-                            <span className="capitalize">{concern.severityLevel}</span>
+                            <span className="capitalize">{t(`form.${concern.severityLevel}Classroom`, concern.severityLevel)}</span>
                           </div>
                         </div>
                       </div>
