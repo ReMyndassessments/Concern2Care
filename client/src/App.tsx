@@ -94,7 +94,6 @@ function Router() {
   return (
     <Switch>
       {/* Public routes (no auth required) */}
-      <Route path="/" component={Landing} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/classroom" component={ClassroomSubmit} />
@@ -110,6 +109,8 @@ function Router() {
       <Route path="/settings" component={AuthenticatedRouter} />
       <Route path="/concerns/:id" component={AuthenticatedRouter} />
       
+      {/* Landing page as default */}
+      <Route path="/" component={Landing} />
       <Route component={NotFound} />
     </Switch>
   );
