@@ -24,9 +24,9 @@ import { Edit3, Wand2, GraduationCap, AlertTriangle, Users, CalendarX, User, Cal
 import { useTranslation } from "react-i18next";
 
 const enhancedConcernFormSchema = z.object({
-  studentFirstName: z.string().min(1, "First name is required"),
-  studentLastInitial: z.string().length(1, "Last initial must be exactly 1 character"),
-  grade: z.string().min(1, "Grade is required"),
+  studentFirstName: z.string().optional(),
+  studentLastInitial: z.string().optional(),
+  grade: z.string().optional(),
   teacherPosition: z.string().min(1, "Teacher position is required"),
   location: z.string().min(1, "Location is required"),
   concernTypes: z.array(z.string()).default([]),
@@ -53,8 +53,16 @@ const enhancedConcernFormSchema = z.object({
   // Task type selection for focused AI responses
   taskType: z.string().min(1, "Task type is required"),
 }).refine((data) => {
-  // For all task types, require concern types and description
-  return data.concernTypes.length > 0 && 
+  // For classroom management, only require description
+  if (data.taskType === 'classroom_management') {
+    return data.description && data.description.length >= 10;
+  }
+  
+  // For individual concerns, require student info, concern types and description
+  return data.studentFirstName && 
+         data.studentLastInitial && 
+         data.grade &&
+         data.concernTypes.length > 0 && 
          data.description && data.description.length >= 10;
 }, {
   message: "Please complete all required fields",
@@ -64,7 +72,7 @@ const enhancedConcernFormSchema = z.object({
   if (data.taskType === 'tier2_intervention') {
     return data.severityLevel;
   }
-  // For differentiation tasks, severity is optional
+  // For differentiation and classroom_management tasks, severity is optional
   return true;
 }, {
   message: "Please select severity level for intervention tasks",
@@ -131,6 +139,11 @@ const TASK_TYPES = [
     value: 'tier2_intervention', 
     label: 'Tier 2 Intervention Task',
     description: 'Generate evidence-based behavioral and academic intervention strategies for concerning behaviors. Focus on targeted interventions for specific behavioral or academic issues.'
+  },
+  { 
+    value: 'classroom_management', 
+    label: 'Whole Class Management Strategies',
+    description: 'Get classroom-wide management strategies based on all your students of concern. Focus on overall classroom dynamics, proactive interventions, and group management techniques.'
   }
 ];
 
@@ -166,6 +179,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
     t('form.contactedParent', 'Contacted parent'),
     t('form.documentedOnly', 'Documented only')
   ];
+  const [requestType, setRequestType] = useState<'individual' | 'classroom'>('individual');
   const [showOtherConcern, setShowOtherConcern] = useState(false);
   const [showOtherAction, setShowOtherAction] = useState(false);
   const [showDifferentiation, setShowDifferentiation] = useState(false);
@@ -281,7 +295,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-4 sm:space-y-6 lg:space-y-8 ${isAtLimit ? 'opacity-60' : ''}`}>
             
-            {/* Task Type Selection - FIRST */}
+            {/* Task Type Selection - UPDATED */}
             <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 sm:p-6">
               <div className="flex items-center space-x-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
