@@ -34,9 +34,9 @@ const app = express();
 // Always trust proxy in Replit environment
 app.set('trust proxy', 1);
 
-// Security middleware
+// Security middleware - FORCE DISABLE CSP for now to fix JavaScript loading
 app.use(helmet({
-  contentSecurityPolicy: env.NODE_ENV === 'production' ? undefined : false,
+  contentSecurityPolicy: false, // Completely disabled to fix JavaScript loading issues
   crossOriginEmbedderPolicy: false,
 }));
 
