@@ -19,8 +19,8 @@ const emailVerificationSchema = z.object({
 // Schema for PIN setup (first-time users)
 const pinSetupSchema = z.object({
   securityPin: z.string().length(4, 'PIN must be exactly 4 digits').regex(/^\d+$/, 'PIN must contain only numbers'),
-  securityQuestion: z.string().min(5, 'Security question must be at least 5 characters'),
-  securityAnswer: z.string().min(2, 'Security answer must be at least 2 characters'),
+  securityQuestion: z.string().min(1, 'Security question is required'),
+  securityAnswer: z.string().min(1, 'Security answer is required'),
 });
 
 // Schema for PIN verification (returning users)
@@ -132,7 +132,7 @@ export function ClassroomTeacherVerification({ onVerificationComplete }: Classro
     });
 
     // Client-side validation check
-    if (!data.securityQuestion || data.securityQuestion.length < 5) {
+    if (!data.securityQuestion || data.securityQuestion.trim().length === 0) {
       toast({
         title: "Validation Error",
         description: "Please select a security question.",
@@ -142,10 +142,10 @@ export function ClassroomTeacherVerification({ onVerificationComplete }: Classro
       return;
     }
 
-    if (!data.securityAnswer || data.securityAnswer.length < 2) {
+    if (!data.securityAnswer || data.securityAnswer.trim().length === 0) {
       toast({
         title: "Validation Error", 
-        description: "Security answer must be at least 2 characters.",
+        description: "Security answer is required.",
         variant: "destructive",
       });
       setIsLoading(false);
