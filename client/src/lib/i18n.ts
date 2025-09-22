@@ -2347,6 +2347,21 @@ const resources = {
       'help.reportStep3': '找到您想要分享的关注事项',
       'help.reportStep4': '点击关注事项旁边的"分享"按钮',
       'help.reportStep5': '系统会为请求类型生成适当标题的综合PDF报告',
+
+      // Request Type Titles (missing)
+      'help.differentiationRequestsTitle': '📚 差异化请求',
+      'help.interventionRequestsTitle': '🎯 干预请求', 
+      'help.classroomRequestsTitle': '👥 课堂管理请求',
+
+      // Enhanced PDF Quality
+      'help.enhancedPDFQuality': '增强的PDF质量',
+      'help.enhancedPDFQualityDesc': 'PDF报告生成的最新改进：',
+      'help.pdfQuality1': '修复字符编码问题 - 不再有乱码文本（Ø=ÜÝ）',
+      'help.pdfQuality2': '本地中文字符显示，无占位符消息',
+      'help.pdfQuality3': '具有适当边框和间距的专业表格格式',
+      'help.pdfQuality4': '优化间距，使文档更清洁、更紧凑',
+      'help.pdfQuality5': '结构化AI响应和课程计划的更好格式',
+
       
       // Interventions Display
       'interventions.title': 'AI生成的干预措施',
