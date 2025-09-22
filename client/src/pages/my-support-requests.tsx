@@ -33,7 +33,8 @@ import {
   Plus,
   X,
   BookOpen,
-  Target
+  Target,
+  Users
 } from "lucide-react";
 import { Concern } from "@shared/schema";
 import { Link } from "wouter";
@@ -48,7 +49,7 @@ export default function MySupportRequests() {
   const [studentFilter, setStudentFilter] = useState("");
   const [expandedRequest, setExpandedRequest] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"all" | "differentiation" | "intervention">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "differentiation" | "intervention" | "classroom_management">("all");
   
   // Email sharing state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -194,6 +195,8 @@ export default function MySupportRequests() {
       return concern.taskType === "differentiation";
     } else if (activeTab === "intervention") {
       return concern.taskType === "tier2_intervention";
+    } else if (activeTab === "classroom_management") {
+      return concern.taskType === "classroom_management";
     }
     
     // "all" tab shows everything
@@ -203,6 +206,7 @@ export default function MySupportRequests() {
   // Get counts for each category
   const differentiationCount = concerns?.filter(c => c.taskType === "differentiation").length || 0;
   const interventionCount = concerns?.filter(c => c.taskType === "tier2_intervention").length || 0;
+  const classroomManagementCount = concerns?.filter(c => c.taskType === "classroom_management").length || 0;
 
   const concernTypeColors = {
     academic: "bg-blue-100 text-blue-800 border-blue-200",
@@ -359,9 +363,9 @@ export default function MySupportRequests() {
 
         {/* Support Requests Tabs */}
         <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6 sm:mb-8">
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "all" | "differentiation" | "intervention")}>
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "all" | "differentiation" | "intervention" | "classroom_management")}>
             <div className="flex flex-col space-y-4">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="all" className="text-xs sm:text-sm">
                   {t('supportRequests.allRequests', 'All Requests')} ({concerns?.length || 0})
                 </TabsTrigger>
@@ -372,6 +376,10 @@ export default function MySupportRequests() {
                 <TabsTrigger value="intervention" className="text-xs sm:text-sm">
                   <Target className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                   {t('supportRequests.interventions', 'Interventions')} ({interventionCount})
+                </TabsTrigger>
+                <TabsTrigger value="classroom_management" className="text-xs sm:text-sm">
+                  <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  Classroom Management ({classroomManagementCount})
                 </TabsTrigger>
               </TabsList>
 
@@ -451,6 +459,8 @@ export default function MySupportRequests() {
                           <Badge 
                             className={concern.taskType === "differentiation" 
                               ? "bg-emerald-100 text-emerald-800 border-emerald-200" 
+                              : concern.taskType === "classroom_management"
+                              ? "bg-violet-100 text-violet-800 border-violet-200"
                               : "bg-indigo-100 text-indigo-800 border-indigo-200"
                             }
                           >
@@ -458,6 +468,11 @@ export default function MySupportRequests() {
                               <>
                                 <BookOpen className="h-3 w-3 mr-1" />
                                 {t('supportRequests.differentiation', 'Differentiation')}
+                              </>
+                            ) : concern.taskType === "classroom_management" ? (
+                              <>
+                                <Users className="h-3 w-3 mr-1" />
+                                Classroom Management
                               </>
                             ) : (
                               <>

@@ -7,6 +7,7 @@ import { generateConcernReport, ensureReportsDirectory, parseMarkdownToPDF } fro
 import { generateConcernHTMLReport, generateMeetingHTMLReport } from "./services/htmlReport";
 import { sendReportEmail, generateSecureReportLink } from "./services/email";
 import { insertConcernSchema, insertFollowUpQuestionSchema, users, concerns, interventions, reports, schools, featureFlags, schoolFeatureOverrides } from "@shared/schema";
+import { z } from "zod";
 import { db } from "./db";
 import { eq, and, sql } from "drizzle-orm";
 import path from "path";
