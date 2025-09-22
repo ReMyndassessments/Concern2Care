@@ -4042,7 +4042,7 @@ Submitted: ${new Date().toLocaleString()}
   });
 
   // Public QR code endpoint for landing page (no auth required)
-  app.get('/api/classroom/qr-code', requireClassroomSolutions, async (req: any, res) => {
+  app.get('/api/classroom/qr-code', async (req: any, res) => {
     try {
       const QRCode = await import('qrcode');
       

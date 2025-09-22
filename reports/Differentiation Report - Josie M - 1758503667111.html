@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differentiation Report - Josie M</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Differentiation Report</h2>
+                <h3 class="student-name">Student: Josie M.</h3>
+                <p class="report-date">Generated on September 22, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Josie M.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Not specified</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Academic, Social/Emotional, Peer Relationships</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/22/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    Josie was moved to the front of the class where she is better able to hear the teacher. However, she still struggles to hear her peers behind her if they give an answer or ask a question.
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p>Of course. As a fellow educator, I recognize you are already deeply attuned to Josie's needs in your classroom. The strategies below are designed to build on your professional expertise and provide a structured, evidence-based framework to support Josie's unique profile. They are offered as a collaborative toolkit for you to adapt and integrate into your practice.</p><p>***</p><p><h2 class="major-heading">Student Learning Profile Summary</h2></p><p>Based on the provided information, Josie's profile presents a unique intersection of needs that requires a multifaceted approach. Her <strong>hearing impairment</strong> means she primarily accesses information visually and through amplification, making the auditory channel of traditional instruction a significant barrier (Easterbrooks & Beal-Alvarez, 2013). As an <strong>EAL learner at a beginner proficiency level</strong>, she is simultaneously acquiring academic content and the language of instruction, which doubles the cognitive load (Cummins, 2000). This combination often manifests as <strong>academic struggle</strong>, likely stemming from inaccessible instruction, language barriers, and potential social isolation.</p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Strengths to Leverage:</strong> High potential for visual learning, resilience, and likely a foundation in her first language (L1) that can be used as a bridge.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Primary Challenges:</strong> Limited access to auditory information, high cognitive load from dual-language processing, and potential gaps in foundational academic concepts due to these barriers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Optimal Learning Conditions:</strong> A visually rich, language-focused environment with reduced auditory distractions. Instruction must be explicit, scaffolded, and provide multiple means for engagement, representation, and action & expression (CAST, 2018).</li></ul></p><p>---</p><p><h2 class="major-heading">1. Content Modifications</h2></p><p><h3 class="intervention-title">Adjusting Complexity</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Chunking with Visual Anchors:</strong> Break down multi-step tasks or dense texts into 3-4 step sequences. For each chunk, provide a corresponding icon or simple image.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* For a science lab, the worksheet has four pictures: 1. Beaker, 2. Thermometer, 3. Pencil writing on paper, 4. Magnifying glass. Each picture is numbered and has one sentence of instruction beside it.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Research:* Supports working memory limitations common for EAL learners and reduces language processing load (Sweller, 2011).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Tiered Vocabulary Lists:</strong> Pre-teach 3-5 essential content-specific words (Tier 3) and 3-5 high-utility academic words (Tier 2) before a lesson. Provide images, definitions, and L1 translations (if possible and appropriate).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* For a history lesson on "expansion," pre-teach: *manifest destiny* (with a map image), *territory* (with an image of land), *acquire* (synonyms: get, obtain), *negotiate* (synonyms: discuss, deal).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Research:* Direct vocabulary instruction is one of the most effective methods for improving comprehension for EAL students (August & Shanahan, 2006).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Sentence Frames & Starter Banks:</strong> Provide grammatically correct structures for responding to questions verbally or in writing.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* "The cause of ______ was ______." "I agree/disagree with ______ because ______." "The first step in solving this is ______."</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Materials:* Laminated strips or a poster on her desk.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Research:* Scaffolds language production and allows students to focus on content rather than syntax (Gibbons, 2015).</li></ul></p><p><h3 class="intervention-title">Multiple Representations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Visual Supports:</strong> Use graphic organizers for every major concept. A flowchart for processes, a Venn diagram for comparisons, a T-chart for pros/cons.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Materials:* Supply a folder of blank, commonly used organizers. Use online tools like Google Drawings or Lucidchart for digital versions.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Auditory Options (Modified):</strong> Since Josie has a hearing impairment, ensure all audio is:</li></ul><br>    1.   <strong>Captioned:</strong> Use closed captioning on all videos (YouTube, Netflix, etc.).<br>    2.   <strong>Amplified & Clear:</strong> If she uses an FM system, ensure you are using the microphone correctly. Speak facing the class, clearly, and at a moderate pace.<br>    3.   <strong>Transcribed:</strong> Provide a written transcript of audio clips or teacher lectures. Tools like Otter.ai can generate live transcripts.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Kinesthetic Activities:</strong> Incorporate manipulatives and models. In math, use algebra tiles. In science, use physical models of cells. In ELA, use word cards to physically build sentences.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Research:* Embodied cognition theory suggests physical action can support abstract learning (Glenberg, 2008).</li></ul></p><p><h3 class="intervention-title">Interest-Based Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Culturally Relevant Text Selection:</strong> Where possible, incorporate texts, examples, and problems that reflect diverse backgrounds and experiences.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Choice Menus:</strong> For project-based learning, provide a "menu" of options for demonstrating understanding of a standard.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* For a book report, options could include: a character Instagram profile, a diorama of a key scene, a written interview with the protagonist, or a movie trailer pitch.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Materials:* A simple rubric that applies to all choices to ensure consistent assessment criteria.</li></ul></p><p>---</p><p><h2 class="major-heading">2. Process Modifications</h2></p><p><h3 class="intervention-title">Instructional Delivery</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Think-Aloud Modeling:</strong> Verbally model your cognitive process for solving a problem or analyzing a text. Make the invisible steps of expert thinking visible.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* "When I see this math word problem, the first thing I do is look for key words. I see 'total,' which makes me think I need to add. So I will identify the numbers I need to add together..."</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Research:* Effective for both EAL learners and students who benefit from explicit instruction (Fisher & Frey, 2008).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Pacing & Wait Time:</strong> After asking a question, institute a mandatory 10-15 second "think time." This gives Josie time to process the language, formulate a thought, and perhaps prepare to type or write a response.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Balance:</strong> Structure lessons to include short, explicit teacher-led instruction (10 mins), followed by guided collaborative practice (15 mins), and then independent/partner work (15 mins).</li></ul></p><p><h3 class="intervention-title">Scaffolding Techniques</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Step-by-Step Checklists:</strong> For complex tasks like essays or science reports, provide a checklist of discrete, manageable steps. She can check off each step as she completes it.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Peer Support & "Welcome Buddies":</strong> Partner Josie with a kind, empathetic peer who can serve as a model for routines, help clarify directions, and be a first line of support. Rotate this buddy periodically. <strong>Crucially, the buddy is not a tutor</strong> but a facilitator.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Gesture and Visual Cuing:</strong> Use consistent gestures for common instructions (e.g., pointing to ear for "listen," hands together for "get into groups," open palm for "stop").</li></ul></p><p><h3 class="intervention-title">Technology Integration</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Assistive Technology:</strong> Ensure Josie has consistent access to and training on any prescribed assistive listening devices (FM system).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Digital Tools:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Google Read & Write:</strong> Provides text-to-speech (to hear text read aloud), speech-to-text (to dictate responses), picture dictionaries, and vocabulary lists.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Microsoft Immersive Reader:</strong> Built into Word and OneNote, it can read text aloud, break it into syllables, highlight parts of speech, and offer picture definitions.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Translation Tools:</strong> Google Translate can be used strategically for key words and phrases to bridge L1 understanding. Use it as a dictionary, not for translating entire passages.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Accessibility Features:</strong> Enable closed captioning on all devices and software. Use high-contrast visual displays.</li></ul></p><p>---</p><p><h2 class="major-heading">3. Product Alternatives</h2></p><p><h3 class="intervention-title">Assessment Options</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Modified Rubrics:</strong> For written assignments, modify the rubric to weight "Ideas and Content" more heavily than "Conventions and Grammar" at this stage. This assesses her understanding separately from her English proficiency.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Performance-Based Assessments:</strong> Allow her to demonstrate understanding through diagrams, labeled models, posters, or recorded verbal explanations (if speech is clear and comfortable for her).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Portfolios:</strong> Collect work over time to show growth in both content mastery and language acquisition, rather than relying on single-point assessments.</li></ul></p><p><h3 class="intervention-title">Expression Methods</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Option 1: Visual Report</strong> - Create an infographic or detailed comic strip explaining a concept.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Option 2: Digital Presentation</strong> - Use Google Slides or Prezi with minimal text and strong visual supports, which she can present or have a peer present.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Option 3: Model/Build</strong> - Create a physical or digital 3D model (using Minecraft or Tinkercad, for example) to represent understanding.</li></ul></p><p>---</p><p><h2 class="major-heading">4. Learning Environment Optimization</h2></p><p><h3 class="intervention-title">Physical Space</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Seating:</strong> Josie must have a seat with a clear, unobstructed view of your face and any visual aids (board, screen). The ideal location is front and center.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Lighting:</strong> Ensure your face is well-lit when speaking. Avoid standing with your back to a bright window.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Organization:</strong> Provide a consistent, labeled system for her materials. Use visual schedules on her desk to outline the day's activities.</li></ul></p><p><h3 class="intervention-title">Social Environment</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Structured Group Work:</strong> Use highly structured cooperative learning strategies like "Think-Pair-Share" or numbered heads together. Assign specific, rotating roles (e.g., recorder, materials manager, reporter) to ensure meaningful participation for all.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Communication Norms:</strong> Establish and model class norms for inclusive communication: facing the speaker, speaking one at a time, and rephrasing rather than repeating when someone doesn't understand.</li></ul></p><p>---</p><p><h2 class="major-heading">5. Implementation Timeline</h2></p><p><h3 class="intervention-title">Week 1-2: Immediate Strategies</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Seating:</strong> Ensure optimal seating arrangement.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Tech Check:</strong> Confirm all assistive listening technology is working and you are trained on its use. Enable captions on your computer and projector.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Visual Schedule:</strong> Implement a personal visual schedule on Josie's desk.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Pre-Teaching:</strong> Meet with Josie for 5 minutes at the start of the day or during a study period to pre-teach key vocabulary for the day.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Baseline: Collect 1-2 writing samples and note on-task behavior during whole-group instruction.</li></ul></p><p><h3 class="intervention-title">Weeks 3-6: Short-term Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Introduce Tools:</strong> Begin integrating one tech tool (e.g., Immersive Reader) for reading assignments.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implement Checklists:</strong> Provide step-by-step checklists for one major assignment.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Formalize Peer Support:</strong> Establish and briefly train a "welcome buddy" system.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Track vocabulary quiz scores and accuracy on assignments using modified rubrics.</li></ul></p><p><h3 class="intervention-title">Ongoing: Long-term Support</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Full Integration:</strong> All teachers consistently use captions, visual supports, and structured group work.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Choice & Voice:</strong> Regularly incorporate choice menus for summative assessments.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Transition Planning:</strong> Begin discussions with high school staff about Josie's learning profile and effective strategies to ensure a smooth transition.</li></ul></p><p>---</p><p><h2 class="major-heading">6. Progress Monitoring & Data Collection</h2></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Metric 1: Vocabulary Acquisition:</strong> Weekly mini-quizzes on pre-taught Tier 2 and Tier 3 words (track % correct).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Metric 2: Task Completion:</strong> Percentage of assignments completed using provided scaffolds (checklists, organizers).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Metric 3: Engagement:</strong> Simple +/- tally every 10 minutes during a lesson for on-task behavior.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Tool:</strong> Use a simple chart or spreadsheet to track this data weekly.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adjustment Point:</strong> If no growth is seen in 3-4 weeks, convene with the ELL and special education support team to review and revise strategies.</li></ul></p><p>---</p><p><h2 class="major-heading">7. Collaboration & Communication</h2></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Parent/Family:</strong> Use a communication log (a simple notebook or shared doc). Share wins, not just challenges. Ask about Josie's interests and how she communicates at home. Use translation services for formal meetings.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Support Staff:</strong> Schedule a brief, recurring meeting (e.g., every two weeks) with the ELL specialist, teacher of the deaf/hard of hearing, and special education case manager. Share data and strategies across all classes.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation:</strong> Maintain a simple log of strategies tried, along with the progress monitoring data. This is essential for future IEP/504 meetings and for informing next year's teachers.</li></ul></p><p>***</p><p><h4 class="sub-heading">Research Citations:</h4><br><ul class="intervention-list"><li class="main-bullet">  August, D., & Shanahan, T. (Eds.). (2006). *Developing literacy in second-language learners: Report of the National Literacy Panel on Language-Minority Children and Youth.* Erlbaum.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  CAST (2018). *Universal Design for Learning Guidelines version 2.2.*</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Cummins, J. (2000). *Language, power and pedagogy: Bilingual children in the crossfire.* Multilingual Matters.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Easterbrooks, S. R., & Beal-Alvarez, J. S. (2013). *Literacy instruction for students who are deaf and hard of hearing.* Oxford University Press.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Fisher, D., & Frey, N. (2008). *Better learning through structured teaching: A framework for the gradual release of responsibility.* ASCD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Gibbons, P. (2015). *Scaffolding language, scaffolding learning: Teaching English language learners in the mainstream classroom* (2nd ed.). Heinemann.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Glenberg, A. M. (2008). Embodiment for Education. In P. Calvo & A. Gomila (Eds.), *Handbook of Cognitive Science: An Embodied Approach* (pp. 455–468). Elsevier.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Sweller, J. (2011). Cognitive load theory. In J. P. Mestre & B. H. Ross (Eds.), *The psychology of learning and motivation* (Vol. 55, pp. 37–76). Academic Press.</li></ul></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>
