@@ -200,11 +200,40 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  
+  // Enhanced startup logging
+  console.log('🚀 Starting server initialization...');
+  console.log(`🌐 Server configured for host: 0.0.0.0, port: ${port}`);
+  console.log(`🔧 Environment: ${env.NODE_ENV}`);
+  console.log(`📊 Process PID: ${process.pid}`);
+  
+  try {
+    server.listen({
+      port,
+      host: "0.0.0.0",
+      // Removed reusePort option which can cause issues in containerized environments like Cloud Run
+    }, () => {
+      console.log(`✅ Server successfully started and listening on port ${port}`);
+      console.log(`🌍 Server accessible at: http://0.0.0.0:${port}`);
+      console.log(`📋 Health check available at: http://0.0.0.0:${port}/health`);
+      log(`serving on port ${port}`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    if (error instanceof Error && error.stack) {
+      console.error('Stack trace:', error.stack);
+    }
+    process.exit(1);
+  }
+  
+  // Handle server error events
+  server.on('error', (error: Error & { code?: string }) => {
+    console.error('❌ Server error occurred:', error);
+    if (error.code === 'EADDRINUSE') {
+      console.error(`🚫 Port ${port} is already in use. Try setting a different PORT environment variable.`);
+    } else if (error.code === 'EACCES') {
+      console.error(`🚫 Permission denied to bind to port ${port}. Try running with elevated privileges or use a port >= 1024.`);
+    }
+    process.exit(1);
   });
 })();
