@@ -15,8 +15,8 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
 import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home } from 'lucide-react';
 
-// Form validation schema
-const classroomSubmissionSchema = z.object({
+// Base form validation schema
+const baseClassroomSubmissionSchema = z.object({
   teacherFirstName: z.string().min(1, 'First name is required'),
   teacherLastInitial: z.string().min(1, 'Last initial is required').max(1, 'Only one letter allowed'),
   teacherPosition: z.string().min(1, 'Position is required'),
@@ -42,6 +42,12 @@ const classroomSubmissionSchema = z.object({
   actionsTaken: z.array(z.string()).min(1, 'Please select at least one action taken'),
 });
 
+// Extended schema with security question fields (for first-time users)
+const classroomSubmissionSchema = baseClassroomSubmissionSchema.extend({
+  securityQuestion: z.string().optional(),
+  securityAnswer: z.string().optional(),
+});
+
 type ClassroomSubmissionForm = z.infer<typeof classroomSubmissionSchema>;
 
 export default function ClassroomSubmit() {
@@ -50,6 +56,8 @@ export default function ClassroomSubmit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<any>(null);
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState<boolean | null>(null);
+  const [showPinReset, setShowPinReset] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<ClassroomSubmissionForm>({
@@ -60,6 +68,8 @@ export default function ClassroomSubmit() {
       teacherPosition: '',
       teacherEmail: '',
       securityPin: '',
+      securityQuestion: '',
+      securityAnswer: '',
       studentFirstName: '',
       studentLastInitial: '',
       studentAge: '',
@@ -95,6 +105,26 @@ export default function ClassroomSubmit() {
 
     checkFeatureFlag();
   }, []);
+
+  // Check if teacher needs to set up security question when email changes
+  const watchedEmail = form.watch('teacherEmail');
+  useEffect(() => {
+    const checkTeacherStatus = async () => {
+      if (watchedEmail && watchedEmail.includes('@')) {
+        try {
+          // For now, assume first-time users need security questions
+          // Later we can add an API endpoint to check if teacher has PIN set
+          setIsFirstTimeUser(true);
+        } catch (error) {
+          console.error('Error checking teacher status:', error);
+        }
+      }
+    };
+
+    if (watchedEmail) {
+      checkTeacherStatus();
+    }
+  }, [watchedEmail]);
 
   const onSubmit = async (data: ClassroomSubmissionForm) => {
     setIsSubmitting(true);
@@ -352,12 +382,85 @@ export default function ClassroomSubmit() {
                         />
                       </FormControl>
                       <FormDescription>
-                        Create a 4-digit PIN to access your responses later
+                        {isFirstTimeUser 
+                          ? "Create a 4-digit PIN to secure your account" 
+                          : "Enter your existing 4-digit PIN"
+                        }
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Security Question Fields - Only for first-time users */}
+                {isFirstTimeUser && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="securityQuestion"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Security Question</FormLabel>
+                          <FormControl>
+                            <Select onValueChange={field.onChange} value={field.value} data-testid="select-security-question">
+                              <SelectTrigger>
+                                <SelectValue placeholder="Choose a security question" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="What was the name of your first pet?">What was the name of your first pet?</SelectItem>
+                                <SelectItem value="What city were you born in?">What city were you born in?</SelectItem>
+                                <SelectItem value="What was your childhood nickname?">What was your childhood nickname?</SelectItem>
+                                <SelectItem value="What is your favorite color?">What is your favorite color?</SelectItem>
+                                <SelectItem value="What was the make of your first car?">What was the make of your first car?</SelectItem>
+                                <SelectItem value="What is your mother's maiden name?">What is your mother's maiden name?</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormDescription>
+                            Choose a question to help recover your PIN if forgotten
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="securityAnswer"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Security Answer</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="text" 
+                              placeholder="Your answer to the security question" 
+                              {...field}
+                              data-testid="input-security-answer"
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Remember this answer - you'll need it to reset your PIN
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
+
+                {/* Forgot PIN Link - Only for returning users */}
+                {isFirstTimeUser === false && (
+                  <div className="text-sm text-muted-foreground">
+                    <button 
+                      type="button" 
+                      onClick={() => setShowPinReset(true)}
+                      className="text-blue-600 hover:underline"
+                      data-testid="link-forgot-pin"
+                    >
+                      Forgot your PIN?
+                    </button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
