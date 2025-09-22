@@ -3561,15 +3561,19 @@ Submitted: ${new Date().toLocaleString()}
       
       // We'll use a simple frontend-specific validation schema instead
       
-      // Use a more permissive validation for frontend
+      // Check for session authentication first
+      const session = (req as any).session;
+      if (!session?.classroomVerified?.email) {
+        return res.status(401).json({ message: 'Authentication required. Please verify your PIN first.' });
+      }
+
+      const teacherEmail = session.classroomVerified.email;
+
+      // Validation schema without security fields (auth handled by session)
       const validationSchema = z.object({
         teacherFirstName: z.string().min(1),
         teacherLastInitial: z.string().min(1).max(1),
         teacherPosition: z.string().min(1),
-        teacherEmail: z.string().email(),
-        securityPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only'),
-        securityQuestion: z.string().optional().refine(val => !val || val.trim() === '' || val.trim().length >= 5, "Security question must be at least 5 characters"), // Only required for first submission
-        securityAnswer: z.string().optional().refine(val => !val || val.trim() === '' || val.trim().length >= 2, "Security answer must be at least 2 characters"), // Only required for first submission
         studentFirstName: z.string().min(1),
         studentLastInitial: z.string().min(1).max(1),
         studentAge: z.string().min(1),
@@ -3599,10 +3603,6 @@ Submitted: ${new Date().toLocaleString()}
         teacherFirstName,
         teacherLastInitial,
         teacherPosition,
-        teacherEmail,
-        securityPin,
-        securityQuestion,
-        securityAnswer,
         studentFirstName,
         studentLastInitial,
         studentAge,
@@ -3618,40 +3618,14 @@ Submitted: ${new Date().toLocaleString()}
         actionsTaken
       } = validationResult.data;
 
-      // Find enrolled teacher by email
+      // Find enrolled teacher by email (from session)
       const enrolledTeacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
       if (!enrolledTeacher || !enrolledTeacher.isActive) {
         return res.status(403).json({ message: 'Teacher not enrolled in the program or inactive' });
       }
 
-      // PIN Security Logic: First submission sets PIN + security question, subsequent submissions must match PIN
-      let hashedPin;
-      if (!enrolledTeacher.securityPin) {
-        // First submission: Must provide both PIN and security question
-        if (!securityQuestion || !securityAnswer) {
-          return res.status(400).json({ 
-            message: 'First-time users must provide both a security PIN and security question for account protection.' 
-          });
-        }
-        
-        hashedPin = await bcrypt.hash(securityPin, 10);
-        const hashedAnswer = await bcrypt.hash(securityAnswer.toLowerCase().trim(), 10);
-        console.log(`🔐 Setting PIN and security question for first-time teacher: ${teacherEmail}`);
-        
-        // Update teacher record with new PIN and security question
-        await storage.setClassroomTeacherPinAndSecurity(enrolledTeacher.id, hashedPin, securityQuestion, hashedAnswer);
-      } else {
-        // Subsequent submission: Validate PIN matches
-        const pinMatches = await bcrypt.compare(securityPin, enrolledTeacher.securityPin);
-        if (!pinMatches) {
-          console.log(`❌ PIN validation failed for teacher: ${teacherEmail}`);
-          return res.status(401).json({ 
-            message: 'Invalid security PIN. Please use the PIN you set during your first submission or reset your PIN if forgotten.' 
-          });
-        }
-        console.log(`✅ PIN validated for teacher: ${teacherEmail}`);
-        hashedPin = enrolledTeacher.securityPin; // Use existing PIN
-      }
+      // Teacher is already authenticated via session - no PIN check needed here
+      console.log(`📋 Processing submission for authenticated teacher: ${teacherEmail}`);
 
       // Atomic submission creation with usage increment in transaction
       let submission;
@@ -3668,7 +3642,6 @@ Submitted: ${new Date().toLocaleString()}
           teacherLastInitial,
           teacherPosition,
           teacherEmail,
-          securityPin: hashedPin,
           // Student info (from teacher input)
           firstName: studentFirstName, // Student first name or initials as provided by teacher
           lastInitial: studentLastInitial, // Student last initial as provided by teacher
@@ -4307,6 +4280,118 @@ Submitted: ${new Date().toLocaleString()}
     } catch (error: any) {
       console.error('Error getting security question:', error);
       res.status(500).json({ message: 'Failed to retrieve security question' });
+    }
+  });
+
+  // Teacher enrollment endpoint (first-time setup)
+  app.post('/api/classroom/enroll-teacher', requireClassroomSolutions, async (req, res) => {
+    try {
+      const bcrypt = await import('bcrypt');
+      const { z } = await import('zod');
+
+      const validationSchema = z.object({
+        teacherEmail: z.string().email(),
+        securityPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only'),
+        securityQuestion: z.string().min(5, "Security question must be at least 5 characters"),
+        securityAnswer: z.string().min(2, "Security answer must be at least 2 characters")
+      });
+
+      const validationResult = validationSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: 'Invalid request data',
+          errors: validationResult.error.issues
+        });
+      }
+
+      const { teacherEmail, securityPin, securityQuestion, securityAnswer } = validationResult.data;
+
+      // Check if teacher is enrolled in the program
+      const enrolledTeacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
+      if (!enrolledTeacher || !enrolledTeacher.isActive) {
+        return res.status(403).json({ message: 'Teacher not enrolled in the program or inactive' });
+      }
+
+      // Check if teacher already has PIN set up
+      if (enrolledTeacher.securityPin) {
+        return res.status(400).json({ message: 'PIN already set up for this teacher. Use PIN verification instead.' });
+      }
+
+      // Hash the PIN and security answer
+      const hashedPin = await bcrypt.hash(securityPin, 10);
+      const hashedAnswer = await bcrypt.hash(securityAnswer.toLowerCase().trim(), 10);
+
+      // Update teacher with security credentials
+      await storage.updateClassroomEnrolledTeacher(enrolledTeacher.id, {
+        securityPin: hashedPin,
+        securityQuestion: securityQuestion,
+        securityAnswer: hashedAnswer
+      });
+
+      // Set session flag for authenticated teacher
+      (req as any).session.classroomVerified = {
+        email: teacherEmail,
+        verifiedAt: new Date().toISOString()
+      };
+
+      console.log('✅ Teacher enrolled successfully:', teacherEmail);
+      res.json({ success: true, message: 'PIN setup completed successfully' });
+    } catch (error: any) {
+      console.error('Error enrolling teacher:', error);
+      res.status(500).json({ message: 'Failed to complete enrollment' });
+    }
+  });
+
+  // Teacher PIN verification endpoint (returning users)
+  app.post('/api/classroom/verify-teacher-pin', requireClassroomSolutions, async (req, res) => {
+    try {
+      const bcrypt = await import('bcrypt');
+      const { z } = await import('zod');
+
+      const validationSchema = z.object({
+        teacherEmail: z.string().email(),
+        securityPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only')
+      });
+
+      const validationResult = validationSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: 'Invalid request data',
+          errors: validationResult.error.issues
+        });
+      }
+
+      const { teacherEmail, securityPin } = validationResult.data;
+
+      // Check if teacher is enrolled in the program
+      const enrolledTeacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
+      if (!enrolledTeacher || !enrolledTeacher.isActive) {
+        return res.status(403).json({ message: 'Teacher not enrolled in the program or inactive' });
+      }
+
+      // Check if teacher has PIN set up
+      if (!enrolledTeacher.securityPin) {
+        return res.status(400).json({ message: 'No PIN found for this teacher. Please complete first-time setup.' });
+      }
+
+      // Verify PIN
+      const isValidPin = await bcrypt.compare(securityPin, enrolledTeacher.securityPin);
+      if (!isValidPin) {
+        console.log('❌ Invalid PIN attempt for teacher:', teacherEmail);
+        return res.status(401).json({ message: 'Invalid PIN' });
+      }
+
+      // Set session flag for authenticated teacher
+      (req as any).session.classroomVerified = {
+        email: teacherEmail,
+        verifiedAt: new Date().toISOString()
+      };
+
+      console.log('✅ Teacher PIN verified successfully:', teacherEmail);
+      res.json({ success: true, message: 'PIN verified successfully' });
+    } catch (error: any) {
+      console.error('Error verifying teacher PIN:', error);
+      res.status(500).json({ message: 'Failed to verify PIN' });
     }
   });
 
