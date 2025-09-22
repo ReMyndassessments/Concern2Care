@@ -125,8 +125,11 @@ export default function ClassroomSubmit() {
   // Check if teacher needs to set up security question when email changes
   const watchedEmail = form.watch('teacherEmail');
   useEffect(() => {
+    console.log('🔍 Email watcher triggered, email:', watchedEmail);
+    
     const checkTeacherStatus = async () => {
       if (watchedEmail && watchedEmail.includes('@')) {
+        console.log('📞 Making API call to check teacher PIN status for:', watchedEmail);
         try {
           const response = await apiRequest({
             url: '/api/classroom/check-teacher-pin-status',
@@ -135,13 +138,14 @@ export default function ClassroomSubmit() {
           });
           
           setIsFirstTimeUser(response.isFirstTimeUser);
-          console.log(`Teacher ${watchedEmail} - First time user: ${response.isFirstTimeUser}`);
+          console.log(`✅ Teacher ${watchedEmail} - First time user: ${response.isFirstTimeUser}`);
         } catch (error) {
-          console.error('Error checking teacher status:', error);
+          console.error('❌ Error checking teacher status:', error);
           // If teacher not found, assume they need to be enrolled first
           setIsFirstTimeUser(null);
         }
       } else {
+        console.log('🚫 Email not valid for API call:', watchedEmail);
         setIsFirstTimeUser(null);
       }
     };
@@ -436,6 +440,7 @@ export default function ClassroomSubmit() {
                 />
 
                 {/* Security Question Fields - Only for first-time users */}
+                {console.log('🔍 Rendering security fields check - isFirstTimeUser:', isFirstTimeUser)}
                 {isFirstTimeUser && (
                   <>
                     <FormField
