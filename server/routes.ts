@@ -3669,11 +3669,13 @@ Submitted: ${new Date().toLocaleString()}
         let autoSendTime: Date;
         let urgentFlag = false;
         
+        // CLASSROOM SOLUTIONS: Email sending is disabled - set all submissions to far future to prevent auto-send
+        autoSendTime = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000); // Far future to prevent auto-send
+        
         if (urgentSafeguard?.isUrgent) {
-          // Urgent case: Bypass delay, mark as urgent flagged, require admin approval
+          // Urgent case: Mark as urgent flagged, require admin approval
           urgentFlag = true;
           finalStatus = 'urgent_flagged';
-          autoSendTime = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000); // Far future to prevent auto-send
           responseMessage = 'URGENT: This case involves potential harm. Initial strategies have been provided. Please consult your school\'s child protection protocol immediately.';
           
           // Create urgent admin notification
@@ -3689,11 +3691,10 @@ Submitted: ${new Date().toLocaleString()}
           console.log('🚨 URGENT case detected - admin notification created');
         } else if (severityLevel === 'urgent') {
           // Urgent severity but no keywords: Still needs quick attention
-          autoSendTime = new Date(now.getTime() + 15 * 60 * 1000); // 15 minutes
           responseMessage = 'An urgent case requires rapid support. Initial strategies are provided now. Please notify your student support department immediately.';
         } else {
-          // Normal case: 10-minute delay
-          autoSendTime = new Date(now.getTime() + 10 * 60 * 1000); // 10 minutes
+          // Normal case: Strategies are ready for review
+          responseMessage = 'Your personalized strategies have been generated and are ready for review.';
         }
         
         // Update submission with AI draft and delayed delivery settings
@@ -3711,7 +3712,8 @@ Submitted: ${new Date().toLocaleString()}
       } catch (error) {
         console.error("❌ Error generating AI draft for submission:", submission.id, error);
         // Don't fail the submission if AI generation fails
-        const autoSendTime = new Date(Date.now() + 10 * 60 * 1000); // Default 10 min delay
+        // CLASSROOM SOLUTIONS: Email sending is disabled - set to far future to prevent auto-send
+        const autoSendTime = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000); // Far future to prevent auto-send
         await storage.updateClassroomSubmission(submission.id, {
           status: 'pending',
           aiDraft: 'Error generating AI draft - manual review required',
