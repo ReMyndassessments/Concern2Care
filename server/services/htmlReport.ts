@@ -241,6 +241,8 @@ export async function generateConcernHTMLReport(
   // Determine report title based on task type
   const reportTitle = concern.taskType === 'differentiation' 
     ? 'Differentiation Report' 
+    : concern.taskType === 'classroom_management'
+    ? 'Classroom Management Strategies Report'
     : 'Tier 2 Intervention Report';
 
   // Format interventions content
@@ -266,7 +268,10 @@ export async function generateConcernHTMLReport(
             <div class="header-content">
                 <h1 class="app-title">Concern2Care</h1>
                 <h2 class="report-title">${reportTitle}</h2>
-                <h3 class="student-name">Student: ${concern.studentFirstName} ${concern.studentLastInitial}.</h3>
+                ${concern.taskType === 'classroom_management' 
+                  ? `<h3 class="student-name">Teacher: ${concern.teacher.firstName} ${concern.teacher.lastName}</h3>`
+                  : `<h3 class="student-name">Student: ${concern.studentFirstName} ${concern.studentLastInitial}.</h3>`
+                }
                 <p class="report-date">Generated on ${currentDate}</p>
             </div>
             ${includeLetterhead ? '<div class="letterhead-space"></div>' : ''}

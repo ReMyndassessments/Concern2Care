@@ -907,8 +907,12 @@ Submitted: ${new Date().toLocaleString()}
       // Create descriptive filename based on task type and student name
       const reportType = concern.taskType === 'differentiation' 
         ? 'Differentiation Report' 
+        : concern.taskType === 'classroom_management'
+        ? 'Classroom Management Strategies Report'
         : 'Tier 2 Intervention Report';
-      const studentName = `${concern.studentFirstName} ${concern.studentLastInitial}`;
+      const studentName = concern.taskType === 'classroom_management' 
+        ? `${concern.teacher.firstName} ${concern.teacher.lastName}` 
+        : `${concern.studentFirstName} ${concern.studentLastInitial}`;
       const timestamp = Date.now();
       
       // Sanitize filename for filesystem compatibility
