@@ -105,8 +105,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, password: rawPassword } = req.body;
       const password = rawPassword?.trim(); // Remove any whitespace
-      console.log('🔐 Login attempt - Email:', email, 'Password length:', password?.length);
-      console.log('🔐 Password first/last chars:', password ? `"${password[0]}...${password[password.length-1]}"` : 'undefined');
+      console.log('🔐 Login attempt for email:', email);
+      // Password details not logged for security
       
       if (!email || !password) {
         return res.status(400).json({ message: "Email and password are required" });
@@ -2127,8 +2127,7 @@ Submitted: ${new Date().toLocaleString()}
       // Add password status and separate admins from teachers
       const usersWithPasswordStatus = allUsers.map(user => ({
         ...user,
-        password: user.password ? "set" : null, // Indicate if password exists without revealing it
-        adminViewablePassword: user.adminViewablePassword // Include readable password for admin
+        hasPassword: !!user.password, // Boolean to indicate if password exists
       }));
       res.json({ teachers: usersWithPasswordStatus });
     } catch (error) {
@@ -2147,13 +2146,13 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(404).json({ message: 'Teacher not found' });
       }
 
-      // Return the teacher data including the ACTUAL readable password (not hash)
+      // Return the teacher data with password status
       res.json({
         id: teacher.id,
         firstName: teacher.firstName,
         lastName: teacher.lastName,
         email: teacher.email,
-        password: teacher.adminViewablePassword, // Return readable password for admin use
+        hasPassword: !!teacher.password,
         isActive: teacher.isActive,
         supportRequestsUsed: teacher.supportRequestsUsed || 0,
         supportRequestsLimit: teacher.supportRequestsLimit || 20,
@@ -2209,7 +2208,7 @@ Submitted: ${new Date().toLocaleString()}
         lastName,
         email: normalizedEmail,
         password: hashedPassword,
-        adminViewablePassword: password, // Store the actual password for admin viewing
+        // Plaintext password storage removed for security
         school: school?.trim() || null,
         schoolDistrict: schoolDistrict?.trim() || null,
         primaryGrade: primaryGrade?.trim() || null,
@@ -2333,7 +2332,7 @@ Submitted: ${new Date().toLocaleString()}
       // Update teacher password with both hashed and readable versions
       await storage.updateUser(teacherId, { 
         password: hashedPassword,
-        adminViewablePassword: newPassword,
+        // Plaintext password storage removed for security
         updatedAt: new Date(),
       });
       
