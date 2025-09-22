@@ -4190,15 +4190,133 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
-  // Teacher PIN status check removed - verification disabled
+  // Simplified Teacher Verification - PIN Only (No Security Questions)
+  
+  // Check teacher status (exists and has PIN set up)
+  app.post('/api/classroom/check-teacher', requireClassroomSolutions, async (req, res) => {
+    try {
+      const { z } = await import('zod');
+      const emailSchema = z.object({
+        email: z.string().email()
+      });
 
-  // PIN Reset endpoint removed - verification disabled
+      const { email } = emailSchema.parse(req.body);
+      
+      const teacher = await storage.getClassroomEnrolledTeacherByEmail(email);
+      
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found. Please contact your administrator.' });
+      }
 
-  // Security question endpoint removed - verification disabled
+      if (!teacher.isActive) {
+        return res.status(403).json({ message: 'Teacher account is inactive. Please contact your administrator.' });
+      }
 
-  // Teacher enrollment endpoint removed - verification disabled
+      // Check if PIN is already set up
+      const isNew = !teacher.securityPin;
 
-  // Teacher PIN verification endpoint removed - verification disabled
+      res.json({ 
+        success: true, 
+        isNew,
+        teacherName: `${teacher.firstName} ${teacher.lastName}`
+      });
+    } catch (error) {
+      console.error('Error checking teacher status:', error);
+      res.status(500).json({ message: 'Failed to check teacher status' });
+    }
+  });
+
+  // Set up PIN for new teachers
+  app.post('/api/classroom/setup-pin', requireClassroomSolutions, async (req, res) => {
+    try {
+      const { z } = await import('zod');
+      const bcrypt = await import('bcrypt');
+      
+      const setupSchema = z.object({
+        teacherEmail: z.string().email(),
+        pin: z.string().length(4).regex(/^\d{4}$/)
+      });
+
+      const { teacherEmail, pin } = setupSchema.parse(req.body);
+      
+      const teacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
+      
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      if (teacher.securityPin) {
+        return res.status(400).json({ message: 'PIN already set up for this teacher' });
+      }
+
+      // Hash the PIN
+      const hashedPin = await bcrypt.hash(pin, 10);
+      
+      // Update teacher with PIN
+      await storage.updateClassroomEnrolledTeacher(teacher.id, {
+        securityPin: hashedPin,
+        pinSetAt: new Date()
+      });
+
+      // Set up session for immediate form access
+      const session = (req as any).session;
+      session.classroomVerified = {
+        email: teacherEmail,
+        verifiedAt: new Date().toISOString()
+      };
+
+      res.json({ 
+        success: true,
+        message: 'PIN set up successfully'
+      });
+    } catch (error) {
+      console.error('Error setting up PIN:', error);
+      res.status(500).json({ message: 'Failed to set up PIN' });
+    }
+  });
+
+  // Verify PIN for retrieval (when teachers want to see their responses)
+  app.post('/api/classroom/verify-pin', requireClassroomSolutions, async (req, res) => {
+    try {
+      const { z } = await import('zod');
+      const bcrypt = await import('bcrypt');
+      
+      const verifySchema = z.object({
+        teacherEmail: z.string().email(),
+        pin: z.string().length(4).regex(/^\d{4}$/)
+      });
+
+      const { teacherEmail, pin } = verifySchema.parse(req.body);
+      
+      const teacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
+      
+      if (!teacher || !teacher.securityPin) {
+        return res.status(404).json({ message: 'Teacher not found or PIN not set up' });
+      }
+
+      // Verify PIN
+      const isValidPin = await bcrypt.compare(pin, teacher.securityPin);
+      
+      if (!isValidPin) {
+        return res.status(401).json({ message: 'Invalid PIN' });
+      }
+
+      // Set up session for form access
+      const session = (req as any).session;
+      session.classroomVerified = {
+        email: teacherEmail,
+        verifiedAt: new Date().toISOString()
+      };
+
+      res.json({ 
+        success: true,
+        message: 'PIN verified successfully'
+      });
+    } catch (error) {
+      console.error('Error verifying PIN:', error);
+      res.status(500).json({ message: 'Failed to verify PIN' });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
