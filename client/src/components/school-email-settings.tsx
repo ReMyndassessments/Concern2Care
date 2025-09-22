@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { useTranslation } from "react-i18next";
 import { 
   Mail, 
   Shield, 
@@ -49,6 +50,7 @@ interface School {
 
 // Component for auto-creating schools from teacher data
 function AutoCreateSchools({ onSchoolsCreated }: { onSchoolsCreated: () => void }) {
+  const { t } = useTranslation();
   const { toast } = useToast();
   
   const autoCreateMutation = useMutation({
@@ -59,15 +61,15 @@ function AutoCreateSchools({ onSchoolsCreated }: { onSchoolsCreated: () => void 
     },
     onSuccess: (result: any) => {
       toast({
-        title: "Schools Created",
-        description: `Found ${result.created} new school${result.created === 1 ? '' : 's'} and created them from teacher data.`,
+        title: t('schoolEmailSettings.schoolsCreated', 'Schools Created'),
+        description: t('schoolEmailSettings.schoolsCreatedDesc', `Found ${result.created} new school${result.created === 1 ? '' : 's'} and created them from teacher data.`),
       });
       onSchoolsCreated();
     },
     onError: (error: any) => {
       toast({
-        title: "Auto-Creation Failed",
-        description: error.message || "Failed to auto-create schools",
+        title: t('schoolEmailSettings.autoCreationFailed', 'Auto-Creation Failed'),
+        description: error.message || t('schoolEmailSettings.autoCreationFailedDesc', 'Failed to auto-create schools'),
         variant: "destructive",
       });
     },
@@ -82,7 +84,7 @@ function AutoCreateSchools({ onSchoolsCreated }: { onSchoolsCreated: () => void 
       data-testid="button-auto-create-schools"
     >
       <Plus className="w-4 h-4 mr-2" />
-      {autoCreateMutation.isPending ? "Creating Schools..." : "Create Schools from Teacher Data"}
+      {autoCreateMutation.isPending ? t('schoolEmailSettings.creatingSchools', 'Creating Schools...') : t('schoolEmailSettings.createSchoolsFromData', 'Create Schools from Teacher Data')}
     </Button>
   );
 }
@@ -92,6 +94,7 @@ interface SchoolEmailSettingsProps {
 }
 
 export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSettingsProps) {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
@@ -155,16 +158,16 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
     },
     onSuccess: () => {
       toast({
-        title: "School Email Configuration Saved",
-        description: "The school's email settings have been updated successfully.",
+        title: t('schoolEmailSettings.configSaved', 'School Email Configuration Saved'),
+        description: t('schoolEmailSettings.configSavedDesc', "The school's email settings have been updated successfully."),
       });
       queryClient.invalidateQueries({ queryKey: [`/api/admin/school/${currentSchoolId}/email-config`] });
       setShowForm(false);
     },
     onError: (error: any) => {
       toast({
-        title: "Save Failed",
-        description: error.message || "Failed to save school email configuration",
+        title: t('schoolEmailSettings.saveFailed', 'Save Failed'),
+        description: error.message || t('schoolEmailSettings.saveFailedDesc', 'Failed to save school email configuration'),
         variant: "destructive",
       });
     },
@@ -177,7 +180,7 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
     },
     onSuccess: (result: any) => {
       toast({
-        title: result.success ? "Test Email Sent" : "Test Failed",
+        title: result.success ? t('schoolEmailSettings.testSent', 'Test Email Sent') : t('schoolEmailSettings.testFailed', 'Test Failed'),
         description: result.message,
         variant: result.success ? "default" : "destructive",
       });
@@ -186,8 +189,8 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
     },
     onError: (error: any) => {
       toast({
-        title: "Test Failed",
-        description: error.message || "Failed to test school email configuration",
+        title: t('schoolEmailSettings.testFailed', 'Test Failed'),
+        description: error.message || t('schoolEmailSettings.testFailedDesc', 'Failed to test school email configuration'),
         variant: "destructive",
       });
     },
@@ -200,16 +203,16 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
     },
     onSuccess: () => {
       toast({
-        title: "Configuration Deleted",
-        description: "The school's email configuration has been removed.",
+        title: t('schoolEmailSettings.configDeleted', 'Configuration Deleted'),
+        description: t('schoolEmailSettings.configDeletedDesc', "The school's email configuration has been removed."),
       });
       queryClient.invalidateQueries({ queryKey: [`/api/admin/school/${currentSchoolId}/email-config`] });
       setShowForm(false);
     },
     onError: (error: any) => {
       toast({
-        title: "Delete Failed",
-        description: error.message || "Failed to delete school email configuration",
+        title: t('schoolEmailSettings.deleteFailed', 'Delete Failed'),
+        description: error.message || t('schoolEmailSettings.deleteFailedDesc', 'Failed to delete school email configuration'),
         variant: "destructive",
       });
     },
@@ -219,16 +222,16 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
     e.preventDefault();
     if (!currentSchoolId) {
       toast({
-        title: "School Required",
-        description: "Please select a school first.",
+        title: t('schoolEmailSettings.schoolRequired', 'School Required'),
+        description: t('schoolEmailSettings.schoolRequiredDesc', 'Please select a school first.'),
         variant: "destructive",
       });
       return;
     }
     if (!formData.smtpHost || !formData.smtpUser || !formData.smtpPassword) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
+        title: t('schoolEmailSettings.missingInfo', 'Missing Information'),
+        description: t('schoolEmailSettings.missingInfoDesc', 'Please fill in all required fields.'),
         variant: "destructive",
       });
       return;
@@ -239,8 +242,8 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
   const handleTest = () => {
     if (!testEmail) {
       toast({
-        title: "Test Email Required",
-        description: "Please enter an email address to send the test to.",
+        title: t('schoolEmailSettings.testEmailRequired', 'Test Email Required'),
+        description: t('schoolEmailSettings.testEmailRequiredDesc', 'Please enter an email address to send the test to.'),
         variant: "destructive",
       });
       return;
@@ -255,17 +258,17 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Building2 className="w-5 h-5" />
-          <span>School Email Configuration</span>
-          <Badge variant="outline">Admin Only</Badge>
+          <span>{t('schoolEmailSettings.title', 'School Email Configuration')}</span>
+          <Badge variant="outline">{t('schoolEmailSettings.adminOnly', 'Admin Only')}</Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* School Selection */}
         <div className="space-y-2">
-          <Label htmlFor="school-select">Select School</Label>
+          <Label htmlFor="school-select">{t('schoolEmailSettings.selectSchool', 'Select School')}</Label>
           <Select value={currentSchoolId} onValueChange={setCurrentSchoolId}>
             <SelectTrigger data-testid="select-school">
-              <SelectValue placeholder="Choose a school to configure" />
+              <SelectValue placeholder={t('schoolEmailSettings.selectSchoolPlaceholder', 'Choose a school to configure')} />
             </SelectTrigger>
             <SelectContent>
               {schools?.map((school) => (
@@ -281,7 +284,7 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              Please select a school to configure its email settings. School email configurations provide default email settings for all teachers in that school.
+              {t('schoolEmailSettings.selectSchoolDesc', 'Please select a school to configure its email settings. School email configurations provide default email settings for all teachers in that school.')}
               <div className="mt-3">
                 <AutoCreateSchools onSchoolsCreated={() => {
                   queryClient.invalidateQueries({ queryKey: ["/api/admin/schools"] });
@@ -296,24 +299,24 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
             <Alert>
               <Shield className="h-4 w-4" />
               <AlertDescription>
-                <strong>School-wide Configuration for {selectedSchool.name}</strong><br />
-                This email configuration will be used by all teachers in this school who haven't set up personal email settings.
+                <strong>{t('schoolEmailSettings.schoolWideConfigTitle', 'School-wide Configuration for {{schoolName}}', { schoolName: selectedSchool.name })}</strong><br />
+                {t('schoolEmailSettings.schoolWideConfigDesc', "This email configuration will be used by all teachers in this school who haven't set up personal email settings.")}
               </AlertDescription>
             </Alert>
 
             {isLoading ? (
               <div className="flex items-center space-x-2">
                 <Mail className="w-5 h-5 animate-pulse" />
-                <span>Loading school email settings...</span>
+                <span>{t('schoolEmailSettings.loading', 'Loading school email settings...')}</span>
               </div>
             ) : schoolConfig && !showForm ? (
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Current School Email Settings</h3>
+                  <h3 className="text-lg font-medium">{t('schoolEmailSettings.currentSchoolEmailSettings', 'Current School Email Settings')}</h3>
                   <div className="space-x-2">
                     <Button variant="outline" onClick={() => setShowForm(true)} data-testid="button-edit-school-email">
                       <Settings className="w-4 h-4 mr-2" />
-                      Edit
+                      {t('schoolEmailSettings.edit', 'Edit')}
                     </Button>
                     <Button 
                       variant="outline" 
@@ -322,35 +325,35 @@ export default function SchoolEmailSettings({ selectedSchoolId }: SchoolEmailSet
                       data-testid="button-delete-school-email"
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
+                      {t('schoolEmailSettings.delete', 'Delete')}
                     </Button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm bg-gray-50 p-4 rounded-lg">
                   <div>
-                    <span className="font-medium">SMTP Server:</span>
+                    <span className="font-medium">{t('schoolEmailSettings.summary.smtpServer', 'SMTP Server')}:</span>
                     <p>{schoolConfig.smtpHost}:{schoolConfig.smtpPort}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Username:</span>
+                    <span className="font-medium">{t('schoolEmailSettings.summary.username', 'Username')}:</span>
                     <p>{schoolConfig.smtpUser}</p>
                   </div>
                   <div>
-                    <span className="font-medium">From Address:</span>
+                    <span className="font-medium">{t('schoolEmailSettings.summary.fromAddress', 'From Address')}:</span>
                     <p>{schoolConfig.fromAddress || schoolConfig.smtpUser}</p>
                   </div>
                   <div>
-                    <span className="font-medium">From Name:</span>
+                    <span className="font-medium">{t('schoolEmailSettings.summary.fromName', 'From Name')}:</span>
                     <p>{schoolConfig.fromName || 'Concern2Care'}</p>
                   </div>
                   <div>
-                    <span className="font-medium">Status:</span>
+                    <span className="font-medium">{t('schoolEmailSettings.summary.status', 'Status')}:</span>
                     <div className="flex items-center space-x-2">
                       {schoolConfig.isActive ? (
-                        <Badge variant="default" className="bg-green-100 text-green-800">Active</Badge>
+                        <Badge variant="default" className="bg-green-100 text-green-800">{t('schoolEmailSettings.statusActive', 'Active')}</Badge>
                       ) : (
-                        <Badge variant="secondary">Inactive</Badge>
+                        <Badge variant="secondary">{t('schoolEmailSettings.statusInactive', 'Inactive')}</Badge>
                       )}
                       {schoolConfig.testStatus === 'success' && (
                         <CheckCircle className="w-4 h-4 text-green-600" />

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+import { useTranslation } from "react-i18next";
 // Using manual separator and scrolling instead of missing components
 import { 
   HelpCircle, 
@@ -28,6 +29,7 @@ import {
 } from "lucide-react";
 
 export default function HelpGuide() {
+  const { t } = useTranslation();
   const { isFeatureEnabled } = useFeatureFlags();
   const Section = ({ icon: Icon, title, children, className = "" }: {
     icon: any;
