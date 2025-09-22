@@ -2362,6 +2362,12 @@ const resources = {
       'help.pdfQuality4': '优化间距，使文档更清洁、更紧凑',
       'help.pdfQuality5': '结构化AI响应和课程计划的更好格式',
 
+      // Missing Section Titles
+      'help.creatingPDFReports': '生成PDF报告',
+      'help.organizedRequestManagement': '有组织的请求管理',
+      'help.personalEmailSetupDesc': '配置您的个人邮件账户以发送报告：',
+      'help.classroomRequestsDesc': '全班策略和环境管理方法',
+
       
       // Interventions Display
       'interventions.title': 'AI生成的干预措施',
