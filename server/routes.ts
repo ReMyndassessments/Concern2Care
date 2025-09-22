@@ -3361,10 +3361,8 @@ Submitted: ${new Date().toLocaleString()}
     try {
       const QRCode = await import('qrcode');
       
-      // Get the base URL from environment or construct it
-      const baseUrl = process.env.REPLIT_DOMAINS 
-        ? `https://${process.env.REPLIT_DOMAINS}` 
-        : process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+      // Use production URL for Classroom Solutions QR code
+      const baseUrl = 'https://concern2care.com';
       
       const submissionUrl = `${baseUrl}/classroom/submit`;
       
@@ -4019,23 +4017,6 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
-  // Generate QR code for enrollment
-  app.get('/api/admin/classroom/qr-code', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
-    try {
-      const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
-      const formUrl = `${baseUrl}/classroom/submit`;
-      
-      // For now, return the URL - QR code generation will be added in frontend
-      res.json({ 
-        success: true, 
-        formUrl,
-        qrCodeData: formUrl
-      });
-    } catch (error) {
-      console.error('Error generating QR code:', error);
-      res.status(500).json({ message: 'Failed to generate QR code' });
-    }
-  });
 
   // Public QR code endpoint for landing page (no auth required)
   app.get('/api/classroom/qr-code', async (req: any, res) => {
