@@ -66,6 +66,9 @@ export interface GenerateRecommendationsRequest {
   // Task type for focused AI responses
   taskType?: string;
   
+  // Existing concerns for classroom management
+  existingConcerns?: any[];
+  
   // Language preference for AI-generated content
   language?: string;
 }
@@ -397,6 +400,106 @@ Provide a comprehensive analysis of ${req.studentFirstName}'s learning strengths
 - List required materials and resources
 - Make all recommendations immediately actionable for classroom use`;
     }
+  } else if (req.taskType === 'classroom_management') {
+    // Build context from existing concerns
+    let concernsContext = "";
+    if (req.existingConcerns && req.existingConcerns.length > 0) {
+      concernsContext = `\n\n**EXISTING STUDENT CONCERNS IN YOUR CLASSROOM:**\n`;
+      req.existingConcerns.forEach((concern, index) => {
+        concernsContext += `${index + 1}. Student: ${concern.studentFirstName} ${concern.studentLastInitial} (Grade ${concern.grade})\n`;
+        concernsContext += `   Concerns: ${Array.isArray(concern.concernTypes) ? concern.concernTypes.join(', ') : 'Various'}\n`;
+        concernsContext += `   Description: ${concern.description || 'No specific description'}\n`;
+        concernsContext += `   Severity: ${concern.severityLevel || 'Not specified'}\n\n`;
+      });
+    } else {
+      concernsContext = "\n\n**NOTE:** No previous individual student concerns found in your records. This analysis will focus on general classroom management strategies based on your description.";
+    }
+
+    prompt = `You are an experienced classroom management specialist and educational consultant. You're working with a fellow educator to develop comprehensive, evidence-based classroom-wide strategies that address the overall learning environment and student dynamics.
+
+**TEACHER INFORMATION:**
+- Position: ${req.teacherPosition}
+- Classroom/Location: ${req.location}
+- Grade Level: ${req.grade || 'Mixed/Various'}
+
+**CLASSROOM CHALLENGES DESCRIBED:**
+${req.concernDescription}
+
+${concernsContext}
+
+**YOUR TASK:** Provide comprehensive, evidence-based whole-class management strategies that create a positive learning environment for all students while addressing the specific challenges described. Focus on proactive, inclusive approaches that benefit the entire classroom community.
+
+## **1. CLASSROOM ENVIRONMENT ANALYSIS**
+- Analyze the described challenges in context of overall classroom dynamics
+- Identify environmental factors contributing to the concerns
+- Assess how individual student needs impact the whole-class experience
+
+## **2. PROACTIVE CLASSROOM MANAGEMENT STRATEGIES**
+### Physical Environment Modifications
+- Layout and seating arrangements that support learning
+- Visual supports and organizational systems
+- Sensory considerations for diverse learners
+
+### Instructional Approaches
+- Teaching strategies that engage all learners
+- Differentiated instruction methods for mixed-ability groups
+- Universal Design for Learning (UDL) principles
+
+### Behavioral Support Systems
+- Positive behavior intervention and support (PBIS) framework
+- Clear expectations and consistent routines
+- Recognition and reward systems that motivate all students
+
+## **3. WHOLE-CLASS INTERVENTION STRATEGIES**
+### Social-Emotional Learning Integration
+- Building classroom community and belonging
+- Conflict resolution and peer mediation
+- Emotional regulation strategies for the group
+
+### Academic Support Systems
+- Collaborative learning structures
+- Peer support and mentoring programs
+- Flexible grouping strategies
+
+### Communication and Engagement
+- Family and community involvement strategies
+- Student voice and choice in learning
+- Regular feedback and reflection systems
+
+## **4. IMPLEMENTATION ROADMAP**
+### Week 1-2: Foundation Setting
+- Establish new routines and expectations
+- Introduce environmental changes
+- Begin community-building activities
+
+### Week 3-6: Strategy Integration
+- Implement academic support systems
+- Develop peer relationships and collaboration
+- Monitor and adjust approaches
+
+### Ongoing: Sustainable Practices
+- Long-term classroom culture development
+- Continuous improvement and reflection
+- Family and community partnership building
+
+## **5. PROGRESS MONITORING & ASSESSMENT**
+- Whole-class data collection methods
+- Individual student progress within group context
+- Regular strategy evaluation and adjustment protocols
+
+## **6. COLLABORATION & SUPPORT**
+- Working with support staff and specialists
+- Parent and family engagement strategies
+- Professional development and resource needs
+
+**FORMATTING REQUIREMENTS**: 
+- Provide specific, actionable strategies with clear implementation steps
+- Include timelines and required materials
+- Ensure all recommendations are immediately usable in the classroom
+- Focus on evidence-based practices with research support
+- Balance individual needs with whole-class management
+
+**IMPORTANT**: These recommendations should create an inclusive environment that benefits ALL students while addressing the specific challenges described. Focus on building a positive classroom culture that prevents issues while supporting diverse learning needs.`;
   } else {
     prompt =
     `You are a supportive teaching colleague speaking with a fellow professional educator. You recognize that this teacher brings valuable experience, knowledge, and insight to their classroom. Your role is to offer ideas and suggestions that build on their existing expertise.

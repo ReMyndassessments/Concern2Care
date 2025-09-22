@@ -521,6 +521,14 @@ Submitted: ${new Date().toLocaleString()}
         otherNeeds: req.body.otherNeeds,
       });
 
+      // For classroom management, fetch all existing concerns for this teacher
+      let existingConcerns: any[] = [];
+      if (newConcern.taskType === 'classroom_management') {
+        console.log("📚 Fetching existing concerns for classroom management strategies...");
+        existingConcerns = await storage.getConcernsByTeacher(userId);
+        console.log(`📊 Found ${existingConcerns.length} existing concerns for teacher`);
+      }
+
       // Generate AI recommendations using the enhanced format
       const recommendationRequest: GenerateRecommendationsRequest = {
         studentFirstName: newConcern.studentFirstName,
@@ -552,20 +560,36 @@ Submitted: ${new Date().toLocaleString()}
         
         // Task type for focused AI responses
         taskType: newConcern.taskType || "tier2_intervention",
+        
+        // Existing concerns for classroom management
+        existingConcerns: existingConcerns,
       };
 
       const recommendationResponse = await generateRecommendations(recommendationRequest);
 
       // Save the AI response with appropriate title based on task type
-      const taskTypeLabel = newConcern.taskType === "differentiation" ? "Differentiation Strategies" : "Tier 2 Intervention Recommendations";
+      let taskTypeLabel, steps, timeline;
+      
+      if (newConcern.taskType === "differentiation") {
+        taskTypeLabel = "Differentiation Strategies";
+        steps = ["Review Student Needs", "Adapt Instruction Methods", "Implement Accommodations", "Monitor Learning Progress"];
+        timeline = "Ongoing";
+      } else if (newConcern.taskType === "classroom_management") {
+        taskTypeLabel = "Whole Class Management Strategies";
+        steps = ["Analyze Classroom Environment", "Implement Proactive Strategies", "Establish Support Systems", "Monitor Class Progress"];
+        timeline = "4-8 weeks implementation";
+      } else {
+        taskTypeLabel = "Tier 2 Intervention Recommendations";
+        steps = ["Review Assessment Summary", "Implement Immediate Interventions", "Apply Short-term Strategies", "Monitor Progress"];
+        timeline = "2-6 weeks";
+      }
+      
       const savedInterventions = await storage.createInterventions([{
         concernId: newConcern.id,
         title: `AI-Generated ${taskTypeLabel}`,
         description: recommendationResponse.recommendations,
-        steps: newConcern.taskType === "differentiation" 
-          ? ["Review Student Needs", "Adapt Instruction Methods", "Implement Accommodations", "Monitor Learning Progress"]
-          : ["Review Assessment Summary", "Implement Immediate Interventions", "Apply Short-term Strategies", "Monitor Progress"],
-        timeline: newConcern.taskType === "differentiation" ? "Ongoing" : "2-6 weeks",
+        steps: steps,
+        timeline: timeline,
       }]);
 
       // Increment usage count after successful concern creation
