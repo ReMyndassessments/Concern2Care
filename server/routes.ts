@@ -152,14 +152,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
               sessionId: req.sessionID?.slice(0, 8)
             });
 
-            // Simplified session save - just save it directly
+            // Ensure session is properly saved before responding
             req.session.save((err: any) => {
               if (err) {
                 console.error('❌ Session save failed:', err);
                 return res.status(500).json({ message: "Login failed - session error" });
               }
               
-              console.log('✅ Session saved for:', user.email);
+              console.log('✅ Session saved successfully for:', user.email);
+              console.log('🔍 Final session state:', {
+                isAuthenticated: req.session.isAuthenticated,
+                hasUser: !!req.session.user,
+                sessionId: req.sessionID?.slice(0, 8)
+              });
               
               return res.json({ 
                 success: true, 
@@ -4292,8 +4297,8 @@ Submitted: ${new Date().toLocaleString()}
       const validationSchema = z.object({
         teacherEmail: z.string().email(),
         securityPin: z.string().length(4, 'PIN must be exactly 4 digits').regex(/^\d{4}$/, 'PIN must be 4 digits only'),
-        securityQuestion: z.string().min(3, "Security question must be at least 3 characters"),
-        securityAnswer: z.string().min(1, "Security answer is required")
+        securityQuestion: z.string().optional(),
+        securityAnswer: z.string().optional()
       });
 
       const validationResult = validationSchema.safeParse(req.body);
@@ -4319,12 +4324,12 @@ Submitted: ${new Date().toLocaleString()}
 
       // Hash the PIN and security answer
       const hashedPin = await bcrypt.hash(securityPin, 10);
-      const hashedAnswer = await bcrypt.hash(securityAnswer.toLowerCase().trim(), 10);
+      const hashedAnswer = securityAnswer ? await bcrypt.hash(securityAnswer.toLowerCase().trim(), 10) : undefined;
 
       // Update teacher with security credentials
       await storage.updateClassroomEnrolledTeacher(enrolledTeacher.id, {
         securityPin: hashedPin,
-        securityQuestion: securityQuestion,
+        securityQuestion: securityQuestion || undefined,
         securityAnswer: hashedAnswer
       });
 

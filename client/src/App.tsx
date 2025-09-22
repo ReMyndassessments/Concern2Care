@@ -39,19 +39,13 @@ function AuthenticatedRouter() {
   }
 
   if (!isAuthenticated) {
-    // Redirect to login for protected routes
-    window.location.href = '/login';
+    // Redirect to login for protected routes - handled by the main Router
     return null;
   }
 
   return (
     <Switch>
-      {/* Redirect root to appropriate dashboard */}
-      <Route path="/" component={() => { 
-        const redirectPath = user?.isAdmin ? '/admin' : '/home';
-        window.location.replace(redirectPath);
-        return null;
-      }} />
+      {/* Authenticated users are automatically redirected by their role */}
       
       {/* Admin routes */}
       {user?.isAdmin ? (
