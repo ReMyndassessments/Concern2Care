@@ -337,7 +337,7 @@ Submitted: ${new Date().toLocaleString()}
   // Email configuration endpoints for Classroom Solutions
   app.post('/api/admin/email-config', requireAuth, async (req, res) => {
     try {
-      const user = req.session.user;
+      const user = (req.session as any).user;
       if (!user || !user.isAdmin) {
         return res.status(403).json({ message: 'Admin access required' });
       }
@@ -358,7 +358,7 @@ Submitted: ${new Date().toLocaleString()}
         smtpPassword: emailConfig.smtpPassword,
         fromAddress: emailConfig.fromEmail || emailConfig.smtpUser,
         fromName: 'Concern2Care',
-        toEmail: emailConfig.toEmail,
+        // toEmail removed - not part of email config schema
         isActive: true
       });
 
@@ -372,7 +372,7 @@ Submitted: ${new Date().toLocaleString()}
 
   app.get('/api/admin/email-config', requireAuth, async (req, res) => {
     try {
-      const user = req.session.user;
+      const user = (req.session as any).user;
       if (!user || !user.isAdmin) {
         return res.status(403).json({ message: 'Admin access required' });
       }
@@ -387,7 +387,7 @@ Submitted: ${new Date().toLocaleString()}
           smtpUser: config.smtpUser,
           smtpPassword: '', // Don't return password for security
           fromEmail: config.fromAddress,
-          toEmail: config.toEmail || 'ne_roberts@yahoo.com'
+          toEmail: 'ne_roberts@yahoo.com' // Default email
         };
         res.json(emailConfig);
       } else {
@@ -3808,7 +3808,6 @@ Submitted: ${new Date().toLocaleString()}
       await storage.updateClassroomSubmission(id, {
         status: 'approved',
         adminReviewedBy: adminId,
-        adminReviewedAt: new Date(),
         autoSendTime: new Date() // Send immediately
       });
       
@@ -3835,7 +3834,6 @@ Submitted: ${new Date().toLocaleString()}
       await storage.updateClassroomSubmission(id, {
         status: 'hold',
         adminReviewedBy: adminId,
-        adminReviewedAt: new Date(),
         autoSendTime: new Date('2099-12-31'), // Far future to prevent auto-send
         adminNotes: reason || 'Submission placed on hold for review'
       });
@@ -3862,7 +3860,6 @@ Submitted: ${new Date().toLocaleString()}
       await storage.updateClassroomSubmission(id, {
         status: 'cancelled',
         adminReviewedBy: adminId,
-        adminReviewedAt: new Date(),
         adminNotes: reason || 'Submission cancelled by admin'
       });
       
@@ -3899,7 +3896,6 @@ Submitted: ${new Date().toLocaleString()}
       await storage.updateClassroomSubmission(id, {
         status: 'urgent_flagged',
         adminReviewedBy: adminId,
-        adminReviewedAt: new Date(),
         adminNotes: `Escalated: ${reason || 'Requires higher-level review'}`,
         autoSendTime: new Date('2099-12-31') // Prevent auto-send until manually reviewed
       });
@@ -4127,21 +4123,29 @@ Submitted: ${new Date().toLocaleString()}
       }
 
       // Sort submissions by most recent first
-      submissions.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+      submissions.sort((a, b) => {
+        const dateA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
+        const dateB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
+        return dateB - dateA;
+      });
 
       // Format responses for display
       const formattedSubmissions = submissions.map(submission => ({
         id: submission.id,
-        studentFirstName: submission.studentFirstName,
-        studentLastInitial: submission.studentLastInitial,
+        studentFirstName: submission.firstName,
+        studentLastInitial: submission.lastInitial,
         studentGrade: submission.studentGrade,
         taskType: submission.taskType,
         severityLevel: submission.severityLevel,
         status: submission.status,
         submittedAt: submission.submittedAt,
-        aiResponse: submission.aiResponse,
+        aiResponse: submission.aiDraft,
         adminReviewedBy: submission.adminReviewedBy,
-        adminReviewedAt: submission.adminReviewedAt
+        concerns: submission.concernDescription,
+        behaviors: submission.concernTypes,
+        actionsTaken: submission.actionsTaken,
+        learningProfile: submission.learningProfile,
+        primarySubject: submission.taskType === 'tier2_intervention' ? 'Tier 2 Intervention' : 'Differentiation'
       }));
 
       const readyCount = submissions.filter(s => s.status === 'approved' || s.status === 'auto_sent').length;
