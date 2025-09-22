@@ -29,20 +29,20 @@ const contactFormSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
-// Teacher lookup schema
-const teacherLookupSchema = z.object({
-  email: z.string().email('Valid email is required'),
-  securityPin: z.string().min(4, 'PIN must be exactly 4 digits').max(4, 'PIN must be exactly 4 digits').regex(/^\d{4}$/, 'PIN must be 4 digits only'),
-});
-
-type TeacherLookupData = z.infer<typeof teacherLookupSchema>;
-
 // Teacher Lookup Component
 function TeacherLookup() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [isLookingUp, setIsLookingUp] = useState(false);
   const [teacherData, setTeacherData] = useState<any>(null);
+
+  // Teacher lookup schema with translations - moved inside component
+  const teacherLookupSchema = z.object({
+    email: z.string().email(t('teacherLookup.emailRequired', 'Valid email is required')),
+    securityPin: z.string().min(4, t('teacherLookup.pinExact', 'PIN must be exactly 4 digits')).max(4, t('teacherLookup.pinExact', 'PIN must be exactly 4 digits')).regex(/^\d{4}$/, t('teacherLookup.pinDigitsOnly', 'PIN must be 4 digits only')),
+  });
+
+  type TeacherLookupData = z.infer<typeof teacherLookupSchema>;
 
   const lookupForm = useForm<TeacherLookupData>({
     resolver: zodResolver(teacherLookupSchema),

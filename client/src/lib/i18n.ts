@@ -932,6 +932,9 @@ const resources = {
       'teacherLookup.pinPlaceholder': 'Enter your 4-digit PIN',
       'teacherLookup.viewSubmissions': 'View My Submissions',
       'teacherLookup.lookingUp': 'Looking up...',
+      'teacherLookup.emailRequired': 'Valid email is required',
+      'teacherLookup.pinExact': 'PIN must be exactly 4 digits',
+      'teacherLookup.pinDigitsOnly': 'PIN must be 4 digits only',
       
       // Login Page
       'login.title': 'Teacher Sign In',
@@ -1943,6 +1946,9 @@ const resources = {
       'teacherLookup.pinPlaceholder': '输入您的4位数密码',
       'teacherLookup.viewSubmissions': '查看我的提交',
       'teacherLookup.lookingUp': '查找中...',
+      'teacherLookup.emailRequired': '需要有效的邮箱地址',
+      'teacherLookup.pinExact': '密码必须恰好是4位数字',
+      'teacherLookup.pinDigitsOnly': '密码必须只包含4位数字',
       
       // Login Page
       'login.title': '教师登录',
