@@ -93,13 +93,16 @@ function AuthenticatedRouter() {
 function Router() {
   return (
     <Switch>
-      {/* Public routes (no auth required) */}
+      {/* Classroom submission routes */}
+      <Route path="/classroom-submit" component={ClassroomSubmit} />
+      <Route path="/classroom/submit" component={ClassroomSubmit} />
+      <Route path="/classroom" component={ClassroomSubmit} />
+      
+      {/* Public routes */}
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
-      <Route path="/classroom" component={ClassroomSubmit} />
-      <Route path="/classroom/submit" component={ClassroomSubmit} />
       
-      {/* All other routes require authentication */}
+      {/* Authenticated routes */}
       <Route path="/admin" component={AuthenticatedRouter} />
       <Route path="/admin/*" component={AuthenticatedRouter} />
       <Route path="/home" component={AuthenticatedRouter} />
@@ -109,8 +112,10 @@ function Router() {
       <Route path="/settings" component={AuthenticatedRouter} />
       <Route path="/concerns/:id" component={AuthenticatedRouter} />
       
-      {/* Landing page as default */}
+      {/* Landing page */}
       <Route path="/" component={Landing} />
+      
+      {/* 404 fallback */}
       <Route component={NotFound} />
     </Switch>
   );
