@@ -659,7 +659,7 @@ export default function HelpGuide() {
                   t('help.chineseFeature5', "Seamless language preference storage")
                 ]} />
                 <p className="text-sm text-blue-700 mt-3">
-                  {t('help.chineseInterfaceDesc', 'Use the language selector in the header to switch between English and Chinese. Your preference will be saved automatically.')}
+                  {t('help.languageSwitcher', 'Use the language selector in the header to switch between English and Chinese. Your preference will be saved automatically.')}
                 </p>
               </div>
             </SubSection>

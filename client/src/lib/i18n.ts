@@ -2495,14 +2495,9 @@ const resources = {
       'help.beforeStep4': '准确记录出现的任何错误消息',
       'help.beforeStep5': '准备描述问题发生时您正在尝试做什么',
       
-      // ALL REMAINING SECTION TITLES AND TEXT
+      // ALL REMAINING SECTION TITLES AND TEXT  
       'help.latestEnhancements': '最新增强功能',
-      'help.studentPrivacyProtection': '学生隐私保护', 
-      'help.bestPractices': '最佳实践',
-      'help.usagePerformanceIssues': '使用和性能问题',
-      'help.emailSharingProblems': '邮件分享问题',
-      'help.mobileDeviceUsage': '移动设备使用',
-      'help.languageSelectorDesc': '使用标题中的语言选择器在英语和中文之间切换。您的偏好将自动保存。',
+      'help.bestPractices': '最佳实践和提示',
       
 
       
