@@ -2500,9 +2500,6 @@ const resources = {
       'help.usagePerformanceIssues': '使用和性能问题', 
       'help.emailProblems': '邮件分享问题',
       'help.mobileDeviceUsage': '移动设备使用',
-      'help.latestEnhancements': '最新增强功能',
-      'help.bestPractices': '最佳实践和提示',
-      'help.languageSwitcher': '使用标题中的语言选择器在英语和中文之间切换。您的偏好将自动保存。',
       
 
       
