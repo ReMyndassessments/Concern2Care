@@ -23,7 +23,8 @@ import {
   Smartphone,
   Copy,
   Download,
-  Languages
+  Languages,
+  Users
 } from "lucide-react";
 
 export default function HelpGuide() {
@@ -94,7 +95,7 @@ export default function HelpGuide() {
               Concern2Care is your AI-powered teaching assistant designed to help K-12 educators document student concerns 
               and receive evidence-based intervention strategies. This comprehensive guide will help you make the most of all features.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center p-3 bg-white/50 rounded-lg">
                 <FileText className="h-8 w-8 text-blue-600 mx-auto mb-2" />
                 <p className="font-medium text-sm">Document Concerns</p>
@@ -102,6 +103,10 @@ export default function HelpGuide() {
               <div className="text-center p-3 bg-white/50 rounded-lg">
                 <Lightbulb className="h-8 w-8 text-purple-600 mx-auto mb-2" />
                 <p className="font-medium text-sm">Get AI Interventions</p>
+              </div>
+              <div className="text-center p-3 bg-white/50 rounded-lg">
+                <Users className="h-8 w-8 text-violet-600 mx-auto mb-2" />
+                <p className="font-medium text-sm">Classroom Management</p>
               </div>
               <div className="text-center p-3 bg-white/50 rounded-lg">
                 <Share className="h-8 w-8 text-green-600 mx-auto mb-2" />
@@ -177,8 +182,8 @@ export default function HelpGuide() {
 
         {/* AI Interventions */}
         <Section icon={Lightbulb} title="AI-Generated Support Strategies">
-          <SubSection title="Two Types of AI Support">
-            <p>Concern2Care provides two distinct types of AI-generated support strategies:</p>
+          <SubSection title="Three Types of AI Support">
+            <p>Concern2Care provides three distinct types of AI-generated support strategies:</p>
             <div className="space-y-3 mt-3">
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h5 className="font-medium text-blue-800 mb-2">📚 Differentiation Strategies</h5>
@@ -190,6 +195,12 @@ export default function HelpGuide() {
                 <h5 className="font-medium text-purple-800 mb-2">🎯 Behavior Support Strategies</h5>
                 <p className="text-sm text-purple-700">
                   Evidence-based intervention approaches for students requiring additional support beyond regular classroom instruction.
+                </p>
+              </div>
+              <div className="bg-violet-50 p-4 rounded-lg">
+                <h5 className="font-medium text-violet-800 mb-2">👥 Classroom Management Strategies</h5>
+                <p className="text-sm text-violet-700">
+                  Whole-class management approaches and environmental strategies to improve overall classroom dynamics and learning environment.
                 </p>
               </div>
             </div>
@@ -242,6 +253,102 @@ export default function HelpGuide() {
           </SubSection>
         </Section>
 
+        {/* Classroom Management Strategies */}
+        <Section icon={Users} title="Classroom Management Strategies">
+          <SubSection title="What Are Classroom Management Strategies?">
+            <p>Classroom management strategies focus on whole-class approaches to improve the overall learning environment, classroom dynamics, and group behavior management.</p>
+            <div className="bg-violet-50 p-4 rounded-lg mt-3">
+              <h6 className="font-medium text-violet-800 mb-2">Key Differences from Individual Student Support:</h6>
+              <ul className="text-sm text-violet-700 space-y-1">
+                <li>• Addresses classroom-wide issues rather than individual student concerns</li>
+                <li>• Focuses on environmental factors, routines, and systems</li>
+                <li>• Provides strategies for managing groups and classroom dynamics</li>
+                <li>• Includes proactive approaches to prevent issues before they occur</li>
+              </ul>
+            </div>
+          </SubSection>
+
+          <SubSection title="When to Use Classroom Management Strategies">
+            <p>Consider using classroom management support when you're experiencing:</p>
+            <FeatureList features={[
+              "Overall classroom disruption or lack of focus",
+              "Difficulty managing transitions between activities",
+              "Challenges with group work or collaborative learning",
+              "Problems with classroom routines or procedures",
+              "Need for better engagement strategies for the whole class",
+              "Issues with classroom environment or physical space management"
+            ]} />
+          </SubSection>
+
+          <SubSection title="Information Required for Classroom Management Requests">
+            <p>When requesting classroom management strategies, you'll provide:</p>
+            <FeatureList features={[
+              "Total number of students in your class",
+              "Information about mixed abilities and learning levels",
+              "Number of English as Additional Language (EAL) learners",
+              "Number of students with IEPs or special needs",
+              "Description of pervasive issues affecting the class",
+              "Additional context about your classroom environment"
+            ]} />
+          </SubSection>
+
+          <SubSection title="Types of Classroom Management Strategies You'll Receive">
+            <div className="space-y-3 mt-3">
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <h6 className="font-medium text-gray-800 mb-2">🏛️ Environmental Strategies</h6>
+                <p className="text-sm text-gray-700">Physical classroom setup, seating arrangements, and learning zones</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <h6 className="font-medium text-gray-800 mb-2">⏰ Routine & Procedure Strategies</h6>
+                <p className="text-sm text-gray-700">Daily routines, transitions, and classroom management systems</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <h6 className="font-medium text-gray-800 mb-2">🎯 Engagement & Motivation Strategies</h6>
+                <p className="text-sm text-gray-700">Whole-class motivation techniques and engagement methods</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <h6 className="font-medium text-gray-800 mb-2">🤝 Group Management Strategies</h6>
+                <p className="text-sm text-gray-700">Managing collaborative work, group dynamics, and peer interactions</p>
+              </div>
+            </div>
+          </SubSection>
+
+          <SubSection title="Guided-Practice Implementation Format">
+            <p>Classroom management strategies are provided in a structured, guided-practice format with implementation phases:</p>
+            <div className="space-y-2 mt-3">
+              <div className="bg-green-50 p-3 rounded-lg">
+                <h6 className="font-medium text-green-800 text-sm mb-1">📋 Week 1-2: Foundation Setting</h6>
+                <p className="text-xs text-green-700">Initial setup, introducing new systems, and establishing routines</p>
+              </div>
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <h6 className="font-medium text-blue-800 text-sm mb-1">🔄 Week 3-6: Strategy Integration</h6>
+                <p className="text-xs text-blue-700">Refining approaches, addressing challenges, and building consistency</p>
+              </div>
+              <div className="bg-purple-50 p-3 rounded-lg">
+                <h6 className="font-medium text-purple-800 text-sm mb-1">✅ Ongoing: Sustainable Practices</h6>
+                <p className="text-xs text-purple-700">Long-term maintenance, monitoring, and continuous improvement</p>
+              </div>
+            </div>
+          </SubSection>
+
+          <SubSection title="How Classroom Management Integrates with Individual Student Support">
+            <p>Classroom management strategies work alongside individual student interventions:</p>
+            <FeatureList features={[
+              "AI analyzes your previous individual student concerns to inform classroom strategies",
+              "Addresses systemic issues that may be affecting multiple students",
+              "Provides environmental supports that benefit all students, including those with individual needs",
+              "Creates a foundation for successful implementation of individual interventions"
+            ]} />
+          </SubSection>
+
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Pro Tip:</strong> Classroom management strategies can often prevent many individual student issues from arising by creating a more structured, supportive learning environment for all students.
+            </AlertDescription>
+          </Alert>
+        </Section>
+
         {/* Follow-up Questions */}
         <Section icon={MessageSquare} title="Follow-up Questions and Support">
           <SubSection title="Getting Additional Guidance">
@@ -271,10 +378,10 @@ export default function HelpGuide() {
             <p>Generate professional reports that include your concern documentation and recommended interventions:</p>
             <StepList steps={[
               "Navigate to 'My Support Requests' from the main menu",
-              "Use the 'Differentiation Requests' and 'Intervention Requests' tabs to find your concerns",
+              "Use the 'Differentiation Requests', 'Intervention Requests', and 'Classroom Management' tabs to find your concerns",
               "Find the concern you want to share",
               "Click the 'Share' button next to the concern", 
-              "The system generates a comprehensive PDF report"
+              "The system generates a comprehensive PDF report with appropriate headers for the request type"
             ]} />
           </SubSection>
 
@@ -293,21 +400,26 @@ export default function HelpGuide() {
             <div className="space-y-2 mt-3">
               <div className="bg-blue-50 p-3 rounded-lg">
                 <h6 className="font-medium text-blue-800 text-sm mb-1">📚 Differentiation Requests</h6>
-                <p className="text-xs text-blue-700">Teaching strategies and classroom adjustments</p>
+                <p className="text-xs text-blue-700">Teaching strategies and classroom adjustments for individual students</p>
               </div>
               <div className="bg-purple-50 p-3 rounded-lg">
                 <h6 className="font-medium text-purple-800 text-sm mb-1">🎯 Intervention Requests</h6>
-                <p className="text-xs text-purple-700">Behavior support strategies and learning plans</p>
+                <p className="text-xs text-purple-700">Behavior support strategies and learning plans for individual students</p>
+              </div>
+              <div className="bg-violet-50 p-3 rounded-lg">
+                <h6 className="font-medium text-violet-800 text-sm mb-1">👥 Classroom Management Requests</h6>
+                <p className="text-xs text-violet-700">Whole-class strategies and environmental management approaches</p>
               </div>
             </div>
           </SubSection>
 
           <SubSection title="Report Contents">
             <FeatureList features={[
-              "Original concern documentation",
-              "AI-generated support strategies (differentiation or intervention)",
-              "Implementation timelines and steps", 
+              "Original concern documentation with appropriate context (student or classroom)",
+              "AI-generated support strategies (differentiation, intervention, or classroom management)",
+              "Implementation timelines and structured guidance with phases", 
               "Professional formatting suitable for school records",
+              "Appropriate headers: Individual student reports vs. classroom management strategy reports",
               "Date stamps and teacher information",
               "Proper Chinese character support for bilingual reports",
               "Clean, professional table formatting for structured content"
