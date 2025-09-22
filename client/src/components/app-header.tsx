@@ -146,7 +146,7 @@ export default function AppHeader() {
               className="hidden sm:flex text-gray-600 hover:text-red-600 hover:border-red-300 border-gray-300 text-xs px-2 py-1"
             >
               <LogOut className="h-3 w-3 mr-1" />
-              Sign Out
+              {t('header.signOut', 'Sign Out')}
             </Button>
             
             {/* Mobile Menu Button */}
@@ -170,19 +170,19 @@ export default function AppHeader() {
                   <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
                       <BarChart3 className="h-4 w-4 mr-3" />
-                      New Request
+                      {t('header.newRequest', 'New Request')}
                     </Button>
                   </Link>
                   <Link href="/my-support-requests" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
                       <History className="h-4 w-4 mr-3" />
-                      My Requests
+                      {t('header.myRequests', 'My Requests')}
                     </Button>
                   </Link>
                   <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
                       <Settings className="h-4 w-4 mr-3" />
-                      Settings
+                      {t('header.settings', 'Settings')}
                     </Button>
                   </Link>
                 </>
@@ -191,7 +191,7 @@ export default function AppHeader() {
                 <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="ghost" size="sm" className="w-full justify-start text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl px-4 py-3">
                     <Shield className="h-4 w-4 mr-3" />
-                    Admin Dashboard
+                    {t('header.adminDashboard', 'Admin Dashboard')}
                   </Button>
                 </Link>
               )}

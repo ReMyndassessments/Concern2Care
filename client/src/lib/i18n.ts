@@ -915,7 +915,7 @@ const resources = {
       'language.english': 'English',
       'language.chinese': '中文',
       
-      // App Header
+      // App Header Navigation
       'header.newRequest': 'New Request',
       'header.myRequests': 'My Requests', 
       'header.settings': 'Settings',
