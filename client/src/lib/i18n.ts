@@ -2403,8 +2403,21 @@ const resources = {
       'help.gmailStep4': '为"邮件"生成新的应用密码',
       'help.gmailStep5': '复制16字符密码并在Concern2Care中使用',
 
-      // Add missing admin feature 5
-      'help.adminFeature5': '查看教师使用统计和活动',
+      // ACTUAL TRANSLATION KEYS USED BY COMPONENT - CRITICAL FIX
+      'help.teacherMgmt1': '为您的学校添加新的教师账户',
+      'help.teacherMgmt2': '编辑教师联系信息和个人资料',
+      'help.teacherMgmt3': '根据需要授予额外的月度请求',
+      'help.teacherMgmt4': '停用教师账户（例如员工变动）',
+      'help.teacherMgmt5': '查看教师使用统计和活动',
+      'help.schoolEmail1': '为所有教师设置学区邮件设置',
+      'help.schoolEmail2': '配置机构SMTP服务器详细信息',
+      'help.schoolEmail3': '允许教师使用学校邮件分享报告',
+      'help.schoolEmail4': '测试和验证学校邮件配置',
+      'help.analytics1': '查看全校使用仪表板和趋势',
+      'help.analytics2': '生成干预措施有效性报告',
+      'help.analytics3': '监控教师参与度和采用率',
+      'help.analytics4': '导出学校数据用于机构分析',
+      'help.analytics5': '跟踪最常见的关注类型和模式',
       
 
       
