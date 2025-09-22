@@ -157,6 +157,7 @@ export interface IStorage {
   incrementClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher>;
   resetClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher>;
   checkAndResetClassroomUsageIfNeeded(teacherId: string): Promise<boolean>;
+  setClassroomTeacherPin(teacherId: string, hashedPin: string): Promise<ClassroomEnrolledTeacher>;
   
   createClassroomSubmission(submission: InsertClassroomSubmission & { teacherId: string }): Promise<ClassroomSubmission>;
   getClassroomSubmissions(): Promise<ClassroomSubmissionWithTeacher[]>;
@@ -1029,6 +1030,24 @@ export class DatabaseStorage implements IStorage {
     return updatedTeacher;
   }
 
+  async setClassroomTeacherPin(teacherId: string, hashedPin: string): Promise<ClassroomEnrolledTeacher> {
+    const [updatedTeacher] = await db
+      .update(classroomEnrolledTeachers)
+      .set({ 
+        securityPin: hashedPin,
+        pinSetAt: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(classroomEnrolledTeachers.id, teacherId))
+      .returning();
+    
+    if (!updatedTeacher) {
+      throw new Error(`Teacher ${teacherId} not found`);
+    }
+    
+    return updatedTeacher;
+  }
+
   async checkAndResetClassroomUsageIfNeeded(teacherId: string): Promise<boolean> {
     const teacher = await this.getClassroomEnrolledTeacher(teacherId);
     if (!teacher) {
@@ -1068,13 +1087,13 @@ export class DatabaseStorage implements IStorage {
     return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
       ...classroom_submissions,
       // Frontend expects these specific camelCase field names
-      studentFirstName: classroom_submissions.first_name,
-      studentLastInitial: classroom_submissions.last_initial,
-      studentAge: classroom_submissions.student_age,
-      studentGrade: classroom_submissions.student_grade,
+      studentFirstName: classroom_submissions.firstName,
+      studentLastInitial: classroom_submissions.lastInitial,
+      studentAge: classroom_submissions.studentAge,
+      studentGrade: classroom_submissions.studentGrade,
       // Ensure arrays are safe for map() calls
-      learningProfile: classroom_submissions.learning_profile || [],
-      actionsTaken: classroom_submissions.actions_taken || [],
+      learningProfile: classroom_submissions.learningProfile || [],
+      actionsTaken: classroom_submissions.actionsTaken || [],
       teacher: classroom_enrolled_teachers!
     }));
   }
@@ -1134,13 +1153,13 @@ export class DatabaseStorage implements IStorage {
     return submissions.map(({ classroom_submissions, classroom_enrolled_teachers }) => ({
       ...classroom_submissions,
       // Frontend expects these specific camelCase field names
-      studentFirstName: classroom_submissions.first_name,
-      studentLastInitial: classroom_submissions.last_initial,
-      studentAge: classroom_submissions.student_age,
-      studentGrade: classroom_submissions.student_grade,
+      studentFirstName: classroom_submissions.firstName,
+      studentLastInitial: classroom_submissions.lastInitial,
+      studentAge: classroom_submissions.studentAge,
+      studentGrade: classroom_submissions.studentGrade,
       // Ensure arrays are safe for map() calls
-      learningProfile: classroom_submissions.learning_profile || [],
-      actionsTaken: classroom_submissions.actions_taken || [],
+      learningProfile: classroom_submissions.learningProfile || [],
+      actionsTaken: classroom_submissions.actionsTaken || [],
       teacher: classroom_enrolled_teachers!
     }));
   }

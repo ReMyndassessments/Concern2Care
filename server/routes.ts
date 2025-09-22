@@ -3591,8 +3591,27 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(403).json({ message: 'Teacher not enrolled in the program or inactive' });
       }
 
-      // Hash the security PIN for secure storage
-      const hashedPin = await bcrypt.hash(securityPin, 10);
+      // PIN Security Logic: First submission sets PIN, subsequent submissions must match
+      let hashedPin;
+      if (!enrolledTeacher.securityPin) {
+        // First submission: Set the PIN
+        hashedPin = await bcrypt.hash(securityPin, 10);
+        console.log(`🔐 Setting PIN for first-time teacher: ${teacherEmail}`);
+        
+        // Update teacher record with new PIN
+        await storage.setClassroomTeacherPin(enrolledTeacher.id, hashedPin);
+      } else {
+        // Subsequent submission: Validate PIN matches
+        const pinMatches = await bcrypt.compare(securityPin, enrolledTeacher.securityPin);
+        if (!pinMatches) {
+          console.log(`❌ PIN validation failed for teacher: ${teacherEmail}`);
+          return res.status(401).json({ 
+            message: 'Invalid security PIN. Please use the PIN you set during your first submission.' 
+          });
+        }
+        console.log(`✅ PIN validated for teacher: ${teacherEmail}`);
+        hashedPin = enrolledTeacher.securityPin; // Use existing PIN
+      }
 
       // Atomic submission creation with usage increment in transaction
       let submission;
