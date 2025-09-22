@@ -734,15 +734,15 @@ export default function HelpGuide() {
           <SubSection title={t('help.pdfReportIssues', 'PDF and Report Issues')}>
             <div className="space-y-3">
               <div className="bg-red-50 p-3 rounded-lg">
-                <p className="font-medium text-red-800 text-sm">Problem: PDF shows garbled characters or symbols</p>
+                <p className="font-medium text-red-800 text-sm">{t('help.pdfProblem1Title', 'Problem: PDF shows garbled characters or symbols')}</p>
                 <p className="text-red-700 text-sm mt-1">
-                  <strong>Solution:</strong> This has been fixed in recent updates. If you still see issues, try refreshing the page and generating a new report.
+                  <strong>{t('help.solution', 'Solution')}:</strong> {t('help.pdfProblem1Solution', 'This has been fixed in recent updates. If you still see issues, try refreshing the page and generating a new report.')}
                 </p>
               </div>
               <div className="bg-red-50 p-3 rounded-lg">
-                <p className="font-medium text-red-800 text-sm">Problem: Chinese text not displaying properly</p>
+                <p className="font-medium text-red-800 text-sm">{t('help.pdfProblem2Title', 'Problem: Chinese text not displaying properly')}</p>
                 <p className="text-red-700 text-sm mt-1">
-                  <strong>Solution:</strong> Chinese characters now display natively in PDFs. Clear your browser cache and try again.
+                  <strong>{t('help.solution', 'Solution')}:</strong> {t('help.pdfProblem2Solution', 'Chinese characters now display natively in PDFs. Clear your browser cache and try again.')}
                 </p>
               </div>
               <div className="bg-red-50 p-3 rounded-lg">

@@ -2444,6 +2444,13 @@ const resources = {
       'help.accessFeature4': '可缩放文本和界面元素',
       'help.accessFeature5': '所有交互元素的适当ARIA标签',
       
+      // PDF Troubleshooting (newly added translation keys)
+      'help.solution': '解决方案',
+      'help.pdfProblem1Title': '问题：PDF显示乱码字符或符号',
+      'help.pdfProblem1Solution': '这在最近的更新中已修复。如果您仍然看到问题，请尝试刷新页面并生成新报告。',
+      'help.pdfProblem2Title': '问题：中文文本显示不正确',
+      'help.pdfProblem2Solution': '中文字符现在在PDF中原生显示。清除浏览器缓存并重试。',
+      
 
       
       // Interventions Display
