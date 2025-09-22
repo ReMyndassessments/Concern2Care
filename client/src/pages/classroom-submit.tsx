@@ -14,7 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
-// Teacher verification component removed - verification disabled
+import TeacherVerification from '@/components/teacher-verification';
 import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home } from 'lucide-react';
 
 // Base form validation schema
@@ -51,7 +51,8 @@ export default function ClassroomSubmit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<any>(null);
-  // Teacher verification removed - skip verification step
+  const [isVerified, setIsVerified] = useState(false);
+  const [verifiedTeacherEmail, setVerifiedTeacherEmail] = useState('');
   const [showPinReset, setShowPinReset] = useState(false);
   const { toast } = useToast();
 
@@ -77,7 +78,11 @@ export default function ClassroomSubmit() {
     },
   });
 
-  // Teacher verification removed - no verification needed
+  // Handle teacher verification completion
+  const handleVerificationComplete = (teacherEmail: string) => {
+    setVerifiedTeacherEmail(teacherEmail);
+    setIsVerified(true);
+  };
 
   // Check if Classroom Solutions feature is enabled
   useEffect(() => {
@@ -212,8 +217,14 @@ export default function ClassroomSubmit() {
     );
   }
 
-  // Teacher verification removed - show form directly
-  // Note: Verification logic was disabled in this implementation
+  // Show verification component if teacher not verified yet
+  if (!isVerified) {
+    return (
+      <TeacherVerification 
+        onVerificationComplete={handleVerificationComplete}
+      />
+    );
+  }
 
   // Main form (shown after verification is complete)
   return (
@@ -318,7 +329,17 @@ export default function ClassroomSubmit() {
                   )}
                 />
 
-                {/* Verification was disabled - no teacher display needed */}
+                {/* Verified Teacher Display */}
+                {verifiedTeacherEmail && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <span className="text-green-800 font-medium">
+                        Verified as: {verifiedTeacherEmail}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
