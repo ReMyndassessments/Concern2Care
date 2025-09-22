@@ -746,9 +746,9 @@ export default function HelpGuide() {
                 </p>
               </div>
               <div className="bg-red-50 p-3 rounded-lg">
-                <p className="font-medium text-red-800 text-sm">Problem: Copy button not working</p>
+                <p className="font-medium text-red-800 text-sm">{t('help.pdfProblem3Title', 'Problem: Copy button not working')}</p>
                 <p className="text-red-700 text-sm mt-1">
-                  <strong>Solution:</strong> Ensure your browser allows clipboard access. Most modern browsers support this feature automatically.
+                  <strong>{t('help.solution', 'Solution')}:</strong> {t('help.pdfProblem3Solution', 'Ensure your browser allows clipboard access. Most modern browsers support this feature automatically.')}
                 </p>
               </div>
             </div>
@@ -757,21 +757,21 @@ export default function HelpGuide() {
           <SubSection title={t('help.usagePerformanceIssues', 'Usage and Performance Issues')}>
             <div className="space-y-3">
               <div className="bg-yellow-50 p-3 rounded-lg">
-                <p className="font-medium text-yellow-800 text-sm">Problem: Reached monthly limit</p>
+                <p className="font-medium text-yellow-800 text-sm">{t('help.usageProblem1Title', 'Problem: Reached monthly limit')}</p>
                 <p className="text-yellow-700 text-sm mt-1">
-                  <strong>Solution:</strong> Contact your administrator for additional requests, or wait for the monthly reset.
+                  <strong>{t('help.solution', 'Solution')}:</strong> {t('help.usageProblem1Solution', 'Contact your administrator for additional requests, or wait for the monthly reset.')}
                 </p>
               </div>
               <div className="bg-red-50 p-3 rounded-lg">
-                <p className="font-medium text-red-800 text-sm">Problem: Login issues or session timeouts</p>
+                <p className="font-medium text-red-800 text-sm">{t('help.usageProblem2Title', 'Problem: Login issues or session timeouts')}</p>
                 <p className="text-red-700 text-sm mt-1">
-                  <strong>Solution:</strong> Clear browser cookies and cache, then log in again. Contact your administrator if problems persist.
+                  <strong>{t('help.solution', 'Solution')}:</strong> {t('help.usageProblem2Solution', 'Clear browser cookies and cache, then log in again. Contact your administrator if problems persist.')}
                 </p>
               </div>
               <div className="bg-red-50 p-3 rounded-lg">
-                <p className="font-medium text-red-800 text-sm">Problem: Action buttons not responding</p>
+                <p className="font-medium text-red-800 text-sm">{t('help.usageProblem3Title', 'Problem: Action buttons not responding')}</p>
                 <p className="text-red-700 text-sm mt-1">
-                  <strong>Solution:</strong> Refresh the page. If using mobile, ensure you're tapping directly on the button area.
+                  <strong>{t('help.solution', 'Solution')}:</strong> {t('help.usageProblem3Solution', 'Refresh the page. If using mobile, ensure you\'re tapping directly on the button area.')}
                 </p>
               </div>
             </div>
@@ -780,9 +780,9 @@ export default function HelpGuide() {
           <SubSection title={t('help.fileUploadProblems', 'File Upload Problems')}>
             <div className="space-y-3">
               <div className="bg-orange-50 p-3 rounded-lg">
-                <p className="font-medium text-orange-800 text-sm">Problem: File upload fails</p>
+                <p className="font-medium text-orange-800 text-sm">{t('help.fileUploadProblemTitle', 'Problem: File upload fails')}</p>
                 <p className="text-orange-700 text-sm mt-1">
-                  <strong>Solution:</strong> Check file size (max 10MB), ensure supported format (PDF, images), and verify internet connection.
+                  <strong>{t('help.solution', 'Solution')}:</strong> {t('help.fileUploadProblemSolution', 'Check file size (max 10MB), ensure supported format (PDF, images), and verify internet connection.')}
                 </p>
               </div>
             </div>

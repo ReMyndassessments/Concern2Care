@@ -2450,6 +2450,16 @@ const resources = {
       'help.pdfProblem1Solution': '这在最近的更新中已修复。如果您仍然看到问题，请尝试刷新页面并生成新报告。',
       'help.pdfProblem2Title': '问题：中文文本显示不正确',
       'help.pdfProblem2Solution': '中文字符现在在PDF中原生显示。清除浏览器缓存并重试。',
+      'help.pdfProblem3Title': '问题：复制按钮不工作',
+      'help.pdfProblem3Solution': '确保您的浏览器允许剪贴板访问。大多数现代浏览器自动支持此功能。',
+      'help.usageProblem1Title': '问题：达到月度限制',
+      'help.usageProblem1Solution': '联系您的管理员获取额外请求，或等待月度重置。',
+      'help.usageProblem2Title': '问题：登录问题或会话超时',
+      'help.usageProblem2Solution': '清除浏览器cookie和缓存，然后重新登录。如果问题持续存在，请联系您的管理员。',
+      'help.usageProblem3Title': '问题：操作按钮无响应',
+      'help.usageProblem3Solution': '刷新页面。如果使用移动设备，确保您直接点击按钮区域。',
+      'help.fileUploadProblemTitle': '问题：文件上传失败',
+      'help.fileUploadProblemSolution': '检查文件大小（最大10MB），确保支持的格式（PDF、图片），并验证互联网连接。',
       
 
       
