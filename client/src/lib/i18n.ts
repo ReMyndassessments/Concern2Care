@@ -2488,6 +2488,13 @@ const resources = {
       'help.emailSec3': '学校管理员无法查看个人邮件设置',
       'help.emailSec4': '所有邮件传输使用安全协议',
       
+      // BEFORE CONTACTING SUPPORT STEPS
+      'help.beforeStep1': '检查此帮助指南寻找解决方案',
+      'help.beforeStep2': '尝试刷新浏览器或退出/重新登录',
+      'help.beforeStep3': '如果有分享问题，测试您的邮件配置',
+      'help.beforeStep4': '准确记录出现的任何错误消息',
+      'help.beforeStep5': '准备描述问题发生时您正在尝试做什么',
+      
 
       
       // Interventions Display
