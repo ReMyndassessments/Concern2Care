@@ -122,6 +122,35 @@ export function ClassroomTeacherVerification({ onVerificationComplete }: Classro
   const handlePinSetup = async (data: PinSetupForm) => {
     setIsLoading(true);
     console.log('🔐 Setting up PIN for first-time user:', teacherEmail);
+    console.log('📝 Form data being submitted:', {
+      teacherEmail,
+      securityPin: data.securityPin ? '****' : 'EMPTY',
+      securityQuestion: data.securityQuestion || 'EMPTY',
+      securityAnswer: data.securityAnswer || 'EMPTY',
+      securityQuestionLength: data.securityQuestion?.length || 0,
+      securityAnswerLength: data.securityAnswer?.length || 0,
+    });
+
+    // Client-side validation check
+    if (!data.securityQuestion || data.securityQuestion.length < 5) {
+      toast({
+        title: "Validation Error",
+        description: "Please select a security question.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    if (!data.securityAnswer || data.securityAnswer.length < 2) {
+      toast({
+        title: "Validation Error", 
+        description: "Security answer must be at least 2 characters.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
 
     try {
       await apiRequest({
