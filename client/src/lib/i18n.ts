@@ -171,6 +171,8 @@ const resources = {
       'form.pervasiveIssuesPlaceholder': 'e.g., Ongoing conflicts between two student groups, bullying incidents, difficulty with transitions, noise level management, frequent disruptions during independent work...',
       'form.additionalContextLabel': 'Additional Classroom Context',
       'form.additionalContextPlaceholder': 'e.g., Physical classroom constraints, resource limitations, parent/family challenges, recent changes in classroom dynamics, upcoming events affecting behavior...',
+      'form.classroomManagementConcernsLabel': 'Detailed Description of Classroom Management Concerns',
+      'form.classroomManagementConcernsPlaceholder': 'Describe the overall classroom dynamics and management challenges you\'re experiencing. Include details about group behaviors, classroom environment issues, instructional challenges, and any patterns affecting the whole class learning experience...',
 
       // My Support Requests page
       'supportRequests.title': 'Student Support Requests',
@@ -859,6 +861,8 @@ const resources = {
       'form.pervasiveIssuesPlaceholder': '例如：两个学生群体之间的持续冲突，歺凌事件，过渡困难，噪音管理，独立学习时的频繁干扰...',
       'form.additionalContextLabel': '附加教室背景',
       'form.additionalContextPlaceholder': '例如：物理教室限制，资源限制，家长/家庭挑战，教室动态的最近变化，影响行为的即将到来的事件...',
+      'form.classroomManagementConcernsLabel': '教室管理关注的详细描述',
+      'form.classroomManagementConcernsPlaceholder': '描述您正在经历的整体教室动态和管理挑战。包括有关群体行为、教室环境问题、教学挑战以及影响整个班级学习体验的任何模式的详细信息...',
 
       // My Support Requests page
       'supportRequests.title': '学生支持请求',

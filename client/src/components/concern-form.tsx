@@ -1031,7 +1031,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 <FormItem>
                   <FormLabel className="text-base">
                     {form.watch('taskType') === 'classroom_management' 
-                      ? 'Detailed Description of Classroom Management Concerns' 
+                      ? t('form.classroomManagementConcernsLabel', 'Detailed Description of Classroom Management Concerns')
                       : t('form.detailedDescription', 'Detailed Description of Concern')
                     } <span className="text-red-500">*</span>
                   </FormLabel>
@@ -1039,7 +1039,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     <Textarea 
                       rows={6}
                       placeholder={form.watch('taskType') === 'classroom_management'
-                        ? 'Describe the overall classroom dynamics and management challenges you\'re experiencing. Include details about group behaviors, classroom environment issues, instructional challenges, and any patterns affecting the whole class learning experience...'
+                        ? t('form.classroomManagementConcernsPlaceholder', 'Describe the overall classroom dynamics and management challenges you\'re experiencing. Include details about group behaviors, classroom environment issues, instructional challenges, and any patterns affecting the whole class learning experience...')
                         : t('form.descriptionPlaceholder', 'Please provide specific details about the observed behavior or concern. Include frequency, duration, context, and any patterns you\'ve noticed...')
                       }
                       className="resize-none min-h-[120px] text-base"
