@@ -113,7 +113,7 @@ export default function ClassroomSubmit() {
       
       toast({
         title: "Request Submitted Successfully",
-        description: "You will receive a response via email within 24-48 hours.",
+        description: "Your request has been submitted and will be reviewed by our team.",
       });
 
     } catch (error: any) {
@@ -178,11 +178,8 @@ export default function ClassroomSubmit() {
               Your classroom solutions request has been submitted and will be reviewed by our team.
             </p>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-              <p className="text-sm text-blue-800">
-                <strong>Response Timeline:</strong> You will receive a personalized response via email within 24-48 hours.
-              </p>
               {submissionResult.remainingRequests !== undefined && (
-                <p className="text-sm text-blue-800 mt-2">
+                <p className="text-sm text-blue-800">
                   <strong>Remaining Requests:</strong> {submissionResult.remainingRequests} this month
                 </p>
               )}
