@@ -136,28 +136,16 @@ export default function ClassroomSubmit() {
   const onSubmit = async (data: ClassroomSubmissionForm) => {
     setIsSubmitting(true);
     try {
-      // Validate with appropriate schema based on user type
-      if (isFirstTimeUser !== null) {
-        const schema = createClassroomSubmissionSchema(isFirstTimeUser);
-        const validationResult = schema.safeParse(data);
-        if (!validationResult.success) {
-          const firstError = validationResult.error.issues[0];
-          toast({
-            title: "Validation Error",
-            description: firstError.message,
-            variant: "destructive",
-          });
-          setIsSubmitting(false);
-          return;
-        }
-      }
-      
-      console.log('Submitting classroom form:', data);
+      // Form is already validated by Zod schema
+      console.log('📋 Submitting classroom form for verified teacher:', verifiedTeacherEmail);
       
       const response = await apiRequest({
         url: '/api/classroom/submit',
         method: 'POST',
-        body: data,
+        body: {
+          ...data,
+          teacherEmail: verifiedTeacherEmail, // Use verified email
+        },
       });
 
       console.log('Submission response:', response);
@@ -441,85 +429,16 @@ export default function ClassroomSubmit() {
                         />
                       </FormControl>
                       <FormDescription>
-                        {isFirstTimeUser 
-                          ? "Create a 4-digit PIN to secure your account" 
-                          : "Enter your existing 4-digit PIN"
-                        }
+                        Enter your 4-digit PIN (verified during login)
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Security Question Fields - Only for first-time users */}
-                {isFirstTimeUser && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="securityQuestion"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Security Question</FormLabel>
-                          <FormControl>
-                            <Select onValueChange={field.onChange} value={field.value} data-testid="select-security-question">
-                              <SelectTrigger>
-                                <SelectValue placeholder="Choose a security question" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="What was the name of your first pet?">What was the name of your first pet?</SelectItem>
-                                <SelectItem value="What city were you born in?">What city were you born in?</SelectItem>
-                                <SelectItem value="What was your childhood nickname?">What was your childhood nickname?</SelectItem>
-                                <SelectItem value="What is your favorite color?">What is your favorite color?</SelectItem>
-                                <SelectItem value="What was the make of your first car?">What was the make of your first car?</SelectItem>
-                                <SelectItem value="What is your mother's maiden name?">What is your mother's maiden name?</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormDescription>
-                            Choose a question to help recover your PIN if forgotten
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                {/* Security fields handled in verification component */}
 
-                    <FormField
-                      control={form.control}
-                      name="securityAnswer"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Security Answer</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="text" 
-                              placeholder="Your answer to the security question" 
-                              {...field}
-                              data-testid="input-security-answer"
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Remember this answer - you'll need it to reset your PIN
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-
-                {/* Forgot PIN Link - Only for returning users */}
-                {isFirstTimeUser === false && (
-                  <div className="text-sm text-muted-foreground">
-                    <button 
-                      type="button" 
-                      onClick={() => setShowPinReset(true)}
-                      className="text-blue-600 hover:underline"
-                      data-testid="link-forgot-pin"
-                    >
-                      Forgot your PIN?
-                    </button>
-                  </div>
-                )}
+                {/* PIN reset handled in verification component */}
               </CardContent>
             </Card>
 
