@@ -440,7 +440,6 @@ export default function ClassroomSubmit() {
                 />
 
                 {/* Security Question Fields - Only for first-time users */}
-                {console.log('🔍 Rendering security fields check - isFirstTimeUser:', isFirstTimeUser)}
                 {isFirstTimeUser && (
                   <>
                     <FormField
