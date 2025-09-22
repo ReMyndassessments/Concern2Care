@@ -303,7 +303,12 @@ export function ClassroomTeacherVerification({ onVerificationComplete }: Classro
           {/* PIN Setup Step (First-time users) */}
           {currentStep === 'pin_setup' && (
             <Form {...pinSetupForm}>
-              <form onSubmit={pinSetupForm.handleSubmit(handlePinSetup)} className="space-y-4">
+              <form onSubmit={(e) => {
+                console.log('🔍 Form submission triggered');
+                console.log('🔍 Form values at submission:', pinSetupForm.getValues());
+                console.log('🔍 Form errors at submission:', pinSetupForm.formState.errors);
+                return pinSetupForm.handleSubmit(handlePinSetup)(e);
+              }} className="space-y-4">
                 <div className="bg-blue-50 p-3 rounded-md">
                   <p className="text-sm text-blue-700">
                     <strong>Welcome!</strong> Since this is your first time, please create a 4-digit PIN and select a security question for password recovery.
