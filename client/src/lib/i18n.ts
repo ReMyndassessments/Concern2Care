@@ -271,9 +271,16 @@ const resources = {
       // Categories
       'category.academic': 'Academic Performance',
       'category.behavioral': 'Behavioral Issues',
+      'category.behavior': 'Behavior',
       'category.social': 'Social-Emotional',
+      'category.social-emotional': 'Social/Emotional',
+      'category.peer-relationships': 'Peer Relationships',
       'category.attendance': 'Attendance/Engagement',
       'category.other': 'Other',
+      
+      // Location translations
+      'location.allClassrooms': 'All Classrooms',
+      'location.classroom': 'Classroom',
       
       // Grades
       'grade.k': 'Kindergarten',
@@ -921,9 +928,16 @@ const resources = {
       // Categories
       'category.academic': '学业表现',
       'category.behavioral': '行为问题',
+      'category.behavior': '行为',
       'category.social': '社交情感',
+      'category.social-emotional': '社交/情感',
+      'category.peer-relationships': '同伴关系',
       'category.attendance': '出勤/参与度',
       'category.other': '其他',
+      
+      // Location translations
+      'location.allClassrooms': '所有教室',
+      'location.classroom': '教室',
       
       // Grades
       'grade.k': '幼儿园',

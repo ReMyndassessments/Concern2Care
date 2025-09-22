@@ -509,11 +509,11 @@ export default function MySupportRequests() {
                           </div>
                           <div className="flex items-center space-x-1 sm:space-x-2">
                             <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" />
-                            <span>{concern.location}</span>
+                            <span>{concern.location === 'All Classrooms' ? t('location.allClassrooms', 'All Classrooms') : concern.location === 'Classroom' ? t('location.classroom', 'Classroom') : concern.location}</span>
                           </div>
                           <div className="flex items-center space-x-1 sm:space-x-2">
                             <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" />
-                            <span className="capitalize">{t(`form.${concern.severityLevel}Classroom`, concern.severityLevel)}</span>
+                            <span className="capitalize">{concern.severityLevel === 'mild' ? t('form.mildClassroom', 'Mild').replace(' – Needs classroom support', '') : concern.severityLevel === 'moderate' ? t('form.moderateTier2', 'Moderate').replace(' – Needs behavior support strategies', '') : concern.severityLevel === 'urgent' ? t('form.urgentImmediate', 'Urgent').replace(' – Immediate follow-up needed', '') : concern.severityLevel}</span>
                           </div>
                         </div>
                       </div>
