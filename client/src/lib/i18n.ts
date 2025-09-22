@@ -2403,59 +2403,9 @@ const resources = {
       'help.gmailStep4': '为"邮件"生成新的应用密码',
       'help.gmailStep5': '复制16字符密码并在Concern2Care中使用',
 
-      // COMPLETE SYSTEMATIC CHINESE TRANSLATIONS FOR ALL HELP KEYS
-      // Admin & School Features
-      'help.mobileDeviceUsage': '移动设备使用',
-      'help.emailProblems': '邮件分享问题', 
-      'help.adminPrivacyNote': '注意：学校管理员无法访问个别教师的关注详情或报告以保护隐私，但可以查看汇总使用统计。',
-      'help.languageSupport': '语言和国际支持',
-      'help.multiLanguage': '多语言功能',
-      'help.mobileAccessibility': '移动和无障碍功能',
-      'help.chineseInterfaceDesc': '使用标题中的语言选择器在英语和中文之间切换。您的偏好将自动保存。',
-      
-      // Admin Feature Translation Keys (for screenshot)
-      'help.adminFeature1': '为您的学校添加新的教师账户',
-      'help.adminFeature2': '编辑教师联系信息和个人资料', 
-      'help.adminFeature3': '根据需要授予额外的月度请求',
-      'help.adminFeature4': '停用教师账户（例如员工变动）',
+      // Add missing admin feature 5
       'help.adminFeature5': '查看教师使用统计和活动',
-      'help.schoolEmailFeature1': '为所有教师设置学区邮件设置',
-      'help.schoolEmailFeature2': '配置机构SMTP服务器详细信息',
-      'help.schoolEmailFeature3': '允许教师使用学校邮件分享报告',
-      'help.schoolEmailFeature4': '测试和验证学校邮件配置',
-      'help.analyticsFeature1': '查看全校使用仪表板和趋势',
-      'help.analyticsFeature2': '生成干预措施有效性报告',
-      'help.analyticsFeature3': '监控教师参与度和采用率',
-      'help.analyticsFeature4': '导出学校数据用于机构分析',
-      'help.analyticsFeature5': '跟踪最常见的关注类型和模式',
       
-      // Mobile Features (removed duplicates)
-      'help.mobileFeature1': '完全响应式设计，在手机和平板电脑上完美运行',
-      'help.mobileFeature2': '触摸友好界面，按钮较大（最小高度56px）',
-      'help.mobileFeature3': '所有功能在移动设备上可用，具有优化布局',
-      'help.mobileFeature4': '移动优先表单，具有适当的键盘优化',
-      'help.mobileFeature5': '可折叠导航菜单，便于移动导航',
-      'help.mobileFeature6': '移动设备上的全宽按钮，便于点击',
-      'help.mobileFeature7': '针对移动阅读优化的文本大小和间距',
-      'help.mobileUsageTips': '移动使用技巧',
-      'help.mobileTip1': '使用横向模式更容易查看表格和数据输入',
-      'help.mobileTip2': '如果按钮没有立即响应，请点击并按住',
-      'help.mobileTip3': '汉堡菜单（☰）提供快速访问所有功能',
-      'help.mobileTip4': '在数据表上水平滚动以查看所有列',
-      'help.mobileTip5': '使用捏合缩放进行详细报告查看',
-      'help.mobileTip6': '语音转文本在关注描述字段中效果很好',
-      'help.mobileOptimized': '移动优化功能',
-      'help.mobileOptFeature1': '在小屏幕上显示较短文本的移动友好落地页',
-      'help.mobileOptFeature2': '具有增强视觉反馈的触摸优化CTA按钮',
-      'help.mobileOptFeature3': '具有可滚动内容的响应式管理仪表板',
-      'help.mobileOptFeature4': '具有适当键盘处理的移动友好登录页面',
-      'help.mobileOptFeature5': '适用时支持导航的滑动手势',
-      
-      // Email Problem Solutions
-      'help.emailProblem1Title': '问题："分享报告失败"错误',
-      'help.emailProblem1Solution': '解决方案：检查您的邮件配置。对于Gmail，确保您使用的是应用密码，而不是常规密码。',
-      'help.emailProblem2Title': '问题：邮件测试失败',
-      'help.emailProblem2Solution': '解决方案：验证SMTP设置，检查互联网连接，并确保您的邮件提供商允许第三方应用访问。',
 
       
       // Interventions Display
