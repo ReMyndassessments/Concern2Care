@@ -89,166 +89,165 @@ export default function HelpGuide() {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 text-xl">
               <BookOpen className="h-6 w-6 text-blue-600" />
-              <span>Welcome to Concern2Care</span>
+              <span>{t('help.welcome', 'Welcome to Concern2Care')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-gray-700 mb-4">
-              Concern2Care is your AI-powered teaching assistant designed to help K-12 educators document student concerns 
-              and receive evidence-based intervention strategies. This comprehensive guide will help you make the most of all features.
+              {t('help.welcomeDesc', 'Concern2Care is your AI-powered teaching assistant designed to help K-12 educators document student concerns and receive evidence-based intervention strategies. This comprehensive guide will help you make the most of all features.')}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center p-3 bg-white/50 rounded-lg">
                 <FileText className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <p className="font-medium text-sm">Document Concerns</p>
+                <p className="font-medium text-sm">{t('help.documentConcerns', 'Document Concerns')}</p>
               </div>
               <div className="text-center p-3 bg-white/50 rounded-lg">
                 <Lightbulb className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-                <p className="font-medium text-sm">Get AI Interventions</p>
+                <p className="font-medium text-sm">{t('help.getAiInterventions', 'Get AI Interventions')}</p>
               </div>
               <div className="text-center p-3 bg-white/50 rounded-lg">
                 <Users className="h-8 w-8 text-violet-600 mx-auto mb-2" />
-                <p className="font-medium text-sm">Classroom Management</p>
+                <p className="font-medium text-sm">{t('help.classroomManagement', 'Classroom Management')}</p>
               </div>
               <div className="text-center p-3 bg-white/50 rounded-lg">
                 <Share className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                <p className="font-medium text-sm">Share Reports</p>
+                <p className="font-medium text-sm">{t('help.shareReports', 'Share Reports')}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Getting Started */}
-        <Section icon={User} title="Getting Started">
-          <SubSection title="First-Time Setup">
+        <Section icon={User} title={t('help.gettingStarted', 'Getting Started')}>
+          <SubSection title={t('help.firstTimeSetup', 'First-Time Setup')}>
             <StepList steps={[
-              "Complete your profile information in Settings → Profile",
-              "Set up your email configuration for report sharing (Settings → Email)",
-              "Familiarize yourself with the main dashboard and usage limits",
-              "Review the types of concerns and interventions available"
+              t('help.firstTimeSetupStep1', 'Complete your profile information in Settings → Profile'),
+              t('help.firstTimeSetupStep2', 'Set up your email configuration for report sharing (Settings → Email)'),
+              t('help.firstTimeSetupStep3', 'Familiarize yourself with the main dashboard and usage limits'),
+              t('help.firstTimeSetupStep4', 'Review the types of concerns and interventions available')
             ]} />
           </SubSection>
           
-          <SubSection title="Understanding Usage Limits">
-            <p>Each teacher has a monthly limit of support requests (typically 20). Your usage is tracked and displayed on the main dashboard.</p>
+          <SubSection title={t('help.understandingUsageLimits', 'Understanding Usage Limits')}>
+            <p>{t('help.usageLimitsDesc', 'Each teacher has a monthly limit of support requests (typically 20). Your usage is tracked and displayed on the main dashboard.')}</p>
             <Alert className="mt-2">
               <Info className="h-4 w-4" />
               <AlertDescription>
-                <strong>Tip:</strong> Use the "Save Intervention" feature to keep strategies you find particularly useful without using additional requests.
+                <strong>{t('help.proTip', 'Tip')}:</strong> {t('help.usageLimitsTip', 'Use the "Save Intervention" feature to keep strategies you find particularly useful without using additional requests.')}
               </AlertDescription>
             </Alert>
           </SubSection>
         </Section>
 
         {/* Documenting Concerns */}
-        <Section icon={FileText} title="Documenting Student Concerns">
-          <SubSection title="Basic Information Required">
+        <Section icon={FileText} title={t('help.documentingConcerns', 'Documenting Student Concerns')}>
+          <SubSection title={t('help.basicInfoRequired', 'Basic Information Required')}>
             <FeatureList features={[
-              "Student first name and last initial (privacy protection)",
-              "Grade level and your teaching position",
-              "Incident date and location",
-              "Concern type(s): Academic, Behavioral, Social/Emotional, Attendance, etc.",
-              "Detailed description of the concern",
-              "Severity level: Mild, Moderate, or Urgent",
-              "Actions already taken"
+              t('help.basicInfo1', 'Student first name and last initial (privacy protection)'),
+              t('help.basicInfo2', 'Grade level and your teaching position'),
+              t('help.basicInfo3', 'Incident date and location'),
+              t('help.basicInfo4', 'Concern type(s): Academic, Behavioral, Social/Emotional, Attendance, etc.'),
+              t('help.basicInfo5', 'Detailed description of the concern'),
+              t('help.basicInfo6', 'Severity level: Mild, Moderate, or Urgent'),
+              t('help.basicInfo7', 'Actions already taken')
             ]} />
           </SubSection>
 
-          <SubSection title="Enhanced Student Information (Optional but Recommended)">
-            <p>Providing additional student context helps generate more personalized interventions:</p>
+          <SubSection title={t('help.enhancedStudentInfo', 'Enhanced Student Information (Optional but Recommended)')}>
+            <p>{t('help.enhancedStudentInfoDesc', 'Providing additional student context helps generate more personalized interventions:')}</p>
             <FeatureList features={[
-              "IEP status and disability information",
-              "English as Additional Language (EAL) proficiency level", 
-              "Gifted program participation",
-              "Academic struggling indicators",
-              "Other specific learning needs"
+              t('help.enhancedInfo1', 'IEP status and disability information'),
+              t('help.enhancedInfo2', 'English as Additional Language (EAL) proficiency level'),
+              t('help.enhancedInfo3', 'Gifted program participation'),
+              t('help.enhancedInfo4', 'Academic struggling indicators'),
+              t('help.enhancedInfo5', 'Other specific learning needs')
             ]} />
           </SubSection>
 
-          <SubSection title="File Uploads for Better Recommendations">
-            <p>Upload relevant documents to enhance AI analysis:</p>
+          <SubSection title={t('help.fileUploads', 'File Uploads for Better Recommendations')}>
+            <p>{t('help.fileUploadsDesc', 'Upload relevant documents to enhance AI analysis:')}</p>
             <FeatureList features={[
-              "Student assessment reports (PDF, images)",
-              "Lesson plans related to the concern",
-              "Files are securely stored and only used for generating better interventions"
+              t('help.fileUpload1', 'Student assessment reports (PDF, images)'),
+              t('help.fileUpload2', 'Lesson plans related to the concern'),
+              t('help.fileUpload3', 'Files are securely stored and only used for generating better interventions')
             ]} />
           </SubSection>
 
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              <strong>Privacy Note:</strong> Never include full names, student IDs, or other personally identifiable information in your descriptions.
+              <strong>{t('help.proTip', 'Privacy Note')}:</strong> {t('help.privacyNote', 'Never include full names, student IDs, or other personally identifiable information in your descriptions.')}
             </AlertDescription>
           </Alert>
         </Section>
 
         {/* AI Interventions */}
-        <Section icon={Lightbulb} title="AI-Generated Support Strategies">
-          <SubSection title="Three Types of AI Support">
-            <p>Concern2Care provides three distinct types of AI-generated support strategies:</p>
+        <Section icon={Lightbulb} title={t('help.aiInterventions', 'AI-Generated Support Strategies')}>
+          <SubSection title={t('help.threeTypesSupport', 'Three Types of AI Support')}>
+            <p>{t('help.aiSupportDesc', 'Concern2Care provides three distinct types of AI-generated support strategies:')}</p>
             <div className="space-y-3 mt-3">
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h5 className="font-medium text-blue-800 mb-2">📚 Differentiation Strategies</h5>
+                <h5 className="font-medium text-blue-800 mb-2">{t('help.differentiationStrategies', '📚 Differentiation Strategies')}</h5>
                 <p className="text-sm text-blue-700">
-                  Teaching adjustments and personalized learning approaches to meet individual student needs within the classroom setting.
+                  {t('help.differentiationDesc', 'Teaching adjustments and personalized learning approaches to meet individual student needs within the classroom setting.')}
                 </p>
               </div>
               <div className="bg-purple-50 p-4 rounded-lg">
-                <h5 className="font-medium text-purple-800 mb-2">🎯 Behavior Support Strategies</h5>
+                <h5 className="font-medium text-purple-800 mb-2">{t('help.behaviorSupport', '🎯 Behavior Support Strategies')}</h5>
                 <p className="text-sm text-purple-700">
-                  Evidence-based intervention approaches for students requiring additional support beyond regular classroom instruction.
+                  {t('help.behaviorSupportDesc', 'Evidence-based intervention approaches for students requiring additional support beyond regular classroom instruction.')}
                 </p>
               </div>
               <div className="bg-violet-50 p-4 rounded-lg">
-                <h5 className="font-medium text-violet-800 mb-2">👥 Classroom Management Strategies</h5>
+                <h5 className="font-medium text-violet-800 mb-2">{t('help.classroomManagementStrategies', '👥 Classroom Management Strategies')}</h5>
                 <p className="text-sm text-violet-700">
-                  Whole-class management approaches and environmental strategies to improve overall classroom dynamics and learning environment.
+                  {t('help.classroomManagementDesc', 'Whole-class management approaches and environmental strategies to improve overall classroom dynamics and learning environment.')}
                 </p>
               </div>
             </div>
           </SubSection>
 
-          <SubSection title="Strategy Features">
+          <SubSection title={t('help.strategyFeatures', 'Strategy Features')}>
             <FeatureList features={[
-              "Multiple strategies per concern with focused approaches",
-              "Step-by-step implementation guidance", 
-              "Timeline recommendations and progress monitoring",
-              "Evidence-based approaches aligned with educational best practices",
-              "Personalized based on student needs, context, and chosen strategy type"
+              t('help.strategyFeature1', 'Multiple strategies per concern with focused approaches'),
+              t('help.strategyFeature2', 'Step-by-step implementation guidance'),
+              t('help.strategyFeature3', 'Timeline recommendations and progress monitoring'),
+              t('help.strategyFeature4', 'Evidence-based approaches aligned with educational best practices'),
+              t('help.strategyFeature5', 'Personalized based on student needs, context, and chosen strategy type')
             ]} />
           </SubSection>
 
-          <SubSection title="Saving and Managing Interventions">
+          <SubSection title={t('help.savingManaging', 'Saving and Managing Interventions')}>
             <StepList steps={[
-              "Review the generated intervention strategies",
-              "Click 'Save Intervention' to bookmark useful strategies",
-              "Saved interventions appear in your support requests list",
-              "Use the search function to find specific interventions later"
+              t('help.savingStep1', 'Review the generated intervention strategies'),
+              t('help.savingStep2', 'Click \'Save Intervention\' to bookmark useful strategies'),
+              t('help.savingStep3', 'Saved interventions appear in your support requests list'),
+              t('help.savingStep4', 'Use the search function to find specific interventions later')
             ]} />
           </SubSection>
 
-          <SubSection title="New: Action Buttons for AI Outputs">
-            <p>Each AI-generated intervention now includes convenient action buttons at the bottom:</p>
+          <SubSection title={t('help.newActionButtons', 'New: Action Buttons for AI Outputs')}>
+            <p>{t('help.actionButtonsDesc', 'Each AI-generated intervention now includes convenient action buttons at the bottom:')}</p>
             <div className="space-y-3 mt-3">
               <div className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
                 <Copy className="h-5 w-5 text-gray-600" />
                 <div>
-                  <p className="font-medium text-sm text-gray-800">Copy to Clipboard</p>
-                  <p className="text-xs text-gray-600">Instantly copy the intervention text for use in other documents</p>
+                  <p className="font-medium text-sm text-gray-800">{t('help.copyClipboard', 'Copy to Clipboard')}</p>
+                  <p className="text-xs text-gray-600">{t('help.copyClipboardDesc', 'Instantly copy the intervention text for use in other documents')}</p>
                 </div>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
                 <Download className="h-5 w-5 text-gray-600" />
                 <div>
-                  <p className="font-medium text-sm text-gray-800">Download as Text File</p>
-                  <p className="text-xs text-gray-600">Save individual interventions as .txt files to your device</p>
+                  <p className="font-medium text-sm text-gray-800">{t('help.downloadTextFile', 'Download as Text File')}</p>
+                  <p className="text-xs text-gray-600">{t('help.downloadTextFileDesc', 'Save individual interventions as .txt files to your device')}</p>
                 </div>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
                 <Upload className="h-5 w-5 text-gray-600" />
                 <div>
-                  <p className="font-medium text-sm text-gray-800">Share Individual Intervention</p>
-                  <p className="text-xs text-gray-600">Share specific interventions via email without creating full reports</p>
+                  <p className="font-medium text-sm text-gray-800">{t('help.shareIndividual', 'Share Individual Intervention')}</p>
+                  <p className="text-xs text-gray-600">{t('help.shareIndividualDesc', 'Share specific interventions via email without creating full reports')}</p>
                 </div>
               </div>
             </div>
@@ -256,29 +255,29 @@ export default function HelpGuide() {
         </Section>
 
         {/* Classroom Management Strategies */}
-        <Section icon={Users} title="Classroom Management Strategies">
-          <SubSection title="What Are Classroom Management Strategies?">
-            <p>Classroom management strategies focus on whole-class approaches to improve the overall learning environment, classroom dynamics, and group behavior management.</p>
+        <Section icon={Users} title={t('help.classroomManagementTitle', 'Classroom Management Strategies')}>
+          <SubSection title={t('help.whatAreClassroomStrategies', 'What Are Classroom Management Strategies?')}>
+            <p>{t('help.classroomStrategiesDesc', 'Classroom management strategies focus on whole-class approaches to improve the overall learning environment, classroom dynamics, and group behavior management.')}</p>
             <div className="bg-violet-50 p-4 rounded-lg mt-3">
-              <h6 className="font-medium text-violet-800 mb-2">Key Differences from Individual Student Support:</h6>
+              <h6 className="font-medium text-violet-800 mb-2">{t('help.keyDifferences', 'Key Differences from Individual Student Support:')}</h6>
               <ul className="text-sm text-violet-700 space-y-1">
-                <li>• Addresses classroom-wide issues rather than individual student concerns</li>
-                <li>• Focuses on environmental factors, routines, and systems</li>
-                <li>• Provides strategies for managing groups and classroom dynamics</li>
-                <li>• Includes proactive approaches to prevent issues before they occur</li>
+                <li>{t('help.keyDiff1', '• Addresses classroom-wide issues rather than individual student concerns')}</li>
+                <li>{t('help.keyDiff2', '• Focuses on environmental factors, routines, and systems')}</li>
+                <li>{t('help.keyDiff3', '• Provides strategies for managing groups and classroom dynamics')}</li>
+                <li>{t('help.keyDiff4', '• Includes proactive approaches to prevent issues before they occur')}</li>
               </ul>
             </div>
           </SubSection>
 
-          <SubSection title="When to Use Classroom Management Strategies">
-            <p>Consider using classroom management support when you're experiencing:</p>
+          <SubSection title={t('help.whenToUse', 'When to Use Classroom Management Strategies')}>
+            <p>{t('help.whenToUseDesc', 'Consider using classroom management support when you\'re experiencing:')}</p>
             <FeatureList features={[
-              "Overall classroom disruption or lack of focus",
-              "Difficulty managing transitions between activities",
-              "Challenges with group work or collaborative learning",
-              "Problems with classroom routines or procedures",
-              "Need for better engagement strategies for the whole class",
-              "Issues with classroom environment or physical space management"
+              t('help.whenToUse1', 'Overall classroom disruption or lack of focus'),
+              t('help.whenToUse2', 'Difficulty managing transitions between activities'),
+              t('help.whenToUse3', 'Challenges with group work or collaborative learning'),
+              t('help.whenToUse4', 'Problems with classroom routines or procedures'),
+              t('help.whenToUse5', 'Need for better engagement strategies for the whole class'),
+              t('help.whenToUse6', 'Issues with classroom environment or physical space management')
             ]} />
           </SubSection>
 
