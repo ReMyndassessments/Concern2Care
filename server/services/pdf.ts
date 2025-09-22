@@ -44,11 +44,75 @@ export async function generateConcernReport(
       doc.text(`Date Documented: ${concern.createdAt?.toLocaleDateString('en-US') || 'Unknown'}`, 50, yPosition);
       yPosition += 25;
       
+      // Teacher's Comprehensive Submission Details
       doc.text('Teacher\'s Submitted Response:', 50, yPosition);
+      yPosition += 20;
+      
+      // Basic incident information
+      doc.fontSize(11).fillColor('#374151');
+      doc.text(`Incident Date: ${concern.incidentDate?.toLocaleDateString('en-US') || 'Not specified'}`, 70, yPosition);
       yPosition += 15;
-      const descriptionLines = doc.heightOfString(concern.description, { width: 495 });
-      doc.text(concern.description, 50, yPosition, { width: 495, align: 'justify' });
-      yPosition += descriptionLines + 30;
+      doc.text(`Location: ${concern.location || 'Not specified'}`, 70, yPosition);
+      yPosition += 15;
+      doc.text(`Teacher Position: ${concern.teacherPosition || 'Not specified'}`, 70, yPosition);
+      yPosition += 15;
+      doc.text(`Severity Level: ${concern.severityLevel || 'Not specified'}`, 70, yPosition);
+      yPosition += 20;
+      
+      // Actions already taken
+      if (concern.actionsTaken && Array.isArray(concern.actionsTaken) && concern.actionsTaken.length > 0) {
+        doc.fontSize(11).fillColor('#374151').text('Actions Already Taken:', 70, yPosition);
+        yPosition += 15;
+        concern.actionsTaken.forEach((action) => {
+          doc.fontSize(10).fillColor('#666666').text(`• ${action}`, 85, yPosition);
+          yPosition += 12;
+        });
+        if (concern.otherActionTaken) {
+          doc.text(`• ${concern.otherActionTaken}`, 85, yPosition);
+          yPosition += 12;
+        }
+        yPosition += 10;
+      }
+      
+      // Student learning profile
+      const profileItems = [];
+      if (concern.hasIep) profileItems.push('Has IEP/504 Plan');
+      if (concern.hasDisability && concern.disabilityType) profileItems.push(`Diagnosed with: ${concern.disabilityType}`);
+      if (concern.isEalLearner) {
+        const proficiency = concern.ealProficiency ? ` (${concern.ealProficiency} proficiency)` : '';
+        profileItems.push(`EAL Learner${proficiency}`);
+      }
+      if (concern.isGifted) profileItems.push('Gifted/Talented');
+      if (concern.isStruggling) profileItems.push('Currently struggling academically');
+      if (concern.otherNeeds) profileItems.push(`Other needs: ${concern.otherNeeds}`);
+      
+      if (profileItems.length > 0) {
+        doc.fontSize(11).fillColor('#374151').text('Student Learning Profile:', 70, yPosition);
+        yPosition += 15;
+        profileItems.forEach((item) => {
+          doc.fontSize(10).fillColor('#666666').text(`• ${item}`, 85, yPosition);
+          yPosition += 12;
+        });
+        yPosition += 10;
+      }
+      
+      // Detailed description
+      doc.fontSize(11).fillColor('#374151').text('Detailed Description:', 70, yPosition);
+      yPosition += 15;
+      const descriptionLines = doc.heightOfString(concern.description, { width: 475 });
+      doc.fontSize(10).fillColor('#000000').text(concern.description, 85, yPosition, { width: 475, align: 'justify' });
+      yPosition += descriptionLines + 15;
+      
+      // Lesson plan content if available
+      if (concern.lessonPlanContent) {
+        doc.fontSize(11).fillColor('#374151').text('Lesson Plan Content:', 70, yPosition);
+        yPosition += 15;
+        const lessonLines = doc.heightOfString(concern.lessonPlanContent, { width: 475 });
+        doc.fontSize(10).fillColor('#000000').text(concern.lessonPlanContent, 85, yPosition, { width: 475, align: 'justify' });
+        yPosition += lessonLines + 15;
+      }
+      
+      yPosition += 15;
 
       // Check if we need a new page
       if (yPosition > 700) {
