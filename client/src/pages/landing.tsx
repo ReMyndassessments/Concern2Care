@@ -880,11 +880,13 @@ export default function Landing() {
               <Button 
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 onClick={() => {
-                  window.open('/classroom/submit', '_blank');
+                  const productionUrl = qrCodeData?.submissionUrl || `${window.location.origin}/classroom/submit`;
+                  window.open(productionUrl, '_blank');
                 }}
                 data-testid="button-access-form"
+                disabled={qrLoading}
               >
-                Access Submission Form
+                {qrLoading ? 'Loading...' : 'Access Submission Form'}
               </Button>
             </div>
           </div>
