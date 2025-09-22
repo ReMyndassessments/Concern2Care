@@ -923,6 +923,16 @@ const resources = {
       'header.signOut': 'Sign Out',
       'header.smartSupportTools': 'Smart Support Tools',
       
+      // Teacher Lookup Section
+      'teacherLookup.title': 'View Your Classroom Solutions Responses',
+      'teacherLookup.description': 'Enter your email; to check your submitted requests and view approved responses.',
+      'teacherLookup.emailAddress': 'Email Address',
+      'teacherLookup.emailPlaceholder': 'Enter your email address',
+      'teacherLookup.securityPin': 'Security PIN',
+      'teacherLookup.pinPlaceholder': 'Enter your 4-digit PIN',
+      'teacherLookup.viewSubmissions': 'View My Submissions',
+      'teacherLookup.lookingUp': 'Looking up...',
+      
       // Login Page
       'login.title': 'Teacher Sign In',
       'login.secureAccess': 'Secure Access',
@@ -1923,6 +1933,16 @@ const resources = {
       'header.adminDashboard': '管理仪表盘',
       'header.signOut': '退出登录',
       'header.smartSupportTools': '智能支持工具',
+      
+      // Teacher Lookup Section - Chinese
+      'teacherLookup.title': '查看您的课堂解决方案回复',
+      'teacherLookup.description': '输入您的邮箱；查看您已提交的请求并查看已批准的回复。',
+      'teacherLookup.emailAddress': '邮箱地址',
+      'teacherLookup.emailPlaceholder': '输入您的邮箱地址',
+      'teacherLookup.securityPin': '安全密码',
+      'teacherLookup.pinPlaceholder': '输入您的4位数密码',
+      'teacherLookup.viewSubmissions': '查看我的提交',
+      'teacherLookup.lookingUp': '查找中...',
       
       // Login Page
       'login.title': '教师登录',

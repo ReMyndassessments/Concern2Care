@@ -39,6 +39,7 @@ type TeacherLookupData = z.infer<typeof teacherLookupSchema>;
 
 // Teacher Lookup Component
 function TeacherLookup() {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [isLookingUp, setIsLookingUp] = useState(false);
   const [teacherData, setTeacherData] = useState<any>(null);
@@ -182,11 +183,11 @@ function TeacherLookup() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel>{t('teacherLookup.emailAddress', 'Email Address')}</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder={t('teacherLookup.emailPlaceholder', 'Enter your email address')}
                     {...field}
                     data-testid="input-teacher-lookup-email"
                   />
@@ -201,11 +202,11 @@ function TeacherLookup() {
             name="securityPin"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Security PIN</FormLabel>
+                <FormLabel>{t('teacherLookup.securityPin', 'Security PIN')}</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Enter your 4-digit PIN"
+                    placeholder={t('teacherLookup.pinPlaceholder', 'Enter your 4-digit PIN')}
                     maxLength={4}
                     {...field}
                     data-testid="input-teacher-lookup-pin"
@@ -227,7 +228,7 @@ function TeacherLookup() {
             data-testid="button-lookup-submissions"
           >
             <Search className="w-4 h-4 mr-2" />
-            {isLookingUp ? 'Looking up...' : 'View My Submissions'}
+            {isLookingUp ? t('teacherLookup.lookingUp', 'Looking up...') : t('teacherLookup.viewSubmissions', 'View My Submissions')}
           </Button>
         </form>
       </Form>
@@ -895,8 +896,8 @@ export default function Landing() {
         {/* Teacher Response Lookup Section */}
         <div className="mt-12 max-w-2xl mx-auto">
           <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">View Your Classroom Solutions Responses</h3>
-            <p className="text-gray-600 mb-6 text-center">Enter your email; to check your submitted requests and view approved responses.</p>
+            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">{t('teacherLookup.title', 'View Your Classroom Solutions Responses')}</h3>
+            <p className="text-gray-600 mb-6 text-center">{t('teacherLookup.description', 'Enter your email; to check your submitted requests and view approved responses.')}</p>
             
             <TeacherLookup />
           </div>
