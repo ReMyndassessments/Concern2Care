@@ -34,16 +34,6 @@ export async function generateConcernReport(
 
       let yPosition = 150;
 
-      // Student Information
-      doc.fontSize(14).fillColor('#000000').text('Student Information', 50, yPosition);
-      yPosition += 25;
-      doc.fontSize(12).text(`Name: ${concern.studentFirstName} ${concern.studentLastInitial}.`, 50, yPosition);
-      yPosition += 20;
-      doc.text(`Teacher: ${concern.teacher.firstName} ${concern.teacher.lastName}`, 50, yPosition);
-      yPosition += 20;
-      doc.text(`School: ${concern.teacher.school || 'Not specified'}`, 50, yPosition);
-      yPosition += 30;
-
       // Concern Details
       doc.fontSize(14).fillColor('#000000').text('Concern Details', 50, yPosition);
       yPosition += 25;

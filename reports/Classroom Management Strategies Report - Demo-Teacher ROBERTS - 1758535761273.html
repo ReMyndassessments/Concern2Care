@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classroom Management Strategies Report -  </title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Classroom Management Strategies Report</h2>
+                <h3 class="student-name">Teacher: Demo-Teacher ROBERTS</h3>
+                <p class="report-date">Generated on September 22, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value"> .</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Not specified</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">General Concern</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/22/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Description:</h4>
+                <div class="description-content">
+                    To add to this situation, we have parents who are not supportive and have begun as some of the students have done, to take sides in the conflict between the two students.  One of those students is a male and the other a female.
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p>🚨 <strong>IMMEDIATE SAFETY CONCERN DETECTED</strong> 🚨</p><p><h4 class="sub-heading">URGENT ACTION REQUIRED - DO NOT DELAY:</h4></p><p>1. <strong>CONTACT STUDENT SUPPORT SERVICES IMMEDIATELY</strong><br>2. <strong>NOTIFY SENIOR MANAGEMENT TEAM TODAY</strong>  <br>3. <strong>FOLLOW YOUR SCHOOL'S CHILD PROTECTION POLICY</strong><br>4. <strong>DO NOT LEAVE THIS STUDENT UNSUPERVISED</strong><br>5. <strong>DOCUMENT THIS CONCERN FORMALLY</strong></p><p><br><h4 class="sub-heading">SAFETY KEYWORDS DETECTED:</h4> The following words in your submission triggered this alert: "gun"</p><p><h4 class="sub-heading">⚠️ CRITICAL SAFETY PROTOCOL:</h4><br>This situation requires immediate professional intervention beyond classroom strategies. The safety concerns identified require specialized support from trained professionals.</p><p><h4 class="bold-heading">If there is imminent danger, follow your local emergency protocols immediately.</h4></p><p><h4 class="sub-heading">Educational strategies are provided below ONLY after safety measures are in place:</h4></p><p><h4 class="sub-heading">Note:</h4> The intervention strategies below are provided as general guidance only. Professional assessment and intervention are required for this case.</p><p>Of course. It's clear you're navigating a complex classroom environment with a diverse range of student needs, from urgent behavioral and safety concerns to academic and social-emotional challenges. Your detailed notes show a deep commitment to understanding each student, which is the cornerstone of effective classroom management.</p><p>Let's build on your professional insights and develop a comprehensive, whole-class approach. The goal is to create a structured, predictable, and supportive environment that proactively addresses these challenges, reduces the cognitive load on you, and allows every student to feel safe and ready to learn.</p><p>***</p><p><h3 class="intervention-title">1. CLASSROOM ENVIRONMENT ANALYSIS</h3></p><p>Based on your descriptions, the core challenges impacting the whole class are:</p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Safety & Regulation:</strong> Multiple students (Jay R., Noel R., Allen) present with urgent, physically aggressive behaviors. This creates a climate of anxiety and unpredictability for everyone. The conflict between two students, now involving parents taking sides, further fractures the classroom community.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Attention & Focus:</strong> Challenges with maintaining attention (Jay R., Josie R., multiple others), compounded by external noise (cafeteria), make sustained whole-class instruction difficult.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Social-Emotional Needs:</strong> A significant number of students exhibit anxiety, depression, withdrawal (Abby P., Crystal R., Sonia M.), and difficulty with peer relationships. This requires a classroom culture that explicitly teaches and models emotional regulation and empathy.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Academic Diversity:</strong> The range includes gifted students who need extension (Abby P., Josie R.), students with significant academic gaps, and those with subject-specific anxiety (Crystal R. and math). A one-size-fits-all approach will not be effective.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Environmental Factor:</strong> The proximity to the cafeteria is a real and persistent distraction that must be actively managed.</li></ul></p><p><h3 class="intervention-title">2. PROACTIVE CLASSROOM MANAGEMENT STRATEGIES</h3></p><p>#### <strong>Physical Environment Modifications</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Seating for Focus and Community:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Implement a hybrid seating model. Use clustered desks for collaborative work but ensure all clusters are oriented away from the door/cafeteria noise. For direct instruction, have a clear "gathering area" (e.g., on a rug) or teach students a silent signal to pivot their chairs to face the front.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> This minimizes distractions and allows for flexible grouping. For Josie M. (hearing), ensure her cluster is central so she can see and hear peers during discussions.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Predictable Visual Systems:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Create a highly visual daily schedule with icons and times. Use a "Now/Next/Later" board. Implement a consistent color-coding system for subject materials and turn-in trays.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Reduces anxiety for students like Noel R. (detached), Crystal R. (anxious), and Sonia M. (new) by making the day predictable. Supports students with focus challenges by breaking down time.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Calming Sensory Corner:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Dedicate a quiet corner of the room as a "Regulation Station." Equip it with noise-canceling headphones, fidget tools, calming glitter jars, and visual guides for deep breathing. Establish clear rules for its use (e.g., 5-minute timer, non-disruptive).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Provides a proactive, sanctioned outlet for students like Josie R. (fidgety), Abby P. (anxious), and Jay R. (dysregulated) to self-regulate before behavior escalates.</li></ul></p><p>#### <strong>Instructional Approaches (Universal Design for Learning - UDL)</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Multiple Means of Engagement:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Start lessons with a compelling "hook" (a puzzling question, a short video, a picture). Incorporate choice boards for projects and assessments. Use random digital name pickers (like Wheel of Names) instead of hand-raising to keep all students engaged.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Addresses motivation for gifted students (Abby P., Josie R.) and anxious/reluctant students (Abby P., Crystal R.) by increasing relevance and autonomy.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Multiple Means of Representation:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Always provide instructions in at least two formats: verbal *and* written (on the board or a handout). Use anchor charts and graphic organizers. Incorporate videos and hands-on models.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Supports students with attention challenges (Jay R., Josie R.), auditory processing needs (Josie M.), and language barriers (Noel R.'s parents).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Multiple Means of Action & Expression:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Differentiate products. Allow students to show understanding through a podcast, a poster, an essay, or a presentation. For students who finish early (gifted), have a "What's Next?" menu of extension activities.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Reduces anxiety for students like Crystal R. (math anxiety) by allowing alternative pathways to success. Prevents boredom and disruption from early finishers.</li></ul></p><p>#### <strong>Behavioral Support Systems (Positive Behavioral Interventions & Supports - PBIS)</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Clear, Positive Expectations:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Co-create 3-5 positively stated classroom rules with students (e.g., "We are safe," "We are kind," "We try our best"). Teach, model, and practice what these look like and sound like in every context (hallway, group work, independent work).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Establishes a shared community standard, not just teacher-imposed rules. Provides a common language for addressing behavior.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Reinforcement System:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Implement a whole-class token economy (e.g., marbles in a jar, letters to spell a word) where students earn points for demonstrating the core expectations. Pair this with frequent, specific labeled praise ("Jay, thank you for showing you are safe by walking in the classroom.").</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Focuses attention on positive behavior. The group contingency encourages positive peer modeling and community building.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Consistent Routines & Procedures:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Teach explicit routines for every transition: entering the room, turning in work, asking for help, moving to groups, and what to do when finished. Practice them until they are automatic.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Minimizes downtime, which is a prime time for disruptive behavior. Reduces anxiety by making the environment predictable.</li></ul></p><p><h3 class="intervention-title">3. WHOLE-CLASS INTERVENTION STRATEGIES</h3></p><p>#### <strong>Social-Emotional Learning (SEL) Integration</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Daily Community Meetings:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Start each day with a 10-15 minute morning meeting. Follow the format: Greeting, Share, Activity, Morning Message. This is non-negotiable protected time.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Builds relationships and a sense of belonging, directly countering the "sides" being taken. Provides a structured forum for students like Sonia M. to connect and for others to practice social skills.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Explicit SEL Instruction:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Use a curriculum like Second Step or Sanford Harmony to teach lessons on empathy, emotion management, and problem-solving. Role-play common conflicts, including how to disagree respectfully.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Equips all students with the skills to navigate the social challenges present in your classroom. Provides a framework for de-escalating conflicts.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Peace Corner / Peer Mediation:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Train student volunteers in basic mediation steps. Create a "Peace Corner" with a guide for "I feel..." statements and solution brainstorming. Encourage students in conflict to use it before coming to you.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Empowers students to solve their own problems, freeing you to teach. Directly addresses the student conflict and parental involvement issue by giving students a tool.</li></ul></p><p>#### <strong>Academic Support Systems</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Collaborative Learning Structures:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> Use structured Kagan strategies like "Think-Pair-Share," "RoundRobin," and "Numbered Heads Together." These require individual accountability within cooperation.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> Ensures active participation from all students, not just the ones who always raise their hands. Provides built-in peer support for students who struggle.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Flexible Small Groups:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Action:</strong> During independent work time, use a rotating workshop model (e.g., Daily 5, MATH rotations). You pull a small group for targeted instruction (remediation or extension), while other groups work on independent tasks, collaborative projects, or technology.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Why:</strong> This is the engine of differentiation. It allows you to meet the urgent needs of students like Noel R. and Jay R. while challenging your gifted students.</li></ul></p><p><h3 class="intervention-title">4. IMPLEMENTATION ROADMAP</h3></p><p><h4 class="bold-heading">Week 1-2: Foundation & Safety</h4><br>1.  <strong>Day 1:</strong> Re-introduce the classroom as a team. Co-create the 3-5 positive rules. Teach and practice the two most critical routines: entering the room and the signal for quiet attention.<br>2.  <strong>Week 1:</strong> Launch the Morning Meeting routine every day without fail. Introduce the "Regulation Station" and its rules.<br>3.  <strong>Week 2:</strong> Introduce the visual schedule and the token economy. Begin explicitly teaching one SEL skill, like identifying emotions.</p><p><h4 class="bold-heading">Week 3-6: Building Momentum</h4><br>1.  <strong>Week 3:</strong> Introduce the workshop model with one subject (e.g., reading). Start with short rotations and heavily model expected behaviors.<br>2.  <strong>Week 4:</strong> Begin using collaborative learning structures in your lessons. Introduce the "Peace Corner" and train peer mediators.<br>3.  <strong>Week 5-6:</strong> Solidify all routines. Hold a class meeting to reflect on what's working and what needs tweaking.</p><p><h4 class="bold-heading">Ongoing: Sustainability</h4><br><ul class="intervention-list"><li class="main-bullet">  Keep the Morning Meeting and SEL instruction sacred.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Hold brief weekly planning meetings with any co-teachers, paraprofessionals, or support staff to ensure consistency.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Continuously rotate and refresh the "What's Next?" menu and Regulation Station tools to maintain engagement.</li></ul></p><p><h3 class="intervention-title">5. PROGRESS MONITORING & ASSESSMENT</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Whole-Class:</strong> Track data on your token economy. How full is the jar each day? This is a pulse check on classroom climate.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Behavior:</strong> Use a simple tally sheet to track the frequency of specific behaviors (e.g., calling out, leaving seat) *before* and *after* implementing a new strategy. This tells you what's working.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Academic:</strong> Use exit tickets and quick quizzes to gauge whole-class understanding before moving on.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>SEL:</strong> Use a simple Google Form survey ( thumbs up/sideways/down) to ask students how they're feeling about school, their friends, and their work.</li></ul></p><p><h3 class="intervention-title">6. COLLABORATION & SUPPORT</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Urgent Safety Concerns (Jay R., Noel R.):</strong> This is your top priority. You cannot manage this alone. <strong>Immediately</strong> formalize a request for a functional behavior assessment (FBA) and behavior intervention plan (BIP) from your school's support team (psychologist, counselor, admin). Document every incident. This is non-negotiable for classroom safety.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Mental Health Concerns (Abby P. - "leaving this place," dark artwork):</strong> <strong>This is a high-priority safety concern.</strong> You must immediately share these specific observations with your school counselor and/or psychologist. This requires professional follow-up and likely parent contact. Do not handle this alone.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Parents:</strong> For the conflict where parents are taking sides, request a mediated meeting with a school administrator or counselor present. Come to the meeting with a focus on solutions: "We are all here because we want what's best for all students. Here is the plan we are implementing in class to support positive conflict resolution, and here's how you can support that language at home."</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Support Staff:</strong> Proactively schedule time with the ESL specialist (for Noel R.'s parents), gifted coordinator, and special education team to ensure your whole-class strategies are aligned with any IEP or GIEP goals.</li></ul></p><p>Your expertise and dedication are evident. These strategies are designed to give you the structured framework you need to harness the positive energy in your classroom while systematically addressing these complex challenges. You've got this.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>

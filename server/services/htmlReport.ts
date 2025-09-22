@@ -278,6 +278,7 @@ export async function generateConcernHTMLReport(
         </header>
 
 
+        ${concern.taskType !== 'classroom_management' ? `
         <!-- Student Information Section -->
         <section class="info-section">
             <h3 class="section-title">Student Information</h3>
@@ -296,6 +297,7 @@ export async function generateConcernHTMLReport(
                 </div>
             </div>
         </section>
+        ` : ''}
 
         <!-- Concern Details Section -->
         <section class="concern-section">
