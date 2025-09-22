@@ -1264,7 +1264,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       {form.watch('taskType') === 'differentiation' 
                         ? t('form.generateDifferentiationStrategies', 'Generate Differentiation Strategies')
                         : form.watch('taskType') === 'classroom_management'
-                        ? 'Classroom Strategies'
+                        ? t('form.generateClassroomStrategies', 'Classroom Strategies')
                         : t('form.generateTier2Strategies', 'Explore Behavior Support Strategies')}
                     </>
                   )}
