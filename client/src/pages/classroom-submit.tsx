@@ -52,6 +52,7 @@ export default function ClassroomSubmit() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<any>(null);
   // Teacher verification removed - skip verification step
+  const [showPinReset, setShowPinReset] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<ClassroomSubmissionForm>({
@@ -211,43 +212,8 @@ export default function ClassroomSubmit() {
     );
   }
 
-  // Show verification component if teacher not verified yet
-  if (!verifiedTeacherEmail) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <header className="bg-white shadow-sm">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <FileText className="h-6 w-6 text-blue-600 mr-2" />
-                <div>
-                  <h1 className="text-xl font-semibold text-gray-900">C2C Classroom Solutions</h1>
-                  <p className="text-sm text-gray-600">Request Differentiation & Intervention Support</p>
-                </div>
-              </div>
-              <Button
-                onClick={() => setLocation('/')}
-                variant="outline"
-                className="flex items-center"
-                data-testid="button-back-home"
-              >
-                <Home className="h-4 w-4 mr-2" />
-                Back to Home
-              </Button>
-            </div>
-          </div>
-        </header>
-
-        {/* Teacher Verification Modal */}
-        <ClassroomTeacherVerification 
-          onVerificationComplete={handleVerificationComplete}
-        />
-      </div>
-    );
-  }
-  
-  console.log('✅ RENDERING MAIN FORM - verifiedTeacherEmail has value:', verifiedTeacherEmail);
+  // Teacher verification removed - show form directly
+  // Note: Verification logic was disabled in this implementation
 
   // Main form (shown after verification is complete)
   return (
@@ -352,17 +318,7 @@ export default function ClassroomSubmit() {
                   )}
                 />
 
-                {/* Verified Teacher Display */}
-                {verifiedTeacherEmail && (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                      <span className="text-green-800 font-medium">
-                        Verified as: {verifiedTeacherEmail}
-                      </span>
-                    </div>
-                  </div>
-                )}
+                {/* Verification was disabled - no teacher display needed */}
               </CardContent>
             </Card>
 
