@@ -2461,6 +2461,33 @@ const resources = {
       'help.fileUploadProblemTitle': '问题：文件上传失败',
       'help.fileUploadProblemSolution': '检查文件大小（最大10MB），确保支持的格式（PDF、图片），并验证互联网连接。',
       
+      // BEST PRACTICES SECTION - ALL MISSING TRANSLATIONS
+      'help.writingEffective': '编写有效的关注描述',
+      'help.writingTip1': '在描述中要具体和客观',
+      'help.writingTip2': '包括学习环境的相关背景',
+      'help.writingTip3': '专注于可观察的行为和学业表现',
+      'help.writingTip4': '提及尝试过的以前策略',
+      'help.writingTip5': '包括关注的时间和频率',
+      'help.maximizingAI': '最大化AI效果',
+      'help.aiTip1': '提供完整的学生背景（IEP、EAL状态等）',
+      'help.aiTip2': '在可用时上传相关评估文档',
+      'help.aiTip3': '使用后续问题澄清特定方面',
+      'help.aiTip4': '保存成功的干预措施以供将来参考',
+      'help.aiTip5': '在适用时结合多种关注类型',
+      'help.sharingTip1': '仅与授权的学校人员分享',
+      'help.sharingTip2': '在邮件消息中包含背景',
+      'help.sharingTip3': '如需要与收件人跟进',
+      'help.sharingTip4': '保持报告安全和机密',
+      'help.sharingTip5': '记录何时以及与谁分享了报告',
+      'help.fileSec1': '上传的文件安全存储在云存储中',
+      'help.fileSec2': '文件仅限上传教师访问',
+      'help.fileSec3': '自动删除政策保护长期隐私',
+      'help.fileSec4': '文件仅用于生成更好的干预措施',
+      'help.emailSec1': '邮件凭据经过加密且安全',
+      'help.emailSec2': '只有您可以访问您的邮件配置',
+      'help.emailSec3': '学校管理员无法查看个人邮件设置',
+      'help.emailSec4': '所有邮件传输使用安全协议',
+      
 
       
       // Interventions Display
