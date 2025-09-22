@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { useTranslation } from "react-i18next";
 import { 
   Mail, 
   Shield, 
@@ -43,6 +44,7 @@ interface EmailStatus {
 }
 
 export default function EmailSettings() {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
@@ -92,8 +94,8 @@ export default function EmailSettings() {
     },
     onSuccess: () => {
       toast({
-        title: "Email Configuration Saved",
-        description: "Your personal email settings have been updated successfully.",
+        title: t('emailSettings.configSaved', 'Email Configuration Saved'),
+        description: t('emailSettings.configSavedDesc', 'Your personal email settings have been updated successfully.'),
       });
       queryClient.invalidateQueries({ queryKey: ["/api/email/user-config"] });
       queryClient.invalidateQueries({ queryKey: ["/api/email/status"] });
@@ -101,8 +103,8 @@ export default function EmailSettings() {
     },
     onError: (error: any) => {
       toast({
-        title: "Save Failed",
-        description: error.message || "Failed to save email configuration",
+        title: t('emailSettings.saveFailed', 'Save Failed'),
+        description: error.message || t('emailSettings.saveFailedDesc', 'Failed to save email configuration'),
         variant: "destructive",
       });
     },
@@ -115,7 +117,7 @@ export default function EmailSettings() {
     },
     onSuccess: (result: any) => {
       toast({
-        title: result.success ? "Test Email Sent" : "Test Failed",
+        title: result.success ? t('emailSettings.testSent', 'Test Email Sent') : t('emailSettings.testFailed', 'Test Failed'),
         description: result.message,
         variant: result.success ? "default" : "destructive",
       });
@@ -124,8 +126,8 @@ export default function EmailSettings() {
     },
     onError: (error: any) => {
       toast({
-        title: "Test Failed",
-        description: error.message || "Failed to test email configuration",
+        title: t('emailSettings.testFailed', 'Test Failed'),
+        description: error.message || t('emailSettings.testFailedDesc', 'Failed to test email configuration'),
         variant: "destructive",
       });
     },
@@ -138,8 +140,8 @@ export default function EmailSettings() {
     },
     onSuccess: () => {
       toast({
-        title: "Configuration Deleted",
-        description: "Your personal email configuration has been removed.",
+        title: t('emailSettings.configDeleted', 'Configuration Deleted'),
+        description: t('emailSettings.configDeletedDesc', 'Your personal email configuration has been removed.'),
       });
       queryClient.invalidateQueries({ queryKey: ["/api/email/user-config"] });
       queryClient.invalidateQueries({ queryKey: ["/api/email/status"] });
@@ -157,8 +159,8 @@ export default function EmailSettings() {
     },
     onError: (error: any) => {
       toast({
-        title: "Delete Failed",
-        description: error.message || "Failed to delete email configuration",
+        title: t('emailSettings.deleteFailed', 'Delete Failed'),
+        description: error.message || t('emailSettings.deleteFailedDesc', 'Failed to delete email configuration'),
         variant: "destructive",
       });
     },
@@ -168,8 +170,8 @@ export default function EmailSettings() {
     e.preventDefault();
     if (!formData.smtpHost || !formData.smtpUser || !formData.smtpPassword) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
+        title: t('emailSettings.missingInfo', 'Missing Information'),
+        description: t('emailSettings.missingInfoDesc', 'Please fill in all required fields.'),
         variant: "destructive",
       });
       return;
@@ -180,8 +182,8 @@ export default function EmailSettings() {
   const handleTest = () => {
     if (!testEmail) {
       toast({
-        title: "Test Email Required",
-        description: "Please enter an email address to send the test to.",
+        title: t('emailSettings.testEmailRequired', 'Test Email Required'),
+        description: t('emailSettings.testEmailRequiredDesc', 'Please enter an email address to send the test to.'),
         variant: "destructive",
       });
       return;
@@ -196,14 +198,14 @@ export default function EmailSettings() {
       return (
         <Badge variant="default" className="bg-green-100 text-green-800">
           <CheckCircle className="w-3 h-3 mr-1" />
-          Active
+          {t('emailSettings.statusActive', 'Active')}
         </Badge>
       );
     } else {
       return (
         <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
           <AlertTriangle className="w-3 h-3 mr-1" />
-          Limited
+          {t('emailSettings.statusLimited', 'Limited')}
         </Badge>
       );
     }
@@ -213,11 +215,11 @@ export default function EmailSettings() {
     if (!emailStatus) return "";
 
     if (emailStatus.activeConfig === 'user') {
-      return "Using your personal email configuration";
+      return t('emailSettings.usingPersonalConfig', 'Using your personal email configuration');
     } else if (emailStatus.activeConfig === 'school') {
-      return "Using your school's email configuration";
+      return t('emailSettings.usingSchoolConfig', "Using your school's email configuration");
     } else {
-      return "No email configuration available";
+      return t('emailSettings.noConfigAvailable', 'No email configuration available');
     }
   };
 
@@ -227,7 +229,7 @@ export default function EmailSettings() {
         <CardContent className="p-6">
           <div className="flex items-center space-x-2">
             <Mail className="w-5 h-5 animate-pulse" />
-            <span>Loading email settings...</span>
+            <span>{t('emailSettings.loading', 'Loading email settings...')}</span>
           </div>
         </CardContent>
       </Card>
@@ -239,7 +241,7 @@ export default function EmailSettings() {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Mail className="w-5 h-5" />
-          <span>Email Configuration</span>
+          <span>{t('emailSettings.title', 'Email Configuration')}</span>
           {getStatusBadge()}
         </CardTitle>
       </CardHeader>
@@ -249,10 +251,10 @@ export default function EmailSettings() {
           <Alert>
             <Info className="h-4 w-4" />
             <AlertDescription>
-              <strong>Current Status:</strong> {getActiveConfigDescription()}
+              <strong>{t('emailSettings.currentStatus', 'Current Status')}:</strong> {getActiveConfigDescription()}
               {emailStatus?.activeConfig === 'school' && (
                 <span className="block mt-1 text-sm text-gray-600">
-                  You can set up personal email settings to override your school's configuration.
+                  {t('emailSettings.personalOverrideNote', "You can set up personal email settings to override your school's configuration.")}
                 </span>
               )}
             </AlertDescription>
@@ -261,25 +263,25 @@ export default function EmailSettings() {
           {emailStatus && (
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="flex items-center space-x-2">
-                <span className="font-medium">Personal Config:</span>
+                <span className="font-medium">{t('emailSettings.personalConfig', 'Personal Config')}:</span>
                 {emailStatus.hasPersonalConfig ? (
                   <Badge variant="default" className="bg-green-100 text-green-800">
                     <CheckCircle className="w-3 h-3 mr-1" />
-                    Configured
+                    {t('emailSettings.statusConfigured', 'Configured')}
                   </Badge>
                 ) : (
-                  <Badge variant="secondary">Not Set</Badge>
+                  <Badge variant="secondary">{t('emailSettings.statusNotSet', 'Not Set')}</Badge>
                 )}
               </div>
               <div className="flex items-center space-x-2">
-                <span className="font-medium">School Config:</span>
+                <span className="font-medium">{t('emailSettings.schoolConfig', 'School Config')}:</span>
                 {emailStatus.hasSchoolConfig ? (
                   <Badge variant="default" className="bg-blue-100 text-blue-800">
                     <Shield className="w-3 h-3 mr-1" />
-                    Available
+                    {t('emailSettings.statusAvailable', 'Available')}
                   </Badge>
                 ) : (
-                  <Badge variant="secondary">Not Available</Badge>
+                  <Badge variant="secondary">{t('emailSettings.statusNotAvailable', 'Not Available')}</Badge>
                 )}
               </div>
             </div>
@@ -292,11 +294,11 @@ export default function EmailSettings() {
         {userConfig && !showForm ? (
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium">Your Personal Email Settings</h3>
+              <h3 className="text-lg font-medium">{t('emailSettings.personalEmailSettings', 'Your Personal Email Settings')}</h3>
               <div className="space-x-2">
                 <Button variant="outline" onClick={() => setShowForm(true)} data-testid="button-edit-email">
                   <Settings className="w-4 h-4 mr-2" />
-                  Edit
+                  {t('emailSettings.edit', 'Edit')}
                 </Button>
                 <Button 
                   variant="outline" 
@@ -305,31 +307,31 @@ export default function EmailSettings() {
                   data-testid="button-delete-email"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
-                  Delete
+                  {t('emailSettings.delete', 'Delete')}
                 </Button>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-sm bg-gray-50 p-4 rounded-lg">
               <div>
-                <span className="font-medium">SMTP Server:</span>
+                <span className="font-medium">{t('emailSettings.summary.smtpServer', 'SMTP Server')}:</span>
                 <p>{userConfig.smtpHost}:{userConfig.smtpPort}</p>
               </div>
               <div>
-                <span className="font-medium">Username:</span>
+                <span className="font-medium">{t('emailSettings.summary.username', 'Username')}:</span>
                 <p>{userConfig.smtpUser}</p>
               </div>
               <div>
-                <span className="font-medium">From Address:</span>
+                <span className="font-medium">{t('emailSettings.summary.fromAddress', 'From Address')}:</span>
                 <p>{userConfig.fromAddress || userConfig.smtpUser}</p>
               </div>
               <div>
-                <span className="font-medium">Status:</span>
+                <span className="font-medium">{t('emailSettings.summary.status', 'Status')}:</span>
                 <div className="flex items-center space-x-2">
                   {userConfig.isActive ? (
-                    <Badge variant="default" className="bg-green-100 text-green-800">Active</Badge>
+                    <Badge variant="default" className="bg-green-100 text-green-800">{t('emailSettings.configStatusActive', 'Active')}</Badge>
                   ) : (
-                    <Badge variant="secondary">Inactive</Badge>
+                    <Badge variant="secondary">{t('emailSettings.configStatusInactive', 'Inactive')}</Badge>
                   )}
                   {userConfig.testStatus === 'success' && (
                     <CheckCircle className="w-4 h-4 text-green-600" />
@@ -343,12 +345,12 @@ export default function EmailSettings() {
 
             {/* Test Email Section */}
             <div className="space-y-2">
-              <Label htmlFor="test-email">Test Email Configuration</Label>
+              <Label htmlFor="test-email">{t('emailSettings.testSectionLabel', 'Test Email Configuration')}</Label>
               <div className="flex space-x-2">
                 <Input
                   id="test-email"
                   type="email"
-                  placeholder="Enter email to test"
+                  placeholder={t('emailSettings.testPlaceholder', 'Enter email to test')}
                   value={testEmail}
                   onChange={(e) => setTestEmail(e.target.value)}
                   data-testid="input-test-email"
@@ -359,7 +361,7 @@ export default function EmailSettings() {
                   data-testid="button-test-email"
                 >
                   <Send className="w-4 h-4 mr-2" />
-                  {testConfigMutation.isPending ? "Sending..." : "Test"}
+                  {testConfigMutation.isPending ? t('emailSettings.sending', 'Sending...') : t('emailSettings.test', 'Test')}
                 </Button>
               </div>
             </div>
@@ -369,13 +371,13 @@ export default function EmailSettings() {
             {!userConfig && (
               <div className="text-center py-8">
                 <Mail className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Personal Email Configuration</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">{t('emailSettings.noPersonalConfigTitle', 'No Personal Email Configuration')}</h3>
                 <p className="text-gray-600 mb-4">
-                  Set up your personal email settings to send reports and notifications.
+                  {t('emailSettings.noPersonalConfigDesc', 'Set up your personal email settings to send reports and notifications.')}
                 </p>
                 <Button onClick={() => setShowForm(true)} data-testid="button-setup-email">
                   <Settings className="w-4 h-4 mr-2" />
-                  Setup Personal Email
+                  {t('emailSettings.setupPersonalEmail', 'Setup Personal Email')}
                 </Button>
               </div>
             )}
@@ -385,7 +387,7 @@ export default function EmailSettings() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex justify-between items-center">
                   <h3 className="text-lg font-medium">
-                    {userConfig ? "Edit" : "Setup"} Personal Email Settings
+                    {userConfig ? t('emailSettings.editTitle', 'Edit') : t('emailSettings.setupTitle', 'Setup')} {t('emailSettings.personalEmailSettingsForm', 'Personal Email Settings')}
                   </h3>
                   <Button 
                     type="button" 
@@ -393,27 +395,27 @@ export default function EmailSettings() {
                     onClick={() => setShowForm(false)}
                     data-testid="button-cancel-email"
                   >
-                    Cancel
+                    {t('emailSettings.cancel', 'Cancel')}
                   </Button>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="smtp-host">SMTP Server Hostname *</Label>
+                    <Label htmlFor="smtp-host">{t('emailSettings.smtpHostLabel', 'SMTP Server Hostname *')}</Label>
                     <Input
                       id="smtp-host"
                       value={formData.smtpHost}
                       onChange={(e) => setFormData({...formData, smtpHost: e.target.value})}
-                      placeholder="smtp.gmail.com"
+                      placeholder={t('emailSettings.smtpHostPlaceholder', 'smtp.gmail.com')}
                       required
                       data-testid="input-smtp-host"
                     />
                     <p className="text-xs text-gray-600">
-                      Server hostname (e.g., smtp.gmail.com), not your email address
+                      {t('emailSettings.smtpHostHelp', 'Server hostname (e.g., smtp.gmail.com), not your email address')}
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="smtp-port">Port *</Label>
+                    <Label htmlFor="smtp-port">{t('emailSettings.portLabel', 'Port *')}</Label>
                     <Input
                       id="smtp-port"
                       type="number"
@@ -424,7 +426,7 @@ export default function EmailSettings() {
                       data-testid="input-smtp-port"
                     />
                     <p className="text-xs text-gray-600">
-                      587 (TLS) or 465 (SSL)
+                      {t('emailSettings.portHelp', '587 (TLS) or 465 (SSL)')}
                     </p>
                   </div>
                 </div>
@@ -439,28 +441,28 @@ export default function EmailSettings() {
                       data-testid="switch-smtp-secure"
                       className="rounded border-gray-300"
                     />
-                    <Label htmlFor="smtp-secure">Use SSL (port 465)</Label>
+                    <Label htmlFor="smtp-secure">{t('emailSettings.secureLabel', 'Use SSL (port 465)')}</Label>
                   </div>
                   <p className="text-xs text-gray-600">
-                    Check this if using port 465, leave unchecked for port 587 (TLS)
+                    {t('emailSettings.secureHelp', 'Check this if using port 465, leave unchecked for port 587 (TLS)')}
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="smtp-user">Username/Email *</Label>
+                  <Label htmlFor="smtp-user">{t('emailSettings.usernameLabel', 'Username/Email *')}</Label>
                   <Input
                     id="smtp-user"
                     type="email"
                     value={formData.smtpUser}
                     onChange={(e) => setFormData({...formData, smtpUser: e.target.value})}
-                    placeholder="your-email@example.com"
+                    placeholder={t('emailSettings.usernamePlaceholder', 'your-email@example.com')}
                     required
                     data-testid="input-smtp-user"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="smtp-password">Password *</Label>
+                  <Label htmlFor="smtp-password">{t('emailSettings.passwordLabel', 'Password *')}</Label>
                   <Input
                     id="smtp-password"
                     type="password"
@@ -471,24 +473,24 @@ export default function EmailSettings() {
                     data-testid="input-smtp-password"
                   />
                   <p className="text-xs text-gray-600">
-                    For Gmail, use an App Password instead of your regular password.
+                    {t('emailSettings.passwordHelp', 'For Gmail, use an App Password instead of your regular password.')}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="from-address">From Address (Optional)</Label>
+                    <Label htmlFor="from-address">{t('emailSettings.fromAddressLabel', 'From Address (Optional)')}</Label>
                     <Input
                       id="from-address"
                       type="email"
                       value={formData.fromAddress}
                       onChange={(e) => setFormData({...formData, fromAddress: e.target.value})}
-                      placeholder="Leave empty to use username"
+                      placeholder={t('emailSettings.fromAddressPlaceholder', 'Leave empty to use username')}
                       data-testid="input-from-address"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="from-name">From Name (Optional)</Label>
+                    <Label htmlFor="from-name">{t('emailSettings.fromNameLabel', 'From Name (Optional)')}</Label>
                     <Input
                       id="from-name"
                       value={formData.fromName}
@@ -508,7 +510,7 @@ export default function EmailSettings() {
                     data-testid="switch-is-active"
                     className="rounded border-gray-300"
                   />
-                  <Label htmlFor="is-active">Enable this email configuration</Label>
+                  <Label htmlFor="is-active">{t('emailSettings.enableConfigLabel', 'Enable this email configuration')}</Label>
                 </div>
 
                 <Button 
@@ -517,7 +519,7 @@ export default function EmailSettings() {
                   className="w-full"
                   data-testid="button-save-email"
                 >
-                  {saveConfigMutation.isPending ? "Saving..." : "Save Email Configuration"}
+                  {saveConfigMutation.isPending ? t('emailSettings.saving', 'Saving...') : t('emailSettings.saveConfigButton', 'Save Email Configuration')}
                 </Button>
               </form>
             )}
