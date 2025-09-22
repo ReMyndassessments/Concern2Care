@@ -776,75 +776,75 @@ export default function Landing() {
               <Users className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Classroom Solutions Program
+              {t('classroomSolutions.title', 'Classroom Solutions Program')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Specialized intervention support for K-12 teachers worldwide, delivered through our expert review process
+              {t('classroomSolutions.subtitle', 'Specialized intervention support for K-12 teachers worldwide, delivered through our expert review process')}
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">How It Works</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('classroomSolutions.howItWorks', 'How It Works')}</h3>
               <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">1</div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Submit Your Request</h4>
-                    <p className="text-gray-600">Teachers access our form via QR code to submit student concerns and intervention requests</p>
+                    <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step1Title', 'Submit Your Request')}</h4>
+                    <p className="text-gray-600">{t('classroomSolutions.step1Description', 'Teachers access our form via QR code to submit student concerns and intervention requests')}</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">2</div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Expert Review</h4>
-                    <p className="text-gray-600">Our administrators review AI-generated strategies for quality and safety</p>
+                    <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step2Title', 'Expert Review')}</h4>
+                    <p className="text-gray-600">{t('classroomSolutions.step2Description', 'Our administrators review AI-generated strategies for quality and safety')}</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">3</div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Receive Interventions</h4>
-                    <p className="text-gray-600">Approved, evidence-based Tier 2 intervention strategies delivered directly to teachers</p>
+                    <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step3Title', 'Receive Interventions')}</h4>
+                    <p className="text-gray-600">{t('classroomSolutions.step3Description', 'Approved, evidence-based Tier 2 intervention strategies delivered directly to teachers')}</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Program Features</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">{t('classroomSolutions.programFeatures', 'Program Features')}</h3>
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>Evidence-based Tier 2 intervention strategies</span>
+                  <span>{t('classroomSolutions.feature1', 'Evidence-based Tier 2 intervention strategies')}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>Expert review and quality assurance</span>
+                  <span>{t('classroomSolutions.feature2', 'Expert review and quality assurance')}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>Safety keyword monitoring and alerts</span>
+                  <span>{t('classroomSolutions.feature3', 'Safety keyword monitoring and alerts')}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>QR code access for easy teacher submission</span>
+                  <span>{t('classroomSolutions.feature4', 'QR code access for easy teacher submission')}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>Professional report generation and delivery</span>
+                  <span>{t('classroomSolutions.feature5', 'Professional report generation and delivery')}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>Global reach for K-12 educators</span>
+                  <span>{t('classroomSolutions.feature6', 'Global reach for K-12 educators')}</span>
                 </li>
               </ul>
               
               <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="text-center">
-                  <h4 className="font-semibold text-blue-900 mb-2">Contact Information</h4>
+                  <h4 className="font-semibold text-blue-900 mb-2">{t('classroomSolutions.contactInfo', 'Contact Information')}</h4>
                   <p className="text-blue-800 text-sm">
-                    For more information on the Classroom Solutions Program, Individual, School, and District Teacher Registration, Contact us at info@remynd.online
+                    {t('classroomSolutions.contactText', 'For more information on the Classroom Solutions Program, Individual, School, and District Teacher Registration, Contact us at info@remynd.online')}
                   </p>
                 </div>
               </div>
@@ -854,8 +854,8 @@ export default function Landing() {
           {/* QR Code for Teacher Submissions */}
           <div className="mt-12 text-center">
             <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Access for Classroom Solutions Registered Teachers</h3>
-              <p className="text-gray-600 mb-6">Scan the QR code or click the "Access Submission Form" button below.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">{t('classroomSolutions.quickAccess', 'Quick Access for Classroom Solutions Registered Teachers')}</h3>
+              <p className="text-gray-600 mb-6">{t('classroomSolutions.scanQR', 'Scan the QR code or click the "Access Submission Form" button below.')}</p>
               
               <div className="mb-6">
                 <div className="bg-gray-100 rounded-lg p-4 inline-block">
@@ -886,7 +886,7 @@ export default function Landing() {
                 data-testid="button-access-form"
                 disabled={qrLoading}
               >
-                {qrLoading ? 'Loading...' : 'Access Submission Form'}
+                {qrLoading ? t('classroomSolutions.loading', 'Loading...') : t('classroomSolutions.accessForm', 'Access Submission Form')}
               </Button>
             </div>
           </div>
