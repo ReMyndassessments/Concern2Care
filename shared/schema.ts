@@ -98,7 +98,7 @@ export const concerns = pgTable("concerns", {
   lessonPlanContent: text("lesson_plan_content"), // Text content of lesson plan
   
   // Task type selection for focused AI responses
-  taskType: varchar("task_type").default("tier2_intervention"), // "differentiation" | "tier2_intervention"
+  taskType: varchar("task_type").default("tier2_intervention"), // "differentiation" | "tier2_intervention" | "classroom_management"
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -342,7 +342,7 @@ export const classroomSubmissions = pgTable("classroom_submissions", {
   studentGrade: varchar("student_grade", { length: 10 }).notNull(),
   
   // Form Data - enhanced with required enums
-  taskType: varchar("task_type").notNull(), // 'differentiation' | 'tier2_intervention'
+  taskType: varchar("task_type").notNull(), // 'differentiation' | 'tier2_intervention' | 'classroom_management'
   learningProfile: jsonb("learning_profile").notNull().default('[]'), // Array of profile tags
   
   // Additional details for specific learning profile items
@@ -704,7 +704,7 @@ export const insertClassroomSubmissionSchema = createInsertSchema(classroomSubmi
   submittedAt: true,
   updatedAt: true,
 }).extend({
-  taskType: z.enum(['differentiation', 'tier2_intervention']),
+  taskType: z.enum(['differentiation', 'tier2_intervention', 'classroom_management']),
   severityLevel: z.enum(['mild', 'moderate', 'urgent']),
   learningProfile: z.array(z.string()).default([]),
   concernTypes: z.array(z.string()).min(1, "At least one concern type is required"),
@@ -763,7 +763,7 @@ export type AdminNotificationWithDetails = AdminNotification & {
 };
 
 // Severity and status enums for type safety
-export const CLASSROOM_TASK_TYPES = ['differentiation', 'tier2_intervention'] as const;
+export const CLASSROOM_TASK_TYPES = ['differentiation', 'tier2_intervention', 'classroom_management'] as const;
 export const CLASSROOM_SEVERITY_LEVELS = ['mild', 'moderate', 'urgent'] as const;
 export const CLASSROOM_SUBMISSION_STATUSES = ['pending', 'approved', 'sending', 'hold', 'cancelled', 'auto_sent', 'urgent_flagged', 'completed'] as const;
 export const ADMIN_NOTIFICATION_TYPES = ['urgent', 'reminder', 'followup'] as const;
