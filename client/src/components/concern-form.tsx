@@ -52,10 +52,18 @@ const enhancedConcernFormSchema = z.object({
   
   // Task type selection for focused AI responses
   taskType: z.string().min(1, "Task type is required"),
+  
+  // Classroom information fields for classroom management
+  studentCount: z.string().optional(),
+  mixedAbilities: z.string().optional(),
+  ealLearners: z.string().optional(),
+  studentsWithIEPs: z.string().optional(),
+  pervasiveIssues: z.string().optional(),
+  additionalContext: z.string().optional(),
 }).refine((data) => {
-  // For classroom management, only require description
+  // For classroom management, require description and student count
   if (data.taskType === 'classroom_management') {
-    return data.description && data.description.length >= 10;
+    return data.description && data.description.length >= 10 && data.studentCount;
   }
   
   // For individual concerns, require student info, concern types and description
@@ -460,8 +468,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
             </div>
                 )}
 
-            {/* Student Learning Profile - Available for both task types */}
-            {form.watch('taskType') && (
+            {/* Student Learning Profile - Only show for individual student tasks */}
+            {form.watch('taskType') && form.watch('taskType') !== 'classroom_management' && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
@@ -711,6 +719,156 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                     />
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Classroom Information - Only show for classroom management */}
+            {form.watch('taskType') === 'classroom_management' && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 sm:p-6">
+                <div className="flex items-center space-x-2 mb-3 sm:mb-4">
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900">Classroom Information</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  {/* Number of Students */}
+                  <FormField
+                    control={form.control}
+                    name="studentCount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Number of Students in Class <span className="text-red-500">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            placeholder="e.g., 25" 
+                            {...field} 
+                            disabled={isAtLimit}
+                            data-testid="input-student-count"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Mixed Age/Ability Groups */}
+                  <FormField
+                    control={form.control}
+                    name="mixedAbilities"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Mixed Age Groups or Ability Levels
+                        </FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            placeholder="e.g., Multi-grade classroom (Grades 2-3), Wide range of reading levels from emergent to grade 4 level, Several advanced math students..."
+                            className="w-full min-h-[80px] p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                            disabled={isAtLimit}
+                            data-testid="textarea-mixed-abilities"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* EAL Learners */}
+                  <FormField
+                    control={form.control}
+                    name="ealLearners"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          EAL (English as Additional Language) Learners
+                        </FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            placeholder="e.g., 8 EAL students - 3 beginning level, 4 intermediate level, 1 advanced level. Languages spoken: Spanish (4), Mandarin (2), Arabic (2)..."
+                            className="w-full min-h-[80px] p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                            disabled={isAtLimit}
+                            data-testid="textarea-eal-learners"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Students with IEPs */}
+                  <FormField
+                    control={form.control}
+                    name="studentsWithIEPs"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Students with IEPs, 504 Plans, or Special Needs
+                        </FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            placeholder="e.g., 4 students with IEPs (2 for learning disabilities, 1 for ADHD, 1 for autism spectrum), 2 students with 504 plans for anxiety management..."
+                            className="w-full min-h-[80px] p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                            disabled={isAtLimit}
+                            data-testid="textarea-students-ieps"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Pervasive Issues */}
+                  <FormField
+                    control={form.control}
+                    name="pervasiveIssues"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Pervasive Classroom Issues
+                        </FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            placeholder="e.g., Ongoing conflicts between two student groups, bullying incidents, difficulty with transitions, noise level management, frequent disruptions during independent work..."
+                            className="w-full min-h-[100px] p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                            disabled={isAtLimit}
+                            data-testid="textarea-pervasive-issues"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Additional Classroom Context */}
+                  <FormField
+                    control={form.control}
+                    name="additionalContext"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Additional Classroom Context
+                        </FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            placeholder="e.g., Physical classroom constraints, resource limitations, parent/family challenges, recent changes in classroom dynamics, upcoming events affecting behavior..."
+                            className="w-full min-h-[80px] p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                            disabled={isAtLimit}
+                            data-testid="textarea-additional-context"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             )}
 
