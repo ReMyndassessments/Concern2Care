@@ -875,7 +875,7 @@ export default function HelpGuide() {
 
           <SubSection title={t('help.recentUpdates', 'Recent Updates and Improvements')}>
             <div className="bg-green-50 p-4 rounded-lg">
-              <p className="font-medium text-green-800 mb-2">Latest Enhancements:</p>
+              <p className="font-medium text-green-800 mb-2">{t('help.latestEnhancements', 'Latest Enhancements')}:</p>
               <FeatureList features={[
                 t('help.enhancement1', "Comprehensive mobile responsiveness improvements across all pages"),
                 t('help.enhancement2', "Mobile-optimized CTA section with touch-friendly 56px buttons"),
