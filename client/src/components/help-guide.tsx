@@ -281,102 +281,102 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Information Required for Classroom Management Requests">
-            <p>When requesting classroom management strategies, you'll provide:</p>
+          <SubSection title={t('help.infoRequired', 'Information Required for Classroom Management Requests')}>
+            <p>{t('help.infoRequiredDesc', 'When requesting classroom management strategies, you\'ll provide:')}</p>
             <FeatureList features={[
-              "Total number of students in your class",
-              "Information about mixed abilities and learning levels",
-              "Number of English as Additional Language (EAL) learners",
-              "Number of students with IEPs or special needs",
-              "Description of pervasive issues affecting the class",
-              "Additional context about your classroom environment"
+              t('help.infoRequired1', 'Total number of students in your class'),
+              t('help.infoRequired2', 'Information about mixed abilities and learning levels'),
+              t('help.infoRequired3', 'Number of English as Additional Language (EAL) learners'),
+              t('help.infoRequired4', 'Number of students with IEPs or special needs'),
+              t('help.infoRequired5', 'Description of pervasive issues affecting the class'),
+              t('help.infoRequired6', 'Additional context about your classroom environment')
             ]} />
           </SubSection>
 
-          <SubSection title="Types of Classroom Management Strategies You'll Receive">
+          <SubSection title={t('help.typesYouReceive', 'Types of Classroom Management Strategies You\'ll Receive')}>
             <div className="space-y-3 mt-3">
               <div className="bg-gray-50 p-3 rounded-lg">
-                <h6 className="font-medium text-gray-800 mb-2">🏛️ Environmental Strategies</h6>
-                <p className="text-sm text-gray-700">Physical classroom setup, seating arrangements, and learning zones</p>
+                <h6 className="font-medium text-gray-800 mb-2">{t('help.environmentalStrategies', '🏛️ Environmental Strategies')}</h6>
+                <p className="text-sm text-gray-700">{t('help.environmentalDesc', 'Physical classroom setup, seating arrangements, and learning zones')}</p>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg">
-                <h6 className="font-medium text-gray-800 mb-2">⏰ Routine & Procedure Strategies</h6>
-                <p className="text-sm text-gray-700">Daily routines, transitions, and classroom management systems</p>
+                <h6 className="font-medium text-gray-800 mb-2">{t('help.routineProcedure', '⏰ Routine & Procedure Strategies')}</h6>
+                <p className="text-sm text-gray-700">{t('help.routineProcedureDesc', 'Daily routines, transitions, and classroom management systems')}</p>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg">
-                <h6 className="font-medium text-gray-800 mb-2">🎯 Engagement & Motivation Strategies</h6>
-                <p className="text-sm text-gray-700">Whole-class motivation techniques and engagement methods</p>
+                <h6 className="font-medium text-gray-800 mb-2">{t('help.engagementMotivation', '🎯 Engagement & Motivation Strategies')}</h6>
+                <p className="text-sm text-gray-700">{t('help.engagementMotivationDesc', 'Whole-class motivation techniques and engagement methods')}</p>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg">
-                <h6 className="font-medium text-gray-800 mb-2">🤝 Group Management Strategies</h6>
-                <p className="text-sm text-gray-700">Managing collaborative work, group dynamics, and peer interactions</p>
+                <h6 className="font-medium text-gray-800 mb-2">{t('help.groupManagement', '🤝 Group Management Strategies')}</h6>
+                <p className="text-sm text-gray-700">{t('help.groupManagementDesc', 'Managing collaborative work, group dynamics, and peer interactions')}</p>
               </div>
             </div>
           </SubSection>
 
-          <SubSection title="Guided-Practice Implementation Format">
-            <p>Classroom management strategies are provided in a structured, guided-practice format with implementation phases:</p>
+          <SubSection title={t('help.guidedPractice', 'Guided-Practice Implementation Format')}>
+            <p>{t('help.guidedPracticeDesc', 'Classroom management strategies are provided in a structured, guided-practice format with implementation phases:')}</p>
             <div className="space-y-2 mt-3">
               <div className="bg-green-50 p-3 rounded-lg">
-                <h6 className="font-medium text-green-800 text-sm mb-1">📋 Week 1-2: Foundation Setting</h6>
-                <p className="text-xs text-green-700">Initial setup, introducing new systems, and establishing routines</p>
+                <h6 className="font-medium text-green-800 text-sm mb-1">{t('help.week12', '📋 Week 1-2: Foundation Setting')}</h6>
+                <p className="text-xs text-green-700">{t('help.week12Desc', 'Initial setup, introducing new systems, and establishing routines')}</p>
               </div>
               <div className="bg-blue-50 p-3 rounded-lg">
-                <h6 className="font-medium text-blue-800 text-sm mb-1">🔄 Week 3-6: Strategy Integration</h6>
-                <p className="text-xs text-blue-700">Refining approaches, addressing challenges, and building consistency</p>
+                <h6 className="font-medium text-blue-800 text-sm mb-1">{t('help.week36', '🔄 Week 3-6: Strategy Integration')}</h6>
+                <p className="text-xs text-blue-700">{t('help.week36Desc', 'Refining approaches, addressing challenges, and building consistency')}</p>
               </div>
               <div className="bg-purple-50 p-3 rounded-lg">
-                <h6 className="font-medium text-purple-800 text-sm mb-1">✅ Ongoing: Sustainable Practices</h6>
-                <p className="text-xs text-purple-700">Long-term maintenance, monitoring, and continuous improvement</p>
+                <h6 className="font-medium text-purple-800 text-sm mb-1">{t('help.ongoing', '✅ Ongoing: Sustainable Practices')}</h6>
+                <p className="text-xs text-purple-700">{t('help.ongoingDesc', 'Long-term maintenance, monitoring, and continuous improvement')}</p>
               </div>
             </div>
           </SubSection>
 
-          <SubSection title="How Classroom Management Integrates with Individual Student Support">
-            <p>Classroom management strategies work alongside individual student interventions:</p>
+          <SubSection title={t('help.integrationWithIndividual', 'How Classroom Management Integrates with Individual Student Support')}>
+            <p>{t('help.integrationDesc', 'Classroom management strategies work alongside individual student interventions:')}</p>
             <FeatureList features={[
-              "AI analyzes your previous individual student concerns to inform classroom strategies",
-              "Addresses systemic issues that may be affecting multiple students",
-              "Provides environmental supports that benefit all students, including those with individual needs",
-              "Creates a foundation for successful implementation of individual interventions"
+              t('help.integration1', 'AI analyzes your previous individual student concerns to inform classroom strategies'),
+              t('help.integration2', 'Addresses systemic issues that may be affecting multiple students'),
+              t('help.integration3', 'Provides environmental supports that benefit all students, including those with individual needs'),
+              t('help.integration4', 'Creates a foundation for successful implementation of individual interventions')
             ]} />
           </SubSection>
 
           <Alert>
             <Info className="h-4 w-4" />
             <AlertDescription>
-              <strong>Pro Tip:</strong> Classroom management strategies can often prevent many individual student issues from arising by creating a more structured, supportive learning environment for all students.
+              <strong>{t('help.proTip', 'Pro Tip')}:</strong> {t('help.proTipDesc', 'Classroom management strategies can often prevent many individual student issues from arising by creating a more structured, supportive learning environment for all students.')}
             </AlertDescription>
           </Alert>
         </Section>
 
         {/* Follow-up Questions */}
-        <Section icon={MessageSquare} title="Follow-up Questions and Support">
-          <SubSection title="Getting Additional Guidance">
-            <p>After receiving interventions, you can ask follow-up questions for clarification or additional strategies:</p>
+        <Section icon={MessageSquare} title={t('help.followUpQuestions', 'Follow-up Questions and Support')}>
+          <SubSection title={t('help.gettingAdditional', 'Getting Additional Guidance')}>
+            <p>{t('help.additionalGuidanceDesc', 'After receiving interventions, you can ask follow-up questions for clarification or additional strategies:')}</p>
             <StepList steps={[
-              "Click 'Ask Follow-up Question' on any intervention",
-              "Type your specific question or request for clarification",
-              "Receive AI-powered responses with additional guidance",
-              "Ask multiple questions as needed"
+              t('help.followUpStep1', 'Click \'Ask Follow-up Question\' on any intervention'),
+              t('help.followUpStep2', 'Type your specific question or request for clarification'),
+              t('help.followUpStep3', 'Receive AI-powered responses with additional guidance'),
+              t('help.followUpStep4', 'Ask multiple questions as needed')
             ]} />
           </SubSection>
 
-          <SubSection title="Common Follow-up Questions">
+          <SubSection title={t('help.commonFollowUp', 'Common Follow-up Questions')}>
             <FeatureList features={[
-              "How to adapt strategies for different learning styles",
-              "Timeline adjustments for specific situations",
-              "Modifications for students with special needs",
-              "Progress monitoring techniques",
-              "Parent communication strategies"
+              t('help.commonFollowUp1', 'How to adapt strategies for different learning styles'),
+              t('help.commonFollowUp2', 'Timeline adjustments for specific situations'),
+              t('help.commonFollowUp3', 'Modifications for students with special needs'),
+              t('help.commonFollowUp4', 'Progress monitoring techniques'),
+              t('help.commonFollowUp5', 'Parent communication strategies')
             ]} />
           </SubSection>
         </Section>
 
         {/* Report Generation and Sharing */}
-        <Section icon={Share} title="Report Generation and Sharing">
-          <SubSection title="Creating PDF Reports">
-            <p>Generate professional reports that include your concern documentation and recommended interventions:</p>
+        <Section icon={Share} title={t('help.reportGeneration', 'Report Generation and Sharing')}>
+          <SubSection title={t('help.creatingPDFReports', 'Creating PDF Reports')}>
+            <p>{t('help.pdfReportsDesc', 'Generate professional reports that include your concern documentation and recommended interventions:')}</p>
             <StepList steps={[
               "Navigate to 'My Support Requests' from the main menu",
               "Use the 'Differentiation Requests', 'Intervention Requests', and 'Classroom Management' tabs to find your concerns",
@@ -386,8 +386,8 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Email Sharing">
-            <p>Share reports directly with student support staff or when necessary:</p>
+          <SubSection title={t('help.emailSharing', 'Email Sharing')}>
+            <p>{t('help.emailSharingDesc', 'Share reports directly with student support staff or when necessary:')}</p>
             <StepList steps={[
               "Ensure your email configuration is set up (Settings → Email)",
               "Add recipient names and email addresses",
@@ -396,8 +396,8 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Organized Request Management">
-            <p>Your support requests are now organized into clear categories:</p>
+          <SubSection title={t('help.organizedRequestManagement', 'Organized Request Management')}>
+            <p>{t('help.organizedRequestDesc', 'Your support requests are now organized into clear categories:')}</p>
             <div className="space-y-2 mt-3">
               <div className="bg-blue-50 p-3 rounded-lg">
                 <h6 className="font-medium text-blue-800 text-sm mb-1">📚 Differentiation Requests</h6>
@@ -414,7 +414,7 @@ export default function HelpGuide() {
             </div>
           </SubSection>
 
-          <SubSection title="Report Contents">
+          <SubSection title={t('help.reportContents', 'Report Contents')}>
             <FeatureList features={[
               "Original concern documentation with appropriate context (student or classroom)",
               "AI-generated support strategies (differentiation, intervention, or classroom management)",
@@ -427,8 +427,8 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Enhanced PDF Quality">
-            <p>Recent improvements to PDF report generation:</p>
+          <SubSection title={t('help.enhancedPDFQuality', 'Enhanced PDF Quality')}>
+            <p>{t('help.enhancedPDFQualityDesc', 'Recent improvements to PDF report generation:')}</p>
             <FeatureList features={[
               "Fixed character encoding issues - no more garbled text (Ø=ÜÝ)",
               "Native Chinese character display without placeholder messages",
@@ -440,9 +440,9 @@ export default function HelpGuide() {
         </Section>
 
         {/* Email Configuration */}
-        <Section icon={Mail} title="Email Configuration">
-          <SubSection title="Personal Email Setup">
-            <p>Configure your personal email account for sending reports:</p>
+        <Section icon={Mail} title={t('help.emailConfiguration', 'Email Configuration')}>
+          <SubSection title={t('help.personalEmailSetup', 'Personal Email Setup')}>
+            <p>{t('help.personalEmailSetupDesc', 'Configure your personal email account for sending reports:')}</p>
             <StepList steps={[
               "Go to Settings → Email Configuration",
               "Click 'Edit Personal Email Settings'",
@@ -452,7 +452,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Gmail Setup (Most Common)">
+          <SubSection title={t('help.gmailSetup', 'Gmail Setup (Most Common)')}>
             <div className="bg-blue-50 p-4 rounded-lg">
               <p className="font-medium mb-2">Gmail Configuration:</p>
               <ul className="text-sm space-y-1">
@@ -465,7 +465,7 @@ export default function HelpGuide() {
             </div>
           </SubSection>
 
-          <SubSection title="Creating Gmail App Passwords">
+          <SubSection title={t('help.creatingGmailPasswords', 'Creating Gmail App Passwords')}>
             <StepList steps={[
               "Go to your Google Account Security settings",
               "Enable 2-Step Verification if not already enabled",
@@ -482,14 +482,14 @@ export default function HelpGuide() {
             </AlertDescription>
           </Alert>
 
-          <SubSection title="School Email Configuration (Admin Only)">
-            <p>Administrators can configure school-wide email settings that all teachers can use as an alternative to personal email accounts.</p>
+          <SubSection title={t('help.schoolEmailConfig', 'School Email Configuration (Admin Only)')}>
+            <p>{t('help.schoolEmailConfigDesc', 'Administrators can configure school-wide email settings that all teachers can use as an alternative to personal email accounts.')}</p>
           </SubSection>
         </Section>
 
         {/* Profile Management */}
-        <Section icon={Settings} title="Profile and Account Management">
-          <SubSection title="Updating Your Profile">
+        <Section icon={Settings} title={t('help.profileManagement', 'Profile and Account Management')}>
+          <SubSection title={t('help.updatingProfile', 'Updating Your Profile')}>
             <StepList steps={[
               "Go to Settings → Profile",
               "Click 'Edit' to modify your information",
@@ -498,7 +498,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Account Information">
+          <SubSection title={t('help.accountInformation', 'Account Information')}>
             <FeatureList features={[
               "View your account type (Teacher or Administrator)",
               "Monitor your monthly usage statistics",
@@ -507,8 +507,8 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Notification Preferences">
-            <p>Configure how you receive updates:</p>
+          <SubSection title={t('help.notificationPreferences', 'Notification Preferences')}>
+            <p>{t('help.notificationPreferencesDesc', 'Configure how you receive updates:')}</p>
             <FeatureList features={[
               "Email notifications for important events",
               "Report generation alerts",
@@ -519,13 +519,13 @@ export default function HelpGuide() {
 
         {/* Individual Teacher Registration - Feature Flag Conditional */}
         {isFeatureEnabled('individual_teacher_registration') && (
-          <Section icon={User} title="Individual Teacher Registration">
+          <Section icon={User} title={t('help.individualTeacherRegistration', 'Individual Teacher Registration')}>
             <p className="text-sm text-gray-600 mb-4">
               <Badge variant="outline" className="mr-2 bg-orange-50 text-orange-700 border-orange-200">Individual Teachers</Badge>
               For individual teachers who want to use Concern2Care without school administration setup.
             </p>
 
-            <SubSection title="Getting Started as Individual Teacher">
+            <SubSection title={t('help.gettingStartedIndividual', 'Getting Started as Individual Teacher')}>
               <FeatureList features={[
                 "Register independently for $10/month through Buy Me a Coffee",
                 "Complete your professional profile with school and teaching details", 
@@ -535,7 +535,7 @@ export default function HelpGuide() {
               ]} />
             </SubSection>
 
-            <SubSection title="Registration Information Required">
+            <SubSection title={t('help.registrationInfoRequired', 'Registration Information Required')}>
               <FeatureList features={[
                 "First Name and Last Name *",
                 "Email Address * (for account access)",
@@ -548,7 +548,7 @@ export default function HelpGuide() {
               ]} />
             </SubSection>
 
-            <SubSection title="Individual vs. School-Managed Accounts">
+            <SubSection title={t('help.individualVsSchool', 'Individual vs. School-Managed Accounts')}>
               <div className="space-y-3">
                 <div className="bg-green-50 p-4 rounded-lg">
                   <h6 className="font-medium text-green-800 mb-2">Individual Account Benefits</h6>
@@ -581,13 +581,13 @@ export default function HelpGuide() {
         )}
 
         {/* Admin Features */}
-        <Section icon={Shield} title="School Administrator Features">
+        <Section icon={Shield} title={t('help.adminFeatures', 'School Administrator Features')}>
           <p className="text-sm text-gray-600 mb-4">
             <Badge variant="outline" className="mr-2">School Admin Only</Badge>
             These features are available to designated school administrators for managing their institution's Concern2Care usage.
           </p>
 
-          <SubSection title="Teacher Account Management">
+          <SubSection title={t('help.teacherAccountManagement', 'Teacher Account Management')}>
             <FeatureList features={[
               "Add new teacher accounts for your school",
               "Edit teacher contact information and profiles",
@@ -597,7 +597,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="School-Wide Email Configuration">
+          <SubSection title={t('help.schoolWideEmail', 'School-Wide Email Configuration')}>
             <FeatureList features={[
               "Set up school district email settings for all teachers",
               "Configure institutional SMTP server details", 
@@ -606,7 +606,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="School Analytics and Reporting">
+          <SubSection title={t('help.schoolAnalytics', 'School Analytics and Reporting')}>
             <FeatureList features={[
               "View school-wide usage dashboard and trends",
               "Generate reports on intervention effectiveness",
@@ -616,7 +616,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="User Support and Training">
+          <SubSection title={t('help.userSupportTraining', 'User Support and Training')}>
             <FeatureList features={[
               "Send password reset emails to teachers",
               "Access teacher training resources and guides",
@@ -634,8 +634,8 @@ export default function HelpGuide() {
         </Section>
 
         {/* Language and International Support */}
-        <Section icon={Languages} title="Language and International Support">
-          <SubSection title="Multi-Language Capabilities">
+        <Section icon={Languages} title={t('help.languageSupport', 'Language and International Support')}>
+          <SubSection title={t('help.multiLanguage', 'Multi-Language Capabilities')}>
             <FeatureList features={[
               "AI can understand and respond to questions in multiple languages",
               "Chinese language support for parent communication materials",
@@ -645,7 +645,7 @@ export default function HelpGuide() {
           </SubSection>
 
           {isFeatureEnabled('chinese_localization') && (
-            <SubSection title="Chinese Interface (Beta)">
+            <SubSection title={t('help.chineseInterface', 'Chinese Interface (Beta)')}>
               <div className="bg-blue-50 p-4 rounded-lg">
                 <div className="flex items-center space-x-2 mb-2">
                   <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-300">New Feature</Badge>
@@ -668,8 +668,8 @@ export default function HelpGuide() {
         </Section>
 
         {/* Mobile Usage */}
-        <Section icon={Smartphone} title="Mobile and Accessibility">
-          <SubSection title="Mobile Device Usage">
+        <Section icon={Smartphone} title={t('help.mobileAccessibility', 'Mobile and Accessibility')}>
+          <SubSection title={t('help.mobileDeviceUsage', 'Mobile Device Usage')}>
             <FeatureList features={[
               "Fully responsive design works perfectly on phones and tablets",
               "Touch-friendly interface with large buttons (56px minimum height)",
@@ -681,7 +681,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Mobile Usage Tips">
+          <SubSection title={t('help.mobileUsageTips', 'Mobile Usage Tips')}>
             <StepList steps={[
               "Use landscape mode for easier table viewing and data entry",
               "Tap and hold buttons if they don't respond immediately",
@@ -692,7 +692,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Mobile-Optimized Features">
+          <SubSection title={t('help.mobileOptimized', 'Mobile-Optimized Features')}>
             <FeatureList features={[
               "Mobile-friendly landing page with shorter text on small screens",
               "Touch-optimized CTA buttons with enhanced visual feedback",
@@ -702,7 +702,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Accessibility Features">
+          <SubSection title={t('help.accessibilityFeatures', 'Accessibility Features')}>
             <FeatureList features={[
               "Keyboard navigation support",
               "Screen reader compatibility",
@@ -714,8 +714,8 @@ export default function HelpGuide() {
         </Section>
 
         {/* Troubleshooting */}
-        <Section icon={AlertTriangle} title="Troubleshooting Common Issues">
-          <SubSection title="Email Sharing Problems">
+        <Section icon={AlertTriangle} title={t('help.troubleshooting', 'Troubleshooting Common Issues')}>
+          <SubSection title={t('help.emailProblems', 'Email Sharing Problems')}>
             <div className="space-y-3">
               <div className="bg-red-50 p-3 rounded-lg">
                 <p className="font-medium text-red-800 text-sm">Problem: "Failed to Share Report" error</p>
@@ -732,7 +732,7 @@ export default function HelpGuide() {
             </div>
           </SubSection>
 
-          <SubSection title="PDF and Report Issues">
+          <SubSection title={t('help.pdfReportIssues', 'PDF and Report Issues')}>
             <div className="space-y-3">
               <div className="bg-red-50 p-3 rounded-lg">
                 <p className="font-medium text-red-800 text-sm">Problem: PDF shows garbled characters or symbols</p>
@@ -755,7 +755,7 @@ export default function HelpGuide() {
             </div>
           </SubSection>
 
-          <SubSection title="Usage and Performance Issues">
+          <SubSection title={t('help.usagePerformanceIssues', 'Usage and Performance Issues')}>
             <div className="space-y-3">
               <div className="bg-yellow-50 p-3 rounded-lg">
                 <p className="font-medium text-yellow-800 text-sm">Problem: Reached monthly limit</p>
@@ -778,7 +778,7 @@ export default function HelpGuide() {
             </div>
           </SubSection>
 
-          <SubSection title="File Upload Problems">
+          <SubSection title={t('help.fileUploadProblems', 'File Upload Problems')}>
             <div className="space-y-3">
               <div className="bg-orange-50 p-3 rounded-lg">
                 <p className="font-medium text-orange-800 text-sm">Problem: File upload fails</p>
@@ -789,7 +789,7 @@ export default function HelpGuide() {
             </div>
           </SubSection>
 
-          <SubSection title="Getting Additional Help">
+          <SubSection title={t('help.gettingAdditionalHelp', 'Getting Additional Help')}>
             <FeatureList features={[
               "Contact your school administrator for account issues",
               "Use the test email function to verify configuration",
@@ -800,8 +800,8 @@ export default function HelpGuide() {
         </Section>
 
         {/* Best Practices */}
-        <Section icon={CheckCircle} title="Best Practices and Tips">
-          <SubSection title="Writing Effective Concern Descriptions">
+        <Section icon={CheckCircle} title={t('help.bestPractices', 'Best Practices and Tips')}>
+          <SubSection title={t('help.writingEffective', 'Writing Effective Concern Descriptions')}>
             <FeatureList features={[
               "Be specific and objective in your descriptions",
               "Include relevant context about the learning environment",
@@ -811,7 +811,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Maximizing AI Effectiveness">
+          <SubSection title={t('help.maximizingAI', 'Maximizing AI Effectiveness')}>
             <FeatureList features={[
               "Provide complete student context (IEP, EAL status, etc.)",
               "Upload relevant assessment documents when available",
@@ -821,7 +821,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Report Sharing Etiquette">
+          <SubSection title={t('help.reportSharingEtiquette', 'Report Sharing Etiquette')}>
             <FeatureList features={[
               "Only share with authorized school personnel",
               "Include context in your email message",
@@ -833,8 +833,8 @@ export default function HelpGuide() {
         </Section>
 
         {/* Data Privacy and Security */}
-        <Section icon={Shield} title="Data Privacy and Security">
-          <SubSection title="Student Privacy Protection">
+        <Section icon={Shield} title={t('help.dataPrivacySecurity', 'Data Privacy and Security')}>
+          <SubSection title={t('help.studentPrivacyProtection', 'Student Privacy Protection')}>
             <FeatureList features={[
               "Never include full student names or IDs",
               "Use only first name and last initial",
@@ -844,7 +844,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="File Security">
+          <SubSection title={t('help.fileSecurity', 'File Security')}>
             <FeatureList features={[
               "Uploaded files are stored securely in cloud storage",
               "Files are only accessible to the uploading teacher",
@@ -853,7 +853,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Email Security">
+          <SubSection title={t('help.emailSecurity', 'Email Security')}>
             <FeatureList features={[
               "Email credentials are encrypted and secure",
               "Only you can access your email configuration",
@@ -864,8 +864,8 @@ export default function HelpGuide() {
         </Section>
 
         {/* Contact and Support */}
-        <Section icon={HelpCircle} title="Getting Support">
-          <SubSection title="Who to Contact">
+        <Section icon={HelpCircle} title={t('help.gettingSupport', 'Getting Support')}>
+          <SubSection title={t('help.whoToContact', 'Who to Contact')}>
             <FeatureList features={[
               "Technical issues: Contact your school's IT administrator",
               "Account problems: Reach out to your designated school administrator",
@@ -874,7 +874,7 @@ export default function HelpGuide() {
             ]} />
           </SubSection>
 
-          <SubSection title="Recent Updates and Improvements">
+          <SubSection title={t('help.recentUpdates', 'Recent Updates and Improvements')}>
             <div className="bg-green-50 p-4 rounded-lg">
               <p className="font-medium text-green-800 mb-2">Latest Enhancements:</p>
               <FeatureList features={[
@@ -890,7 +890,7 @@ export default function HelpGuide() {
             </div>
           </SubSection>
 
-          <SubSection title="Before Contacting Support">
+          <SubSection title={t('help.beforeContacting', 'Before Contacting Support')}>
             <StepList steps={[
               "Check this help guide for solutions",
               "Try refreshing your browser or logging out/in",
@@ -905,10 +905,9 @@ export default function HelpGuide() {
         
         <div className="text-center py-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
           <BookOpen className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-          <p className="text-lg font-medium text-gray-900 mb-2">Thank you for using Concern2Care!</p>
+          <p className="text-lg font-medium text-gray-900 mb-2">{t('help.thankYou', 'Thank you for using Concern2Care!')}</p>
           <p className="text-gray-600 text-sm">
-            Your dedication to student success makes a difference. This platform is designed to support you in providing 
-            the best possible interventions for your students.
+            {t('help.dedication', 'Your dedication to student success makes a difference. This platform is designed to support you in providing the best possible interventions for your students.')}
           </p>
         </div>
       </div>
