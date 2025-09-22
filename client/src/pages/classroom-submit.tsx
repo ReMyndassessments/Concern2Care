@@ -68,8 +68,6 @@ const classroomSubmissionSchema = baseClassroomSubmissionSchema.extend({
 type ClassroomSubmissionForm = z.infer<typeof classroomSubmissionSchema>;
 
 export default function ClassroomSubmit() {
-  console.log('🚨🚨🚨 CLASSROOM SUBMIT COMPONENT STARTED 🚨🚨🚨');
-  
   const [location, setLocation] = useLocation();
   const [isFeatureEnabled, setIsFeatureEnabled] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,10 +76,6 @@ export default function ClassroomSubmit() {
   const [verifiedTeacherEmail, setVerifiedTeacherEmail] = useState<string | null>(null);
   const [showPinReset, setShowPinReset] = useState(false);
   const { toast } = useToast();
-  
-  console.log('🚨 INITIAL STATE - verifiedTeacherEmail:', verifiedTeacherEmail);
-  console.log('🚨 TYPE CHECK - verifiedTeacherEmail type:', typeof verifiedTeacherEmail);
-  console.log('🚨 NULLISH CHECK - !verifiedTeacherEmail:', !verifiedTeacherEmail);
 
   const form = useForm<ClassroomSubmissionForm>({
     resolver: zodResolver(classroomSubmissionSchema),
@@ -255,10 +249,7 @@ export default function ClassroomSubmit() {
   }
 
   // Show verification component if teacher not verified yet
-  console.log('🔍 VERIFICATION CHECK - verifiedTeacherEmail:', verifiedTeacherEmail);
-  
   if (!verifiedTeacherEmail) {
-    console.log('🚨 RENDERING VERIFICATION MODAL - verifiedTeacherEmail is null/undefined');
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
