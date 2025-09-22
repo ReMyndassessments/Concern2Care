@@ -3539,6 +3539,8 @@ Submitted: ${new Date().toLocaleString()}
         teacherPosition: z.string().min(1),
         teacherEmail: z.string().email(),
         securityPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only'),
+        securityQuestion: z.string().min(5).max(200).optional(), // Only required for first submission
+        securityAnswer: z.string().min(2).max(100).optional(), // Only required for first submission
         studentFirstName: z.string().min(1),
         studentLastInitial: z.string().min(1).max(1),
         studentAge: z.string().min(1),
@@ -3570,6 +3572,8 @@ Submitted: ${new Date().toLocaleString()}
         teacherPosition,
         teacherEmail,
         securityPin,
+        securityQuestion,
+        securityAnswer,
         studentFirstName,
         studentLastInitial,
         studentAge,
@@ -3591,22 +3595,29 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(403).json({ message: 'Teacher not enrolled in the program or inactive' });
       }
 
-      // PIN Security Logic: First submission sets PIN, subsequent submissions must match
+      // PIN Security Logic: First submission sets PIN + security question, subsequent submissions must match PIN
       let hashedPin;
       if (!enrolledTeacher.securityPin) {
-        // First submission: Set the PIN
-        hashedPin = await bcrypt.hash(securityPin, 10);
-        console.log(`🔐 Setting PIN for first-time teacher: ${teacherEmail}`);
+        // First submission: Must provide both PIN and security question
+        if (!securityQuestion || !securityAnswer) {
+          return res.status(400).json({ 
+            message: 'First-time users must provide both a security PIN and security question for account protection.' 
+          });
+        }
         
-        // Update teacher record with new PIN
-        await storage.setClassroomTeacherPin(enrolledTeacher.id, hashedPin);
+        hashedPin = await bcrypt.hash(securityPin, 10);
+        const hashedAnswer = await bcrypt.hash(securityAnswer.toLowerCase().trim(), 10);
+        console.log(`🔐 Setting PIN and security question for first-time teacher: ${teacherEmail}`);
+        
+        // Update teacher record with new PIN and security question
+        await storage.setClassroomTeacherPinAndSecurity(enrolledTeacher.id, hashedPin, securityQuestion, hashedAnswer);
       } else {
         // Subsequent submission: Validate PIN matches
         const pinMatches = await bcrypt.compare(securityPin, enrolledTeacher.securityPin);
         if (!pinMatches) {
           console.log(`❌ PIN validation failed for teacher: ${teacherEmail}`);
           return res.status(401).json({ 
-            message: 'Invalid security PIN. Please use the PIN you set during your first submission.' 
+            message: 'Invalid security PIN. Please use the PIN you set during your first submission or reset your PIN if forgotten.' 
           });
         }
         console.log(`✅ PIN validated for teacher: ${teacherEmail}`);

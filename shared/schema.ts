@@ -258,7 +258,11 @@ export const classroomEnrolledTeachers = pgTable("classroom_enrolled_teachers", 
   // Security PIN for submissions and response access
   securityPin: varchar("security_pin", { length: 64 }), // Hashed 4-digit PIN
   pinSetAt: timestamp("pin_set_at"), // When PIN was first set
-  pinResetAt: timestamp("pin_reset_at"), // When PIN was last reset by admin
+  pinResetAt: timestamp("pin_reset_at"), // When PIN was last reset
+  
+  // Security question for PIN reset
+  securityQuestion: varchar("security_question", { length: 200 }), // Question chosen by teacher
+  securityAnswer: varchar("security_answer", { length: 64 }), // Hashed answer
   
   enrolledBy: varchar("enrolled_by").references(() => users.id).notNull(),
   enrolledAt: timestamp("enrolled_at").defaultNow(),
