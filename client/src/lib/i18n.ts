@@ -2385,7 +2385,6 @@ const resources = {
       'help.gmailConfigPasswordDesc': 'Gmail应用密码（不是您的常规密码）',
 
       // Admin Features
-      'help.schoolAdminOnly': '仅限学校管理员',
       'help.adminFeaturesDesc': '这些功能仅对指定的学校管理员可用，用于管理其机构的Concern2Care使用情况。',
       'help.adminTeacherManagement': '教师账户管理',
       'help.adminFeature1': '为您的学校添加新教师账户',
@@ -2422,6 +2421,10 @@ const resources = {
       'help.support2': '访问教师培训资源和指南',
       'help.support3': '监控帮助台问题和常见问题',
       'help.support4': '协调员工培训会议',
+      'help.multiLang1': 'AI可以理解并回应多种语言的问题',
+      'help.multiLang2': '家长沟通材料的中文语言支持',
+      'help.multiLang3': 'PDF报告中国际文本的正确字符编码',
+      'help.multiLang4': '适当时的跨文化教育策略',
       
 
       
