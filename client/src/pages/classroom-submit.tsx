@@ -249,7 +249,10 @@ export default function ClassroomSubmit() {
   }
 
   // Show verification component if teacher not verified yet
+  console.log('🔍 VERIFICATION CHECK - verifiedTeacherEmail:', verifiedTeacherEmail);
+  
   if (!verifiedTeacherEmail) {
+    console.log('🚨 RENDERING VERIFICATION MODAL - verifiedTeacherEmail is null/undefined');
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
@@ -283,6 +286,8 @@ export default function ClassroomSubmit() {
       </div>
     );
   }
+  
+  console.log('✅ RENDERING MAIN FORM - verifiedTeacherEmail has value:', verifiedTeacherEmail);
 
   // Main form (shown after verification is complete)
   return (
