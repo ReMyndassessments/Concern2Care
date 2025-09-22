@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
 import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home } from 'lucide-react';
@@ -42,7 +43,22 @@ const baseClassroomSubmissionSchema = z.object({
   actionsTaken: z.array(z.string()).min(1, 'Please select at least one action taken'),
 });
 
-// Extended schema with security question fields (for first-time users)
+// Schema will be dynamically created based on user type
+const createClassroomSubmissionSchema = (isFirstTime: boolean) => {
+  if (isFirstTime) {
+    return baseClassroomSubmissionSchema.extend({
+      securityQuestion: z.string().min(1, 'Please select a security question'),
+      securityAnswer: z.string().min(2, 'Please provide an answer to your security question'),
+    });
+  } else {
+    return baseClassroomSubmissionSchema.extend({
+      securityQuestion: z.string().optional(),
+      securityAnswer: z.string().optional(),
+    });
+  }
+};
+
+// Default schema for initial form setup
 const classroomSubmissionSchema = baseClassroomSubmissionSchema.extend({
   securityQuestion: z.string().optional(),
   securityAnswer: z.string().optional(),
@@ -129,6 +145,22 @@ export default function ClassroomSubmit() {
   const onSubmit = async (data: ClassroomSubmissionForm) => {
     setIsSubmitting(true);
     try {
+      // Validate with appropriate schema based on user type
+      if (isFirstTimeUser !== null) {
+        const schema = createClassroomSubmissionSchema(isFirstTimeUser);
+        const validationResult = schema.safeParse(data);
+        if (!validationResult.success) {
+          const firstError = validationResult.error.issues[0];
+          toast({
+            title: "Validation Error",
+            description: firstError.message,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+      
       console.log('Submitting classroom form:', data);
       
       const response = await apiRequest({
@@ -1140,6 +1172,237 @@ export default function ClassroomSubmit() {
           </form>
         </Form>
       </main>
+
+      {/* PIN Reset Dialog */}
+      <PinResetDialog 
+        open={showPinReset} 
+        onOpenChange={setShowPinReset}
+        onSuccess={() => {
+          setShowPinReset(false);
+          toast({
+            title: "PIN Reset Successfully",
+            description: "You can now use your new PIN to submit forms.",
+          });
+        }}
+      />
     </div>
+  );
+}
+
+// PIN Reset Dialog Component
+function PinResetDialog({ 
+  open, 
+  onOpenChange, 
+  onSuccess 
+}: { 
+  open: boolean; 
+  onOpenChange: (open: boolean) => void;
+  onSuccess: () => void;
+}) {
+  const [step, setStep] = useState<'email' | 'question' | 'reset'>('email');
+  const [email, setEmail] = useState('');
+  const [securityQuestion, setSecurityQuestion] = useState('');
+  const [securityAnswer, setSecurityAnswer] = useState('');
+  const [newPin, setNewPin] = useState('');
+  const [confirmPin, setConfirmPin] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const resetForm = () => {
+    setStep('email');
+    setEmail('');
+    setSecurityQuestion('');
+    setSecurityAnswer('');
+    setNewPin('');
+    setConfirmPin('');
+  };
+
+  const getSecurityQuestion = async () => {
+    setIsLoading(true);
+    try {
+      const response = await apiRequest({
+        url: '/api/classroom/get-security-question',
+        method: 'POST',
+        body: { teacherEmail: email },
+      });
+      setSecurityQuestion(response.securityQuestion);
+      setStep('question');
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to retrieve security question.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetPin = async () => {
+    if (newPin !== confirmPin) {
+      toast({
+        title: "Error",
+        description: "PINs do not match.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await apiRequest({
+        url: '/api/classroom/reset-pin',
+        method: 'POST',
+        body: { 
+          teacherEmail: email, 
+          securityAnswer: securityAnswer,
+          newPin: newPin 
+        },
+      });
+      resetForm();
+      onSuccess();
+    } catch (error: any) {
+      toast({
+        title: "Reset Failed",
+        description: error?.message || "Failed to reset PIN.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Reset Your PIN</DialogTitle>
+          <DialogDescription>
+            {step === 'email' && "Enter your email to retrieve your security question."}
+            {step === 'question' && "Answer your security question to reset your PIN."}
+            {step === 'reset' && "Choose a new 4-digit PIN."}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          {step === 'email' && (
+            <>
+              <div>
+                <label htmlFor="reset-email" className="block text-sm font-medium mb-2">Email Address</label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="teacher@school.edu"
+                  data-testid="input-reset-email"
+                />
+              </div>
+              <Button 
+                onClick={getSecurityQuestion} 
+                disabled={!email || isLoading}
+                className="w-full"
+                data-testid="button-get-question"
+              >
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                Get Security Question
+              </Button>
+            </>
+          )}
+
+          {step === 'question' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium mb-2">Security Question</label>
+                <p className="text-sm text-muted-foreground bg-muted p-3 rounded">{securityQuestion}</p>
+              </div>
+              <div>
+                <label htmlFor="security-answer" className="block text-sm font-medium mb-2">Your Answer</label>
+                <Input
+                  id="security-answer"
+                  type="text"
+                  value={securityAnswer}
+                  onChange={(e) => setSecurityAnswer(e.target.value)}
+                  placeholder="Enter your answer"
+                  data-testid="input-reset-answer"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setStep('email')}
+                  className="flex-1"
+                  data-testid="button-back"
+                >
+                  Back
+                </Button>
+                <Button 
+                  onClick={() => setStep('reset')} 
+                  disabled={!securityAnswer}
+                  className="flex-1"
+                  data-testid="button-continue"
+                >
+                  Continue
+                </Button>
+              </div>
+            </>
+          )}
+
+          {step === 'reset' && (
+            <>
+              <div>
+                <label htmlFor="new-pin" className="block text-sm font-medium mb-2">New PIN</label>
+                <Input
+                  id="new-pin"
+                  type="password"
+                  value={newPin}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                    setNewPin(value);
+                  }}
+                  placeholder="4-digit PIN"
+                  maxLength={4}
+                  data-testid="input-new-pin"
+                />
+              </div>
+              <div>
+                <label htmlFor="confirm-pin" className="block text-sm font-medium mb-2">Confirm New PIN</label>
+                <Input
+                  id="confirm-pin"
+                  type="password"
+                  value={confirmPin}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                    setConfirmPin(value);
+                  }}
+                  placeholder="4-digit PIN"
+                  maxLength={4}
+                  data-testid="input-confirm-pin"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setStep('question')}
+                  className="flex-1"
+                  data-testid="button-back-question"
+                >
+                  Back
+                </Button>
+                <Button 
+                  onClick={resetPin} 
+                  disabled={!newPin || !confirmPin || newPin !== confirmPin || isLoading}
+                  className="flex-1"
+                  data-testid="button-reset-pin"
+                >
+                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  Reset PIN
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
