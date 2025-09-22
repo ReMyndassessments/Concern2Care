@@ -148,21 +148,22 @@ const COMMON_DISABILITY_TYPES = [
   'Other'
 ];
 
-const TASK_TYPES = [
+// Task types configuration - labels and descriptions will be translated dynamically
+const TASK_TYPE_CONFIGS = [
   { 
     value: 'differentiation', 
-    label: 'Differentiation Task',
-    description: 'Get specific strategies to adapt instruction for different learning styles, abilities, and needs. Focus on instructional modifications and learning accommodations.'
+    labelKey: 'form.differentiationTask',
+    descriptionKey: 'form.differentiationDesc'
   },
   { 
     value: 'tier2_intervention', 
-    label: 'Tier 2 Intervention Task',
-    description: 'Generate evidence-based behavioral and academic intervention strategies for concerning behaviors. Focus on targeted interventions for specific behavioral or academic issues.'
+    labelKey: 'form.tier2InterventionTask',
+    descriptionKey: 'form.tier2InterventionDesc'
   },
   { 
     value: 'classroom_management', 
-    label: 'Whole Class Management Strategies',
-    description: 'Get classroom-wide management strategies based on all your students of concern. Focus on overall classroom dynamics, proactive interventions, and group management techniques.'
+    labelKey: 'form.wholeClassManagementTask',
+    descriptionKey: 'form.wholeClassManagementDesc'
   }
 ];
 
@@ -183,6 +184,15 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
       'Family/Home': t('form.familyHome', 'Family/Home')
     };
     return typeMap[type] || type;
+  };
+
+  // Helper function to get translated task types
+  const getTranslatedTaskTypes = (t: any) => {
+    return TASK_TYPE_CONFIGS.map(config => ({
+      value: config.value,
+      label: t(config.labelKey, config.labelKey),
+      description: t(config.descriptionKey, config.descriptionKey)
+    }));
   };
 
   // Helper function to get translated severity levels
@@ -338,7 +348,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                         className="flex flex-col space-y-4"
                         disabled={isAtLimit}
                       >
-                        {TASK_TYPES.filter(taskType => 
+                        {getTranslatedTaskTypes(t).filter(taskType => 
                           !field.value || field.value === taskType.value
                         ).map((taskType) => (
                           <div key={taskType.value} className="flex items-start space-x-2 sm:space-x-3 p-3 sm:p-4 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors">
@@ -371,7 +381,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   <div className="flex items-start space-x-3">
                     <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-xs sm:text-sm font-medium text-blue-900 mb-1">{t('form.taskSelected', 'Task Selected: {{taskType}}', { taskType: TASK_TYPES.find(t => t.value === form.watch('taskType'))?.label || 'Unknown Task' })}</h4>
+                      <h4 className="text-xs sm:text-sm font-medium text-blue-900 mb-1">{t('form.taskSelected', 'Task Selected: {{taskType}}', { taskType: getTranslatedTaskTypes(t).find(task => task.value === form.watch('taskType'))?.label || 'Unknown Task' })}</h4>
                       <p className="text-xs sm:text-sm text-blue-700">
                         {t('form.taskSelectionNote', 'If you need both differentiation strategies AND Tier 2 intervention recommendations for the same student, please submit separate requests. This helps ensure each task receives focused, specialized attention.')}
                       </p>
