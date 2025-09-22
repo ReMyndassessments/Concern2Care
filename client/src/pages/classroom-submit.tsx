@@ -128,17 +128,28 @@ export default function ClassroomSubmit() {
     const checkTeacherStatus = async () => {
       if (watchedEmail && watchedEmail.includes('@')) {
         try {
-          // For now, assume first-time users need security questions
-          // Later we can add an API endpoint to check if teacher has PIN set
-          setIsFirstTimeUser(true);
+          const response = await apiRequest({
+            url: '/api/classroom/check-teacher-pin-status',
+            method: 'POST',
+            body: { teacherEmail: watchedEmail },
+          });
+          
+          setIsFirstTimeUser(response.isFirstTimeUser);
+          console.log(`Teacher ${watchedEmail} - First time user: ${response.isFirstTimeUser}`);
         } catch (error) {
           console.error('Error checking teacher status:', error);
+          // If teacher not found, assume they need to be enrolled first
+          setIsFirstTimeUser(null);
         }
+      } else {
+        setIsFirstTimeUser(null);
       }
     };
 
     if (watchedEmail) {
       checkTeacherStatus();
+    } else {
+      setIsFirstTimeUser(null);
     }
   }, [watchedEmail]);
 

@@ -3766,71 +3766,6 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
-  // PIN Reset endpoint for classroom teachers
-  app.post('/api/classroom/reset-pin', async (req: Request, res: Response) => {
-    try {
-      const validationSchema = z.object({
-        teacherEmail: z.string().email(),
-        securityAnswer: z.string().min(1),
-        newPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only')
-      });
-
-      const validationResult = validationSchema.safeParse(req.body);
-      if (!validationResult.success) {
-        return res.status(400).json({ 
-          message: 'Invalid request data',
-          errors: validationResult.error.issues
-        });
-      }
-
-      const { teacherEmail, securityAnswer, newPin } = validationResult.data;
-
-      const result = await storage.resetClassroomTeacherPinWithSecurity(teacherEmail, securityAnswer, newPin);
-      
-      if (result.success) {
-        console.log(`🔐 PIN reset successful for teacher: ${teacherEmail}`);
-        res.json({ message: result.message });
-      } else {
-        console.log(`❌ PIN reset failed for teacher: ${teacherEmail} - ${result.message}`);
-        res.status(401).json({ message: result.message });
-      }
-    } catch (error: any) {
-      console.error('Error during PIN reset:', error);
-      res.status(500).json({ message: 'Failed to reset PIN' });
-    }
-  });
-
-  // Get security question for PIN reset
-  app.post('/api/classroom/get-security-question', async (req: Request, res: Response) => {
-    try {
-      const validationSchema = z.object({
-        teacherEmail: z.string().email()
-      });
-
-      const validationResult = validationSchema.safeParse(req.body);
-      if (!validationResult.success) {
-        return res.status(400).json({ 
-          message: 'Invalid email address'
-        });
-      }
-
-      const { teacherEmail } = validationResult.data;
-      
-      const teacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
-      if (!teacher || !teacher.isActive) {
-        return res.status(404).json({ message: 'Teacher not found or inactive' });
-      }
-
-      if (!teacher.securityQuestion) {
-        return res.status(404).json({ message: 'No security question found for this account' });
-      }
-
-      res.json({ securityQuestion: teacher.securityQuestion });
-    } catch (error: any) {
-      console.error('Error getting security question:', error);
-      res.status(500).json({ message: 'Failed to retrieve security question' });
-    }
-  });
 
   // Admin: Get all submissions
   app.get('/api/admin/classroom/submissions', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
@@ -4059,6 +3994,103 @@ Submitted: ${new Date().toLocaleString()}
     } catch (error) {
       console.error('Error deleting submission:', error);
       res.status(500).json({ message: 'Failed to delete submission' });
+    }
+  });
+
+  // Check teacher PIN status (for determining first-time user)
+  app.post('/api/classroom/check-teacher-pin-status', async (req: Request, res: Response) => {
+    try {
+      const validationSchema = z.object({
+        teacherEmail: z.string().email()
+      });
+
+      const validationResult = validationSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: 'Invalid email address'
+        });
+      }
+
+      const { teacherEmail } = validationResult.data;
+      
+      const teacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
+      if (!teacher || !teacher.isActive) {
+        return res.status(404).json({ message: 'Teacher not found or inactive' });
+      }
+
+      res.json({ 
+        hasPin: !!teacher.securityPin,
+        isFirstTimeUser: !teacher.securityPin 
+      });
+    } catch (error: any) {
+      console.error('Error checking teacher PIN status:', error);
+      res.status(500).json({ message: 'Failed to check teacher status' });
+    }
+  });
+
+  // PIN Reset endpoint for classroom teachers
+  app.post('/api/classroom/reset-pin', async (req: Request, res: Response) => {
+    try {
+      const validationSchema = z.object({
+        teacherEmail: z.string().email(),
+        securityAnswer: z.string().min(1),
+        newPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only')
+      });
+
+      const validationResult = validationSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: 'Invalid request data',
+          errors: validationResult.error.issues
+        });
+      }
+
+      const { teacherEmail, securityAnswer, newPin } = validationResult.data;
+
+      const result = await storage.resetClassroomTeacherPinWithSecurity(teacherEmail, securityAnswer, newPin);
+      
+      if (result.success) {
+        console.log(`🔐 PIN reset successful for teacher: ${teacherEmail}`);
+        res.json({ message: result.message });
+      } else {
+        console.log(`❌ PIN reset failed for teacher: ${teacherEmail} - ${result.message}`);
+        res.status(401).json({ message: result.message });
+      }
+    } catch (error: any) {
+      console.error('Error during PIN reset:', error);
+      res.status(500).json({ message: 'Failed to reset PIN' });
+    }
+  });
+
+  // Get security question for PIN reset
+  app.post('/api/classroom/get-security-question', async (req: Request, res: Response) => {
+    try {
+      const validationSchema = z.object({
+        teacherEmail: z.string().email()
+      });
+
+      const validationResult = validationSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: 'Invalid email address'
+        });
+      }
+
+      const { teacherEmail } = validationResult.data;
+      
+      const teacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
+      if (!teacher || !teacher.isActive) {
+        return res.status(404).json({ message: 'Teacher not found or inactive' });
+      }
+
+      if (!teacher.securityQuestion) {
+        return res.status(404).json({ message: 'No security question found for this account' });
+      }
+
+      res.json({ securityQuestion: teacher.securityQuestion });
+    } catch (error: any) {
+      console.error('Error getting security question:', error);
+      res.status(500).json({ message: 'Failed to retrieve security question' });
     }
   });
 
