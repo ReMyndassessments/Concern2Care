@@ -628,7 +628,7 @@ export default function HelpGuide() {
           <Alert>
             <Info className="h-4 w-4" />
             <AlertDescription>
-              <strong>Note:</strong> School administrators cannot access individual teacher's concern details or reports for privacy protection, but can view aggregated usage statistics.
+{t('help.adminPrivacyNote', 'Note: School administrators cannot access individual teacher\'s concern details or reports for privacy protection, but can view aggregated usage statistics.')}
             </AlertDescription>
           </Alert>
         </Section>
@@ -659,8 +659,7 @@ export default function HelpGuide() {
                   t('help.chineseFeature5', "Seamless language preference storage")
                 ]} />
                 <p className="text-sm text-blue-700 mt-3">
-                  Use the language selector in the header to switch between English and Chinese. 
-                  Your preference will be saved automatically.
+                  {t('help.chineseInterfaceDesc', 'Use the language selector in the header to switch between English and Chinese. Your preference will be saved automatically.')}
                 </p>
               </div>
             </SubSection>
@@ -718,15 +717,15 @@ export default function HelpGuide() {
           <SubSection title={t('help.emailProblems', 'Email Sharing Problems')}>
             <div className="space-y-3">
               <div className="bg-red-50 p-3 rounded-lg">
-                <p className="font-medium text-red-800 text-sm">Problem: "Failed to Share Report" error</p>
+                <p className="font-medium text-red-800 text-sm">{t('help.emailProblem1Title', 'Problem: "Failed to Share Report" error')}</p>
                 <p className="text-red-700 text-sm mt-1">
-                  <strong>Solution:</strong> Check your email configuration. For Gmail, ensure you're using an App Password, not your regular password.
+                  {t('help.emailProblem1Solution', 'Solution: Check your email configuration. For Gmail, ensure you\'re using an App Password, not your regular password.')}
                 </p>
               </div>
               <div className="bg-red-50 p-3 rounded-lg">
-                <p className="font-medium text-red-800 text-sm">Problem: Email test fails</p>
+                <p className="font-medium text-red-800 text-sm">{t('help.emailProblem2Title', 'Problem: Email test fails')}</p>
                 <p className="text-red-700 text-sm mt-1">
-                  <strong>Solution:</strong> Verify SMTP settings, check internet connection, and ensure your email provider allows third-party app access.
+                  {t('help.emailProblem2Solution', 'Solution: Verify SMTP settings, check internet connection, and ensure your email provider allows third-party app access.')}
                 </p>
               </div>
             </div>

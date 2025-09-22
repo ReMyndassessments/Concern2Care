@@ -2396,78 +2396,63 @@ const resources = {
       // Gmail troubleshooting
       'help.troubleshootingGmail': '故障排除：如果您找不到应用密码，请确保首先启用两步验证。某些工作账户可能有不同要求。',
 
-      // Gmail Steps (missing from screenshots)
-      'help.gmailStep1': '转到您的Google账户安全设置',
-      'help.gmailStep2': '如果尚未启用，请启用两步验证',
-      'help.gmailStep3': '查找"应用密码"部分',
-      'help.gmailStep4': '为"邮件"生成新的应用密码',
-      'help.gmailStep5': '复制16字符密码并在Concern2Care中使用',
-
-      // Teacher Management (Admin Features)
-      'help.teacherAccountManagement': '教师账户管理',
-      'help.teacherMgmt1': '为您的学校添加新教师账户',
-      'help.teacherMgmt2': '编辑教师联系信息和个人资料',
-      'help.teacherMgmt3': '根据需要授予额外的月度请求',
-      'help.teacherMgmt4': '停用教师账户（例如员工变动）',
-      'help.teacherMgmt5': '查看教师使用统计和活动',
-
-      // School Email Configuration  
-      'help.schoolWideEmail': '全校邮件配置',
-      'help.schoolEmail1': '为所有教师设置学区邮件设置',
-      'help.schoolEmail2': '配置机构SMTP服务器详情',
-      'help.schoolEmail3': '允许教师使用学校邮件进行报告分享',
-      'help.schoolEmail4': '测试和验证学校邮件配置',
-
-      // School Analytics
-      'help.schoolAnalytics': '学校分析和报告',
-      'help.analytics1': '查看全校使用仪表板和趋势',
-      'help.analytics2': '生成干预效果报告',
-      'help.analytics3': '监控教师参与度和采用率',
-      'help.analytics4': '导出学校数据进行机构分析',
-      'help.analytics5': '跟踪最常见的关注类型和模式',
-
-      // User Support and Training
-      'help.userSupportTraining': '用户支持和培训',
-      'help.support1': '向教师发送密码重置邮件',
-      'help.support2': '访问教师培训资源和指南',
-      'help.support3': '监控帮助台问题和常见问题',
-      'help.support4': '协调员工培训会议',
-
-      // Admin Privacy Note
+      // COMPLETE SYSTEMATIC CHINESE TRANSLATIONS FOR ALL HELP KEYS
+      // Admin & School Features
+      'help.mobileDeviceUsage': '移动设备使用',
+      'help.emailProblems': '邮件分享问题', 
       'help.adminPrivacyNote': '注意：学校管理员无法访问个别教师的关注详情或报告以保护隐私，但可以查看汇总使用统计。',
-
-      // Language and International Support
-      'help.languageInternationalSupport': '语言和国际支持',
-      'help.multilingualFeatures': '多语言功能',
-      'help.multilingual1': 'AI可以理解并回应多种语言的问题',
-      'help.multilingual2': '家长沟通材料的中文语言支持',
-      'help.multilingual3': 'PDF报告中国际文本的正确字符编码',
-      'help.multilingual4': '适当时的跨文化教育策略',
-
-      // Chinese Interface
-      'help.chineseInterface': '中文界面（测试版）',
+      'help.languageSupport': '语言和国际支持',
+      'help.multiLanguage': '多语言功能',
+      'help.mobileAccessibility': '移动和无障碍功能',
       'help.chineseInterfaceDesc': '使用标题中的语言选择器在英语和中文之间切换。您的偏好将自动保存。',
+      
+      // Multilingual Support Features
+      'help.multiLang1': 'AI可以理解并回应多种语言的问题',
+      'help.multiLang2': '家长沟通材料的中文语言支持', 
+      'help.multiLang3': 'PDF报告中国际文本的正确字符编码',
+      'help.multiLang4': '适当时的跨文化教育策略',
+      
+      // Chinese Interface Features
       'help.chineseFeature1': '用户界面的完整中文翻译',
       'help.chineseFeature2': '英语和中文之间的语言切换',
-      'help.chineseFeature3': '本地化的菜单标签、按钮和导航',
-      'help.chineseFeature4': '中文教育术语背景',
+      'help.chineseFeature3': '本地化的表单标签、按钮和导航',
+      'help.chineseFeature4': '中文教育术语和语境',
       'help.chineseFeature5': '无缝语言偏好存储',
-
-      // Mobile Functionality
-      'help.mobileFunctionality': '移动功能',
-      'help.mobile1': '在小屏幕上显示较短文本的移动友好落地页',
-      'help.mobile2': '带有增强视觉反馈的触摸优化CTA按钮',
-      'help.mobile3': '具有可滚动内容的响应式管理仪表板',
-      'help.mobile4': '具有适当键盘处理的移动友好登录页面',
-      'help.mobile5': '适用时支持导航的滑动手势',
-
+      
+      // Mobile Features
+      'help.mobileFeature1': '完全响应式设计，在手机和平板电脑上完美运行',
+      'help.mobileFeature2': '触摸友好界面，按钮较大（最小高度56px）',
+      'help.mobileFeature3': '所有功能在移动设备上可用，具有优化布局',
+      'help.mobileFeature4': '移动优先表单，具有适当的键盘优化',
+      'help.mobileFeature5': '可折叠导航菜单，便于移动导航',
+      'help.mobileFeature6': '移动设备上的全宽按钮，便于点击',
+      'help.mobileFeature7': '针对移动阅读优化的文本大小和间距',
+      'help.mobileUsageTips': '移动使用技巧',
+      'help.mobileTip1': '使用横向模式更容易查看表格和数据输入',
+      'help.mobileTip2': '如果按钮没有立即响应，请点击并按住',
+      'help.mobileTip3': '汉堡菜单（☰）提供快速访问所有功能',
+      'help.mobileTip4': '在数据表上水平滚动以查看所有列',
+      'help.mobileTip5': '使用捏合缩放进行详细报告查看',
+      'help.mobileTip6': '语音转文本在关注描述字段中效果很好',
+      'help.mobileOptimized': '移动优化功能',
+      'help.mobileOptFeature1': '在小屏幕上显示较短文本的移动友好落地页',
+      'help.mobileOptFeature2': '具有增强视觉反馈的触摸优化CTA按钮',
+      'help.mobileOptFeature3': '具有可滚动内容的响应式管理仪表板',
+      'help.mobileOptFeature4': '具有适当键盘处理的移动友好登录页面',
+      'help.mobileOptFeature5': '适用时支持导航的滑动手势',
+      
       // Accessibility Features
-      'help.accessibilityFeatures': '无障碍功能',
-      'help.accessibility1': '键盘导航支持',
-      'help.accessibility2': '屏幕阅读器兼容性',
-      'help.accessibility3': '高对比度颜色方案',
-      'help.accessibility4': '可缩放文本和界面元素',
-      'help.accessibility5': '所有交互元素的适当ARIA标签',
+      'help.accessFeature1': '键盘导航支持',
+      'help.accessFeature2': '屏幕阅读器兼容性',
+      'help.accessFeature3': '高对比度颜色方案',
+      'help.accessFeature4': '可缩放文本和界面元素',
+      'help.accessFeature5': '所有交互元素的适当ARIA标签',
+      
+      // Email Problem Solutions
+      'help.emailProblem1Title': '问题："分享报告失败"错误',
+      'help.emailProblem1Solution': '解决方案：检查您的邮件配置。对于Gmail，确保您使用的是应用密码，而不是常规密码。',
+      'help.emailProblem2Title': '问题：邮件测试失败',
+      'help.emailProblem2Solution': '解决方案：验证SMTP设置，检查互联网连接，并确保您的邮件提供商允许第三方应用访问。',
 
       
       // Interventions Display
