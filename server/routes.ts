@@ -4046,10 +4046,8 @@ Submitted: ${new Date().toLocaleString()}
     try {
       const QRCode = await import('qrcode');
       
-      // Get the base URL from environment or construct it
-      const baseUrl = process.env.REPLIT_DOMAINS 
-        ? `https://${process.env.REPLIT_DOMAINS}` 
-        : process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+      // Use production URL for Classroom Solutions QR code
+      const baseUrl = 'https://concern2care.com';
       
       const submissionUrl = `${baseUrl}/classroom/submit`;
       
