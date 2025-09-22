@@ -70,7 +70,7 @@ export async function generateMeetingHTMLReport(
           </div>
           
           <div class="concern-description">
-            <h5>Description:</h5>
+            <h5>Teacher's Submitted Response:</h5>
             <p>${concern.description || 'No description provided'}</p>
           </div>
 
@@ -314,7 +314,7 @@ export async function generateConcernHTMLReport(
             </div>
             
             <div class="description-section">
-                <h4 class="description-title">Description:</h4>
+                <h4 class="description-title">Teacher's Submitted Response:</h4>
                 <div class="description-content">
                     ${concern.description || (concern.taskType === 'differentiation' ? 
                       'Differentiation strategies requested based on student learning needs and characteristics.' : 

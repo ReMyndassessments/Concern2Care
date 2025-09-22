@@ -44,7 +44,7 @@ export async function generateConcernReport(
       doc.text(`Date Documented: ${concern.createdAt?.toLocaleDateString('en-US') || 'Unknown'}`, 50, yPosition);
       yPosition += 25;
       
-      doc.text('Description:', 50, yPosition);
+      doc.text('Teacher\'s Submitted Response:', 50, yPosition);
       yPosition += 15;
       const descriptionLines = doc.heightOfString(concern.description, { width: 495 });
       doc.text(concern.description, 50, yPosition, { width: 495, align: 'justify' });
