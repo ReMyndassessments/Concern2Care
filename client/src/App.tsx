@@ -93,14 +93,17 @@ function AuthenticatedRouter() {
 function Router() {
   return (
     <Switch>
-      {/* Classroom submission routes */}
-      <Route path="/classroom-submit" component={ClassroomSubmit} />
-      <Route path="/classroom/submit" component={ClassroomSubmit} />
-      <Route path="/classroom" component={ClassroomSubmit} />
+      {/* Landing page - FIRST PRIORITY */}
+      <Route path="/" component={Landing} />
       
       {/* Public routes */}
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
+      
+      {/* Classroom submission routes */}
+      <Route path="/classroom-submit" component={ClassroomSubmit} />
+      <Route path="/classroom/submit" component={ClassroomSubmit} />
+      <Route path="/classroom" component={ClassroomSubmit} />
       
       {/* Authenticated routes */}
       <Route path="/admin" component={AuthenticatedRouter} />
@@ -112,11 +115,8 @@ function Router() {
       <Route path="/settings" component={AuthenticatedRouter} />
       <Route path="/concerns/:id" component={AuthenticatedRouter} />
       
-      {/* Landing page */}
-      <Route path="/" component={Landing} />
-      
-      {/* 404 fallback */}
-      <Route component={NotFound} />
+      {/* 404 fallback - explicit wildcard */}
+      <Route path="*" component={NotFound} />
     </Switch>
   );
 }
