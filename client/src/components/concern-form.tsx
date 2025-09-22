@@ -27,8 +27,8 @@ const enhancedConcernFormSchema = z.object({
   studentFirstName: z.string().optional(),
   studentLastInitial: z.string().optional(),
   grade: z.string().optional(),
-  teacherPosition: z.string().min(1, "Teacher position is required"),
-  location: z.string().min(1, "Location is required"),
+  teacherPosition: z.string().optional(),
+  location: z.string().optional(),
   concernTypes: z.array(z.string()).default([]),
   otherConcernType: z.string().optional(),
   description: z.string().optional(),
@@ -85,6 +85,17 @@ const enhancedConcernFormSchema = z.object({
 }, {
   message: "Please select severity level for intervention tasks",
   path: ["severityLevel"],
+}).refine((data) => {
+  // For individual student tasks, require teacher position and location
+  if (data.taskType && data.taskType !== 'classroom_management') {
+    return data.teacherPosition && data.teacherPosition.trim().length > 0 && 
+           data.location && data.location.trim().length > 0;
+  }
+  // For classroom management, these fields are optional
+  return true;
+}, {
+  message: "Teacher position and location are required for individual student tasks",
+  path: ["teacherPosition"],
 });
 
 type EnhancedConcernFormData = z.infer<typeof enhancedConcernFormSchema>;
@@ -1242,6 +1253,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                       <Wand2 className="h-5 w-5 mr-2" />
                       {form.watch('taskType') === 'differentiation' 
                         ? t('form.generateDifferentiationStrategies', 'Generate Differentiation Strategies')
+                        : form.watch('taskType') === 'classroom_management'
+                        ? 'Classroom Strategies'
                         : t('form.generateTier2Strategies', 'Explore Behavior Support Strategies')}
                     </>
                   )}
