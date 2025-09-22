@@ -18,12 +18,11 @@ import { ClassroomTeacherVerification } from '@/components/classroom-teacher-ver
 import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home } from 'lucide-react';
 
 // Base form validation schema
-const baseClassroomSubmissionSchema = z.object({
+// Submission schema (no security fields - handled by verification modal)
+const classroomSubmissionSchema = z.object({
   teacherFirstName: z.string().min(1, 'First name is required'),
   teacherLastInitial: z.string().min(1, 'Last initial is required').max(1, 'Only one letter allowed'),
   teacherPosition: z.string().min(1, 'Position is required'),
-  teacherEmail: z.string().email('Valid email is required'),
-  securityPin: z.string().min(4, 'PIN must be exactly 4 digits').max(4, 'PIN must be exactly 4 digits').regex(/^\d{4}$/, 'PIN must be 4 digits only'),
   studentFirstName: z.string().min(1, 'Student first name or initials are required'),
   studentLastInitial: z.string().min(1, 'Student last initial is required').max(1, 'Only one letter allowed'),
   studentAge: z.string().min(1, 'Student age is required'),
@@ -44,27 +43,6 @@ const baseClassroomSubmissionSchema = z.object({
   actionsTaken: z.array(z.string()).min(1, 'Please select at least one action taken'),
 });
 
-// Schema will be dynamically created based on user type
-const createClassroomSubmissionSchema = (isFirstTime: boolean) => {
-  if (isFirstTime) {
-    return baseClassroomSubmissionSchema.extend({
-      securityQuestion: z.string().min(1, 'Please select a security question'),
-      securityAnswer: z.string().min(2, 'Please provide an answer to your security question'),
-    });
-  } else {
-    return baseClassroomSubmissionSchema.extend({
-      securityQuestion: z.string().optional(),
-      securityAnswer: z.string().optional(),
-    });
-  }
-};
-
-// Default schema for initial form setup
-const classroomSubmissionSchema = baseClassroomSubmissionSchema.extend({
-  securityQuestion: z.string().optional(),
-  securityAnswer: z.string().optional(),
-});
-
 type ClassroomSubmissionForm = z.infer<typeof classroomSubmissionSchema>;
 
 export default function ClassroomSubmit() {
@@ -83,10 +61,6 @@ export default function ClassroomSubmit() {
       teacherFirstName: '',
       teacherLastInitial: '',
       teacherPosition: '',
-      teacherEmail: '',
-      securityPin: '',
-      securityQuestion: '',
-      securityAnswer: '',
       studentFirstName: '',
       studentLastInitial: '',
       studentAge: '',
@@ -107,8 +81,7 @@ export default function ClassroomSubmit() {
   const handleVerificationComplete = (teacherEmail: string) => {
     console.log('✅ Teacher verification complete for:', teacherEmail);
     setVerifiedTeacherEmail(teacherEmail);
-    // Pre-fill the teacher email in the form
-    form.setValue('teacherEmail', teacherEmail);
+    // Teacher email is handled by session - no need to set in form
   };
 
   // Check if Classroom Solutions feature is enabled
@@ -139,19 +112,11 @@ export default function ClassroomSubmit() {
       // Form is already validated by Zod schema
       console.log('📋 Submitting classroom form for verified teacher:', verifiedTeacherEmail);
       
-      // Filter out empty security question/answer fields for subsequent submissions
-      const submissionData = { ...data, teacherEmail: verifiedTeacherEmail };
-      if (!submissionData.securityQuestion || submissionData.securityQuestion.trim() === '') {
-        delete submissionData.securityQuestion;
-      }
-      if (!submissionData.securityAnswer || submissionData.securityAnswer.trim() === '') {
-        delete submissionData.securityAnswer;
-      }
-      
+      // No security fields needed - teacher is already verified via session
       const response = await apiRequest({
         url: '/api/classroom/submit',
         method: 'POST',
-        body: submissionData,
+        body: data,
       });
 
       console.log('Submission response:', response);
@@ -395,58 +360,17 @@ export default function ClassroomSubmit() {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="teacherEmail"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="email" 
-                          placeholder="your.email@school.edu" 
-                          {...field}
-                          data-testid="input-teacher-email"
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Used for account identification and security
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="securityPin"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Security PIN</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="password" 
-                          placeholder="4-digit PIN" 
-                          maxLength={4} 
-                          {...field}
-                          data-testid="input-security-pin"
-                          onChange={(e) => {
-                            const value = e.target.value.replace(/\D/g, '').slice(0, 4);
-                            field.onChange(value);
-                          }}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Enter your 4-digit PIN (verified during login)
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Security fields handled in verification component */}
-
-                {/* PIN reset handled in verification component */}
+                {/* Verified Teacher Display */}
+                {verifiedTeacherEmail && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <span className="text-green-800 font-medium">
+                        Verified as: {verifiedTeacherEmail}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
