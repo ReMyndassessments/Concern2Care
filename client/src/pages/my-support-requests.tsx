@@ -448,9 +448,14 @@ export default function MySupportRequests() {
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3 mb-2">
                           <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
-                            {concern.studentFirstName} {concern.studentLastInitial}.
+                            {concern.taskType === 'classroom_management' 
+                              ? 'Classroom Management Strategies'
+                              : `${concern.studentFirstName} ${concern.studentLastInitial}.`
+                            }
                           </h3>
-                          <span className="text-xs sm:text-sm text-gray-500">{t('supportRequests.grade', 'Grade {{grade}}', { grade: concern.grade })}</span>
+                          {concern.taskType !== 'classroom_management' && (
+                            <span className="text-xs sm:text-sm text-gray-500">{t('supportRequests.grade', 'Grade {{grade}}', { grade: concern.grade })}</span>
+                          )}
                         </div>
                         
                         {/* Task Type and Concern Types */}
