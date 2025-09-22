@@ -88,7 +88,8 @@ export default function ClassroomSubmit() {
         setIsFeatureEnabled(isEnabled);
       } catch (error) {
         console.error('Error checking feature flag:', error);
-        setIsFeatureEnabled(false);
+        // Enable by default for production if feature flag check fails
+        setIsFeatureEnabled(true);
       }
     };
 
