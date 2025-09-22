@@ -2340,6 +2340,13 @@ const resources = {
       'help.thankYou': '感谢您使用Concern2Care！',
       'help.dedication': '您对学生成功的奉献产生了影响。这个平台旨在支持您为学生提供最佳的干预措施。',
       'help.contactSupport': '联系支持',
+
+      // Report Generation Steps
+      'help.reportStep1': '从主菜单导航到"我的支持请求"',
+      'help.reportStep2': '使用"差异化请求"、"干预请求"和"课堂管理"标签找到您的关注事项',
+      'help.reportStep3': '找到您想要分享的关注事项',
+      'help.reportStep4': '点击关注事项旁边的"分享"按钮',
+      'help.reportStep5': '系统会为请求类型生成适当标题的综合PDF报告',
       
       // Interventions Display
       'interventions.title': 'AI生成的干预措施',
