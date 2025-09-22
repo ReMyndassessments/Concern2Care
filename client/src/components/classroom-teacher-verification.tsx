@@ -19,7 +19,7 @@ const emailVerificationSchema = z.object({
 // Schema for PIN setup (first-time users)
 const pinSetupSchema = z.object({
   securityPin: z.string().length(4, 'PIN must be exactly 4 digits').regex(/^\d+$/, 'PIN must contain only numbers'),
-  securityQuestion: z.string().min(1, 'Please select a security question'),
+  securityQuestion: z.string().min(5, 'Security question must be at least 5 characters'),
   securityAnswer: z.string().min(2, 'Security answer must be at least 2 characters'),
 });
 
