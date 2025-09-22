@@ -943,7 +943,7 @@ export default function ClassroomSubmissionsManagement() {
                 <Input
                   value={emailConfig.fromEmail}
                   onChange={(e) => setEmailConfig(prev => ({ ...prev, fromEmail: e.target.value }))}
-                  placeholder="noreply@concern2care.com"
+                  placeholder="noreply@app.com"
                   data-testid="input-from-email"
                 />
               </div>
