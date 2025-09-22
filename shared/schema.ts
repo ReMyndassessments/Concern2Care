@@ -683,6 +683,9 @@ export const insertClassroomEnrolledTeacherSchema = createInsertSchema(classroom
   enrolledAt: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  securityQuestion: z.string().min(1, "Security question is required").optional(),
+  securityAnswer: z.string().min(1, "Security answer is required").optional(),
 });
 
 export const insertClassroomSubmissionSchema = createInsertSchema(classroomSubmissions).omit({
