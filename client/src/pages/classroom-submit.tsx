@@ -14,7 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
-import { ClassroomTeacherVerification } from '@/components/classroom-teacher-verification';
+// Teacher verification component removed - verification disabled
 import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home } from 'lucide-react';
 
 // Base form validation schema
@@ -51,8 +51,7 @@ export default function ClassroomSubmit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<any>(null);
-  const [verifiedTeacherEmail, setVerifiedTeacherEmail] = useState<string | null>(null);
-  const [showPinReset, setShowPinReset] = useState(false);
+  // Teacher verification removed - skip verification step
   const { toast } = useToast();
 
   const form = useForm<ClassroomSubmissionForm>({
@@ -77,12 +76,7 @@ export default function ClassroomSubmit() {
     },
   });
 
-  // Handle successful teacher verification
-  const handleVerificationComplete = (teacherEmail: string) => {
-    console.log('✅ Teacher verification complete for:', teacherEmail);
-    setVerifiedTeacherEmail(teacherEmail);
-    // Teacher email is handled by session - no need to set in form
-  };
+  // Teacher verification removed - no verification needed
 
   // Check if Classroom Solutions feature is enabled
   useEffect(() => {
@@ -110,9 +104,7 @@ export default function ClassroomSubmit() {
     setIsSubmitting(true);
     try {
       // Form is already validated by Zod schema
-      console.log('📋 Submitting classroom form for verified teacher:', verifiedTeacherEmail);
-      
-      // No security fields needed - teacher is already verified via session
+      console.log('📋 Submitting classroom form - verification disabled');
       const response = await apiRequest({
         url: '/api/classroom/submit',
         method: 'POST',
