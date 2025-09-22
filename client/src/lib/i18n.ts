@@ -2396,6 +2396,13 @@ const resources = {
       // Gmail troubleshooting
       'help.troubleshootingGmail': '故障排除：如果您找不到应用密码，请确保首先启用两步验证。某些工作账户可能有不同要求。',
 
+      // Gmail Steps (fix the English steps in screenshot)
+      'help.gmailStep1': '转到您的Google账户安全设置',
+      'help.gmailStep2': '如果尚未启用，请启用两步验证',
+      'help.gmailStep3': '查找"应用密码"部分',
+      'help.gmailStep4': '为"邮件"生成新的应用密码',
+      'help.gmailStep5': '复制16字符密码并在Concern2Care中使用',
+
       // COMPLETE SYSTEMATIC CHINESE TRANSLATIONS FOR ALL HELP KEYS
       // Admin & School Features
       'help.mobileDeviceUsage': '移动设备使用',
