@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
+import { ClassroomTeacherVerification } from '@/components/classroom-teacher-verification';
 import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home } from 'lucide-react';
 
 // Base form validation schema
@@ -72,7 +73,7 @@ export default function ClassroomSubmit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<any>(null);
-  const [isFirstTimeUser, setIsFirstTimeUser] = useState<boolean | null>(null);
+  const [verifiedTeacherEmail, setVerifiedTeacherEmail] = useState<string | null>(null);
   const [showPinReset, setShowPinReset] = useState(false);
   const { toast } = useToast();
 
@@ -102,6 +103,14 @@ export default function ClassroomSubmit() {
     },
   });
 
+  // Handle successful teacher verification
+  const handleVerificationComplete = (teacherEmail: string) => {
+    console.log('✅ Teacher verification complete for:', teacherEmail);
+    setVerifiedTeacherEmail(teacherEmail);
+    // Pre-fill the teacher email in the form
+    form.setValue('teacherEmail', teacherEmail);
+  };
+
   // Check if Classroom Solutions feature is enabled
   useEffect(() => {
     const checkFeatureFlag = async () => {
@@ -122,40 +131,7 @@ export default function ClassroomSubmit() {
     checkFeatureFlag();
   }, []);
 
-  // Check if teacher needs to set up security question when email changes
-  const watchedEmail = form.watch('teacherEmail');
-  useEffect(() => {
-    console.log('🔍 Email watcher triggered, email:', watchedEmail);
-    
-    const checkTeacherStatus = async () => {
-      if (watchedEmail && watchedEmail.includes('@')) {
-        console.log('📞 Making API call to check teacher PIN status for:', watchedEmail);
-        try {
-          const response = await apiRequest({
-            url: '/api/classroom/check-teacher-pin-status',
-            method: 'POST',
-            body: { teacherEmail: watchedEmail },
-          });
-          
-          setIsFirstTimeUser(response.isFirstTimeUser);
-          console.log(`✅ Teacher ${watchedEmail} - First time user: ${response.isFirstTimeUser}`);
-        } catch (error) {
-          console.error('❌ Error checking teacher status:', error);
-          // If teacher not found, assume they need to be enrolled first
-          setIsFirstTimeUser(null);
-        }
-      } else {
-        console.log('🚫 Email not valid for API call:', watchedEmail);
-        setIsFirstTimeUser(null);
-      }
-    };
-
-    if (watchedEmail) {
-      checkTeacherStatus();
-    } else {
-      setIsFirstTimeUser(null);
-    }
-  }, [watchedEmail]);
+  // No longer need email watcher - verification is handled separately
 
   const onSubmit = async (data: ClassroomSubmissionForm) => {
     setIsSubmitting(true);
@@ -284,7 +260,43 @@ export default function ClassroomSubmit() {
     );
   }
 
-  // Main form
+  // Show verification component if teacher not verified yet
+  if (!verifiedTeacherEmail) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white shadow-sm">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <FileText className="h-6 w-6 text-blue-600 mr-2" />
+                <div>
+                  <h1 className="text-xl font-semibold text-gray-900">C2C Classroom Solutions</h1>
+                  <p className="text-sm text-gray-600">Request Differentiation & Intervention Support</p>
+                </div>
+              </div>
+              <Button
+                onClick={() => setLocation('/')}
+                variant="outline"
+                className="flex items-center"
+                data-testid="button-back-home"
+              >
+                <Home className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        {/* Teacher Verification Modal */}
+        <ClassroomTeacherVerification 
+          onVerificationComplete={handleVerificationComplete}
+        />
+      </div>
+    );
+  }
+
+  // Main form (shown after verification is complete)
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
