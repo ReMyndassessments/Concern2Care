@@ -2413,20 +2413,23 @@ const resources = {
       'help.mobileAccessibility': '移动和无障碍功能',
       'help.chineseInterfaceDesc': '使用标题中的语言选择器在英语和中文之间切换。您的偏好将自动保存。',
       
-      // Multilingual Support Features
-      'help.multiLang1': 'AI可以理解并回应多种语言的问题',
-      'help.multiLang2': '家长沟通材料的中文语言支持', 
-      'help.multiLang3': 'PDF报告中国际文本的正确字符编码',
-      'help.multiLang4': '适当时的跨文化教育策略',
+      // Admin Feature Translation Keys (for screenshot)
+      'help.adminFeature1': '为您的学校添加新的教师账户',
+      'help.adminFeature2': '编辑教师联系信息和个人资料', 
+      'help.adminFeature3': '根据需要授予额外的月度请求',
+      'help.adminFeature4': '停用教师账户（例如员工变动）',
+      'help.adminFeature5': '查看教师使用统计和活动',
+      'help.schoolEmailFeature1': '为所有教师设置学区邮件设置',
+      'help.schoolEmailFeature2': '配置机构SMTP服务器详细信息',
+      'help.schoolEmailFeature3': '允许教师使用学校邮件分享报告',
+      'help.schoolEmailFeature4': '测试和验证学校邮件配置',
+      'help.analyticsFeature1': '查看全校使用仪表板和趋势',
+      'help.analyticsFeature2': '生成干预措施有效性报告',
+      'help.analyticsFeature3': '监控教师参与度和采用率',
+      'help.analyticsFeature4': '导出学校数据用于机构分析',
+      'help.analyticsFeature5': '跟踪最常见的关注类型和模式',
       
-      // Chinese Interface Features
-      'help.chineseFeature1': '用户界面的完整中文翻译',
-      'help.chineseFeature2': '英语和中文之间的语言切换',
-      'help.chineseFeature3': '本地化的表单标签、按钮和导航',
-      'help.chineseFeature4': '中文教育术语和语境',
-      'help.chineseFeature5': '无缝语言偏好存储',
-      
-      // Mobile Features
+      // Mobile Features (removed duplicates)
       'help.mobileFeature1': '完全响应式设计，在手机和平板电脑上完美运行',
       'help.mobileFeature2': '触摸友好界面，按钮较大（最小高度56px）',
       'help.mobileFeature3': '所有功能在移动设备上可用，具有优化布局',
@@ -2447,13 +2450,6 @@ const resources = {
       'help.mobileOptFeature3': '具有可滚动内容的响应式管理仪表板',
       'help.mobileOptFeature4': '具有适当键盘处理的移动友好登录页面',
       'help.mobileOptFeature5': '适用时支持导航的滑动手势',
-      
-      // Accessibility Features
-      'help.accessFeature1': '键盘导航支持',
-      'help.accessFeature2': '屏幕阅读器兼容性',
-      'help.accessFeature3': '高对比度颜色方案',
-      'help.accessFeature4': '可缩放文本和界面元素',
-      'help.accessFeature5': '所有交互元素的适当ARIA标签',
       
       // Email Problem Solutions
       'help.emailProblem1Title': '问题："分享报告失败"错误',
