@@ -378,21 +378,21 @@ export default function HelpGuide() {
           <SubSection title={t('help.creatingPDFReports', 'Creating PDF Reports')}>
             <p>{t('help.pdfReportsDesc', 'Generate professional reports that include your concern documentation and recommended interventions:')}</p>
             <StepList steps={[
-              "Navigate to 'My Support Requests' from the main menu",
-              "Use the 'Differentiation Requests', 'Intervention Requests', and 'Classroom Management' tabs to find your concerns",
-              "Find the concern you want to share",
-              "Click the 'Share' button next to the concern", 
-              "The system generates a comprehensive PDF report with appropriate headers for the request type"
+              t('help.reportStep1', "Navigate to 'My Support Requests' from the main menu"),
+              t('help.reportStep2', "Use the 'Differentiation Requests', 'Intervention Requests', and 'Classroom Management' tabs to find your concerns"),
+              t('help.reportStep3', "Find the concern you want to share"),
+              t('help.reportStep4', "Click the 'Share' button next to the concern"), 
+              t('help.reportStep5', "The system generates a comprehensive PDF report with appropriate headers for the request type")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.emailSharing', 'Email Sharing')}>
             <p>{t('help.emailSharingDesc', 'Share reports directly with student support staff or when necessary:')}</p>
             <StepList steps={[
-              "Ensure your email configuration is set up (Settings → Email)",
-              "Add recipient names and email addresses",
-              "Include a personalized message",
-              "Click 'Send Report' to share via email"
+              t('help.emailStep1', "Ensure your email configuration is set up (Settings → Email)"),
+              t('help.emailStep2', "Add recipient names and email addresses"),
+              t('help.emailStep3', "Include a personalized message"),
+              t('help.emailStep4', "Click 'Send Report' to share via email")
             ]} />
           </SubSection>
 
@@ -400,41 +400,41 @@ export default function HelpGuide() {
             <p>{t('help.organizedRequestDesc', 'Your support requests are now organized into clear categories:')}</p>
             <div className="space-y-2 mt-3">
               <div className="bg-blue-50 p-3 rounded-lg">
-                <h6 className="font-medium text-blue-800 text-sm mb-1">📚 Differentiation Requests</h6>
-                <p className="text-xs text-blue-700">Teaching strategies and classroom adjustments for individual students</p>
+                <h6 className="font-medium text-blue-800 text-sm mb-1">{t('help.differentiationRequestsTitle', '📚 Differentiation Requests')}</h6>
+                <p className="text-xs text-blue-700">{t('help.differentiationRequestsDesc', 'Teaching strategies and classroom adjustments for individual students')}</p>
               </div>
               <div className="bg-purple-50 p-3 rounded-lg">
-                <h6 className="font-medium text-purple-800 text-sm mb-1">🎯 Intervention Requests</h6>
-                <p className="text-xs text-purple-700">Behavior support strategies and learning plans for individual students</p>
+                <h6 className="font-medium text-purple-800 text-sm mb-1">{t('help.interventionRequestsTitle', '🎯 Intervention Requests')}</h6>
+                <p className="text-xs text-purple-700">{t('help.interventionRequestsDesc', 'Behavior support strategies and learning plans for individual students')}</p>
               </div>
               <div className="bg-violet-50 p-3 rounded-lg">
-                <h6 className="font-medium text-violet-800 text-sm mb-1">👥 Classroom Management Requests</h6>
-                <p className="text-xs text-violet-700">Whole-class strategies and environmental management approaches</p>
+                <h6 className="font-medium text-violet-800 text-sm mb-1">{t('help.classroomRequestsTitle', '👥 Classroom Management Requests')}</h6>
+                <p className="text-xs text-violet-700">{t('help.classroomRequestsDesc', 'Whole-class strategies and environmental management approaches')}</p>
               </div>
             </div>
           </SubSection>
 
           <SubSection title={t('help.reportContents', 'Report Contents')}>
             <FeatureList features={[
-              "Original concern documentation with appropriate context (student or classroom)",
-              "AI-generated support strategies (differentiation, intervention, or classroom management)",
-              "Implementation timelines and structured guidance with phases", 
-              "Professional formatting suitable for school records",
-              "Appropriate headers: Individual student reports vs. classroom management strategy reports",
-              "Date stamps and teacher information",
-              "Proper Chinese character support for bilingual reports",
-              "Clean, professional table formatting for structured content"
+              t('help.reportContent1', "Original concern documentation with appropriate context (student or classroom)"),
+              t('help.reportContent2', "AI-generated support strategies (differentiation, intervention, or classroom management)"),
+              t('help.reportContent3', "Implementation timelines and structured guidance with phases"), 
+              t('help.reportContent4', "Professional formatting suitable for school records"),
+              t('help.reportContent5', "Appropriate headers: Individual student reports vs. classroom management strategy reports"),
+              t('help.reportContent6', "Date stamps and teacher information"),
+              t('help.reportContent7', "Proper Chinese character support for bilingual reports"),
+              t('help.reportContent8', "Clean, professional table formatting for structured content")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.enhancedPDFQuality', 'Enhanced PDF Quality')}>
             <p>{t('help.enhancedPDFQualityDesc', 'Recent improvements to PDF report generation:')}</p>
             <FeatureList features={[
-              "Fixed character encoding issues - no more garbled text (Ø=ÜÝ)",
-              "Native Chinese character display without placeholder messages",
-              "Professional table formatting with proper borders and spacing",
-              "Optimized spacing for cleaner, more compact documents",
-              "Better formatting for structured AI responses and lesson plans"
+              t('help.pdfQuality1', "Fixed character encoding issues - no more garbled text (Ø=ÜÝ)"),
+              t('help.pdfQuality2', "Native Chinese character display without placeholder messages"),
+              t('help.pdfQuality3', "Professional table formatting with proper borders and spacing"),
+              t('help.pdfQuality4', "Optimized spacing for cleaner, more compact documents"),
+              t('help.pdfQuality5', "Better formatting for structured AI responses and lesson plans")
             ]} />
           </SubSection>
         </Section>
@@ -444,11 +444,11 @@ export default function HelpGuide() {
           <SubSection title={t('help.personalEmailSetup', 'Personal Email Setup')}>
             <p>{t('help.personalEmailSetupDesc', 'Configure your personal email account for sending reports:')}</p>
             <StepList steps={[
-              "Go to Settings → Email Configuration",
-              "Click 'Edit Personal Email Settings'",
-              "Enter your email provider's SMTP settings",
-              "For Gmail: Use smtp.gmail.com, port 587, and an App Password",
-              "Test your configuration before saving"
+              t('help.emailSetupStep1', "Go to Settings → Email Configuration"),
+              t('help.emailSetupStep2', "Click 'Edit Personal Email Settings'"),
+              t('help.emailSetupStep3', "Enter your email provider's SMTP settings"),
+              t('help.emailSetupStep4', "For Gmail: Use smtp.gmail.com, port 587, and an App Password"),
+              t('help.emailSetupStep5', "Test your configuration before saving")
             ]} />
           </SubSection>
 
@@ -467,11 +467,11 @@ export default function HelpGuide() {
 
           <SubSection title={t('help.creatingGmailPasswords', 'Creating Gmail App Passwords')}>
             <StepList steps={[
-              "Go to your Google Account Security settings",
-              "Enable 2-Step Verification if not already enabled",
-              "Look for 'App passwords' section",
-              "Generate a new app password for 'Mail'",
-              "Copy the 16-character password and use it in Concern2Care"
+              t('help.gmailStep1', "Go to your Google Account Security settings"),
+              t('help.gmailStep2', "Enable 2-Step Verification if not already enabled"),
+              t('help.gmailStep3', "Look for 'App passwords' section"),
+              t('help.gmailStep4', "Generate a new app password for 'Mail'"),
+              t('help.gmailStep5', "Copy the 16-character password and use it in Concern2Care")
             ]} />
           </SubSection>
 
@@ -491,28 +491,28 @@ export default function HelpGuide() {
         <Section icon={Settings} title={t('help.profileManagement', 'Profile and Account Management')}>
           <SubSection title={t('help.updatingProfile', 'Updating Your Profile')}>
             <StepList steps={[
-              "Go to Settings → Profile",
-              "Click 'Edit' to modify your information",
-              "Update your first name, last name, and email address",
-              "Click 'Save' to confirm changes"
+              t('help.profileStep1', "Go to Settings → Profile"),
+              t('help.profileStep2', "Click 'Edit' to modify your information"),
+              t('help.profileStep3', "Update your first name, last name, and email address"),
+              t('help.profileStep4', "Click 'Save' to confirm changes")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.accountInformation', 'Account Information')}>
             <FeatureList features={[
-              "View your account type (Teacher or Administrator)",
-              "Monitor your monthly usage statistics",
-              "Track requests used vs. remaining",
-              "View your support request limit"
+              t('help.accountInfo1', "View your account type (Teacher or Administrator)"),
+              t('help.accountInfo2', "Monitor your monthly usage statistics"),
+              t('help.accountInfo3', "Track requests used vs. remaining"),
+              t('help.accountInfo4', "View your support request limit")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.notificationPreferences', 'Notification Preferences')}>
             <p>{t('help.notificationPreferencesDesc', 'Configure how you receive updates:')}</p>
             <FeatureList features={[
-              "Email notifications for important events",
-              "Report generation alerts",
-              "System update notifications"
+              t('help.notification1', "Email notifications for important events"),
+              t('help.notification2', "Report generation alerts"),
+              t('help.notification3', "System update notifications")
             ]} />
           </SubSection>
         </Section>
@@ -527,45 +527,45 @@ export default function HelpGuide() {
 
             <SubSection title={t('help.gettingStartedIndividual', 'Getting Started as Individual Teacher')}>
               <FeatureList features={[
-                "Register independently for $10/month through Buy Me a Coffee",
-                "Complete your professional profile with school and teaching details", 
-                "Get the same powerful AI-generated differentiation and intervention strategies",
-                "Access all features including PDF reports and email sharing",
-                "Cancel anytime with no long-term commitment"
+                t('help.individual1', "Register independently for $10/month through Buy Me a Coffee"),
+                t('help.individual2', "Complete your professional profile with school and teaching details"), 
+                t('help.individual3', "Get the same powerful AI-generated differentiation and intervention strategies"),
+                t('help.individual4', "Access all features including PDF reports and email sharing"),
+                t('help.individual5', "Cancel anytime with no long-term commitment")
               ]} />
             </SubSection>
 
             <SubSection title={t('help.registrationInfoRequired', 'Registration Information Required')}>
               <FeatureList features={[
-                "First Name and Last Name *",
-                "Email Address * (for account access)",
-                "Password * (minimum 6 characters)",
-                "School Name *",
-                "School District (optional for private/standalone schools)",
-                "Primary Grade * (e.g., '3rd Grade', 'K-5')",
-                "Primary Subject * (e.g., 'Mathematics', 'ELA')",
-                "Teacher Type * (Classroom Teacher, Special Education, etc.)"
+                t('help.regInfo1', "First Name and Last Name *"),
+                t('help.regInfo2', "Email Address * (for account access)"),
+                t('help.regInfo3', "Password * (minimum 6 characters)"),
+                t('help.regInfo4', "School Name *"),
+                t('help.regInfo5', "School District (optional for private/standalone schools)"),
+                t('help.regInfo6', "Primary Grade * (e.g., '3rd Grade', 'K-5')"),
+                t('help.regInfo7', "Primary Subject * (e.g., 'Mathematics', 'ELA')"),
+                t('help.regInfo8', "Teacher Type * (Classroom Teacher, Special Education, etc.)")
               ]} />
             </SubSection>
 
             <SubSection title={t('help.individualVsSchool', 'Individual vs. School-Managed Accounts')}>
               <div className="space-y-3">
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <h6 className="font-medium text-green-800 mb-2">Individual Account Benefits</h6>
+                  <h6 className="font-medium text-green-800 mb-2">{t('help.individualBenefits', 'Individual Account Benefits')}</h6>
                   <ul className="text-sm text-green-700 space-y-1">
-                    <li>• Complete autonomy over your account</li>
-                    <li>• No need for school administrator setup</li>
-                    <li>• Direct payment and subscription management</li>
-                    <li>• Immediate access after registration</li>
+                    <li>{t('help.individualBenefit1', '• Complete autonomy over your account')}</li>
+                    <li>{t('help.individualBenefit2', '• No need for school administrator setup')}</li>
+                    <li>{t('help.individualBenefit3', '• Direct payment and subscription management')}</li>
+                    <li>{t('help.individualBenefit4', '• Immediate access after registration')}</li>
                   </ul>
                 </div>
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <h6 className="font-medium text-blue-800 mb-2">School-Managed Account Benefits</h6>
+                  <h6 className="font-medium text-blue-800 mb-2">{t('help.schoolBenefits', 'School-Managed Account Benefits')}</h6>
                   <ul className="text-sm text-blue-700 space-y-1">
-                    <li>• Paid for by your school or district</li>
-                    <li>• Integrated with school email systems</li>
-                    <li>• Coordinated professional development</li>
-                    <li>• No personal payment required</li>
+                    <li>{t('help.schoolBenefit1', '• Paid for by your school or district')}</li>
+                    <li>{t('help.schoolBenefit2', '• Integrated with school email systems')}</li>
+                    <li>{t('help.schoolBenefit3', '• Coordinated professional development')}</li>
+                    <li>{t('help.schoolBenefit4', '• No personal payment required')}</li>
                   </ul>
                 </div>
               </div>
@@ -589,39 +589,39 @@ export default function HelpGuide() {
 
           <SubSection title={t('help.teacherAccountManagement', 'Teacher Account Management')}>
             <FeatureList features={[
-              "Add new teacher accounts for your school",
-              "Edit teacher contact information and profiles",
-              "Grant additional monthly requests when needed",
-              "Deactivate teacher accounts (e.g., staff changes)",
-              "View teacher usage statistics and activity"
+              t('help.teacherMgmt1', "Add new teacher accounts for your school"),
+              t('help.teacherMgmt2', "Edit teacher contact information and profiles"),
+              t('help.teacherMgmt3', "Grant additional monthly requests when needed"),
+              t('help.teacherMgmt4', "Deactivate teacher accounts (e.g., staff changes)"),
+              t('help.teacherMgmt5', "View teacher usage statistics and activity")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.schoolWideEmail', 'School-Wide Email Configuration')}>
             <FeatureList features={[
-              "Set up school district email settings for all teachers",
-              "Configure institutional SMTP server details", 
-              "Allow teachers to use school email for report sharing",
-              "Test and validate school email configuration"
+              t('help.schoolEmail1', "Set up school district email settings for all teachers"),
+              t('help.schoolEmail2', "Configure institutional SMTP server details"), 
+              t('help.schoolEmail3', "Allow teachers to use school email for report sharing"),
+              t('help.schoolEmail4', "Test and validate school email configuration")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.schoolAnalytics', 'School Analytics and Reporting')}>
             <FeatureList features={[
-              "View school-wide usage dashboard and trends",
-              "Generate reports on intervention effectiveness",
-              "Monitor teacher engagement and adoption rates",
-              "Export school data for institutional analysis",
-              "Track most common concern types and patterns"
+              t('help.analytics1', "View school-wide usage dashboard and trends"),
+              t('help.analytics2', "Generate reports on intervention effectiveness"),
+              t('help.analytics3', "Monitor teacher engagement and adoption rates"),
+              t('help.analytics4', "Export school data for institutional analysis"),
+              t('help.analytics5', "Track most common concern types and patterns")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.userSupportTraining', 'User Support and Training')}>
             <FeatureList features={[
-              "Send password reset emails to teachers",
-              "Access teacher training resources and guides",
-              "Monitor help desk issues and common problems",
-              "Coordinate staff training sessions"
+              t('help.support1', "Send password reset emails to teachers"),
+              t('help.support2', "Access teacher training resources and guides"),
+              t('help.support3', "Monitor help desk issues and common problems"),
+              t('help.support4', "Coordinate staff training sessions")
             ]} />
           </SubSection>
 
@@ -637,10 +637,10 @@ export default function HelpGuide() {
         <Section icon={Languages} title={t('help.languageSupport', 'Language and International Support')}>
           <SubSection title={t('help.multiLanguage', 'Multi-Language Capabilities')}>
             <FeatureList features={[
-              "AI can understand and respond to questions in multiple languages",
-              "Chinese language support for parent communication materials",
-              "Proper character encoding for international text in PDF reports",
-              "Cross-cultural educational strategies when appropriate"
+              t('help.multiLang1', "AI can understand and respond to questions in multiple languages"),
+              t('help.multiLang2', "Chinese language support for parent communication materials"),
+              t('help.multiLang3', "Proper character encoding for international text in PDF reports"),
+              t('help.multiLang4', "Cross-cultural educational strategies when appropriate")
             ]} />
           </SubSection>
 
@@ -652,11 +652,11 @@ export default function HelpGuide() {
                   <p className="font-medium text-blue-800">完整中文界面支持</p>
                 </div>
                 <FeatureList features={[
-                  "Complete Chinese translation of the user interface",
-                  "Language switching between English and Chinese",
-                  "Localized form labels, buttons, and navigation",
-                  "Chinese educational terminology and context",
-                  "Seamless language preference storage"
+                  t('help.chineseFeature1', "Complete Chinese translation of the user interface"),
+                  t('help.chineseFeature2', "Language switching between English and Chinese"),
+                  t('help.chineseFeature3', "Localized form labels, buttons, and navigation"),
+                  t('help.chineseFeature4', "Chinese educational terminology and context"),
+                  t('help.chineseFeature5', "Seamless language preference storage")
                 ]} />
                 <p className="text-sm text-blue-700 mt-3">
                   Use the language selector in the header to switch between English and Chinese. 
@@ -671,44 +671,44 @@ export default function HelpGuide() {
         <Section icon={Smartphone} title={t('help.mobileAccessibility', 'Mobile and Accessibility')}>
           <SubSection title={t('help.mobileDeviceUsage', 'Mobile Device Usage')}>
             <FeatureList features={[
-              "Fully responsive design works perfectly on phones and tablets",
-              "Touch-friendly interface with large buttons (56px minimum height)",
-              "All features available on mobile devices with optimized layouts",
-              "Mobile-first forms with proper keyboard optimization",
-              "Collapsible navigation menus for easy mobile navigation",
-              "Full-width buttons on mobile for easy tapping",
-              "Optimized text sizes and spacing for mobile reading"
+              t('help.mobileFeature1', "Fully responsive design works perfectly on phones and tablets"),
+              t('help.mobileFeature2', "Touch-friendly interface with large buttons (56px minimum height)"),
+              t('help.mobileFeature3', "All features available on mobile devices with optimized layouts"),
+              t('help.mobileFeature4', "Mobile-first forms with proper keyboard optimization"),
+              t('help.mobileFeature5', "Collapsible navigation menus for easy mobile navigation"),
+              t('help.mobileFeature6', "Full-width buttons on mobile for easy tapping"),
+              t('help.mobileFeature7', "Optimized text sizes and spacing for mobile reading")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.mobileUsageTips', 'Mobile Usage Tips')}>
             <StepList steps={[
-              "Use landscape mode for easier table viewing and data entry",
-              "Tap and hold buttons if they don't respond immediately",
-              "The hamburger menu (☰) provides quick access to all features",
-              "Scroll horizontally on data tables to view all columns",
-              "Use pinch-to-zoom for detailed report viewing",
-              "Voice-to-text works well in concern description fields"
+              t('help.mobileTip1', "Use landscape mode for easier table viewing and data entry"),
+              t('help.mobileTip2', "Tap and hold buttons if they don't respond immediately"),
+              t('help.mobileTip3', "The hamburger menu (☰) provides quick access to all features"),
+              t('help.mobileTip4', "Scroll horizontally on data tables to view all columns"),
+              t('help.mobileTip5', "Use pinch-to-zoom for detailed report viewing"),
+              t('help.mobileTip6', "Voice-to-text works well in concern description fields")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.mobileOptimized', 'Mobile-Optimized Features')}>
             <FeatureList features={[
-              "Mobile-friendly landing page with shorter text on small screens",
-              "Touch-optimized CTA buttons with enhanced visual feedback",
-              "Responsive admin dashboard with scrollable content",
-              "Mobile-friendly login page with proper keyboard handling",
-              "Swipe gestures supported for navigation where applicable"
+              t('help.mobileOptFeature1', "Mobile-friendly landing page with shorter text on small screens"),
+              t('help.mobileOptFeature2', "Touch-optimized CTA buttons with enhanced visual feedback"),
+              t('help.mobileOptFeature3', "Responsive admin dashboard with scrollable content"),
+              t('help.mobileOptFeature4', "Mobile-friendly login page with proper keyboard handling"),
+              t('help.mobileOptFeature5', "Swipe gestures supported for navigation where applicable")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.accessibilityFeatures', 'Accessibility Features')}>
             <FeatureList features={[
-              "Keyboard navigation support",
-              "Screen reader compatibility",
-              "High contrast color schemes",
-              "Scalable text and interface elements",
-              "Proper ARIA labels on all interactive elements"
+              t('help.accessFeature1', "Keyboard navigation support"),
+              t('help.accessFeature2', "Screen reader compatibility"),
+              t('help.accessFeature3', "High contrast color schemes"),
+              t('help.accessFeature4', "Scalable text and interface elements"),
+              t('help.accessFeature5', "Proper ARIA labels on all interactive elements")
             ]} />
           </SubSection>
         </Section>
@@ -791,10 +791,10 @@ export default function HelpGuide() {
 
           <SubSection title={t('help.gettingAdditionalHelp', 'Getting Additional Help')}>
             <FeatureList features={[
-              "Contact your school administrator for account issues",
-              "Use the test email function to verify configuration",
-              "Check browser console for technical error messages",
-              "Ensure you're using a modern, supported web browser"
+              t('help.additionalHelp1', "Contact your school administrator for account issues"),
+              t('help.additionalHelp2', "Use the test email function to verify configuration"),
+              t('help.additionalHelp3', "Check browser console for technical error messages"),
+              t('help.additionalHelp4', "Ensure you're using a modern, supported web browser")
             ]} />
           </SubSection>
         </Section>
@@ -803,31 +803,31 @@ export default function HelpGuide() {
         <Section icon={CheckCircle} title={t('help.bestPractices', 'Best Practices and Tips')}>
           <SubSection title={t('help.writingEffective', 'Writing Effective Concern Descriptions')}>
             <FeatureList features={[
-              "Be specific and objective in your descriptions",
-              "Include relevant context about the learning environment",
-              "Focus on observable behaviors and academic performance",
-              "Mention previous strategies attempted",
-              "Include timing and frequency of concerns"
+              t('help.writingTip1', "Be specific and objective in your descriptions"),
+              t('help.writingTip2', "Include relevant context about the learning environment"),
+              t('help.writingTip3', "Focus on observable behaviors and academic performance"),
+              t('help.writingTip4', "Mention previous strategies attempted"),
+              t('help.writingTip5', "Include timing and frequency of concerns")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.maximizingAI', 'Maximizing AI Effectiveness')}>
             <FeatureList features={[
-              "Provide complete student context (IEP, EAL status, etc.)",
-              "Upload relevant assessment documents when available",
-              "Use follow-up questions to clarify specific aspects",
-              "Save successful interventions for future reference",
-              "Combine multiple concern types when applicable"
+              t('help.aiTip1', "Provide complete student context (IEP, EAL status, etc.)"),
+              t('help.aiTip2', "Upload relevant assessment documents when available"),
+              t('help.aiTip3', "Use follow-up questions to clarify specific aspects"),
+              t('help.aiTip4', "Save successful interventions for future reference"),
+              t('help.aiTip5', "Combine multiple concern types when applicable")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.reportSharingEtiquette', 'Report Sharing Etiquette')}>
             <FeatureList features={[
-              "Only share with authorized school personnel",
-              "Include context in your email message",
-              "Follow up with recipients if needed",
-              "Keep reports secure and confidential",
-              "Document when and with whom reports were shared"
+              t('help.sharingTip1', "Only share with authorized school personnel"),
+              t('help.sharingTip2', "Include context in your email message"),
+              t('help.sharingTip3', "Follow up with recipients if needed"),
+              t('help.sharingTip4', "Keep reports secure and confidential"),
+              t('help.sharingTip5', "Document when and with whom reports were shared")
             ]} />
           </SubSection>
         </Section>
@@ -836,29 +836,29 @@ export default function HelpGuide() {
         <Section icon={Shield} title={t('help.dataPrivacySecurity', 'Data Privacy and Security')}>
           <SubSection title={t('help.studentPrivacyProtection', 'Student Privacy Protection')}>
             <FeatureList features={[
-              "Never include full student names or IDs",
-              "Use only first name and last initial",
-              "Avoid including sensitive personal information",
-              "All data is encrypted and securely stored",
-              "Access is limited to authorized school personnel"
+              t('help.privacy1', "Never include full student names or IDs"),
+              t('help.privacy2', "Use only first name and last initial"),
+              t('help.privacy3', "Avoid including sensitive personal information"),
+              t('help.privacy4', "All data is encrypted and securely stored"),
+              t('help.privacy5', "Access is limited to authorized school personnel")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.fileSecurity', 'File Security')}>
             <FeatureList features={[
-              "Uploaded files are stored securely in cloud storage",
-              "Files are only accessible to the uploading teacher",
-              "Automatic deletion policies protect long-term privacy",
-              "Files are used only for generating better interventions"
+              t('help.fileSec1', "Uploaded files are stored securely in cloud storage"),
+              t('help.fileSec2', "Files are only accessible to the uploading teacher"),
+              t('help.fileSec3', "Automatic deletion policies protect long-term privacy"),
+              t('help.fileSec4', "Files are used only for generating better interventions")
             ]} />
           </SubSection>
 
           <SubSection title={t('help.emailSecurity', 'Email Security')}>
             <FeatureList features={[
-              "Email credentials are encrypted and secure",
-              "Only you can access your email configuration",
-              "School administrators cannot view personal email settings",
-              "All email transmissions use secure protocols"
+              t('help.emailSec1', "Email credentials are encrypted and secure"),
+              t('help.emailSec2', "Only you can access your email configuration"),
+              t('help.emailSec3', "School administrators cannot view personal email settings"),
+              t('help.emailSec4', "All email transmissions use secure protocols")
             ]} />
           </SubSection>
         </Section>
@@ -867,10 +867,10 @@ export default function HelpGuide() {
         <Section icon={HelpCircle} title={t('help.gettingSupport', 'Getting Support')}>
           <SubSection title={t('help.whoToContact', 'Who to Contact')}>
             <FeatureList features={[
-              "Technical issues: Contact your school's IT administrator",
-              "Account problems: Reach out to your designated school administrator",
-              "Usage questions: Refer to this help guide or ask colleagues",
-              "Feature requests: Submit through your school's feedback channels"
+              t('help.contact1', "Technical issues: Contact your school's IT administrator"),
+              t('help.contact2', "Account problems: Reach out to your designated school administrator"),
+              t('help.contact3', "Usage questions: Refer to this help guide or ask colleagues"),
+              t('help.contact4', "Feature requests: Submit through your school's feedback channels")
             ]} />
           </SubSection>
 
@@ -878,25 +878,25 @@ export default function HelpGuide() {
             <div className="bg-green-50 p-4 rounded-lg">
               <p className="font-medium text-green-800 mb-2">Latest Enhancements:</p>
               <FeatureList features={[
-                "Comprehensive mobile responsiveness improvements across all pages",
-                "Mobile-optimized CTA section with touch-friendly 56px buttons",
-                "Enhanced mobile navigation with collapsible menus",
-                "Mobile-first responsive breakpoints (sm, md, lg, xl)",
-                "Improved mobile text sizing and readability",
-                "Touch-friendly button designs with proper spacing",
-                "Mobile-specific content optimization for better user experience",
-                "Enhanced mobile landing page with shortened text for small screens"
+                t('help.enhancement1', "Comprehensive mobile responsiveness improvements across all pages"),
+                t('help.enhancement2', "Mobile-optimized CTA section with touch-friendly 56px buttons"),
+                t('help.enhancement3', "Enhanced mobile navigation with collapsible menus"),
+                t('help.enhancement4', "Mobile-first responsive breakpoints (sm, md, lg, xl)"),
+                t('help.enhancement5', "Improved mobile text sizing and readability"),
+                t('help.enhancement6', "Touch-friendly button designs with proper spacing"),
+                t('help.enhancement7', "Mobile-specific content optimization for better user experience"),
+                t('help.enhancement8', "Enhanced mobile landing page with shortened text for small screens")
               ]} />
             </div>
           </SubSection>
 
           <SubSection title={t('help.beforeContacting', 'Before Contacting Support')}>
             <StepList steps={[
-              "Check this help guide for solutions",
-              "Try refreshing your browser or logging out/in",
-              "Test your email configuration if having sharing issues",
-              "Note any error messages exactly as they appear",
-              "Be ready to describe what you were trying to do when the issue occurred"
+              t('help.beforeStep1', "Check this help guide for solutions"),
+              t('help.beforeStep2', "Try refreshing your browser or logging out/in"),
+              t('help.beforeStep3', "Test your email configuration if having sharing issues"),
+              t('help.beforeStep4', "Note any error messages exactly as they appear"),
+              t('help.beforeStep5', "Be ready to describe what you were trying to do when the issue occurred")
             ]} />
           </SubSection>
         </Section>
