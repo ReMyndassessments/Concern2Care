@@ -152,7 +152,7 @@ Concern2Care Support Team
 
     // Send the email with PDF attachment
     await transporter.sendMail({
-      from: options.adminEmail || process.env.SMTP_FROM || 'noreply@concern2care.com',
+      from: options.adminEmail || process.env.SMTP_FROM || 'noreply@app.com',
       to: options.contactEmail,
       subject: subject,
       text: textContent,
