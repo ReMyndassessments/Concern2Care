@@ -2426,6 +2426,24 @@ const resources = {
       'help.multiLang3': 'PDF报告中国际文本的正确字符编码',
       'help.multiLang4': '适当时的跨文化教育策略',
       
+      // Mobile Features (missing ones)
+      'help.mobileFeature6': '移动设备上的全宽按钮，便于点击',
+      'help.mobileFeature7': '针对移动阅读优化的文本大小和间距',
+      
+      // Mobile Optimized Features
+      'help.mobileOptFeature1': '在小屏幕上显示较短文本的移动友好落地页',
+      'help.mobileOptFeature2': '具有增强视觉反馈的触摸优化CTA按钮',
+      'help.mobileOptFeature3': '具有可滚动内容的响应式管理仪表板',
+      'help.mobileOptFeature4': '具有适当键盘处理的移动友好登录页面',
+      'help.mobileOptFeature5': '适用时支持导航的滑动手势',
+      
+      // Accessibility Features
+      'help.accessFeature1': '键盘导航支持',
+      'help.accessFeature2': '屏幕阅读器兼容性',
+      'help.accessFeature3': '高对比度颜色方案',
+      'help.accessFeature4': '可缩放文本和界面元素',
+      'help.accessFeature5': '所有交互元素的适当ARIA标签',
+      
 
       
       // Interventions Display
