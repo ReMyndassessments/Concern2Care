@@ -139,13 +139,19 @@ export default function ClassroomSubmit() {
       // Form is already validated by Zod schema
       console.log('📋 Submitting classroom form for verified teacher:', verifiedTeacherEmail);
       
+      // Filter out empty security question/answer fields for subsequent submissions
+      const submissionData = { ...data, teacherEmail: verifiedTeacherEmail };
+      if (!submissionData.securityQuestion || submissionData.securityQuestion.trim() === '') {
+        delete submissionData.securityQuestion;
+      }
+      if (!submissionData.securityAnswer || submissionData.securityAnswer.trim() === '') {
+        delete submissionData.securityAnswer;
+      }
+      
       const response = await apiRequest({
         url: '/api/classroom/submit',
         method: 'POST',
-        body: {
-          ...data,
-          teacherEmail: verifiedTeacherEmail, // Use verified email
-        },
+        body: submissionData,
       });
 
       console.log('Submission response:', response);
