@@ -3568,8 +3568,8 @@ Submitted: ${new Date().toLocaleString()}
         teacherPosition: z.string().min(1),
         teacherEmail: z.string().email(),
         securityPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only'),
-        securityQuestion: z.string().optional().refine(val => !val || val.trim().length >= 5, "Security question must be at least 5 characters"), // Only required for first submission
-        securityAnswer: z.string().optional().refine(val => !val || val.trim().length >= 2, "Security answer must be at least 2 characters"), // Only required for first submission
+        securityQuestion: z.string().optional().refine(val => !val || val.trim() === '' || val.trim().length >= 5, "Security question must be at least 5 characters"), // Only required for first submission
+        securityAnswer: z.string().optional().refine(val => !val || val.trim() === '' || val.trim().length >= 2, "Security answer must be at least 2 characters"), // Only required for first submission
         studentFirstName: z.string().min(1),
         studentLastInitial: z.string().min(1).max(1),
         studentAge: z.string().min(1),
