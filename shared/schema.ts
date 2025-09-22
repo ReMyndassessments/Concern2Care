@@ -254,6 +254,12 @@ export const classroomEnrolledTeachers = pgTable("classroom_enrolled_teachers", 
   requestsLimit: integer("requests_limit").default(5),
   lastUsageReset: timestamp("last_usage_reset"),
   isActive: boolean("is_active").default(true),
+  
+  // Security PIN for submissions and response access
+  securityPin: varchar("security_pin", { length: 64 }), // Hashed 4-digit PIN
+  pinSetAt: timestamp("pin_set_at"), // When PIN was first set
+  pinResetAt: timestamp("pin_reset_at"), // When PIN was last reset by admin
+  
   enrolledBy: varchar("enrolled_by").references(() => users.id).notNull(),
   enrolledAt: timestamp("enrolled_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
