@@ -2500,6 +2500,7 @@ const resources = {
       'help.usagePerformanceIssues': '使用和性能问题', 
       'help.emailProblems': '邮件分享问题',
       'help.mobileDeviceUsage': '移动设备使用',
+      'help.bestPractices': '最佳实践',
       
 
       
