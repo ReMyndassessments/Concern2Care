@@ -4222,7 +4222,7 @@ Submitted: ${new Date().toLocaleString()}
     try {
       const validationSchema = z.object({
         teacherEmail: z.string().email(),
-        securityAnswer: z.string().min(1),
+        securityAnswer: z.string().min(1, "Security answer is required"),
         newPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only')
       });
 
@@ -4291,9 +4291,9 @@ Submitted: ${new Date().toLocaleString()}
 
       const validationSchema = z.object({
         teacherEmail: z.string().email(),
-        securityPin: z.string().min(4).max(4).regex(/^\d{4}$/, 'PIN must be 4 digits only'),
-        securityQuestion: z.string().min(5, "Security question must be at least 5 characters"),
-        securityAnswer: z.string().min(2, "Security answer must be at least 2 characters")
+        securityPin: z.string().length(4, 'PIN must be exactly 4 digits').regex(/^\d{4}$/, 'PIN must be 4 digits only'),
+        securityQuestion: z.string().min(3, "Security question must be at least 3 characters"),
+        securityAnswer: z.string().min(1, "Security answer is required")
       });
 
       const validationResult = validationSchema.safeParse(req.body);
