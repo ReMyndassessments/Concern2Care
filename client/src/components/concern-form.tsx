@@ -872,7 +872,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
               </div>
             )}
 
-            {/* Teacher and Lesson Information */}
+            {/* Teacher and Lesson Information - Hide for classroom management */}
+            {form.watch('taskType') !== 'classroom_management' && (
             <div className="bg-blue-50 rounded-lg p-4 sm:p-6">
               <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                 <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-brand-blue flex-shrink-0" />
@@ -915,9 +916,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 />
               </div>
             </div>
+            )}
 
-            {/* Concern Types - Required for all task types */}
-            {form.watch('taskType') && (
+            {/* Concern Types - Only for individual student tasks */}
+            {form.watch('taskType') && form.watch('taskType') !== 'classroom_management' && (
               <FormField
                 control={form.control}
                 name="concernTypes"
