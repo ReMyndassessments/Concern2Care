@@ -2368,6 +2368,34 @@ const resources = {
       'help.personalEmailSetupDesc': '配置您的个人邮件账户以发送报告：',
       'help.classroomRequestsDesc': '全班策略和环境管理方法',
 
+      // Gmail Configuration
+      'help.creatingGmailPasswords': '创建Gmail应用密码',
+      'help.gmailConfiguration': 'Gmail配置：',
+      'help.schoolEmailConfigDesc': '管理员可以配置全校邮件设置，供所有教师作为个人邮件账户的替代方案使用。',
+      'help.notificationPreferencesDesc': '配置您接收更新的方式：',
+      'help.adminFeatures': '学校管理员功能',
+
+      // Gmail Steps (using existing appPasswordStep keys)
+      'help.gmailConfigHost': 'SMTP主机：',
+      'help.gmailConfigPort': '端口：',
+      'help.gmailConfigSecurity': '安全性：',
+      'help.gmailConfigUsername': '用户名：',
+      'help.gmailConfigPassword': '密码：',
+      'help.gmailConfigUsernameDesc': '您的Gmail地址',
+      'help.gmailConfigPasswordDesc': 'Gmail应用密码（不是您的常规密码）',
+
+      // Admin Features
+      'help.schoolAdminOnly': '仅限学校管理员',
+      'help.adminFeaturesDesc': '这些功能仅对指定的学校管理员可用，用于管理其机构的Concern2Care使用情况。',
+      'help.adminTeacherManagement': '教师账户管理',
+      'help.adminFeature1': '为您的学校添加新教师账户',
+      'help.adminFeature2': '编辑教师联系信息和个人资料',
+      'help.adminFeature3': '根据需要授予额外的月度请求',
+      'help.adminFeature4': '停用教师账户（例如员工变动）',
+
+      // Gmail troubleshooting
+      'help.troubleshootingGmail': '故障排除：如果您找不到应用密码，请确保首先启用两步验证。某些工作账户可能有不同要求。',
+
       
       // Interventions Display
       'interventions.title': 'AI生成的干预措施',

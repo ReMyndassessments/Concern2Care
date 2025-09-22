@@ -454,13 +454,13 @@ export default function HelpGuide() {
 
           <SubSection title={t('help.gmailSetup', 'Gmail Setup (Most Common)')}>
             <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="font-medium mb-2">Gmail Configuration:</p>
+              <p className="font-medium mb-2">{t('help.gmailConfiguration', 'Gmail Configuration:')}</p>
               <ul className="text-sm space-y-1">
-                <li><strong>SMTP Host:</strong> smtp.gmail.com</li>
-                <li><strong>Port:</strong> 587</li>
-                <li><strong>Security:</strong> TLS/STARTTLS</li>
-                <li><strong>Username:</strong> Your Gmail address</li>
-                <li><strong>Password:</strong> Gmail App Password (not your regular password)</li>
+                <li><strong>{t('help.gmailConfigHost', 'SMTP Host:')}</strong> smtp.gmail.com</li>
+                <li><strong>{t('help.gmailConfigPort', 'Port:')}</strong> 587</li>
+                <li><strong>{t('help.gmailConfigSecurity', 'Security:')}</strong> TLS/STARTTLS</li>
+                <li><strong>{t('help.gmailConfigUsername', 'Username:')}</strong> {t('help.gmailConfigUsernameDesc', 'Your Gmail address')}</li>
+                <li><strong>{t('help.gmailConfigPassword', 'Password:')}</strong> {t('help.gmailConfigPasswordDesc', 'Gmail App Password (not your regular password)')}</li>
               </ul>
             </div>
           </SubSection>
@@ -478,7 +478,7 @@ export default function HelpGuide() {
           <Alert>
             <Info className="h-4 w-4" />
             <AlertDescription>
-              <strong>Troubleshooting:</strong> If you can't find App Passwords, ensure 2-Step Verification is enabled first. Some workplace accounts may have different requirements.
+              {t('help.troubleshootingGmail', "Troubleshooting: If you can't find App Passwords, ensure 2-Step Verification is enabled first. Some workplace accounts may have different requirements.")}
             </AlertDescription>
           </Alert>
 
@@ -583,8 +583,8 @@ export default function HelpGuide() {
         {/* Admin Features */}
         <Section icon={Shield} title={t('help.adminFeatures', 'School Administrator Features')}>
           <p className="text-sm text-gray-600 mb-4">
-            <Badge variant="outline" className="mr-2">School Admin Only</Badge>
-            These features are available to designated school administrators for managing their institution's Concern2Care usage.
+            <Badge variant="outline" className="mr-2">{t('help.schoolAdminOnly', 'School Admin Only')}</Badge>
+            {t('help.adminFeaturesDesc', 'These features are available to designated school administrators for managing their institution\'s Concern2Care usage.')}
           </p>
 
           <SubSection title={t('help.teacherAccountManagement', 'Teacher Account Management')}>
