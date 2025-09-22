@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import path from 'path';
+import fs from 'fs';
 import { emailConfigService } from './emailConfig';
 
 if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
@@ -181,7 +182,7 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
     console.error('   Error details:', error);
     if (options.attachmentPath) {
       console.error('   Attachment path:', options.attachmentPath);
-      console.error('   Attachment exists:', require('fs').existsSync(options.attachmentPath));
+      console.error('   Attachment exists:', fs.existsSync(options.attachmentPath));
     }
     return false;
   }
