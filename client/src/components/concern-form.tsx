@@ -329,10 +329,10 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                                 htmlFor={taskType.value}
                                 className="text-sm sm:text-base font-medium text-gray-900 cursor-pointer block mb-1"
                               >
-                                {taskType.value === 'differentiation' ? t('form.differentiationTask', 'Differentiation Task') : t('form.tier2InterventionTask', 'Tier 2 Intervention Task')}
+                                {taskType.label}
                               </label>
                               <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                                {taskType.value === 'differentiation' ? t('form.differentiationDesc', 'Get specific strategies to adapt instruction for different learning styles, abilities, and needs. Focus on instructional modifications and learning accommodations.') : t('form.tier2InterventionDesc', 'Generate evidence-based behavioral and academic intervention strategies for concerning behaviors. Focus on targeted interventions for specific behavioral or academic issues.')}
+                                {taskType.description}
                               </p>
                             </div>
                           </div>
@@ -352,7 +352,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                   <div className="flex items-start space-x-3">
                     <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-xs sm:text-sm font-medium text-blue-900 mb-1">{t('form.taskSelected', 'Task Selected: {{taskType}}', { taskType: TASK_TYPES.find(t => t.value === form.watch('taskType'))?.value === 'differentiation' ? t('form.differentiationTask', 'Differentiation Task') : t('form.tier2InterventionTask', 'Tier 2 Intervention Task') })}</h4>
+                      <h4 className="text-xs sm:text-sm font-medium text-blue-900 mb-1">{t('form.taskSelected', 'Task Selected: {{taskType}}', { taskType: TASK_TYPES.find(t => t.value === form.watch('taskType'))?.label || 'Unknown Task' })}</h4>
                       <p className="text-xs sm:text-sm text-blue-700">
                         {t('form.taskSelectionNote', 'If you need both differentiation strategies AND Tier 2 intervention recommendations for the same student, please submit separate requests. This helps ensure each task receives focused, specialized attention.')}
                       </p>
