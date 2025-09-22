@@ -386,28 +386,20 @@ const resources = {
       'demo.convertConfirm': 'Convert school to full subscription?',
       'demo.convertConfirmDesc': 'This will end the demo period and convert the school to a paid subscription.',
 
-      // Common Actions
-      'common.save': 'Save',
-      'common.cancel': 'Cancel',
-      'common.edit': 'Edit',
-      'common.delete': 'Delete',
+      // Additional Common Actions (non-duplicates)
       'common.create': 'Create',
       'common.update': 'Update',
-      'common.close': 'Close',
-      'common.confirm': 'Confirm',
-      'common.loading': 'Loading...',
       'common.saving': 'Saving...',
       'common.deleting': 'Deleting...',
       'common.testing': 'Testing...',
-      'common.yes': 'Yes',
-      'common.no': 'No',
       'common.search': 'Search',
       'common.filter': 'Filter',
       'common.refresh': 'Refresh',
-      'common.back': 'Back',
-      'common.next': 'Next',
-      'common.previous': 'Previous',
       'common.submit': 'Submit',
+      'common.note': 'Note',
+
+      // Help Section
+      'help.comprehensiveGuide': 'Comprehensive Help Guide',
 
       // My Support Requests page
       'supportRequests.title': 'Student Support Requests',
@@ -1311,28 +1303,20 @@ const resources = {
       'demo.convertConfirm': '将学校转换为完整订阅？',
       'demo.convertConfirmDesc': '这将结束演示期并将学校转换为付费订阅。',
 
-      // Common Actions
-      'common.save': '保存',
-      'common.cancel': '取消',
-      'common.edit': '编辑',
-      'common.delete': '删除',
+      // Additional Common Actions (non-duplicates)
       'common.create': '创建',
       'common.update': '更新',
-      'common.close': '关闭',
-      'common.confirm': '确认',
-      'common.loading': '加载中...',
       'common.saving': '保存中...',
       'common.deleting': '删除中...',
       'common.testing': '测试中...',
-      'common.yes': '是',
-      'common.no': '否',
       'common.search': '搜索',
       'common.filter': '过滤',
       'common.refresh': '刷新',
-      'common.back': '返回',
-      'common.next': '下一步',
-      'common.previous': '上一步',
       'common.submit': '提交',
+      'common.note': '注意',
+
+      // Help Section
+      'help.comprehensiveGuide': '综合帮助指南',
 
       // My Support Requests page
       'supportRequests.title': '学生支持请求',

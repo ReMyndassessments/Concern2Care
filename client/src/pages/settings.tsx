@@ -15,9 +15,11 @@ import { apiRequest } from "@/lib/queryClient";
 import { User } from "@shared/schema";
 import { Settings as SettingsIcon, Mail, User as UserIcon, Bell, Edit, Save, X, AlertTriangle, HelpCircle } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // Profile Editor Component
 function ProfileEditor({ user }: { user: User | undefined }) {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
@@ -34,16 +36,16 @@ function ProfileEditor({ user }: { user: User | undefined }) {
     },
     onSuccess: () => {
       toast({
-        title: "Profile Updated",
-        description: "Your profile information has been updated successfully.",
+        title: t('profile.profileUpdated', 'Profile Updated'),
+        description: t('profile.profileUpdatedDesc', 'Your profile information has been updated successfully.'),
       });
       setIsEditing(false);
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
     onError: (error: any) => {
       toast({
-        title: "Update Failed",
-        description: error.message || "Failed to update profile information",
+        title: t('profile.updateFailed', 'Update Failed'),
+        description: error.message || t('profile.updateFailedDesc', 'Failed to update profile information'),
         variant: "destructive",
       });
     },
@@ -52,8 +54,8 @@ function ProfileEditor({ user }: { user: User | undefined }) {
   const handleSave = () => {
     if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim()) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
+        title: t('profile.missingInformation', 'Missing Information'),
+        description: t('profile.missingInformationDesc', 'Please fill in all required fields.'),
         variant: "destructive",
       });
       return;
@@ -61,8 +63,8 @@ function ProfileEditor({ user }: { user: User | undefined }) {
 
     if (!formData.email.includes('@')) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: t('profile.invalidEmail', 'Invalid Email'),
+        description: t('profile.invalidEmailDesc', 'Please enter a valid email address.'),
         variant: "destructive",
       });
       return;
@@ -83,7 +85,7 @@ function ProfileEditor({ user }: { user: User | undefined }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium text-gray-900">Personal Information</h3>
+        <h3 className="text-lg font-medium text-gray-900">{t('profile.personalInformation', 'Personal Information')}</h3>
         {!isEditing ? (
           <Button
             variant="outline"
@@ -92,7 +94,7 @@ function ProfileEditor({ user }: { user: User | undefined }) {
             data-testid="button-edit-profile"
           >
             <Edit className="h-4 w-4 mr-2" />
-            Edit
+            {t('profile.edit', 'Edit')}
           </Button>
         ) : (
           <div className="flex gap-2">
@@ -104,7 +106,7 @@ function ProfileEditor({ user }: { user: User | undefined }) {
               data-testid="button-cancel-profile"
             >
               <X className="h-4 w-4 mr-2" />
-              Cancel
+              {t('profile.cancel', 'Cancel')}
             </Button>
             <Button
               size="sm"
@@ -113,7 +115,7 @@ function ProfileEditor({ user }: { user: User | undefined }) {
               data-testid="button-save-profile"
             >
               <Save className="h-4 w-4 mr-2" />
-              {updateProfileMutation.isPending ? "Saving..." : "Save"}
+              {updateProfileMutation.isPending ? t('profile.saving', 'Saving...') : t('profile.save', 'Save')}
             </Button>
           </div>
         )}
@@ -121,51 +123,51 @@ function ProfileEditor({ user }: { user: User | undefined }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="firstName">First Name</Label>
+          <Label htmlFor="firstName">{t('profile.firstName', 'First Name')}</Label>
           {isEditing ? (
             <Input
               id="firstName"
               value={formData.firstName}
               onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-              placeholder="Enter your first name"
+              placeholder={t('profile.firstNamePlaceholder', 'Enter your first name')}
               data-testid="input-first-name"
             />
           ) : (
             <div className="mt-1 p-3 bg-gray-50 rounded-lg">
-              {user?.firstName || 'Not Set'}
+              {user?.firstName || t('profile.notSet', 'Not Set')}
             </div>
           )}
         </div>
         <div>
-          <Label htmlFor="lastName">Last Name</Label>
+          <Label htmlFor="lastName">{t('profile.lastName', 'Last Name')}</Label>
           {isEditing ? (
             <Input
               id="lastName"
               value={formData.lastName}
               onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-              placeholder="Enter your last name"
+              placeholder={t('profile.lastNamePlaceholder', 'Enter your last name')}
               data-testid="input-last-name"
             />
           ) : (
             <div className="mt-1 p-3 bg-gray-50 rounded-lg">
-              {user?.lastName || 'Not Set'}
+              {user?.lastName || t('profile.notSet', 'Not Set')}
             </div>
           )}
         </div>
         <div className="md:col-span-2">
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email">{t('profile.emailAddress', 'Email Address')}</Label>
           {isEditing ? (
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              placeholder="Enter your email address"
+              placeholder={t('profile.emailPlaceholder', 'Enter your email address')}
               data-testid="input-email"
             />
           ) : (
             <div className="mt-1 p-3 bg-gray-50 rounded-lg">
-              {user?.email || 'Not Set'}
+              {user?.email || t('profile.notSet', 'Not Set')}
             </div>
           )}
         </div>
@@ -175,8 +177,7 @@ function ProfileEditor({ user }: { user: User | undefined }) {
         <Alert>
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            <strong>Note:</strong> Changing your email address may affect your login credentials. 
-            Please ensure you have access to the new email address.
+            <strong>{t('common.note', 'Note')}:</strong> {t('profile.emailChangeNote', 'Changing your email address may affect your login credentials. Please ensure you have access to the new email address.')}
           </AlertDescription>
         </Alert>
       )}
@@ -185,6 +186,7 @@ function ProfileEditor({ user }: { user: User | undefined }) {
 }
 
 export default function Settings() {
+  const { t } = useTranslation();
   const { user } = useAuth() as { user: User | undefined };
 
   return (
@@ -208,9 +210,9 @@ export default function Settings() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  Settings
+                  {t('settings.title', 'Settings')}
                 </h1>
-                <p className="text-gray-600">Manage your account preferences and configurations</p>
+                <p className="text-gray-600">{t('settings.subtitle', 'Manage your account preferences and configurations')}</p>
               </div>
             </div>
           </div>
@@ -221,19 +223,19 @@ export default function Settings() {
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <UserIcon className="h-4 w-4" />
-              Profile
+              {t('settings.tabProfile', 'Profile')}
             </TabsTrigger>
             <TabsTrigger value="email" className="flex items-center gap-2">
               <Mail className="h-4 w-4" />
-              Email Configuration
+              {t('settings.tabEmailConfig', 'Email Configuration')}
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center gap-2">
               <Bell className="h-4 w-4" />
-              Notifications
+              {t('settings.tabNotifications', 'Notifications')}
             </TabsTrigger>
             <TabsTrigger value="help" className="flex items-center gap-2">
               <HelpCircle className="h-4 w-4" />
-              Help Guide
+              {t('settings.tabHelpGuide', 'Help Guide')}
             </TabsTrigger>
           </TabsList>
 
@@ -242,19 +244,19 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <UserIcon className="w-5 h-5" />
-                  <span>Profile Information</span>
+                  <span>{t('profile.personalInformation', 'Personal Information')}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <ProfileEditor user={user} />
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Account Type</label>
+                    <label className="text-sm font-medium text-gray-700">{t('profile.accountType', 'Account Type')}</label>
                     <div className="mt-1 p-3 bg-gray-50 rounded-lg flex items-center space-x-2">
-                      <span>{user?.isAdmin ? 'Administrator' : 'Teacher'}</span>
+                      <span>{user?.isAdmin ? t('profile.administrator', 'Administrator') : t('profile.teacher', 'Teacher')}</span>
                       {user?.isAdmin && (
                         <Badge variant="default" className="bg-purple-100 text-purple-800">
-                          Admin
+                          {t('profile.admin', 'Admin')}
                         </Badge>
                       )}
                     </div>
@@ -262,25 +264,25 @@ export default function Settings() {
                 </div>
 
                 <div className="border-t pt-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Usage Information</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">{t('profile.usageInformation', 'Usage Information')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center p-4 bg-blue-50 rounded-lg">
                       <div className="text-2xl font-bold text-blue-600">
                         {user?.supportRequestsUsed || 0}
                       </div>
-                      <p className="text-sm text-gray-600">Requests Used</p>
+                      <p className="text-sm text-gray-600">{t('profile.requestsUsed', 'Requests Used')}</p>
                     </div>
                     <div className="text-center p-4 bg-green-50 rounded-lg">
                       <div className="text-2xl font-bold text-green-600">
                         {(user?.supportRequestsLimit || 20) - (user?.supportRequestsUsed || 0)}
                       </div>
-                      <p className="text-sm text-gray-600">Requests Remaining</p>
+                      <p className="text-sm text-gray-600">{t('profile.requestsRemaining', 'Requests Remaining')}</p>
                     </div>
                     <div className="text-center p-4 bg-purple-50 rounded-lg">
                       <div className="text-2xl font-bold text-purple-600">
                         {user?.supportRequestsLimit || 20}
                       </div>
-                      <p className="text-sm text-gray-600">Monthly Limit</p>
+                      <p className="text-sm text-gray-600">{t('profile.monthlyLimit', 'Monthly Limit')}</p>
                     </div>
                   </div>
                 </div>
@@ -297,15 +299,15 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Bell className="w-5 h-5" />
-                  <span>Notification Preferences</span>
+                  <span>{t('notifications.preferences', 'Notification Preferences')}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div>
-                      <h4 className="font-medium text-gray-900">Email Notifications</h4>
-                      <p className="text-sm text-gray-600">Receive email updates for important events</p>
+                      <h4 className="font-medium text-gray-900">{t('notifications.emailNotifications', 'Email Notifications')}</h4>
+                      <p className="text-sm text-gray-600">{t('notifications.emailNotificationsDesc', 'Receive email updates for important events')}</p>
                     </div>
                     <input
                       type="checkbox"
@@ -317,8 +319,8 @@ export default function Settings() {
                   
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div>
-                      <h4 className="font-medium text-gray-900">Report Generation Alerts</h4>
-                      <p className="text-sm text-gray-600">Get notified when PDF reports are ready</p>
+                      <h4 className="font-medium text-gray-900">{t('notifications.reportAlerts', 'Report Generation Alerts')}</h4>
+                      <p className="text-sm text-gray-600">{t('notifications.reportAlertsDesc', 'Get notified when PDF reports are ready')}</p>
                     </div>
                     <input
                       type="checkbox"
@@ -330,8 +332,8 @@ export default function Settings() {
                   
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div>
-                      <h4 className="font-medium text-gray-900">System Updates</h4>
-                      <p className="text-sm text-gray-600">Receive notifications about system maintenance and updates</p>
+                      <h4 className="font-medium text-gray-900">{t('notifications.systemUpdates', 'System Updates')}</h4>
+                      <p className="text-sm text-gray-600">{t('notifications.systemUpdatesDesc', 'Receive notifications about system maintenance and updates')}</p>
                     </div>
                     <input
                       type="checkbox"
@@ -350,7 +352,7 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <HelpCircle className="w-5 h-5" />
-                  <span>Comprehensive Help Guide</span>
+                  <span>{t('help.comprehensiveGuide', 'Comprehensive Help Guide')}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
