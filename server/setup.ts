@@ -195,24 +195,45 @@ async function ensureEssentialFeatureFlags() {
   
   try {
     // Check if Chinese localization feature flag exists
-    const existingFlag = await db.select()
+    const existingChineseFlag = await db.select()
       .from(featureFlags)
       .where(eq(featureFlags.flagName, 'chinese_localization'))
       .limit(1);
     
-    if (existingFlag.length === 0) {
+    if (existingChineseFlag.length === 0) {
       // Create the Chinese localization feature flag
       await db.insert(featureFlags).values({
         id: crypto.randomUUID(),
         flagName: 'chinese_localization',
         description: 'Enable complete Chinese interface localization including forms, buttons, navigation, and all UI text. Allows users to switch between English and Chinese languages.',
-        isGloballyEnabled: false, // Start disabled for safety
+        isGloballyEnabled: true, // Enable by default for production
         createdAt: new Date(),
         updatedAt: new Date()
       });
       console.log('✅ Chinese localization feature flag created');
     } else {
       console.log('✅ Chinese localization feature flag already exists');
+    }
+
+    // Check if Classroom Solutions feature flag exists
+    const existingClassroomFlag = await db.select()
+      .from(featureFlags)
+      .where(eq(featureFlags.flagName, 'classroom_solutions_enabled'))
+      .limit(1);
+    
+    if (existingClassroomFlag.length === 0) {
+      // Create the Classroom Solutions feature flag
+      await db.insert(featureFlags).values({
+        id: crypto.randomUUID(),
+        flagName: 'classroom_solutions_enabled',
+        description: 'Enable Classroom Solutions module for admin-managed teacher form submissions',
+        isGloballyEnabled: true, // Enable by default for production
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      console.log('✅ Classroom Solutions feature flag created');
+    } else {
+      console.log('✅ Classroom Solutions feature flag already exists');
     }
   } catch (error) {
     console.error('❌ Error initializing feature flags:', error);
