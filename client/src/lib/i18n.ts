@@ -2418,6 +2418,10 @@ const resources = {
       'help.analytics3': '监控教师参与度和采用率',
       'help.analytics4': '导出学校数据用于机构分析',
       'help.analytics5': '跟踪最常见的关注类型和模式',
+      'help.support1': '向教师发送密码重置邮件',
+      'help.support2': '访问教师培训资源和指南',
+      'help.support3': '监控帮助台问题和常见问题',
+      'help.support4': '协调员工培训会议',
       
 
       
