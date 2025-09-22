@@ -382,7 +382,8 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
             {/* Show form sections only after task type is selected */}
             {form.watch('taskType') && (
               <>
-                {/* Student Information Section - Mobile Responsive */}
+                {/* Student Information Section - Only show for individual student tasks */}
+                {form.watch('taskType') !== 'classroom_management' && (
             <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
               <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                 <User className="h-4 w-4 sm:h-5 sm:w-5 text-brand-blue flex-shrink-0" />
@@ -457,6 +458,7 @@ export default function ConcernForm({ onConcernSubmitted }: ConcernFormProps) {
                 />
               </div>
             </div>
+                )}
 
             {/* Student Learning Profile - Available for both task types */}
             {form.watch('taskType') && (
