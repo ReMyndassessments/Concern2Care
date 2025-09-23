@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
-import { Shield, Loader2 } from 'lucide-react';
+import { Shield, Loader2, Home, X } from 'lucide-react';
 
 const pinSetupSchema = z.object({
   pin: z.string().length(4, 'PIN must be exactly 4 digits').regex(/^\d{4}$/, 'PIN must contain only numbers'),
@@ -71,7 +71,14 @@ export default function SimplePinSetup({ teacherEmail, onComplete }: SimplePinSe
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="max-w-md mx-auto">
-        <CardHeader className="text-center">
+        <CardHeader className="text-center relative">
+          <button
+            onClick={() => window.location.href = '/'}
+            className="absolute right-0 top-0 p-2 text-gray-400 hover:text-gray-600 transition-colors"
+            data-testid="button-close-pin-setup"
+          >
+            <X className="h-5 w-5" />
+          </button>
           <div className="mx-auto mb-4 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
             <Shield className="h-6 w-6 text-green-600" />
           </div>
@@ -139,21 +146,34 @@ export default function SimplePinSetup({ teacherEmail, onComplete }: SimplePinSe
                 )}
               />
 
-              <Button 
-                type="submit" 
-                className="w-full"
-                disabled={isSubmitting}
-                data-testid="button-create-pin"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Setting up...
-                  </>
-                ) : (
-                  "Create PIN"
-                )}
-              </Button>
+              <div className="space-y-3">
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  disabled={isSubmitting}
+                  data-testid="button-create-pin"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Setting up...
+                    </>
+                  ) : (
+                    "Create PIN"
+                  )}
+                </Button>
+                
+                <Button 
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => window.location.href = '/'}
+                  data-testid="button-back-home-pin"
+                >
+                  <Home className="mr-2 h-4 w-4" />
+                  Back to Home
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

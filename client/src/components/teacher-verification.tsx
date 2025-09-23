@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
-import { Mail, Loader2 } from 'lucide-react';
+import { Mail, Loader2, Home, X } from 'lucide-react';
 import SimplePinSetup from './simple-pin-setup';
 
 const emailSchema = z.object({
@@ -74,7 +74,14 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Card className="max-w-md mx-auto">
-          <CardHeader className="text-center">
+          <CardHeader className="text-center relative">
+            <button
+              onClick={() => window.location.href = '/'}
+              className="absolute right-0 top-0 p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              data-testid="button-close-verification"
+            >
+              <X className="h-5 w-5" />
+            </button>
             <div className="mx-auto mb-4 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
               <Mail className="h-6 w-6 text-blue-600" />
             </div>
@@ -105,21 +112,34 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                   )}
                 />
 
-                <Button 
-                  type="submit" 
-                  className="w-full"
-                  disabled={isChecking}
-                  data-testid="button-verify-email"
-                >
-                  {isChecking ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Verifying...
-                    </>
-                  ) : (
-                    "Continue"
-                  )}
-                </Button>
+                <div className="space-y-3">
+                  <Button 
+                    type="submit" 
+                    className="w-full"
+                    disabled={isChecking}
+                    data-testid="button-verify-email"
+                  >
+                    {isChecking ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      "Continue"
+                    )}
+                  </Button>
+                  
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => window.location.href = '/'}
+                    data-testid="button-back-home"
+                  >
+                    <Home className="mr-2 h-4 w-4" />
+                    Back to Home
+                  </Button>
+                </div>
               </form>
             </Form>
           </CardContent>
