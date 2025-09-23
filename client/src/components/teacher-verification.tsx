@@ -226,10 +226,17 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                       <FormLabel>4-Digit PIN</FormLabel>
                       <FormControl>
                         <Input
-                          type="password"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           placeholder="••••"
                           maxLength={4}
+                          autoComplete="off"
+                          autoCorrect="off"
+                          autoCapitalize="off"
+                          spellCheck={false}
                           {...field}
+                          className="text-center text-lg tracking-widest font-mono"
                           data-testid="input-teacher-pin"
                         />
                       </FormControl>

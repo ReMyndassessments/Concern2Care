@@ -104,15 +104,21 @@ export default function SimplePinSetup({ teacherEmail, onComplete }: SimplePinSe
                     <FormLabel>Create 4-Digit PIN</FormLabel>
                     <FormControl>
                       <Input
-                        type="password"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         placeholder="••••"
                         maxLength={4}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck={false}
                         {...field}
                         onChange={(e) => {
                           const value = e.target.value.replace(/\D/g, '').slice(0, 4);
                           field.onChange(value);
                         }}
-                        className="text-center text-lg tracking-widest"
+                        className="text-center text-lg tracking-widest font-mono"
                         data-testid="input-pin"
                       />
                     </FormControl>
@@ -129,15 +135,21 @@ export default function SimplePinSetup({ teacherEmail, onComplete }: SimplePinSe
                     <FormLabel>Confirm PIN</FormLabel>
                     <FormControl>
                       <Input
-                        type="password"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         placeholder="••••"
                         maxLength={4}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck={false}
                         {...field}
                         onChange={(e) => {
                           const value = e.target.value.replace(/\D/g, '').slice(0, 4);
                           field.onChange(value);
                         }}
-                        className="text-center text-lg tracking-widest"
+                        className="text-center text-lg tracking-widest font-mono"
                         data-testid="input-confirm-pin"
                       />
                     </FormControl>
