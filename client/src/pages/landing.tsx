@@ -442,14 +442,14 @@ export default function Landing() {
     },
   });
 
-  // Fetch QR code from API
+  // Fetch QR code from API - disabled by default to improve page load speed
   const { data: qrCodeData, isLoading: qrLoading } = useQuery<{
     success: boolean;
     qrCode: string;
     submissionUrl: string;
   }>({
     queryKey: ['/api/classroom/qr-code'],
-    enabled: true,
+    enabled: false, // Only fetch when specifically needed
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
