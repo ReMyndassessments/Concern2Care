@@ -683,8 +683,6 @@ export const insertClassroomEnrolledTeacherSchema = createInsertSchema(classroom
   createdAt: true,
   updatedAt: true,
 }).extend({
-  securityQuestion: z.string().optional(),
-  securityAnswer: z.string().optional(),
 });
 
 export const insertClassroomSubmissionSchema = createInsertSchema(classroomSubmissions).omit({

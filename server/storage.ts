@@ -158,8 +158,6 @@ export interface IStorage {
   resetClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher>;
   checkAndResetClassroomUsageIfNeeded(teacherId: string): Promise<boolean>;
   setClassroomTeacherPin(teacherId: string, hashedPin: string): Promise<ClassroomEnrolledTeacher>;
-  setClassroomTeacherPinAndSecurity(teacherId: string, hashedPin: string, securityQuestion: string, hashedAnswer: string): Promise<ClassroomEnrolledTeacher>;
-  resetClassroomTeacherPinWithSecurity(email: string, securityAnswer: string, newPin: string): Promise<{ success: boolean; message: string; }>;
   
   createClassroomSubmission(submission: InsertClassroomSubmission & { teacherId: string }): Promise<ClassroomSubmission>;
   getClassroomSubmissions(): Promise<ClassroomSubmissionWithTeacher[]>;
@@ -1050,58 +1048,6 @@ export class DatabaseStorage implements IStorage {
     return updatedTeacher;
   }
 
-  async setClassroomTeacherPinAndSecurity(teacherId: string, hashedPin: string, securityQuestion: string, hashedAnswer: string): Promise<ClassroomEnrolledTeacher> {
-    const [updatedTeacher] = await db
-      .update(classroomEnrolledTeachers)
-      .set({ 
-        securityPin: hashedPin,
-        securityQuestion,
-        securityAnswer: hashedAnswer,
-        pinSetAt: new Date(),
-        updatedAt: new Date()
-      })
-      .where(eq(classroomEnrolledTeachers.id, teacherId))
-      .returning();
-    
-    if (!updatedTeacher) {
-      throw new Error(`Teacher ${teacherId} not found`);
-    }
-    
-    return updatedTeacher;
-  }
-
-  async resetClassroomTeacherPinWithSecurity(email: string, securityAnswer: string, newPin: string): Promise<{ success: boolean; message: string; }> {
-    // Get teacher by email
-    const teacher = await this.getClassroomEnrolledTeacherByEmail(email);
-    if (!teacher || !teacher.isActive) {
-      return { success: false, message: 'Teacher not found or inactive' };
-    }
-
-    // Check if teacher has a security question set
-    if (!teacher.securityQuestion || !teacher.securityAnswer) {
-      return { success: false, message: 'No security question found for this account' };
-    }
-
-    // Validate security answer
-    const bcrypt = await import('bcrypt');
-    const answerMatches = await bcrypt.compare(securityAnswer.toLowerCase().trim(), teacher.securityAnswer);
-    if (!answerMatches) {
-      return { success: false, message: 'Incorrect security answer' };
-    }
-
-    // Hash new PIN and update
-    const hashedNewPin = await bcrypt.hash(newPin, 10);
-    await db
-      .update(classroomEnrolledTeachers)
-      .set({ 
-        securityPin: hashedNewPin,
-        pinResetAt: new Date(),
-        updatedAt: new Date()
-      })
-      .where(eq(classroomEnrolledTeachers.id, teacher.id));
-
-    return { success: true, message: 'PIN reset successfully' };
-  }
 
   async checkAndResetClassroomUsageIfNeeded(teacherId: string): Promise<boolean> {
     const teacher = await this.getClassroomEnrolledTeacher(teacherId);
@@ -1165,8 +1111,8 @@ export class DatabaseStorage implements IStorage {
     return {
       ...result.classroom_submissions,
       // Frontend expects these specific camelCase field names
-      studentFirstName: result.classroom_submissions.firstName,
-      studentLastInitial: result.classroom_submissions.lastInitial,
+      firstName: result.classroom_submissions.firstName,
+      lastInitial: result.classroom_submissions.lastInitial,
       studentAge: result.classroom_submissions.studentAge,
       studentGrade: result.classroom_submissions.studentGrade,
       // Ensure arrays are safe for map() calls

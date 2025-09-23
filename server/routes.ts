@@ -4318,6 +4318,44 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
+  // Simple PIN reset (admin-only functionality, no security questions)
+  app.post('/api/classroom/reset-pin-simple', requireClassroomSolutions, async (req, res) => {
+    try {
+      const { z } = await import('zod');
+      const bcrypt = await import('bcrypt');
+      
+      const resetSchema = z.object({
+        teacherEmail: z.string().email(),
+        newPin: z.string().length(4).regex(/^\d{4}$/)
+      });
+
+      const { teacherEmail, newPin } = resetSchema.parse(req.body);
+      
+      const teacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);
+      
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      // Hash new PIN
+      const hashedNewPin = await bcrypt.hash(newPin, 10);
+      
+      // Update teacher with new PIN
+      await storage.updateClassroomEnrolledTeacher(teacher.id, {
+        securityPin: hashedNewPin,
+        pinResetAt: new Date()
+      });
+
+      res.json({ 
+        success: true,
+        message: 'PIN reset successfully'
+      });
+    } catch (error) {
+      console.error('Error resetting PIN:', error);
+      res.status(500).json({ message: 'Failed to reset PIN' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

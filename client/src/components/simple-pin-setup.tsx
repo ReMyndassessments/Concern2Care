@@ -75,9 +75,9 @@ export default function SimplePinSetup({ teacherEmail, onComplete }: SimplePinSe
           <div className="mx-auto mb-4 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
             <Shield className="h-6 w-6 text-green-600" />
           </div>
-          <CardTitle>Security Setup</CardTitle>
+          <CardTitle>Set 4-Digit PIN</CardTitle>
           <CardDescription>
-            Set up your 4-digit PIN for future access to your responses
+            Create your PIN for accessing your responses
           </CardDescription>
         </CardHeader>
         <CardContent>

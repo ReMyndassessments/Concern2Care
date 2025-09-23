@@ -1046,10 +1046,8 @@ function PinResetDialog({
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
 }) {
-  const [step, setStep] = useState<'email' | 'question' | 'reset'>('email');
+  const [step, setStep] = useState<'email' | 'reset'>('email');
   const [email, setEmail] = useState('');
-  const [securityQuestion, setSecurityQuestion] = useState('');
-  const [securityAnswer, setSecurityAnswer] = useState('');
   const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -1058,31 +1056,12 @@ function PinResetDialog({
   const resetForm = () => {
     setStep('email');
     setEmail('');
-    setSecurityQuestion('');
-    setSecurityAnswer('');
     setNewPin('');
     setConfirmPin('');
   };
 
-  const getSecurityQuestion = async () => {
-    setIsLoading(true);
-    try {
-      const response = await apiRequest({
-        url: '/api/classroom/get-security-question',
-        method: 'POST',
-        body: { teacherEmail: email },
-      });
-      setSecurityQuestion(response.securityQuestion);
-      setStep('question');
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error?.message || "Failed to retrieve security question.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const proceedToReset = () => {
+    setStep('reset');
   };
 
   const resetPin = async () => {
@@ -1098,11 +1077,10 @@ function PinResetDialog({
     setIsLoading(true);
     try {
       await apiRequest({
-        url: '/api/classroom/reset-pin',
+        url: '/api/classroom/reset-pin-simple',
         method: 'POST',
         body: { 
           teacherEmail: email, 
-          securityAnswer: securityAnswer,
           newPin: newPin 
         },
       });
@@ -1125,8 +1103,7 @@ function PinResetDialog({
         <DialogHeader>
           <DialogTitle>Reset Your PIN</DialogTitle>
           <DialogDescription>
-            {step === 'email' && "Enter your email to retrieve your security question."}
-            {step === 'question' && "Answer your security question to reset your PIN."}
+            {step === 'email' && "Enter your email to reset your PIN."}
             {step === 'reset' && "Choose a new 4-digit PIN."}
           </DialogDescription>
         </DialogHeader>
@@ -1146,54 +1123,16 @@ function PinResetDialog({
                 />
               </div>
               <Button 
-                onClick={getSecurityQuestion} 
-                disabled={!email || isLoading}
+                onClick={proceedToReset} 
+                disabled={!email}
                 className="w-full"
-                data-testid="button-get-question"
+                data-testid="button-continue-reset"
               >
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                Get Security Question
+                Continue
               </Button>
             </>
           )}
 
-          {step === 'question' && (
-            <>
-              <div>
-                <label className="block text-sm font-medium mb-2">Security Question</label>
-                <p className="text-sm text-muted-foreground bg-muted p-3 rounded">{securityQuestion}</p>
-              </div>
-              <div>
-                <label htmlFor="security-answer" className="block text-sm font-medium mb-2">Your Answer</label>
-                <Input
-                  id="security-answer"
-                  type="text"
-                  value={securityAnswer}
-                  onChange={(e) => setSecurityAnswer(e.target.value)}
-                  placeholder="Enter your answer"
-                  data-testid="input-reset-answer"
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setStep('email')}
-                  className="flex-1"
-                  data-testid="button-back"
-                >
-                  Back
-                </Button>
-                <Button 
-                  onClick={() => setStep('reset')} 
-                  disabled={!securityAnswer}
-                  className="flex-1"
-                  data-testid="button-continue"
-                >
-                  Continue
-                </Button>
-              </div>
-            </>
-          )}
 
           {step === 'reset' && (
             <>
@@ -1230,9 +1169,9 @@ function PinResetDialog({
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
-                  onClick={() => setStep('question')}
+                  onClick={() => setStep('email')}
                   className="flex-1"
-                  data-testid="button-back-question"
+                  data-testid="button-back-email"
                 >
                   Back
                 </Button>
