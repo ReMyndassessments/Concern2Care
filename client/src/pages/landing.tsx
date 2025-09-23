@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
 
 // Contact form schema
 const contactFormSchema = z.object({
@@ -875,16 +876,15 @@ export default function Landing() {
                 </div>
               </div>
               
-              <Button 
-                className="w-full bg-blue-600 hover:bg-blue-700"
-                onClick={() => {
-                  window.location.href = '/classroom-submit';
-                }}
-                data-testid="button-access-form"
-                disabled={qrLoading}
-              >
-                {qrLoading ? t('classroomSolutions.loading', 'Loading...') : t('classroomSolutions.accessForm', 'Access Submission Form')}
-              </Button>
+              <Link href="/classroom-submit">
+                <Button 
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  data-testid="button-access-form"
+                  disabled={qrLoading}
+                >
+                  {qrLoading ? t('classroomSolutions.loading', 'Loading...') : t('classroomSolutions.accessForm', 'Access Submission Form')}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
