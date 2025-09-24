@@ -1027,6 +1027,10 @@ export class DatabaseStorage implements IStorage {
       .where(eq(classroomEnrolledTeachers.id, teacherId))
       .returning();
     
+    if (!updatedTeacher) {
+      throw new Error(`Teacher ${teacherId} not found`);
+    }
+    
     return updatedTeacher;
   }
 
