@@ -3538,6 +3538,49 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
+  // Admin: Change teacher PIN
+  app.post('/api/admin/classroom/teachers/:id/change-pin', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { newPin } = req.body;
+      const adminId = req.user.claims.sub;
+      
+      // Validate PIN format
+      if (!newPin || typeof newPin !== 'string' || !/^\d{4}$/.test(newPin)) {
+        return res.status(400).json({ message: 'PIN must be exactly 4 digits' });
+      }
+      
+      const teacher = await storage.getClassroomEnrolledTeacher(id);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+      
+      // Hash the new PIN
+      const bcrypt = require('bcrypt');
+      const saltRounds = 10;
+      const hashedPin = await bcrypt.hash(newPin, saltRounds);
+      
+      // Update teacher's PIN
+      const updatedTeacher = await storage.setClassroomTeacherPin(id, hashedPin);
+      
+      // Log admin action (no targetUserId since classroom teachers aren't in users table)
+      await storage.logAdminAction({
+        adminId,
+        action: 'change_classroom_teacher_pin',
+        details: { 
+          teacherId: id, 
+          email: teacher.email,
+          changedBy: req.user.email
+        }
+      });
+      
+      res.json({ success: true, message: 'PIN updated successfully' });
+    } catch (error) {
+      console.error('Error changing teacher PIN:', error);
+      res.status(500).json({ message: 'Failed to change PIN' });
+    }
+  });
+
   // Helper function to sanitize PII from free-text fields
   const sanitizePII = (text: string): string => {
     if (!text) return text;
