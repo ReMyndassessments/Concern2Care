@@ -1,0 +1,30 @@
+# Google Cloud Run / App Engine configuration
+runtime: nodejs20
+
+env_variables:
+  NODE_ENV: production
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+
+network:
+  instance_tag: concern2care-app
+
+resources:
+  cpu: 1
+  memory_gb: 1
+
+# Health check configuration
+liveness_check:
+  path: "/health"
+  check_interval_sec: 30
+  timeout_sec: 4
+  failure_threshold: 2
+
+readiness_check:
+  path: "/health"
+  check_interval_sec: 5
+  timeout_sec: 4
+  failure_threshold: 2
+  app_start_timeout_sec: 300

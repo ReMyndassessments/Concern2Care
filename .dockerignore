@@ -1,0 +1,17 @@
+node_modules
+.git
+.env
+*.log
+coverage
+.nyc_output
+.replit
+.replit.backup
+.replit.original
+reports
+attached_assets
+client/src
+server
+vite.config.ts
+tsconfig.json
+.config
+dist/public

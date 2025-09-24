@@ -200,11 +200,24 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   // Cloud Run provides PORT dynamically - never hardcode in production
-  const port = parseInt(process.env.PORT || '5000', 10);
   
-  // Cloud Run specific optimization: ensure we're using the provided port
-  if (process.env.NODE_ENV === 'production' && !process.env.PORT) {
-    console.warn('⚠️  WARNING: In production, PORT should be provided by Cloud Run environment');
+  // Enhanced Cloud Run port detection and configuration
+  let port: number;
+  if (process.env.NODE_ENV === 'production') {
+    // In production (Cloud Run), always use the provided PORT or default to 8080
+    port = parseInt(process.env.PORT || '8080', 10);
+    if (!process.env.PORT) {
+      console.warn('⚠️  WARNING: PORT not provided by Cloud Run, using default 8080');
+    }
+  } else {
+    // In development, use PORT or default to 5000
+    port = parseInt(process.env.PORT || '5000', 10);
+  }
+  
+  // Validate port range for Cloud Run compatibility
+  if (port < 1024 || port > 65535) {
+    console.error(`❌ Invalid port ${port}. Using default 8080 for Cloud Run compatibility.`);
+    port = 8080;
   }
   
   // Enhanced startup logging with Cloud Run environment detection
