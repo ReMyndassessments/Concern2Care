@@ -3520,12 +3520,15 @@ Submitted: ${new Date().toLocaleString()}
       
       const updatedTeacher = await storage.resetClassroomTeacherUsage(id);
       
-      // Log admin action
+      // Log admin action (no targetUserId since classroom teachers aren't in users table)
       await storage.logAdminAction({
         adminId,
         action: 'reset_classroom_teacher_usage',
-        targetUserId: id,
-        details: { previousUsage: teacher.requestsUsed || 0 }
+        details: { 
+          teacherId: id, 
+          email: teacher.email, 
+          previousUsage: teacher.requestsUsed || 0 
+        }
       });
       
       res.json({ success: true, teacher: updatedTeacher });
