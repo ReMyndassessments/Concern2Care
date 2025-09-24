@@ -189,6 +189,9 @@ function TeacherLookup() {
                   <Input
                     type="email"
                     placeholder={t('teacherLookup.emailPlaceholder', 'Enter your email address')}
+                    autoComplete="new-password"
+                    autoCapitalize="none"
+                    spellCheck={false}
                     {...field}
                     data-testid="input-teacher-lookup-email"
                   />
