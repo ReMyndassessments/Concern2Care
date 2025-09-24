@@ -264,7 +264,14 @@ interface SubmissionDetailModalProps {
   isResending: boolean;
 }
 
-function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, onResendSubmission, isResending }: SubmissionDetailModalProps) {
+function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, onResendSubmission, isResending }: {
+  submission: ClassroomSubmissionWithTeacher | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onStatusUpdate: (id: string, status: string, reason?: string) => void;
+  onResendSubmission: (id: string, reason?: string) => void;
+  isResending: boolean;
+}) {
   const [actionReason, setActionReason] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
