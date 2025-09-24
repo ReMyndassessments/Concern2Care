@@ -188,7 +188,6 @@ function TeacherLookup() {
                 <FormControl>
                   <Input
                     type="text"
-                    name="email-address"
                     placeholder={t('teacherLookup.emailPlaceholder', 'Enter your email address')}
                     autoComplete="off"
                     autoCorrect="off"
