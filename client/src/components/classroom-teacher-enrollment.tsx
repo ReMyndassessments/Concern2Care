@@ -73,7 +73,7 @@ export default function ClassroomTeacherEnrollment() {
   const [isGeneratingQr, setIsGeneratingQr] = useState(false);
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [pinChangeTeacher, setPinChangeTeacher] = useState<ClassroomEnrolledTeacher | null>(null);
-  const [currentPin, setCurrentPin] = useState<string | null>(null);
+  const [currentPin, setCurrentPin] = useState<string | null | undefined>(undefined);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -297,18 +297,19 @@ export default function ClassroomTeacherEnrollment() {
   const handleChangePinClick = async (teacher: ClassroomEnrolledTeacher) => {
     setPinChangeTeacher(teacher);
     pinForm.reset();
-    setCurrentPin(null);
+    setCurrentPin(undefined); // undefined = loading, null = needs reset, string = actual PIN
     setShowPinDialog(true);
     
     // Fetch current PIN
     try {
       const response = await apiRequest(`/api/admin/classroom/teachers/${teacher.id}/pin`);
-      setCurrentPin(response.currentPin);
+      setCurrentPin(response.currentPin); // Will be null if encrypted PIN doesn't exist
     } catch (error) {
       console.error('Failed to fetch current PIN:', error);
+      setCurrentPin(null); // Set to null on error (needs reset state)
       toast({
         title: "Warning",
-        description: "Could not fetch current PIN",
+        description: "Could not fetch current PIN - will need to set new PIN",
         variant: "destructive"
       });
     }
@@ -902,6 +903,15 @@ export default function ClassroomTeacherEnrollment() {
                       <span className="text-lg font-mono font-semibold tracking-wider" data-testid="text-current-pin">
                         {currentPin}
                       </span>
+                    ) : currentPin === null ? (
+                      <div className="space-y-1">
+                        <span className="text-orange-600 text-sm font-medium" data-testid="text-pin-needs-reset">
+                          PIN needs to be reset
+                        </span>
+                        <p className="text-xs text-gray-500">
+                          This teacher has an old PIN format. Enter a new PIN below to update it.
+                        </p>
+                      </div>
                     ) : (
                       <span className="text-gray-500 text-sm" data-testid="text-pin-loading">
                         Loading current PIN...
