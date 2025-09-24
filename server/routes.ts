@@ -4155,36 +4155,36 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(400).json({ message: 'Security PIN must be exactly 4 digits' });
       }
 
+      // First, verify PIN against enrolled teacher table (authoritative source)
+      const enrolledTeacher = await storage.getClassroomEnrolledTeacherByEmail(email);
+      
+      if (!enrolledTeacher || !enrolledTeacher.securityPin) {
+        return res.status(401).json({ message: 'Invalid email or security PIN' });
+      }
+
+      // Verify PIN using bcrypt against enrolled teacher's hashed PIN
+      let pinVerified = false;
+      try {
+        pinVerified = await bcrypt.compare(securityPin, enrolledTeacher.securityPin);
+      } catch (error) {
+        console.error('PIN verification error:', error);
+        return res.status(401).json({ message: 'Invalid email or security PIN' });
+      }
+
+      if (!pinVerified) {
+        return res.status(401).json({ message: 'Invalid email or security PIN' });
+      }
+
       // Get submissions by teacher email
       const submissions = await storage.getClassroomSubmissionsByEmail(email);
       
       if (submissions.length === 0) {
         return res.json({ 
           success: true, 
-          teacher: null,
+          teacher: enrolledTeacher,
           submissions: [],
           message: 'No submissions found for this email address. You may need to register first.' 
         });
-      }
-
-      // Verify PIN against any of the user's submissions (all submissions should have the same PIN)
-      let pinVerified = false;
-      for (const submission of submissions) {
-        if (submission.securityPin) {
-          try {
-            const isValidPin = await bcrypt.compare(securityPin, submission.securityPin);
-            if (isValidPin) {
-              pinVerified = true;
-              break;
-            }
-          } catch (error) {
-            console.error('PIN verification error:', error);
-          }
-        }
-      }
-
-      if (!pinVerified) {
-        return res.status(401).json({ message: 'Invalid email or security PIN' });
       }
 
       // Sort submissions by most recent first
