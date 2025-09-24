@@ -1,0 +1,574 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differentiation Report - NOEL R</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Differentiation Report</h2>
+                <h3 class="student-name">Student: NOEL R.</h3>
+                <p class="report-date">Generated on September 24, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">NOEL R.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Demo-Teacher ROBERTS</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Not specified</span>
+                </div>
+            </div>
+        </section>
+        
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Academic</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">9/24/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Teacher's Submitted Response:</h4>
+                <div class="description-content">
+                    noel needs math help
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p>Of course. As a fellow educator, I recognize you are already expertly observing and assessing Noel's needs. The following analysis and strategies are offered to build upon your professional insights, providing a structured, evidence-based framework you can adapt to your classroom context.</p><p><h3 class="intervention-title">Student Learning Profile Summary</h3></p><p>Based on the limited profile provided, a strategic approach for a 5th-grade math student like Noel would focus on creating a highly accessible, engaging, and supportive learning environment. Without specific data, we will design a proactive plan rooted in UDL principles to uncover and support Noel's unique strengths and challenges. The goal is to reduce barriers to learning before they become obstacles, allowing you to gather more precise data on what works best for him.</p><p>---</p><p><h2 class="major-heading">1. Content Modifications</h2></p><p><h3 class="intervention-title">Adjusting Complexity</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Concrete Example: Task Analysis & Work Samples:</strong> Before introducing a new standard (e.g., 5.NBT.5 - Multiplying Multi-digit Numbers), provide a completed example of a similar problem. Use a highlighter to color-code the steps: yellow for setting up the problem, green for the multiplication of the ones place, blue for the tens place, etc. This visual scaffold makes a complex process manageable (Hudson & Miller, 2006).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Concrete Example: Strategic Number Choice:</strong> When assigning practice problems, pre-select numbers that minimize computational frustration and allow focus on the core concept. For example, when introducing long division, use problems with single-digit divisors that result in no remainders before progressing to more complex numbers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Concrete Example: Vocabulary Cards:</strong> Create a personal math word wall for Noel. On one side of an index card, write the term (e.g., "quotient"); on the back, write a student-friendly definition and a visual example. He can build this set throughout the year (Marzano, 2004).</li></ul></p><p><h3 class="intervention-title">Multiple Representations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Visual:</strong> Use "Cubes, Pictures, Numbers" to solve word problems. Noel must show his work in three ways: 1) Using base-ten blocks (cubes), 2) Drawing a diagram or bar model (pictures), and 3) Writing the number sentence (numbers). This strengthens the connection between concrete, representational, and abstract (CRA) understanding (Witzel, Riccomini, & Schneider, 2008).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Auditory:</strong> Use "Math Chants" or songs for memorizing key facts, like the steps for long division ("Divide, Multiply, Subtract, Bring Down"). Record your instructions for complex tasks on a QR code that Noel can scan with a tablet to listen to as many times as needed.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Kinesthetic:</strong> For geometry, use straws and pipe cleaners to build 2D shapes and 3D figures. For fractions, use fraction circles or a folded piece of paper to physically manipulate parts of a whole.</li></ul></p><p><h3 class="intervention-title">Interest-Based Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Choice Menus:</strong> Create a "Math Menu" for unit review. Noel can choose 3 activities from a list of 6 to demonstrate understanding (e.g., "Create a comic strip explaining a math concept," "Design a board game that uses these skills," "Write and solve 5 word problems about [a topic of interest, e.g., video games, sports]" (Tomlinson, 2014).</li></ul></p><p>---</p><p><h2 class="major-heading">2. Process Modifications</h2></p><p><h3 class="intervention-title">Instructional Delivery</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Chunking & Pacing:</strong> Use a visual timer (e.g., Time Timer) to break independent work into manageable 10-15 minute chunks. After each chunk, provide a brief "brain break" or a chance for Noel to check in with you or a peer.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Collaborative Balance:</strong> Implement "Think-Pair-Share" for problem-solving. This gives Noel individual think time (processing) before discussing with one partner (low-risk practice) and then sharing with the whole group.</li></ul></p><p><h3 class="intervention-title">Scaffolding Techniques</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Step-by-Step Checklists:</strong> For multi-step problems (like long division or multi-step word problems), provide a laminated checklist. Noel can use a dry-erase marker to check off each step as he completes it, promoting independence and metacognition.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Think-Alouds:</strong> Explicitly model your problem-solving thought process. "When I see this word problem, the first thing I do is look for the question. I see it asks for the total cost. That tells me I probably need to add or multiply..."</li></ul></p><p><h3 class="intervention-title">Technology Integration</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Assistive Technology:</strong> Introduce text-to-speech tools (like the built-in Immersive Reader in Microsoft products or on a tablet) for reading word problems. This removes decoding barriers and allows focus on the math.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Digital Tools:</strong> Use interactive virtual manipulatives, such as those on the National Library of Virtual Manipulatives or Math Learning Center apps, for hands-on practice without physical clutter.</li></ul></p><p>---</p><p><h2 class="major-heading">3. Product Alternatives</h2></p><p><h3 class="intervention-title">Assessment Options</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Multiple Means of Action & Expression:</strong> For an end-of-unit assessment on fractions, offer a choice:</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Traditional:* Complete a 10-problem worksheet.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Oral/Visual:* Explain the process of adding fractions with unlike denominators using a whiteboard to illustrate.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Project-Based:* Design a "Fraction Pizza" menu, showing different pizza slices as fractions and creating word problems based on customer orders.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Modified Rubrics:</strong> Use a single-point rubric that clearly defines the "Proficient" column for the learning objective, with space for comments on "Areas for Growth" and "Areas of Strength." This reduces cognitive load and provides targeted feedback.</li></ul></p><p>---</p><p><h2 class="major-heading">4. Learning Environment Optimization</h2></p><p><h3 class="intervention-title">Physical Space</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Seating:</strong> Offer flexible seating options (e.g., a standing desk option, a quiet corner with a carrel) and strategically seat Noel near positive peer models and away from high-traffic/distracting areas.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Sensory & Organization:</strong> Provide a "toolkit" for his desk: a stress ball for fidgeting, highlighters for key information, and a folder with a clear "To Do"/"Done" pocket system.</li></ul></p><p><h3 class="intervention-title">Social Environment</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Grouping Strategies:</strong> Use purposeful pairing for activities. For example, pair Noel with a student who has strong verbal skills for a "Think-Pair-Share," and with a student who is methodical for a hands-on activity.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Communication Supports:</strong> Teach and post sentence stems for math talk: "I agree with... because...," "Another strategy could be...," "Can you explain how you got that answer?"</li></ul></p><p>---</p><p><h2 class="major-heading">5. Implementation Timeline</h2></p><p><h3 class="intervention-title">Week 1-2: Immediate Strategies</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Introduce the visual timer for chunking work. Create and begin using the step-by-step checklists for current math topics. Set up the personal math word wall.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Anecdotal notes on Noel's engagement and frustration levels during timed chunks.</li></ul></p><p><h3 class="intervention-title">Weeks 3-6: Short-term Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Introduce the "Math Menu" for a review activity. Begin incorporating the "Cubes, Pictures, Numbers" word problem strategy. Train Noel on using a text-to-speech tool.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Compare performance and choice on the Math Menu with previous quiz scores. Note independence in using the CRA process.</li></ul></p><p><h3 class="intervention-title">Ongoing: Long-term Support</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Weave these strategies into the fabric of daily math instruction. Refine choices and scaffolds based on data. Focus on building self-advocacy by encouraging Noel to choose the tools and strategies that help him most.</li></ul></p><p>---</p><p><h2 class="major-heading">6. Progress Monitoring & Data Collection</h2></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Metrics:</strong> Track percentage of work completion per chunk, accuracy on first-attempt problems with scaffolds, frequency of on-task behavior during independent work, and quality of contributions during partner talk.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Tools:</strong> Use a simple frequency count chart for work completion, a skills-based checklist for problem-solving steps, and a weekly reflection journal (1-2 sentences) for Noel to share what helped him learn each week.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adjustment:</strong> If data shows no improvement in engagement or accuracy after 2-3 weeks of consistent implementation, the strategy should be modified or replaced.</li></ul></p><p>---</p><p><h2 class="major-heading">7. Collaboration & Communication</h2></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Parent/Family:</strong> Share the positive strategies you're using (e.g., "We're using checklists to help break down big problems") in a newsletter or email. Suggest ways they can reinforce these at home, like using chunking for homework.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Support Staff:</strong> Briefly touch base with the school's intervention specialist or instructional coach to share your plan and ask for observational feedback or additional resource ideas.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation:</strong> Keep a simple log of strategies tried, dates implemented, and brief notes on observed effects. This is invaluable for parent conferences, RTI/MTSS meetings, and planning for future teachers.</li></ul></p><p><h4 class="sub-heading">Citations:</h4><br><ul class="intervention-list"><li class="main-bullet">  Hudson, P., & Miller, S. P. (2006). *Designing and implementing mathematics instruction for students with diverse learning needs*. Pearson.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Marzano, R. J. (2004). *Building background knowledge for academic achievement*. ASCD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Tomlinson, C. A. (2014). *The differentiated classroom: Responding to the needs of all learners* (2nd ed.). ASCD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Witzel, B. S., Riccomini, P. J., & Schneider, E. (2008). Implementing CRA with secondary students with learning disabilities in mathematics. *Intervention in School and Clinic, 43*(5), 270-276.</li></ul></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>

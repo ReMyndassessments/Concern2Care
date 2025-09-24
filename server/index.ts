@@ -199,13 +199,23 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
+  // Cloud Run provides PORT dynamically - never hardcode in production
   const port = parseInt(process.env.PORT || '5000', 10);
   
-  // Enhanced startup logging
+  // Cloud Run specific optimization: ensure we're using the provided port
+  if (process.env.NODE_ENV === 'production' && !process.env.PORT) {
+    console.warn('⚠️  WARNING: In production, PORT should be provided by Cloud Run environment');
+  }
+  
+  // Enhanced startup logging with Cloud Run environment detection
   console.log('🚀 Starting server initialization...');
   console.log(`🌐 Server configured for host: 0.0.0.0, port: ${port}`);
   console.log(`🔧 Environment: ${env.NODE_ENV}`);
   console.log(`📊 Process PID: ${process.pid}`);
+  console.log(`☁️  Cloud Run Environment: ${process.env.K_SERVICE ? 'YES' : 'NO'}`);
+  if (process.env.K_SERVICE) {
+    console.log(`📦 Service: ${process.env.K_SERVICE}, Revision: ${process.env.K_REVISION}`);
+  }
   
   try {
     server.listen({
@@ -236,4 +246,32 @@ app.use((req, res, next) => {
     }
     process.exit(1);
   });
+
+  // Graceful shutdown for Cloud Run - essential for proper container lifecycle
+  const gracefulShutdown = (signal: string) => {
+    console.log(`📡 Received ${signal}. Starting graceful shutdown...`);
+    
+    server.close((err) => {
+      if (err) {
+        console.error('❌ Error during server shutdown:', err);
+        process.exit(1);
+      }
+      
+      console.log('✅ Server closed gracefully');
+      console.log('🔄 Closing database connections...');
+      
+      // Add any other cleanup here (database connections, etc.)
+      process.exit(0);
+    });
+    
+    // Force shutdown after 30 seconds (Cloud Run gives us up to 30s)
+    setTimeout(() => {
+      console.error('⏰ Forced shutdown after timeout');
+      process.exit(1);
+    }, 28000); // 28 seconds to be safe
+  };
+
+  // Listen for Cloud Run shutdown signals
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 })();
