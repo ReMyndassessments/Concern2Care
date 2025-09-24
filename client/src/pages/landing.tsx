@@ -245,26 +245,26 @@ function TeacherLookup() {
         <div className="mt-6 space-y-4">
           {teacherData.teacher && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-900 mb-2">Welcome, {teacherData.teacher.firstName}!</h4>
+              <h4 className="font-semibold text-blue-900 mb-2">{t('landing.welcome', 'Welcome, {{name}}!', { name: teacherData.teacher.firstName })}</h4>
               <div className="text-sm text-blue-800">
-                <p>Total submissions: {teacherData.summary.total}</p>
-                <p>Ready: {teacherData.summary.ready} | Processing: {teacherData.summary.pending}</p>
+                <p>{t('landing.totalSubmissions', 'Total submissions: {{count}}', { count: teacherData.summary.total })}</p>
+                <p>{t('landing.ready', 'Ready: {{count}}', { count: teacherData.summary.ready })} | {t('landing.processing', 'Processing: {{count}}', { count: teacherData.summary.pending })}</p>
               </div>
             </div>
           )}
 
           {teacherData.submissions.length > 0 ? (
             <div className="space-y-4">
-              <h4 className="font-semibold text-gray-900">Your Submissions</h4>
+              <h4 className="font-semibold text-gray-900">{t('landing.yourSubmissions', 'Your Submissions')}</h4>
               {teacherData.submissions.map((submission: any, index: number) => (
                 <div key={submission.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <h5 className="font-medium text-gray-900">
-                        Student Request #{teacherData.submissions.length - index}
+                        {t('landing.studentRequest', 'Student Request #{{number}}', { number: teacherData.submissions.length - index })}
                       </h5>
                       <p className="text-sm text-gray-600">
-                        {submission.taskType === 'tier2_intervention' ? 'Tier 2 Intervention' : 'Differentiation'} - {submission.severityLevel} priority
+                        {submission.taskType === 'tier2_intervention' ? t('landing.tier2Intervention', 'Tier 2 Intervention') : t('landing.differentiation', 'Differentiation')} - {t('landing.moderatePriority', 'moderate priority')}
                       </p>
                     </div>
                     <div className="flex flex-col items-end space-y-2">
@@ -281,7 +281,7 @@ function TeacherLookup() {
                               className="text-xs"
                               data-testid={`button-view-response-${submission.id}`}
                             >
-                              View Response
+                              {t('landing.viewResponse', 'View Response')}
                             </Button>
                           </DialogTrigger>
                           <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">

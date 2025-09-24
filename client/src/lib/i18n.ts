@@ -1038,6 +1038,20 @@ const resources = {
       'upload.remove': 'Remove',
       'upload.noFile': 'No file selected',
       
+      // Landing Page
+      'landing.welcome': 'Welcome, {{name}}!',
+      'landing.totalSubmissions': 'Total submissions: {{count}}',
+      'landing.ready': 'Ready: {{count}}',
+      'landing.processing': 'Processing: {{count}}',
+      'landing.yourSubmissions': 'Your Submissions',
+      'landing.studentRequest': 'Student Request #{{number}}',
+      'landing.tier2Intervention': 'Tier 2 Intervention',
+      'landing.differentiation': 'Differentiation',
+      'landing.moderatePriority': 'moderate priority',
+      'landing.viewResponse': 'View Response',
+      'landing.ready_status': 'Ready',
+      'landing.processing_status': 'Processing',
+      
       // Common
       'common.loading': 'Loading...',
       'common.error': 'An error occurred',
@@ -2584,6 +2598,20 @@ const resources = {
       'upload.invalidFileTypeDesc': '请选择具有以下扩展名的文件：',
       'upload.remove': '删除',
       'upload.noFile': '未选择文件',
+      
+      // Landing Page
+      'landing.welcome': '欢迎，{{name}}！',
+      'landing.totalSubmissions': '总提交数：{{count}}',
+      'landing.ready': '已完成：{{count}}',
+      'landing.processing': '处理中：{{count}}',
+      'landing.yourSubmissions': '您的提交',
+      'landing.studentRequest': '学生请求 #{{number}}',
+      'landing.tier2Intervention': '二级干预',
+      'landing.differentiation': '差异化教学',
+      'landing.moderatePriority': '中等优先级',
+      'landing.viewResponse': '查看回复',
+      'landing.ready_status': '已完成',
+      'landing.processing_status': '处理中',
       
       // Common
       'common.loading': '加载中...',
