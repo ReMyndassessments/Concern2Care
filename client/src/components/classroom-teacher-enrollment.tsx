@@ -73,6 +73,7 @@ export default function ClassroomTeacherEnrollment() {
   const [isGeneratingQr, setIsGeneratingQr] = useState(false);
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [pinChangeTeacher, setPinChangeTeacher] = useState<ClassroomEnrolledTeacher | null>(null);
+  const [currentPin, setCurrentPin] = useState<string | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -293,10 +294,24 @@ export default function ClassroomTeacherEnrollment() {
     resetUsageMutation.mutate(teacher.id);
   };
 
-  const handleChangePinClick = (teacher: ClassroomEnrolledTeacher) => {
+  const handleChangePinClick = async (teacher: ClassroomEnrolledTeacher) => {
     setPinChangeTeacher(teacher);
     pinForm.reset();
+    setCurrentPin(null);
     setShowPinDialog(true);
+    
+    // Fetch current PIN
+    try {
+      const response = await apiRequest(`/api/admin/classroom/teachers/${teacher.id}/pin`);
+      setCurrentPin(response.currentPin);
+    } catch (error) {
+      console.error('Failed to fetch current PIN:', error);
+      toast({
+        title: "Warning",
+        description: "Could not fetch current PIN",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleChangePinSubmit = (data: PinChangeFormData) => {
@@ -879,6 +894,22 @@ export default function ClassroomTeacherEnrollment() {
             
             <Form {...pinForm}>
               <form onSubmit={pinForm.handleSubmit(handleChangePinSubmit)} className="space-y-4">
+                {/* Current PIN Display */}
+                <div className="space-y-2">
+                  <Label>Current PIN</Label>
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md border">
+                    {currentPin ? (
+                      <span className="text-lg font-mono font-semibold tracking-wider" data-testid="text-current-pin">
+                        {currentPin}
+                      </span>
+                    ) : (
+                      <span className="text-gray-500 text-sm" data-testid="text-pin-loading">
+                        Loading current PIN...
+                      </span>
+                    )}
+                  </div>
+                </div>
+
                 <FormField
                   control={pinForm.control}
                   name="newPin"

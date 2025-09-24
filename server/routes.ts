@@ -3538,6 +3538,37 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
+  // Admin: Get teacher PIN
+  app.get('/api/admin/classroom/teachers/:id/pin', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Verify teacher exists
+      const teacher = await storage.getClassroomEnrolledTeacher(id);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+      
+      // Get decrypted PIN for admin viewing
+      const currentPin = await storage.getClassroomTeacherPin(id);
+      
+      res.json({ 
+        success: true, 
+        currentPin: currentPin || null,
+        hasPin: !!currentPin,
+        teacher: {
+          id: teacher.id,
+          firstName: teacher.firstName,
+          lastName: teacher.lastName,
+          email: teacher.email
+        }
+      });
+    } catch (error) {
+      console.error('Error getting teacher PIN:', error);
+      res.status(500).json({ message: 'Failed to get teacher PIN' });
+    }
+  });
+
   // Admin: Change teacher PIN
   app.post('/api/admin/classroom/teachers/:id/change-pin', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
     try {
@@ -3555,12 +3586,8 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(404).json({ message: 'Teacher not found' });
       }
       
-      // Hash the new PIN
-      const saltRounds = 10;
-      const hashedPin = await bcrypt.hash(newPin, saltRounds);
-      
-      // Update teacher's PIN
-      const updatedTeacher = await storage.setClassroomTeacherPin(id, hashedPin);
+      // Update teacher's PIN (method handles both hashing and encryption internally)
+      const updatedTeacher = await storage.setClassroomTeacherPin(id, newPin);
       
       // Log admin action (no targetUserId since classroom teachers aren't in users table)
       await storage.logAdminAction({

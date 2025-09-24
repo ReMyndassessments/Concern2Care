@@ -255,7 +255,8 @@ export const classroomEnrolledTeachers = pgTable("classroom_enrolled_teachers", 
   isActive: boolean("is_active").default(true),
   
   // Security PIN for submissions and response access
-  securityPin: varchar("security_pin", { length: 64 }), // Hashed 4-digit PIN
+  securityPin: varchar("security_pin", { length: 64 }), // Hashed 4-digit PIN (for verification)
+  encryptedPin: varchar("encrypted_pin", { length: 128 }), // AES encrypted 4-digit PIN (for admin viewing)
   pinSetAt: timestamp("pin_set_at"), // When PIN was first set
   pinResetAt: timestamp("pin_reset_at"), // When PIN was last reset
   

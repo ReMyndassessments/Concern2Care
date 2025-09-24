@@ -51,6 +51,7 @@ import {
 import { db } from "./db";
 import { eq, desc, and, inArray, sql } from "drizzle-orm";
 import bcrypt from "bcrypt";
+import { encryptPin, decryptPin, validatePin } from "./services/encryption";
 
 // Interface for storage operations
 export interface IStorage {
@@ -157,7 +158,8 @@ export interface IStorage {
   incrementClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher>;
   resetClassroomTeacherUsage(teacherId: string): Promise<ClassroomEnrolledTeacher>;
   checkAndResetClassroomUsageIfNeeded(teacherId: string): Promise<boolean>;
-  setClassroomTeacherPin(teacherId: string, hashedPin: string): Promise<ClassroomEnrolledTeacher>;
+  setClassroomTeacherPin(teacherId: string, plainPin: string): Promise<ClassroomEnrolledTeacher>;
+  getClassroomTeacherPin(teacherId: string): Promise<string | null>;
   
   createClassroomSubmission(submission: InsertClassroomSubmission & { teacherId: string }): Promise<ClassroomSubmission>;
   getClassroomSubmissions(): Promise<ClassroomSubmissionWithTeacher[]>;
@@ -1034,11 +1036,21 @@ export class DatabaseStorage implements IStorage {
     return updatedTeacher;
   }
 
-  async setClassroomTeacherPin(teacherId: string, hashedPin: string): Promise<ClassroomEnrolledTeacher> {
+  async setClassroomTeacherPin(teacherId: string, plainPin: string): Promise<ClassroomEnrolledTeacher> {
+    // Validate PIN format
+    if (!validatePin(plainPin)) {
+      throw new Error('PIN must be exactly 4 digits');
+    }
+
+    // Hash PIN for verification and encrypt for admin viewing
+    const hashedPin = await bcrypt.hash(plainPin, 10);
+    const encryptedPin = encryptPin(plainPin);
+
     const [updatedTeacher] = await db
       .update(classroomEnrolledTeachers)
       .set({ 
         securityPin: hashedPin,
+        encryptedPin: encryptedPin,
         pinSetAt: new Date(),
         updatedAt: new Date()
       })
@@ -1050,6 +1062,25 @@ export class DatabaseStorage implements IStorage {
     }
     
     return updatedTeacher;
+  }
+
+  async getClassroomTeacherPin(teacherId: string): Promise<string | null> {
+    const teacher = await db
+      .select({ encryptedPin: classroomEnrolledTeachers.encryptedPin })
+      .from(classroomEnrolledTeachers)
+      .where(eq(classroomEnrolledTeachers.id, teacherId))
+      .limit(1);
+
+    if (!teacher.length || !teacher[0].encryptedPin) {
+      return null;
+    }
+
+    try {
+      return decryptPin(teacher[0].encryptedPin);
+    } catch (error) {
+      console.error('Failed to decrypt PIN for teacher:', teacherId, error);
+      return null;
+    }
   }
 
 
