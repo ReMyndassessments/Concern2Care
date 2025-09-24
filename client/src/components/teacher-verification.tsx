@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
 import { Mail, Loader2, Home, X } from 'lucide-react';
 import SimplePinSetup from './simple-pin-setup';
+import { useTranslation } from 'react-i18next';
 
 const emailSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -32,6 +33,7 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
   const [isChecking, setIsChecking] = useState(false);
   const [isVerifyingPin, setIsVerifyingPin] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const form = useForm<EmailForm>({
     resolver: zodResolver(emailSchema),
@@ -68,8 +70,8 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
     } catch (error: any) {
       console.error('Teacher check error:', error);
       toast({
-        title: "Verification Failed",
-        description: error?.message || "Unable to verify teacher. Please contact support.",
+        title: t('teacherVerification.verificationFailed', 'Verification Failed'),
+        description: error?.message || t('teacherVerification.verificationFailedDesc', 'Unable to verify teacher. Please contact support.'),
         variant: "destructive",
       });
     } finally {
@@ -91,8 +93,8 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
     } catch (error: any) {
       console.error('PIN verification error:', error);
       toast({
-        title: "PIN Verification Failed",
-        description: error?.message || "Invalid PIN. Please try again.",
+        title: t('teacherVerification.pinVerificationFailed', 'PIN Verification Failed'),
+        description: error?.message || t('teacherVerification.pinVerificationFailedDesc', 'Invalid PIN. Please try again.'),
         variant: "destructive",
       });
     } finally {
@@ -121,9 +123,9 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
             <div className="mx-auto mb-4 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
               <Mail className="h-6 w-6 text-blue-600" />
             </div>
-            <CardTitle>Teacher Verification</CardTitle>
+            <CardTitle>{t('teacherVerification.title', 'Teacher Verification')}</CardTitle>
             <CardDescription>
-              Enter your email address to access the classroom solutions form
+              {t('teacherVerification.emailDescription', 'Enter your email address to access the classroom solutions form')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -134,11 +136,11 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email Address</FormLabel>
+                      <FormLabel>{t('teacherVerification.emailLabel', 'Email Address')}</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="teacher@school.edu"
+                          placeholder={t('teacherVerification.emailPlaceholder', 'teacher@school.edu')}
                           {...field}
                           data-testid="input-teacher-email"
                         />
@@ -158,10 +160,10 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                     {isChecking ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Verifying...
+                        {t('teacherVerification.verifying', 'Verifying...')}
                       </>
                     ) : (
-                      "Continue"
+                      t('teacherVerification.continue', 'Continue')
                     )}
                   </Button>
                   
@@ -173,7 +175,7 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                     data-testid="button-back-home"
                   >
                     <Home className="mr-2 h-4 w-4" />
-                    Back to Home
+                    {t('teacherVerification.backToHome', 'Back to Home')}
                   </Button>
                 </div>
               </form>
@@ -210,9 +212,9 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
             <div className="mx-auto mb-4 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
               <Mail className="h-6 w-6 text-blue-600" />
             </div>
-            <CardTitle>Enter Your PIN</CardTitle>
+            <CardTitle>{t('teacherVerification.enterPinTitle', 'Enter Your PIN')}</CardTitle>
             <CardDescription>
-              Please enter your 4-digit PIN to access the classroom solutions form
+              {t('teacherVerification.enterPinDescription', 'Please enter your 4-digit PIN to access the classroom solutions form')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -223,7 +225,7 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                   name="pin"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>4-Digit PIN</FormLabel>
+                      <FormLabel>{t('teacherVerification.pinLabel', '4-Digit PIN')}</FormLabel>
                       <FormControl>
                         <Input
                           type="text"
@@ -255,10 +257,10 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                     {isVerifyingPin ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Verifying PIN...
+                        {t('teacherVerification.verifyingPin', 'Verifying PIN...')}
                       </>
                     ) : (
-                      "Verify PIN"
+                      t('teacherVerification.verifyPin', 'Verify PIN')
                     )}
                   </Button>
                   
@@ -269,7 +271,7 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                     onClick={() => setCurrentStep('email')}
                     data-testid="button-back-email"
                   >
-                    Back to Email
+                    {t('teacherVerification.backToEmail', 'Back to Email')}
                   </Button>
                 </div>
               </form>
