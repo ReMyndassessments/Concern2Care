@@ -22,7 +22,8 @@ import {
   QrCode,
   CheckCircle,
   XCircle,
-  Loader2
+  Loader2,
+  Key
 } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -54,7 +55,12 @@ const enrolledTeacherSchema = z.object({
   isActive: z.boolean().default(true)
 });
 
+const pinChangeSchema = z.object({
+  newPin: z.string().regex(/^\d{4}$/, "PIN must be exactly 4 digits")
+});
+
 type EnrolledTeacherFormData = z.infer<typeof enrolledTeacherSchema>;
+type PinChangeFormData = z.infer<typeof pinChangeSchema>;
 
 export default function ClassroomTeacherEnrollment() {
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -65,6 +71,8 @@ export default function ClassroomTeacherEnrollment() {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [qrCodeImage, setQrCodeImage] = useState("");
   const [isGeneratingQr, setIsGeneratingQr] = useState(false);
+  const [showPinDialog, setShowPinDialog] = useState(false);
+  const [pinChangeTeacher, setPinChangeTeacher] = useState<ClassroomEnrolledTeacher | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -126,6 +134,13 @@ export default function ClassroomTeacherEnrollment() {
       school: "",
       requestsLimit: 5,
       isActive: true
+    }
+  });
+
+  const pinForm = useForm<PinChangeFormData>({
+    resolver: zodResolver(pinChangeSchema),
+    defaultValues: {
+      newPin: ""
     }
   });
 
@@ -228,6 +243,31 @@ export default function ClassroomTeacherEnrollment() {
     }
   });
 
+  const changePinMutation = useMutation({
+    mutationFn: async ({ teacherId, newPin }: { teacherId: string; newPin: string }) => {
+      return await apiRequest(`/api/admin/classroom/teachers/${teacherId}/change-pin`, {
+        method: "POST",
+        body: { newPin }
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "PIN changed successfully"
+      });
+      setShowPinDialog(false);
+      setPinChangeTeacher(null);
+      pinForm.reset();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to change PIN",
+        variant: "destructive"
+      });
+    }
+  });
+
   // Handlers
   const handleAddTeacher = (data: EnrolledTeacherFormData) => {
     addTeacherMutation.mutate(data);
@@ -251,6 +291,17 @@ export default function ClassroomTeacherEnrollment() {
 
   const handleResetUsage = (teacher: ClassroomEnrolledTeacher) => {
     resetUsageMutation.mutate(teacher.id);
+  };
+
+  const handleChangePinClick = (teacher: ClassroomEnrolledTeacher) => {
+    setPinChangeTeacher(teacher);
+    pinForm.reset();
+    setShowPinDialog(true);
+  };
+
+  const handleChangePinSubmit = (data: PinChangeFormData) => {
+    if (!pinChangeTeacher) return;
+    changePinMutation.mutate({ teacherId: pinChangeTeacher.id, newPin: data.newPin });
   };
 
 
@@ -590,6 +641,14 @@ export default function ClassroomTeacherEnrollment() {
                           <Button
                             variant="outline"
                             size="sm"
+                            onClick={() => handleChangePinClick(teacher)}
+                            data-testid={`button-change-pin-${teacher.id}`}
+                          >
+                            <Key className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => handleDeleteTeacher(teacher)}
                             className="text-red-600 hover:text-red-700"
                             data-testid={`button-delete-${teacher.id}`}
@@ -809,6 +868,65 @@ export default function ClassroomTeacherEnrollment() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* PIN Change Dialog */}
+      {pinChangeTeacher && (
+        <Dialog open={showPinDialog} onOpenChange={setShowPinDialog}>
+          <DialogContent className="sm:max-w-[400px]">
+            <DialogHeader>
+              <DialogTitle>Change PIN for {pinChangeTeacher.firstName} {pinChangeTeacher.lastName}</DialogTitle>
+            </DialogHeader>
+            
+            <Form {...pinForm}>
+              <form onSubmit={pinForm.handleSubmit(handleChangePinSubmit)} className="space-y-4">
+                <FormField
+                  control={pinForm.control}
+                  name="newPin"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New 4-Digit PIN</FormLabel>
+                      <FormControl>
+                        <Input 
+                          {...field} 
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          maxLength={4}
+                          placeholder="Enter 4-digit PIN"
+                          data-testid="input-new-pin"
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                            field.onChange(value);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex justify-end space-x-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setShowPinDialog(false)}
+                    data-testid="button-cancel-pin-change"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={changePinMutation.isPending || pinForm.watch('newPin').length !== 4}
+                    data-testid="button-confirm-pin-change"
+                  >
+                    {changePinMutation.isPending ? "Changing..." : "Change PIN"}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
