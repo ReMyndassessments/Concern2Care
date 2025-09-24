@@ -233,14 +233,14 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                     <FormItem>
                       <FormLabel>{t('teacherVerification.pinLabel', '4-Digit PIN')}</FormLabel>
                       <FormControl>
-                        <Input
+                        <input
                           key="pin-input-field"
-                          type="password"
+                          type="tel"
                           inputMode="numeric"
                           pattern="[0-9]*"
                           placeholder="••••"
                           maxLength={4}
-                          autoComplete="new-password"
+                          autoComplete="off"
                           autoCorrect="off"
                           autoCapitalize="off"
                           spellCheck={false}
@@ -250,9 +250,13 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                             field.onChange(value);
                           }}
                           onBlur={field.onBlur}
-                          name={field.name}
-                          className="text-center text-lg tracking-widest font-mono"
+                          name="verification-code"
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-center text-lg tracking-widest font-mono"
                           data-testid="input-teacher-pin"
+                          style={{
+                            WebkitAppearance: 'none',
+                            MozAppearance: 'textfield'
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
