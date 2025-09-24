@@ -2638,6 +2638,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'en',
+    lng: 'zh', // Default to Chinese
     supportedLngs: ['en', 'zh'],
     nonExplicitSupportedLngs: true,
     debug: false,
