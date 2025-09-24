@@ -65,6 +65,8 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
         setCurrentStep('pin_setup');
       } else {
         // Existing teacher - must verify their PIN
+        // Clear the PIN form to prevent autocomplete issues
+        pinForm.reset({ pin: '' });
         setCurrentStep('pin_entry');
       }
     } catch (error: any) {
@@ -231,13 +233,18 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                           type="text"
                           inputMode="numeric"
                           pattern="[0-9]*"
+                          name="teacher-pin-verification"
                           placeholder="••••"
                           maxLength={4}
-                          autoComplete="off"
+                          autoComplete="one-time-code"
                           autoCorrect="off"
                           autoCapitalize="off"
                           spellCheck={false}
                           {...field}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                            field.onChange(value);
+                          }}
                           className="text-center text-lg tracking-widest font-mono"
                           data-testid="input-teacher-pin"
                         />
