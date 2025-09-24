@@ -744,6 +744,19 @@ export type ClassroomReport = typeof classroomReports.$inferSelect;
 // Extended types for Classroom Solutions with relations
 export type ClassroomSubmissionWithTeacher = ClassroomSubmission & {
   teacher: ClassroomEnrolledTeacher;
+  // Frontend-friendly field mappings from storage layer
+  studentFirstName?: string;
+  studentLastInitial?: string;
+  studentAge?: number;
+  studentGrade?: string;
+  aiResponse?: string | null;
+  teacherFirstName?: string;
+  teacherEmail?: string;
+  learningProfile?: string[];
+  actionsTaken?: string[];
+  // Additional computed fields
+  urgentSafeguard?: boolean;
+  createdAt?: Date | null;
 };
 
 export type ClassroomSubmissionWithDetails = ClassroomSubmission & {

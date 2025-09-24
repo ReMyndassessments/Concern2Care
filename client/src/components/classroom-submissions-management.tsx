@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +42,7 @@ import {
   Save
 } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ClassroomSubmissionWithTeacher } from '@shared/schema';
 
 // Safe date formatting utility
 function formatSafeDate(dateInput: string | Date | null | undefined, format: 'full' | 'date' | 'time' = 'full'): string {
@@ -307,7 +308,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, on
   };
 
   const canTakeAction = ['pending', 'urgent_flagged'].includes(submission.status);
-  const isUrgent = submission.status === 'urgent_flagged' || submission.urgentSafeguard?.requiresImmediateReview;
+  const isUrgent = submission.status === 'urgent_flagged' || submission.urgentSafeguard;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -555,7 +556,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, on
 export default function ClassroomSubmissionsManagement() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSubmission, setSelectedSubmission] = useState<ClassroomSubmission | null>(null);
+  const [selectedSubmission, setSelectedSubmission] = useState<ClassroomSubmissionWithTeacher | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   
   // Email configuration state
@@ -573,7 +574,7 @@ export default function ClassroomSubmissionsManagement() {
   const queryClient = useQueryClient();
 
   // Fetch all submissions
-  const { data: submissions = [], isLoading, error } = useQuery<ClassroomSubmission[]>({
+  const { data: submissions = [], isLoading, error } = useQuery<ClassroomSubmissionWithTeacher[]>({
     queryKey: ['/api/admin/classroom/submissions', statusFilter],
     queryFn: async () => {
       const params = statusFilter !== 'all' ? `?status=${statusFilter}` : '';
@@ -587,11 +588,15 @@ export default function ClassroomSubmissionsManagement() {
     queryKey: ['/api/admin/email-config'],
     queryFn: async () => {
       return apiRequest('GET', '/api/admin/email-config');
-    },
-    onSuccess: (data) => {
-      setEmailConfig(data);
     }
   });
+
+  // Update email config when data is fetched
+  useEffect(() => {
+    if (fetchedEmailConfig) {
+      setEmailConfig(fetchedEmailConfig);
+    }
+  }, [fetchedEmailConfig]);
 
   // Update submission status mutation
   const updateStatusMutation = useMutation({
@@ -695,7 +700,7 @@ export default function ClassroomSubmissionsManagement() {
     resendSubmissionMutation.mutate({ id, reason });
   };
 
-  const handleViewDetails = (submission: ClassroomSubmission) => {
+  const handleViewDetails = (submission: ClassroomSubmissionWithTeacher) => {
     setSelectedSubmission(submission);
     setShowDetailModal(true);
   };
@@ -730,7 +735,7 @@ export default function ClassroomSubmissionsManagement() {
   };
 
   const getStatusBadge = (status: string, urgentSafeguard?: any) => {
-    const isUrgent = status === 'urgent_flagged' || urgentSafeguard?.requiresImmediateReview;
+    const isUrgent = status === 'urgent_flagged' || urgentSafeguard;
     
     const statusConfig = {
       'pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
@@ -756,8 +761,8 @@ export default function ClassroomSubmissionsManagement() {
 
   const filteredSubmissions = submissions.filter(submission => {
     const matchesSearch = !searchTerm || 
-      submission.studentFirstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      submission.studentLastInitial.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (submission.studentFirstName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (submission.studentLastInitial || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       submission.teacher.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       submission.teacher.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       submission.teacher.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -765,7 +770,7 @@ export default function ClassroomSubmissionsManagement() {
     return matchesSearch;
   });
 
-  const urgentCount = submissions.filter(s => s.status === 'urgent_flagged' || s.urgentSafeguard?.requiresImmediateReview).length;
+  const urgentCount = submissions.filter(s => s.status === 'urgent_flagged' || s.urgentSafeguard).length;
   const pendingCount = submissions.filter(s => s.status === 'pending').length;
 
   if (isLoading) {
@@ -1070,8 +1075,8 @@ export default function ClassroomSubmissionsManagement() {
                     
                     <TableCell>
                       <div className="text-sm">
-                        <p>{formatSafeDate(submission.createdAt, 'date')}</p>
-                        <p className="text-gray-500">{formatSafeDate(submission.createdAt, 'time')}</p>
+                        <p>{formatSafeDate(submission.submittedAt, 'date')}</p>
+                        <p className="text-gray-500">{formatSafeDate(submission.submittedAt, 'time')}</p>
                       </div>
                     </TableCell>
                     
