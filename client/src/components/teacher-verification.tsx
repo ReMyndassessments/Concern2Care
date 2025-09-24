@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -32,6 +32,7 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
   const [teacherEmail, setTeacherEmail] = useState('');
   const [isChecking, setIsChecking] = useState(false);
   const [isVerifyingPin, setIsVerifyingPin] = useState(false);
+  const [pinDigits, setPinDigits] = useState(['', '', '', '']);
   const { toast } = useToast();
   const { t } = useTranslation();
 
@@ -81,13 +82,23 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
     }
   };
 
-  const verifyPin = async (data: PinForm) => {
+  const verifyPin = async () => {
+    const pin = pinDigits.join('');
+    if (pin.length !== 4) {
+      toast({
+        title: t('teacherVerification.pinVerificationFailed', 'PIN Verification Failed'),
+        description: t('teacherVerification.pinVerificationFailedDesc', 'Please enter all 4 digits.'),
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsVerifyingPin(true);
     try {
       await apiRequest({
         url: '/api/classroom/verify-pin',
         method: 'POST',
-        body: { teacherEmail: teacherEmail, pin: data.pin },
+        body: { teacherEmail: teacherEmail, pin: pin },
       });
       
       // PIN verified successfully, proceed to form
@@ -103,6 +114,26 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
       setIsVerifyingPin(false);
     }
   };
+
+  const handleDigitChange = (index: number, value: string) => {
+    const digit = value.replace(/\D/g, '').slice(-1); // Only last digit, numbers only
+    const newDigits = [...pinDigits];
+    newDigits[index] = digit;
+    setPinDigits(newDigits);
+    
+    // Auto-focus next input
+    if (digit && index < 3) {
+      const nextInput = document.querySelector(`[data-digit-index="${index + 1}"]`) as HTMLInputElement;
+      if (nextInput) nextInput.focus();
+    }
+  };
+
+  // Clear PIN digits when entering PIN step
+  useEffect(() => {
+    if (currentStep === 'pin_entry') {
+      setPinDigits(['', '', '', '']);
+    }
+  }, [currentStep]);
 
   const handlePinSetupComplete = () => {
     // PIN setup complete, proceed to form
@@ -200,10 +231,6 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
 
   // PIN entry step (for existing teachers)
   if (currentStep === 'pin_entry') {
-    // Force clear the PIN field on render
-    if (pinForm.getValues().pin && pinForm.getValues().pin.includes('@')) {
-      pinForm.setValue('pin', '');
-    }
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Card className="max-w-md mx-auto">
@@ -224,75 +251,61 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...pinForm}>
-              <form onSubmit={pinForm.handleSubmit(verifyPin)} className="space-y-4">
-                <FormField
-                  control={pinForm.control}
-                  name="pin"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('teacherVerification.pinLabel', '4-Digit PIN')}</FormLabel>
-                      <FormControl>
-                        <input
-                          key="pin-input-field"
-                          type="tel"
-                          inputMode="numeric"
-                          pattern="[0-9]*"
-                          placeholder="••••"
-                          maxLength={4}
-                          autoComplete="off"
-                          autoCorrect="off"
-                          autoCapitalize="off"
-                          spellCheck={false}
-                          value={field.value || ''}
-                          onChange={(e) => {
-                            const value = e.target.value.replace(/\D/g, '').slice(0, 4);
-                            field.onChange(value);
-                          }}
-                          onBlur={field.onBlur}
-                          name="verification-code"
-                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-center text-lg tracking-widest font-mono"
-                          data-testid="input-teacher-pin"
-                          style={{
-                            WebkitAppearance: 'none',
-                            MozAppearance: 'textfield'
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="space-y-3">
-                  <Button 
-                    type="submit" 
-                    className="w-full"
-                    disabled={isVerifyingPin}
-                    data-testid="button-verify-pin"
-                  >
-                    {isVerifyingPin ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {t('teacherVerification.verifyingPin', 'Verifying PIN...')}
-                      </>
-                    ) : (
-                      t('teacherVerification.verifyPin', 'Verify PIN')
-                    )}
-                  </Button>
-                  
-                  <Button 
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setCurrentStep('email')}
-                    data-testid="button-back-email"
-                  >
-                    {t('teacherVerification.backToEmail', 'Back to Email')}
-                  </Button>
+            <div className="space-y-6">
+              <div>
+                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-4 block">
+                  {t('teacherVerification.pinLabel', '4-Digit PIN')}
+                </label>
+                <div className="flex justify-center space-x-4">
+                  {pinDigits.map((digit, index) => (
+                    <input
+                      key={`digit-${index}`}
+                      type="tel"
+                      inputMode="numeric"
+                      pattern="[0-9]"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleDigitChange(index, e.target.value)}
+                      data-digit-index={index}
+                      className="w-12 h-12 text-center text-xl font-mono border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                      data-testid={`input-pin-digit-${index}`}
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck={false}
+                    />
+                  ))}
                 </div>
-              </form>
-            </Form>
+              </div>
+
+              <div className="space-y-3">
+                <Button 
+                  onClick={verifyPin}
+                  className="w-full"
+                  disabled={isVerifyingPin || pinDigits.join('').length !== 4}
+                  data-testid="button-verify-pin"
+                >
+                  {isVerifyingPin ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t('teacherVerification.verifyingPin', 'Verifying PIN...')}
+                    </>
+                  ) : (
+                    t('teacherVerification.verifyPin', 'Verify PIN')
+                  )}
+                </Button>
+                
+                <Button 
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setCurrentStep('email')}
+                  data-testid="button-back-email"
+                >
+                  {t('teacherVerification.backToEmail', 'Back to Email')}
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
