@@ -186,10 +186,9 @@ function TeacherLookup() {
               <FormItem>
                 <FormLabel>{t('teacherLookup.emailAddress', 'Email Address')}</FormLabel>
                 <FormControl>
-                  {/* Hidden dummy input to fool autofill */}
-                  <input type="password" style={{display: 'none'}} />
                   <Input
-                    type="email"
+                    type="text"
+                    name="email-address"
                     placeholder={t('teacherLookup.emailPlaceholder', 'Enter your email address')}
                     autoComplete="off"
                     autoCorrect="off"
