@@ -362,7 +362,7 @@ function SubmissionDetailModal({ submission, isOpen, onClose, onStatusUpdate, on
                 <p><strong>Email:</strong> {submission.teacher.email}</p>
                 <p><strong>Position:</strong> {submission.teacher.position}</p>
                 {submission.teacher.school && <p><strong>School:</strong> {submission.teacher.school}</p>}
-                <p><strong>Submitted:</strong> {formatSafeDate(submission.createdAt)}</p>
+                <p><strong>Submitted:</strong> {formatSafeDate(submission.submittedAt)}</p>
               </CardContent>
             </Card>
           </div>
