@@ -200,6 +200,10 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
 
   // PIN entry step (for existing teachers)
   if (currentStep === 'pin_entry') {
+    // Force clear the PIN field on render
+    if (pinForm.getValues().pin && pinForm.getValues().pin.includes('@')) {
+      pinForm.setValue('pin', '');
+    }
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Card className="max-w-md mx-auto">
@@ -230,21 +234,23 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                       <FormLabel>{t('teacherVerification.pinLabel', '4-Digit PIN')}</FormLabel>
                       <FormControl>
                         <Input
-                          type="text"
+                          key="pin-input-field"
+                          type="password"
                           inputMode="numeric"
                           pattern="[0-9]*"
-                          name="teacher-pin-verification"
                           placeholder="••••"
                           maxLength={4}
-                          autoComplete="one-time-code"
+                          autoComplete="new-password"
                           autoCorrect="off"
                           autoCapitalize="off"
                           spellCheck={false}
-                          {...field}
+                          value={field.value || ''}
                           onChange={(e) => {
                             const value = e.target.value.replace(/\D/g, '').slice(0, 4);
                             field.onChange(value);
                           }}
+                          onBlur={field.onBlur}
+                          name={field.name}
                           className="text-center text-lg tracking-widest font-mono"
                           data-testid="input-teacher-pin"
                         />
