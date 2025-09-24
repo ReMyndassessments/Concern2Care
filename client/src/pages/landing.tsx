@@ -899,7 +899,7 @@ export default function Landing() {
         <div className="mt-12 max-w-2xl mx-auto">
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">{t('teacherLookup.title', 'View Your Classroom Solutions Responses')}</h3>
-            <p className="text-gray-600 mb-6 text-center">{t('teacherLookup.description', 'Enter your email; to check your submitted requests and view approved responses.')}</p>
+            <p className="text-gray-600 mb-6 text-center">{t('teacherLookup.description', 'Enter your email; to check your submitted requests and view responses.')}</p>
             
             <TeacherLookup />
           </div>

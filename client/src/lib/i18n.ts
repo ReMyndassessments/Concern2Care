@@ -944,7 +944,7 @@ const resources = {
       
       // Teacher Lookup Section
       'teacherLookup.title': 'View Your Classroom Solutions Responses',
-      'teacherLookup.description': 'Enter your email; to check your submitted requests and view approved responses.',
+      'teacherLookup.description': 'Enter your email; to check your submitted requests and view responses.',
       'teacherLookup.emailAddress': 'Email Address',
       'teacherLookup.emailPlaceholder': 'Enter your email address',
       'teacherLookup.securityPin': 'Security PIN',
