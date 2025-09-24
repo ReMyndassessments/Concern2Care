@@ -3556,7 +3556,6 @@ Submitted: ${new Date().toLocaleString()}
       }
       
       // Hash the new PIN
-      const bcrypt = require('bcrypt');
       const saltRounds = 10;
       const hashedPin = await bcrypt.hash(newPin, saltRounds);
       
