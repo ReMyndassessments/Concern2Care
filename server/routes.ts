@@ -2146,12 +2146,13 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(404).json({ message: 'Teacher not found' });
       }
 
-      // Return the teacher data with password status
+      // Return the teacher data with actual password for admin viewing
       res.json({
         id: teacher.id,
         firstName: teacher.firstName,
         lastName: teacher.lastName,
         email: teacher.email,
+        password: teacher.password, // Include actual password for admin password management
         hasPassword: !!teacher.password,
         isActive: teacher.isActive,
         supportRequestsUsed: teacher.supportRequestsUsed || 0,
