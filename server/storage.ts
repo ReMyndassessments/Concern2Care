@@ -422,11 +422,22 @@ export class DatabaseStorage implements IStorage {
     if (userData.email) {
       userData.email = userData.email.toLowerCase();
     }
+    
+    // Store both hashed password (for auth) and encrypted password (for admin viewing)
+    let hashedPassword: string | undefined;
+    let encryptedPasswordValue: string | undefined;
+    
     if (userData.password) {
-      userData.password = await bcrypt.hash(userData.password, 10);
+      const { encryptPassword } = await import('./services/encryption');
+      hashedPassword = await bcrypt.hash(userData.password, 10);
+      encryptedPasswordValue = encryptPassword(userData.password);
     }
     
-    const [newUser] = await db.insert(users).values(userData).returning();
+    const [newUser] = await db.insert(users).values({
+      ...userData,
+      password: hashedPassword,
+      encryptedPassword: encryptedPasswordValue
+    }).returning();
     if (!newUser) {
       throw new Error("Failed to create user");
     }
@@ -434,9 +445,33 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUser(id: string, user: Partial<UpsertUser>): Promise<User> {
+    const userData = { ...user };
+    
+    // If password is being updated, store both hashed and encrypted versions
+    if (userData.password) {
+      const { encryptPassword } = await import('./services/encryption');
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      const encryptedPasswordValue = encryptPassword(userData.password);
+      
+      const [updatedUser] = await db
+        .update(users)
+        .set({ 
+          ...userData,
+          password: hashedPassword,
+          encryptedPassword: encryptedPasswordValue,
+          updatedAt: new Date() 
+        })
+        .where(eq(users.id, id))
+        .returning();
+      if (!updatedUser) {
+        throw new Error(`User ${id} not found`);
+      }
+      return updatedUser;
+    }
+    
     const [updatedUser] = await db
       .update(users)
-      .set({ ...user, updatedAt: new Date() })
+      .set({ ...userData, updatedAt: new Date() })
       .where(eq(users.id, id))
       .returning();
     if (!updatedUser) {
