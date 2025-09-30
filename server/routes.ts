@@ -2146,13 +2146,25 @@ Submitted: ${new Date().toLocaleString()}
         return res.status(404).json({ message: 'Teacher not found' });
       }
 
-      // Return the teacher data with actual password for admin viewing
+      // Decrypt password for admin viewing
+      let decryptedPassword: string | null = null;
+      if (teacher.encryptedPassword) {
+        try {
+          const { decryptPassword } = await import('./services/encryption');
+          decryptedPassword = decryptPassword(teacher.encryptedPassword);
+        } catch (error) {
+          console.error('Error decrypting password for admin viewing:', error);
+          decryptedPassword = null; // Password exists but can't be decrypted (needs reset)
+        }
+      }
+
+      // Return the teacher data with decrypted password for admin viewing
       res.json({
         id: teacher.id,
         firstName: teacher.firstName,
         lastName: teacher.lastName,
         email: teacher.email,
-        password: teacher.password, // Include actual password for admin password management
+        password: decryptedPassword, // Decrypted password for admin to view
         hasPassword: !!teacher.password,
         isActive: teacher.isActive,
         supportRequestsUsed: teacher.supportRequestsUsed || 0,
