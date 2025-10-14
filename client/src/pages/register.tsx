@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Sparkles, Coffee, CheckCircle, ArrowLeft, Mail, User, Shield, Heart } from "lucide-react";
 import { useLocation } from "wouter";
 import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export default function Register() {
   const { t } = useTranslation();
@@ -34,6 +35,11 @@ export default function Register() {
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-purple-200 rounded-full opacity-20 blur-xl"></div>
         <div className="absolute top-1/3 right-1/3 w-24 h-24 bg-blue-200 rounded-full opacity-30 blur-lg"></div>
         <div className="absolute bottom-1/3 left-1/5 w-28 h-28 bg-indigo-200 rounded-full opacity-25 blur-xl"></div>
+      </div>
+
+      {/* Language Switcher */}
+      <div className="absolute top-4 right-4 z-10">
+        <LanguageSwitcher />
       </div>
 
       <div className="relative w-full max-w-2xl">
