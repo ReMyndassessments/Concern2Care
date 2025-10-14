@@ -127,6 +127,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Valid database user login
             const user = dbUser[0];
             
+            // Check if account is active
+            if (!user.isActive) {
+              console.log('🔐 Login blocked - Account not active:', user.email);
+              return res.status(403).json({ 
+                message: "Your account is pending activation. Please complete payment via Buy Me a Coffee to activate your account. Contact support if you've already paid.",
+                accountStatus: 'inactive'
+              });
+            }
+            
             // Update last login time
             await db.update(users)
               .set({ lastLoginAt: new Date() })
