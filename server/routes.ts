@@ -2465,6 +2465,38 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
+  // Admin: Activate pending teacher account after payment verification
+  app.post('/api/admin/teachers/:id/activate', requireAdmin, async (req: any, res) => {
+    try {
+      const teacherId = req.params.id;
+      
+      const teacher = await storage.getUser(teacherId);
+      if (!teacher) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+
+      if (teacher.isActive) {
+        return res.status(400).json({ message: 'Teacher is already active' });
+      }
+
+      // Activate the teacher account
+      await storage.updateUser(teacherId, { 
+        isActive: true,
+        updatedAt: new Date(),
+      });
+      
+      console.log(`✅ Teacher activated: ${teacher.email} by admin`);
+      
+      res.json({ 
+        success: true, 
+        message: `${teacher.firstName} ${teacher.lastName}'s account has been activated`,
+      });
+    } catch (error) {
+      console.error('Error activating teacher:', error);
+      res.status(500).json({ message: 'Failed to activate teacher account' });
+    }
+  });
+
   // Admin: Reset teacher's monthly usage
   app.post('/api/admin/teachers/:id/reset-usage', requireAdmin, async (req: any, res) => {
     try {

@@ -36,6 +36,7 @@ interface Teacher {
   lastName: string;
   email: string;
   password?: string;
+  school?: string;
   schoolDistrict?: string;
   primaryGrade?: string;
   primarySubject?: string;
