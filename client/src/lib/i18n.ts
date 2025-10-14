@@ -2638,6 +2638,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'en',
+    lng: 'en', // Force English as default
     supportedLngs: ['en', 'zh'],
     nonExplicitSupportedLngs: true,
     debug: false,
