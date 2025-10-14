@@ -717,7 +717,7 @@ export default function Landing() {
               <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{t('pricing.standardPlan')}</h3>
               <p className="text-sm sm:text-base text-gray-600 mb-4">{t('pricing.standardRange')}</p>
               <div className="mb-6">
-                <div className="text-2xl sm:text-3xl font-bold text-gray-900">$10<span className="text-base sm:text-lg text-gray-600">/teacher/month</span></div>
+                <div className="text-2xl sm:text-3xl font-bold text-gray-900">$10<span className="text-base sm:text-lg text-gray-600">{t('pricing.perTeacherMonth')}</span></div>
                 <p className="text-sm sm:text-base text-gray-600">{t('pricing.annual')}</p>
                 <p className="text-sm sm:text-base text-green-600 font-medium">{t('pricing.save10')}</p>
               </div>

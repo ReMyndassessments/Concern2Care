@@ -783,6 +783,7 @@ const resources = {
       'pricing.customPricing': 'Annual: Custom pricing',
       'pricing.getStarted': 'Get Started',
       'pricing.contactUs': 'Get Your Quote - sales@remynd.online',
+      'pricing.perTeacherMonth': '/teacher/month',
       'pricing.features.aiRecommendations': 'Full AI-powered recommendations',
       'pricing.features.supportRequests': '20 support requests per teacher/month',
       'pricing.features.pdfGeneration': 'PDF report generation',
@@ -813,7 +814,7 @@ const resources = {
       'pricing.supportRequests500': 'Monthly Support Requests: 500 total',
       'pricing.supportRequests1500': 'Monthly Support Requests: 1,500 total',
       'pricing.supportRequests3000': 'Monthly Support Requests: 3,000 total',
-      'pricing.perTeacherMonth': '/teacher/month',
+      
       // ROI Comparison Modal
       'comparison.metric': 'Metric',
       'comparison.magicSchool': 'Magic School',
@@ -1872,6 +1873,7 @@ const resources = {
       'pricing.customPricing': '年付: 定制价格',
       'pricing.getStarted': '开始使用',
       'pricing.contactUs': '获取报价 - sales@remynd.online',
+      'pricing.perTeacherMonth': '/教师/月',
       'pricing.features.aiRecommendations': '完整的AI驱动推荐',
       'pricing.features.supportRequests': '每位教师每月20次支持请求',
       'pricing.features.pdfGeneration': 'PDF报告生成',
@@ -1902,7 +1904,6 @@ const resources = {
       'pricing.supportRequests500': '每月支持请求：共500次',
       'pricing.supportRequests1500': '每月支持请求：共1,500次',
       'pricing.supportRequests3000': '每月支持请求：共3,000次',
-      'pricing.perTeacherMonth': '/教师/月',
       'pricing.realSchoolExamples': '真实学校案例',
       'pricing.savingsDescription': '查看您的学校通过年度计费可节省多少费用',
       // ROI 对比模态框
