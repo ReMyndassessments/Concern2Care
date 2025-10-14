@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 // Contact form schema
@@ -436,6 +436,7 @@ export default function Landing() {
   const { isAuthenticated, user, isLoading } = useAuth();
   const { toast } = useToast();
   const { isFeatureEnabled } = useFeatureFlags();
+  const [, setLocation] = useLocation();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isSubmittingContact, setIsSubmittingContact] = useState(false);
 
@@ -730,7 +731,13 @@ export default function Landing() {
                 <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.bulkManagement')}</span></li>
                 <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.training')}</span></li>
               </ul>
-              <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
+              <Button 
+                onClick={() => setLocation('/register')} 
+                className="w-full bg-purple-600 hover:bg-purple-700"
+                data-testid="button-get-started-standard"
+              >
+                {t('pricing.getStarted')}
+              </Button>
             </div>
 
             {/* Enterprise Plan: 200+ Teachers */}
@@ -751,7 +758,13 @@ export default function Landing() {
                 <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.support24')}</span></li>
                 <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.onsiteSupport')}</span></li>
               </ul>
-              <Button className="w-full bg-purple-600 hover:bg-purple-700">{t('pricing.getStarted')}</Button>
+              <Button 
+                onClick={() => setLocation('/register')} 
+                className="w-full bg-purple-600 hover:bg-purple-700"
+                data-testid="button-get-started-enterprise"
+              >
+                {t('pricing.getStarted')}
+              </Button>
             </div>
           </div>
         </div>
