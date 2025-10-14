@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Coffee, CheckCircle, ArrowLeft, Mail, User, Shield, Heart } from "lucide-react";
 import { useLocation } from "wouter";
+import { useTranslation } from 'react-i18next';
 
 export default function Register() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -45,10 +47,10 @@ export default function Register() {
             </div>
             
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
-              Individual Teacher Subscription
+              {t('register.title')}
             </CardTitle>
             <p className="text-gray-600 text-lg">
-              Join Concern2Care for $10/month/teacher
+              {t('register.subtitle')}
             </p>
           </CardHeader>
 
@@ -57,42 +59,42 @@ export default function Register() {
             <div className="bg-purple-50 rounded-xl p-6">
               <h3 className="text-xl font-semibold text-purple-800 mb-4 flex items-center">
                 <Heart className="h-5 w-5 mr-2" />
-                What You Get
+                {t('register.whatYouGet')}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800">AI-Generated Differentiation Strategies</p>
-                    <p className="text-sm text-gray-600">Get personalized teaching adjustments for student needs</p>
+                    <p className="font-medium text-gray-800">{t('register.aiDifferentiation')}</p>
+                    <p className="text-sm text-gray-600">{t('register.aiDifferentiationDesc')}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800">AI-Generated Behavior Support Strategies</p>
-                    <p className="text-sm text-gray-600">Evidence-based intervention strategies for student concerns</p>
+                    <p className="font-medium text-gray-800">{t('register.aiBehaviorSupport')}</p>
+                    <p className="text-sm text-gray-600">{t('register.aiBehaviorSupportDesc')}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800">PDF Report Generation</p>
-                    <p className="text-sm text-gray-600">Professional documentation for meetings</p>
+                    <p className="font-medium text-gray-800">{t('register.pdfReports')}</p>
+                    <p className="text-sm text-gray-600">{t('register.pdfReportsDesc')}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800">Email Report Sharing</p>
-                    <p className="text-sm text-gray-600">Send reports directly to student support or when necessary</p>
+                    <p className="font-medium text-gray-800">{t('register.emailSharing')}</p>
+                    <p className="text-sm text-gray-600">{t('register.emailSharingDesc')}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800">Follow-up Questions</p>
-                    <p className="text-sm text-gray-600">Ask AI for clarification on strategies</p>
+                    <p className="font-medium text-gray-800">{t('register.followUp')}</p>
+                    <p className="text-sm text-gray-600">{t('register.followUpDesc')}</p>
                   </div>
                 </div>
               </div>
@@ -100,30 +102,30 @@ export default function Register() {
 
             {/* Teacher Information Form - Matches Admin Form */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Teacher Information</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('register.teacherInfo')}</h3>
               <div className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">First Name *</Label>
+                    <Label htmlFor="firstName">{t('register.firstName')}</Label>
                     <Input
                       id="firstName"
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="Enter first name"
+                      placeholder={t('register.firstNamePlaceholder')}
                       className="mt-1"
                       required
                       data-testid="input-first-name"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Last Name *</Label>
+                    <Label htmlFor="lastName">{t('register.lastName')}</Label>
                     <Input
                       id="lastName"
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      placeholder="Enter last name"
+                      placeholder={t('register.lastNamePlaceholder')}
                       className="mt-1"
                       required
                       data-testid="input-last-name"
@@ -132,13 +134,13 @@ export default function Register() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="email">Email Address *</Label>
+                  <Label htmlFor="email">{t('register.email')}</Label>
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="teacher@school.edu"
+                    placeholder={t('register.emailPlaceholder')}
                     className="mt-1"
                     required
                     data-testid="input-email"
@@ -146,13 +148,13 @@ export default function Register() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="password">Password *</Label>
+                  <Label htmlFor="password">{t('register.password')}</Label>
                   <Input
                     id="password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Minimum 6 characters"
+                    placeholder={t('register.passwordPlaceholder')}
                     className="mt-1"
                     required
                     data-testid="input-password"
@@ -160,13 +162,13 @@ export default function Register() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="school">School *</Label>
+                  <Label htmlFor="school">{t('register.school')}</Label>
                   <Input
                     id="school"
                     type="text"
                     value={school}
                     onChange={(e) => setSchool(e.target.value)}
-                    placeholder="Enter school name"
+                    placeholder={t('register.schoolPlaceholder')}
                     className="mt-1"
                     required
                     data-testid="input-school"
@@ -174,13 +176,13 @@ export default function Register() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="schoolDistrict">School District</Label>
+                  <Label htmlFor="schoolDistrict">{t('register.schoolDistrict')}</Label>
                   <Input
                     id="schoolDistrict"
                     type="text"
                     value={schoolDistrict}
                     onChange={(e) => setSchoolDistrict(e.target.value)}
-                    placeholder="Enter school district (optional for private/standalone schools)"
+                    placeholder={t('register.schoolDistrictPlaceholder')}
                     className="mt-1"
                     data-testid="input-school-district"
                   />
@@ -188,26 +190,26 @@ export default function Register() {
                 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="primaryGrade">Primary Grade *</Label>
+                    <Label htmlFor="primaryGrade">{t('register.primaryGrade')}</Label>
                     <Input
                       id="primaryGrade"
                       type="text"
                       value={primaryGrade}
                       onChange={(e) => setPrimaryGrade(e.target.value)}
-                      placeholder="e.g., 3rd Grade, K-5"
+                      placeholder={t('register.primaryGradePlaceholder')}
                       className="mt-1"
                       required
                       data-testid="input-primary-grade"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="primarySubject">Primary Subject *</Label>
+                    <Label htmlFor="primarySubject">{t('register.primarySubject')}</Label>
                     <Input
                       id="primarySubject"
                       type="text"
                       value={primarySubject}
                       onChange={(e) => setPrimarySubject(e.target.value)}
-                      placeholder="e.g., Mathematics, ELA"
+                      placeholder={t('register.primarySubjectPlaceholder')}
                       className="mt-1"
                       required
                       data-testid="input-primary-subject"
@@ -217,7 +219,7 @@ export default function Register() {
                 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="teacherType">Teacher Type *</Label>
+                    <Label htmlFor="teacherType">{t('register.teacherType')}</Label>
                     <select
                       id="teacherType"
                       value={teacherType}
@@ -226,18 +228,18 @@ export default function Register() {
                       required
                       data-testid="select-teacher-type"
                     >
-                      <option value="Classroom Teacher">Classroom Teacher</option>
-                      <option value="Special Education Teacher">Special Education Teacher</option>
-                      <option value="ESL Teacher">ESL Teacher</option>
-                      <option value="Reading Specialist">Reading Specialist</option>
-                      <option value="Math Specialist">Math Specialist</option>
-                      <option value="Counselor">Counselor</option>
-                      <option value="Administrator">Administrator</option>
-                      <option value="Other">Other</option>
+                      <option value="Classroom Teacher">{t('register.teacherTypeClassroom')}</option>
+                      <option value="Special Education Teacher">{t('register.teacherTypeSpecialEd')}</option>
+                      <option value="ESL Teacher">{t('register.teacherTypeESL')}</option>
+                      <option value="Reading Specialist">{t('register.teacherTypeReadingSpecialist')}</option>
+                      <option value="Math Specialist">{t('register.teacherTypeMathSpecialist')}</option>
+                      <option value="Counselor">{t('register.teacherTypeCounselor')}</option>
+                      <option value="Administrator">{t('register.teacherTypeAdministrator')}</option>
+                      <option value="Other">{t('register.teacherTypeOther')}</option>
                     </select>
                   </div>
                   <div>
-                    <Label htmlFor="requestLimit">Request Limit</Label>
+                    <Label htmlFor="requestLimit">{t('register.requestLimit')}</Label>
                     <Input
                       id="requestLimit"
                       type="number"
@@ -257,10 +259,10 @@ export default function Register() {
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <div className="flex items-center justify-center space-x-2 mb-2">
                   <Coffee className="h-5 w-5 text-orange-600" />
-                  <span className="text-lg font-semibold text-orange-800">$10/month</span>
+                  <span className="text-lg font-semibold text-orange-800">{t('register.pricePerMonth')}</span>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Cancel anytime • FERPA compliant • Secure payment
+                  {t('register.subscriptionDetails')}
                 </p>
               </div>
               
@@ -270,7 +272,7 @@ export default function Register() {
                 data-testid="button-subscribe"
               >
                 <Coffee className="h-6 w-6 mr-3" />
-                Subscribe with Buy Me a Coffee
+                {t('register.subscribeButton')}
               </Button>
             </div>
 
@@ -278,10 +280,10 @@ export default function Register() {
             <div className="text-center space-y-3">
               <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
                 <Shield className="h-4 w-4" />
-                <span>🔒 All student data is kept confidential and secure</span>
+                <span>{t('register.securityNotice')}</span>
               </div>
               <p className="text-xs text-gray-500">
-                FERPA compliant • Individual teacher subscription • No school admin required
+                {t('register.complianceNotice')}
               </p>
             </div>
           </CardContent>
@@ -296,7 +298,7 @@ export default function Register() {
             data-testid="button-back-home"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
+            {t('register.backToHome')}
           </Button>
           <Button
             variant="ghost"
@@ -304,7 +306,7 @@ export default function Register() {
             className="text-gray-600 hover:text-purple-600 text-sm bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2"
             data-testid="button-back-login"
           >
-            Already have an account? Sign In
+            {t('register.alreadyHaveAccount')}
           </Button>
         </div>
       </div>
