@@ -725,6 +725,9 @@ const resources = {
       'auth.signingin': 'Signing in...',
       'auth.signin': 'Sign In',
       'auth.teacherSignIn': 'Teacher Sign In',
+      'auth.signUp': 'Sign Up',
+      'auth.register': 'Register',
+      'auth.createAccount': 'Create Account',
       'auth.error': 'Login failed. Please check your credentials.',
       
       // Confidence Building & Community
@@ -1790,6 +1793,9 @@ const resources = {
       'auth.signingin': '登录中...',
       'auth.signin': '登录',
       'auth.teacherSignIn': '教师登录',
+      'auth.signUp': '注册',
+      'auth.register': '注册',
+      'auth.createAccount': '创建账户',
       'auth.error': '登录失败，请检查您的凭据。',
       
       // Landing Page
