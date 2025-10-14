@@ -223,39 +223,25 @@ export default function Register() {
                   </div>
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="teacherType">{t('register.teacherType')}</Label>
-                    <select
-                      id="teacherType"
-                      value={teacherType}
-                      onChange={(e) => setTeacherType(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 mt-1"
-                      required
-                      data-testid="select-teacher-type"
-                    >
-                      <option value="Classroom Teacher">{t('register.teacherTypeClassroom')}</option>
-                      <option value="Special Education Teacher">{t('register.teacherTypeSpecialEd')}</option>
-                      <option value="ESL Teacher">{t('register.teacherTypeESL')}</option>
-                      <option value="Reading Specialist">{t('register.teacherTypeReadingSpecialist')}</option>
-                      <option value="Math Specialist">{t('register.teacherTypeMathSpecialist')}</option>
-                      <option value="Counselor">{t('register.teacherTypeCounselor')}</option>
-                      <option value="Administrator">{t('register.teacherTypeAdministrator')}</option>
-                      <option value="Other">{t('register.teacherTypeOther')}</option>
-                    </select>
-                  </div>
-                  <div>
-                    <Label htmlFor="requestLimit">{t('register.requestLimit')}</Label>
-                    <Input
-                      id="requestLimit"
-                      type="number"
-                      min="1"
-                      value={supportRequestsLimit}
-                      onChange={(e) => setSupportRequestsLimit(parseInt(e.target.value) || 20)}
-                      className="mt-1"
-                      data-testid="input-request-limit"
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="teacherType">{t('register.teacherType')}</Label>
+                  <select
+                    id="teacherType"
+                    value={teacherType}
+                    onChange={(e) => setTeacherType(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 mt-1"
+                    required
+                    data-testid="select-teacher-type"
+                  >
+                    <option value="Classroom Teacher">{t('register.teacherTypeClassroom')}</option>
+                    <option value="Special Education Teacher">{t('register.teacherTypeSpecialEd')}</option>
+                    <option value="ESL Teacher">{t('register.teacherTypeESL')}</option>
+                    <option value="Reading Specialist">{t('register.teacherTypeReadingSpecialist')}</option>
+                    <option value="Math Specialist">{t('register.teacherTypeMathSpecialist')}</option>
+                    <option value="Counselor">{t('register.teacherTypeCounselor')}</option>
+                    <option value="Administrator">{t('register.teacherTypeAdministrator')}</option>
+                    <option value="Other">{t('register.teacherTypeOther')}</option>
+                  </select>
                 </div>
               </div>
             </div>
