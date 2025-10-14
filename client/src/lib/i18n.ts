@@ -972,7 +972,7 @@ const resources = {
       
       // Register Page
       'register.title': 'Individual Teacher Subscription',
-      'register.subtitle': 'Join Concern2Care for $10/month/teacher',
+      'register.subtitle': 'Join Concern2Care for $10/month/teacher (Paid Annually)',
       'register.whatYouGet': 'What You Get',
       'register.aiDifferentiation': 'AI-Generated Differentiation Strategies',
       'register.aiDifferentiationDesc': 'Get personalized teaching adjustments for student needs',
@@ -1018,7 +1018,7 @@ const resources = {
       'register.teacherTypeCounselor': 'Counselor',
       'register.teacherTypeAdministrator': 'Administrator',
       'register.teacherTypeOther': 'Other',
-      'register.pricePerMonth': '$10/month',
+      'register.pricePerMonth': '$10/month (Paid Annually: $120/year)',
       'register.subscriptionDetails': 'Cancel anytime • FERPA compliant • Secure payment',
       'register.subscribeButton': 'Subscribe with Buy Me a Coffee',
       'register.securityNotice': '🔒 All student data is kept confidential and secure',
@@ -2059,7 +2059,7 @@ const resources = {
       
       // Register Page
       'register.title': '个人教师订阅',
-      'register.subtitle': '加入Concern2Care，每位教师每月$10',
+      'register.subtitle': '加入Concern2Care，每位教师每月$10（年付）',
       'register.whatYouGet': '您将获得',
       'register.aiDifferentiation': 'AI生成的差异化策略',
       'register.aiDifferentiationDesc': '获得针对学生需求的个性化教学调整',
@@ -2105,7 +2105,7 @@ const resources = {
       'register.teacherTypeCounselor': '辅导员',
       'register.teacherTypeAdministrator': '管理员',
       'register.teacherTypeOther': '其他',
-      'register.pricePerMonth': '每月$10',
+      'register.pricePerMonth': '每月$10（年付：$120/年）',
       'register.subscriptionDetails': '随时取消 • 符合FERPA • 安全支付',
       'register.subscribeButton': '通过Buy Me a Coffee订阅',
       'register.securityNotice': '🔒 所有学生数据均保密且安全',
