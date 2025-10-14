@@ -16,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 // Contact form schema
 const contactFormSchema = z.object({
@@ -434,6 +435,7 @@ export default function Landing() {
   const { t } = useTranslation();
   const { isAuthenticated, user, isLoading } = useAuth();
   const { toast } = useToast();
+  const { isFeatureEnabled } = useFeatureFlags();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isSubmittingContact, setIsSubmittingContact] = useState(false);
 
@@ -562,13 +564,27 @@ export default function Landing() {
                 </Button>
               </div>
             ) : (
-              <Button 
-                onClick={() => window.location.href = '/login'}
-                size="sm"
-                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm"
-              >
-                {t('auth.teacherSignIn')}
-              </Button>
+              <div className="flex items-center gap-2">
+                {isFeatureEnabled('individual_teacher_registration') && (
+                  <Button 
+                    onClick={() => window.location.href = '/register'}
+                    size="sm"
+                    variant="outline"
+                    className="px-3 sm:px-4 py-2 text-xs sm:text-sm"
+                    data-testid="button-sign-up"
+                  >
+                    {t('auth.signUp')}
+                  </Button>
+                )}
+                <Button 
+                  onClick={() => window.location.href = '/login'}
+                  size="sm"
+                  className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm"
+                  data-testid="button-teacher-sign-in"
+                >
+                  {t('auth.teacherSignIn')}
+                </Button>
+              </div>
             )}
           </div>
         </div>
