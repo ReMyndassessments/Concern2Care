@@ -3,13 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Coffee, CheckCircle, ArrowLeft, Mail, User, Shield, Heart } from "lucide-react";
+import { Sparkles, Coffee, CheckCircle, ArrowLeft, Mail, User, Shield, Heart, Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Register() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -19,11 +22,70 @@ export default function Register() {
   const [primaryGrade, setPrimaryGrade] = useState("");
   const [primarySubject, setPrimarySubject] = useState("");
   const [teacherType, setTeacherType] = useState("Classroom Teacher");
-  const [supportRequestsLimit, setSupportRequestsLimit] = useState(20);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [, setLocation] = useLocation();
 
-  const handleBuyMeACoffeeSubscription = () => {
-    window.open('https://buymeacoffee.com/remyndtimetrack/e/467997', '_blank');
+  const handleRegistrationAndPayment = async () => {
+    // Validate required fields
+    if (!firstName || !lastName || !email || !password || !school || !primaryGrade || !primarySubject) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Invalid Password",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Submit registration to backend
+      const response = await apiRequest('/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+          school,
+          schoolDistrict,
+          primaryGrade,
+          primarySubject,
+          teacherType,
+        }),
+      });
+
+      // Show success message
+      toast({
+        title: "Registration Submitted!",
+        description: "Please complete payment to activate your account. You'll be redirected to Buy Me a Coffee.",
+      });
+
+      // Wait a moment for user to see the message
+      setTimeout(() => {
+        // Open Buy Me a Coffee payment page
+        window.open('https://buymeacoffee.com/remyndtimetrack/e/467997', '_blank');
+      }, 1500);
+
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration Failed",
+        description: error.message || "Please try again or contact support",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -257,12 +319,22 @@ export default function Register() {
               </div>
               
               <Button
-                onClick={handleBuyMeACoffeeSubscription}
-                className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-4 text-lg shadow-lg"
+                onClick={handleRegistrationAndPayment}
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold py-4 text-lg shadow-lg disabled:opacity-50"
                 data-testid="button-subscribe"
               >
-                <Coffee className="h-6 w-6 mr-3" />
-                {t('register.subscribeButton')}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-6 w-6 mr-3 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Coffee className="h-6 w-6 mr-3" />
+                    {t('register.subscribeButton')}
+                  </>
+                )}
               </Button>
             </div>
 
