@@ -759,11 +759,11 @@ export default function Landing() {
                 <li className="flex items-start"><Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span className="text-sm sm:text-base">{t('pricing.features.onsiteSupport')}</span></li>
               </ul>
               <Button 
-                onClick={() => setLocation('/register')} 
+                onClick={() => setIsContactModalOpen(true)} 
                 className="w-full bg-purple-600 hover:bg-purple-700"
-                data-testid="button-get-started-enterprise"
+                data-testid="button-contact-enterprise"
               >
-                {t('pricing.getStarted')}
+                {t('pricing.contactUs')}
               </Button>
             </div>
           </div>
