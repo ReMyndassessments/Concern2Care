@@ -51,7 +51,7 @@ export default function Register() {
       // Submit registration to backend
       const response = await apiRequest('/api/auth/register', {
         method: 'POST',
-        body: JSON.stringify({
+        body: {
           firstName,
           lastName,
           email,
@@ -61,7 +61,7 @@ export default function Register() {
           primaryGrade,
           primarySubject,
           teacherType,
-        }),
+        },
       });
 
       // Show success message
