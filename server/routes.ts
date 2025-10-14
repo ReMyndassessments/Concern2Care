@@ -198,6 +198,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Self-service teacher registration endpoint (creates inactive account pending payment)
+  app.post('/api/auth/register', async (req: any, res) => {
+    try {
+      const { firstName, lastName, email, password, school, schoolDistrict, primaryGrade, primarySubject, teacherType } = req.body;
+      
+      console.log('📝 Self-registration attempt for:', email);
+      
+      // Validation
+      if (!firstName || !lastName || !email || !password) {
+        return res.status(400).json({ message: 'First name, last name, email, and password are required' });
+      }
+
+      if (password.length < 6) {
+        return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: 'Invalid email format' });
+      }
+
+      // Normalize email to lowercase
+      const normalizedEmail = email.toLowerCase();
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail?.(normalizedEmail);
+      if (existingUser) {
+        return res.status(409).json({ 
+          message: 'An account with this email already exists. Please use a different email or contact support.',
+        });
+      }
+
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Create inactive teacher account (will be activated after payment verification)
+      const teacherData = {
+        id: `teacher-${Date.now()}`,
+        firstName,
+        lastName,
+        email: normalizedEmail,
+        password: hashedPassword,
+        school: school?.trim() || null,
+        schoolDistrict: schoolDistrict?.trim() || null,
+        primaryGrade: primaryGrade?.trim() || null,
+        primarySubject: primarySubject?.trim() || null,
+        teacherType: teacherType || 'Classroom Teacher',
+        supportRequestsLimit: 20, // Default for individual teachers
+        isActive: false, // Inactive until payment verified
+        isAdmin: false,
+        profileImageUrl: null,
+      };
+
+      await storage.upsertUser(teacherData);
+      
+      console.log('✅ Inactive account created for:', normalizedEmail);
+      
+      res.json({ 
+        success: true,
+        message: 'Registration received! Please complete payment to activate your account.',
+        teacher: {
+          firstName,
+          lastName,
+          email: normalizedEmail,
+          school
+        }
+      });
+    } catch (error) {
+      console.error('❌ Registration error:', error);
+      res.status(500).json({ message: 'Registration failed. Please try again.' });
+    }
+  });
+
   // Contact form endpoint for information requests
   app.post('/api/contact-request', async (req, res) => {
     try {
