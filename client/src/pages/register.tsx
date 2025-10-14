@@ -23,9 +23,7 @@ export default function Register() {
   const [, setLocation] = useLocation();
 
   const handleBuyMeACoffeeSubscription = () => {
-    // This would normally redirect to Buy Me a Coffee subscription page
-    // For now, we'll show what the integration would look like
-    window.open('https://www.buymeacoffee.com/concern2care/membership', '_blank');
+    window.open('https://buymeacoffee.com/remyndtimetrack/e/467997', '_blank');
   };
 
   return (
