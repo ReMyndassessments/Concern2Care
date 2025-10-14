@@ -873,6 +873,82 @@ Michael,Brown,michael.brown@school.edu,,Lincoln Elementary,Springfield District,
         </CardContent>
       </Card>
 
+      {/* Pending Teachers - Awaiting Payment Verification */}
+      {teachers.filter(t => !t.isActive).length > 0 && (
+        <Card className="border-orange-200 bg-orange-50/30">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-orange-600" />
+              Pending Activations ({teachers.filter(t => !t.isActive).length})
+            </CardTitle>
+            <p className="text-sm text-gray-600">
+              Teachers awaiting payment verification from Buy Me a Coffee
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {teachers.filter(t => !t.isActive).map((teacher) => (
+                <div key={teacher.id} className="flex items-center justify-between p-4 bg-white rounded-lg border border-orange-200">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <div className="font-medium">{teacher.firstName} {teacher.lastName}</div>
+                        <div className="text-sm text-gray-600">{teacher.email}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          School: {teacher.school || 'Not specified'} • Grade: {teacher.primaryGrade || 'Not specified'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                      Pending Payment
+                    </Badge>
+                    <Button
+                      size="sm"
+                      onClick={async () => {
+                        try {
+                          await apiRequest(`/api/admin/teachers/${teacher.id}/activate`, {
+                            method: 'POST',
+                          });
+                          toast({
+                            title: "Account Activated",
+                            description: `${teacher.firstName} ${teacher.lastName} can now log in`,
+                          });
+                          loadTeachers();
+                        } catch (error) {
+                          toast({
+                            title: "Activation Failed",
+                            description: "Please try again",
+                            variant: "destructive",
+                          });
+                        }
+                      }}
+                      className="bg-green-600 hover:bg-green-700"
+                      data-testid={`button-activate-${teacher.id}`}
+                    >
+                      <CheckCircle className="h-4 w-4 mr-1" />
+                      Activate
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedTeacher(teacher);
+                        setShowEditDialog(true);
+                      }}
+                      data-testid={`button-edit-pending-${teacher.id}`}
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Teachers Table */}
       <Card>
         <CardContent className="p-0">
