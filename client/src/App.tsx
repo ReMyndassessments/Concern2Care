@@ -19,6 +19,7 @@ import AdminProgramSelector from "@/pages/admin-program-selector";
 import AdminC2CDashboard from "@/pages/admin-c2c-dashboard";
 import AdminClassroomDashboard from "@/pages/admin-classroom-dashboard";
 import ClassroomSubmit from "@/pages/classroom-submit";
+import ViewResponses from "@/pages/view-responses";
 import NotFound from "@/pages/not-found";
 
 // Component that handles authenticated routes
@@ -98,6 +99,9 @@ function Router() {
       <Route path="/classroom-submit" component={ClassroomSubmit} />
       <Route path="/classroom/submit" component={ClassroomSubmit} />
       <Route path="/classroom" component={ClassroomSubmit} />
+      
+      {/* View responses route */}
+      <Route path="/view-responses" component={ViewResponses} />
       
       {/* Authenticated routes */}
       <Route path="/admin" component={AuthenticatedRouter} />

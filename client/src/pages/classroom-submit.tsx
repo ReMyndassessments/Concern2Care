@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from '@/lib/queryClient';
 import TeacherVerification from '@/components/teacher-verification';
-import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home } from 'lucide-react';
+import { FileText, Send, CheckCircle, AlertCircle, Loader2, Home, Search } from 'lucide-react';
 
 // Base form validation schema
 // Submission schema (no security fields - handled by verification modal)
@@ -196,9 +196,18 @@ export default function ClassroomSubmit() {
             
             {/* Navigation buttons */}
             <div className="space-y-3">
+              <Button 
+                onClick={() => setLocation('/view-responses')}
+                className="w-full bg-blue-600 hover:bg-blue-700"
+                data-testid="button-view-responses"
+              >
+                <Search className="mr-2 h-4 w-4" />
+                View My Responses
+              </Button>
               {submissionResult.remainingRequests > 0 && (
                 <Button 
-                  onClick={() => setLocation('/')}
+                  onClick={() => setLocation('/classroom-submit')}
+                  variant="outline"
                   className="w-full"
                   data-testid="button-submit-another-request"
                 >
