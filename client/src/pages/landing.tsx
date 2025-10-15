@@ -452,13 +452,11 @@ export default function Landing() {
     },
   });
 
-  // Use static QR code image for better performance
-  const qrCodeData = {
-    success: true,
-    qrCode: '/classroom-qr.png',
-    submissionUrl: 'https://concern2care.com/classroom-submit'
-  };
-  const qrLoading = false;
+  // Fetch dynamic QR code from API
+  const { data: qrCodeData, isLoading: qrLoading } = useQuery<{ success: boolean; qrCode: string; submissionUrl: string }>({
+    queryKey: ['/api/classroom/qr-code'],
+    enabled: isFeatureEnabled('classroom_solutions_enabled'),
+  });
 
   // Redirect authenticated users to their dashboard
   useEffect(() => {
