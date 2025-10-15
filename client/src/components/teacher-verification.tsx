@@ -27,11 +27,22 @@ interface TeacherVerificationProps {
   onVerificationComplete: (teacherEmail: string) => void;
 }
 
+const registrationSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  email: z.string().email('Please enter a valid email address'),
+  position: z.string().min(1, 'Position is required'),
+  school: z.string().optional(),
+});
+
+type RegistrationForm = z.infer<typeof registrationSchema>;
+
 export default function TeacherVerification({ onVerificationComplete }: TeacherVerificationProps) {
-  const [currentStep, setCurrentStep] = useState<'email' | 'pin_setup' | 'pin_entry' | 'complete'>('email');
+  const [currentStep, setCurrentStep] = useState<'email' | 'register' | 'pin_setup' | 'pin_entry' | 'complete'>('email');
   const [teacherEmail, setTeacherEmail] = useState('');
   const [isChecking, setIsChecking] = useState(false);
   const [isVerifyingPin, setIsVerifyingPin] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [pinDigits, setPinDigits] = useState(['', '', '', '']);
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -47,6 +58,17 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
     resolver: zodResolver(pinSchema),
     defaultValues: {
       pin: '',
+    },
+  });
+
+  const registrationForm = useForm<RegistrationForm>({
+    resolver: zodResolver(registrationSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      position: '',
+      school: '',
     },
   });
 
@@ -79,6 +101,33 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
       });
     } finally {
       setIsChecking(false);
+    }
+  };
+
+  const handleRegistration = async (data: RegistrationForm) => {
+    setIsRegistering(true);
+    try {
+      const response = await apiRequest({
+        url: '/api/classroom/register',
+        method: 'POST',
+        body: data,
+      });
+
+      setTeacherEmail(data.email);
+      toast({
+        title: 'Registration Successful!',
+        description: 'Please set up your 4-digit PIN to secure your account.',
+      });
+      setCurrentStep('pin_setup');
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      toast({
+        title: 'Registration Failed',
+        description: error?.message || 'Unable to register. Please try again.',
+        variant: "destructive",
+      });
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -200,6 +249,18 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                     )}
                   </Button>
                   
+                  <div className="text-center text-sm text-gray-600">
+                    New here?{' '}
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep('register')}
+                      className="text-blue-600 hover:text-blue-800 font-medium"
+                      data-testid="link-register"
+                    >
+                      Sign up for free
+                    </button>
+                  </div>
+                  
                   <Button 
                     type="button"
                     variant="outline"
@@ -210,6 +271,136 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
                     <Home className="mr-2 h-4 w-4" />
                     {t('teacherVerification.backToHome', 'Back to Home')}
                   </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Registration step
+  if (currentStep === 'register') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="max-w-md mx-auto">
+          <CardHeader className="text-center relative">
+            <button
+              onClick={() => setCurrentStep('email')}
+              className="absolute right-0 top-0 p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              data-testid="button-close-registration"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <div className="mx-auto mb-4 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <Mail className="h-6 w-6 text-blue-600" />
+            </div>
+            <CardTitle>Sign Up for Free</CardTitle>
+            <CardDescription>
+              Create your account to access Free Student Support for Schools
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...registrationForm}>
+              <form onSubmit={registrationForm.handleSubmit(handleRegistration)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={registrationForm.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="John" {...field} data-testid="input-register-first-name" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={registrationForm.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Doe" {...field} data-testid="input-register-last-name" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={registrationForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="teacher@school.edu" {...field} data-testid="input-register-email" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={registrationForm.control}
+                  name="position"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Position/Role</FormLabel>
+                      <FormControl>
+                        <Input placeholder="3rd Grade Teacher" {...field} data-testid="input-register-position" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={registrationForm.control}
+                  name="school"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>School (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Lincoln Elementary" {...field} data-testid="input-register-school" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  disabled={isRegistering}
+                  data-testid="button-submit-registration"
+                >
+                  {isRegistering ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating Account...
+                    </>
+                  ) : (
+                    'Create Free Account'
+                  )}
+                </Button>
+
+                <div className="text-center text-sm text-gray-600">
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep('email')}
+                    className="text-blue-600 hover:text-blue-800 font-medium"
+                    data-testid="link-login"
+                  >
+                    Sign in
+                  </button>
                 </div>
               </form>
             </Form>
