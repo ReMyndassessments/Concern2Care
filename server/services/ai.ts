@@ -1572,12 +1572,17 @@ ${actionsTakenInfo}
   try {
     console.log("🤖 Making API request to DeepSeek...");
     
+    // Create abort controller for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
     const response = await fetch(`${apiClient.baseURL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiClient.apiKey}`,
       },
+      signal: controller.signal,
       body: JSON.stringify({
         model: 'deepseek-chat',
         messages: [
@@ -1595,6 +1600,8 @@ ${actionsTakenInfo}
         stream: false
       })
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       console.error("❌ DeepSeek API error:", response.status, response.statusText);
@@ -1632,9 +1639,14 @@ ${actionsTakenInfo}
       urgentSafeguard: urgentCheck
     };
 
-  } catch (error) {
-    console.error("❌ Error calling DeepSeek API:", error);
-    console.log("Falling back to mock data due to error.");
+  } catch (error: any) {
+    if (error.name === 'AbortError') {
+      console.error("❌ DeepSeek API timeout after 30 seconds");
+      console.log("Falling back to mock data due to timeout.");
+    } else {
+      console.error("❌ Error calling DeepSeek API:", error);
+      console.log("Falling back to mock data due to error.");
+    }
     return generateMockClassroomSolution(req, urgentCheck);
   }
 }
