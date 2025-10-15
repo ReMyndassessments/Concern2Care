@@ -3828,7 +3828,6 @@ Submitted: ${new Date().toLocaleString()}
         studentLastInitial: z.string().min(1).max(1),
         studentAge: z.string().min(1),
         studentGrade: z.string().min(1),
-        taskType: z.enum(['differentiation', 'tier2_intervention']),
         learningProfile: z.array(z.string()).min(1),
         englishAsAdditionalLanguageDetails: z.string().optional(),
         diagnosedDisabilityDetails: z.string().optional(),
@@ -3857,7 +3856,6 @@ Submitted: ${new Date().toLocaleString()}
         studentLastInitial,
         studentAge,
         studentGrade,
-        taskType,
         learningProfile,
         englishAsAdditionalLanguageDetails,
         diagnosedDisabilityDetails,
@@ -3867,6 +3865,9 @@ Submitted: ${new Date().toLocaleString()}
         severityLevel,
         actionsTaken
       } = validationResult.data;
+      
+      // Default taskType for free tier - simplified to general support
+      const taskType = 'tier2_intervention';
 
       // Find enrolled teacher by email (from session)
       const enrolledTeacher = await storage.getClassroomEnrolledTeacherByEmail(teacherEmail);

@@ -27,9 +27,6 @@ const classroomSubmissionSchema = z.object({
   studentLastInitial: z.string().min(1, 'Student last initial is required').max(1, 'Only one letter allowed'),
   studentAge: z.string().min(1, 'Student age is required'),
   studentGrade: z.string().min(1, 'Grade level is required'),
-  taskType: z.enum(['differentiation', 'tier2_intervention'], {
-    required_error: 'Please select a request type',
-  }),
   learningProfile: z.array(z.string()).min(1, 'Please select at least one learning profile item'),
   // Additional text fields for specific learning profile items
   englishAsAdditionalLanguageDetails: z.string().optional(),
@@ -66,7 +63,6 @@ export default function ClassroomSubmit() {
       studentLastInitial: '',
       studentAge: '',
       studentGrade: '',
-      taskType: undefined,
       learningProfile: [],
       englishAsAdditionalLanguageDetails: '',
       diagnosedDisabilityDetails: '',
@@ -476,92 +472,11 @@ export default function ClassroomSubmit() {
               </CardContent>
             </Card>
 
-            {/* Request Type */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">3</span>
-                  Request Type
-                </CardTitle>
-                <CardDescription>
-                  What type of support are you requesting?
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="taskType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <Card 
-                            className={`cursor-pointer border-2 transition-colors ${
-                              field.value === 'differentiation' 
-                                ? 'border-blue-500 bg-blue-50' 
-                                : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                            onClick={() => field.onChange('differentiation')}
-                            data-testid="card-differentiation"
-                          >
-                            <CardContent className="p-4">
-                              <div className="flex items-center mb-2">
-                                <input 
-                                  type="radio" 
-                                  checked={field.value === 'differentiation'}
-                                  onChange={() => field.onChange('differentiation')}
-                                  className="mr-2"
-                                  data-testid="radio-differentiation"
-                                />
-                                <h3 className="font-semibold">Differentiation Support</h3>
-                              </div>
-                              <p className="text-sm text-gray-600">
-                                Request strategies to modify instruction, activities, or assessments 
-                                to meet diverse learning needs within your classroom.
-                              </p>
-                            </CardContent>
-                          </Card>
-
-                          <Card 
-                            className={`cursor-pointer border-2 transition-colors ${
-                              field.value === 'tier2_intervention' 
-                                ? 'border-blue-500 bg-blue-50' 
-                                : 'border-gray-200 hover:border-gray-300'
-                            }`}
-                            onClick={() => field.onChange('tier2_intervention')}
-                            data-testid="card-tier2"
-                          >
-                            <CardContent className="p-4">
-                              <div className="flex items-center mb-2">
-                                <input 
-                                  type="radio" 
-                                  checked={field.value === 'tier2_intervention'}
-                                  onChange={() => field.onChange('tier2_intervention')}
-                                  className="mr-2"
-                                  data-testid="radio-tier2"
-                                />
-                                <h3 className="font-semibold">Tier 2 Intervention</h3>
-                              </div>
-                              <p className="text-sm text-gray-600">
-                                Request targeted intervention strategies for students needing 
-                                additional academic or behavioral support beyond general classroom instruction.
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-
             {/* Learning Profile */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">4</span>
+                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">3</span>
                   Student Learning Profile
                 </CardTitle>
                 <CardDescription>
@@ -791,7 +706,7 @@ export default function ClassroomSubmit() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">5</span>
+                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">4</span>
                   Areas of Concern
                 </CardTitle>
                 <CardDescription>
@@ -864,7 +779,7 @@ export default function ClassroomSubmit() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">6</span>
+                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">5</span>
                   Detailed Description
                 </CardTitle>
                 <CardDescription>
@@ -923,7 +838,7 @@ export default function ClassroomSubmit() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">7</span>
+                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">6</span>
                   Actions Already Taken
                 </CardTitle>
                 <CardDescription>
