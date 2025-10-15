@@ -167,7 +167,7 @@ export default function ClassroomSubmit() {
             <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h1 className="text-xl font-semibold text-gray-900 mb-2">Service Not Available</h1>
             <p className="text-gray-600">
-              The Classroom Solutions service is currently not available. 
+              Free Student Support for Schools is currently not available. 
               Please contact your administrator for assistance.
             </p>
           </CardContent>
@@ -185,7 +185,7 @@ export default function ClassroomSubmit() {
             <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
             <h1 className="text-xl font-semibold text-gray-900 mb-2">Request Submitted Successfully!</h1>
             <p className="text-gray-600 mb-4">
-              Your classroom solutions request has been submitted and will be reviewed by our team.
+              Your support request has been submitted. Expect your research-based strategies in your inbox soon.
             </p>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
               {submissionResult.remainingRequests !== undefined && (
@@ -236,8 +236,8 @@ export default function ClassroomSubmit() {
             <div className="flex items-center">
               <FileText className="h-6 w-6 text-blue-600 mr-2" />
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">C2C Classroom Solutions</h1>
-                <p className="text-sm text-gray-600">Request Differentiation & Intervention Support</p>
+                <h1 className="text-xl font-semibold text-gray-900">Free Student Support for Schools</h1>
+                <p className="text-sm text-gray-600">A Resource for Teachers and Student Support Teams</p>
               </div>
             </div>
             <Button
@@ -254,6 +254,13 @@ export default function ClassroomSubmit() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+        {/* Request Limit Notice */}
+        <Alert className="mb-6 border-blue-200 bg-blue-50">
+          <AlertDescription className="text-blue-800">
+            You can submit up to 3 support requests per month through Free Student Support for Schools.
+          </AlertDescription>
+        </Alert>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Teacher Information */}
@@ -993,6 +1000,19 @@ export default function ClassroomSubmit() {
                 This form is designed to protect student privacy while providing you with personalized support strategies.
               </AlertDescription>
             </Alert>
+
+            {/* Upgrade Messaging */}
+            <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-white">
+              <CardContent className="pt-6">
+                <p className="text-sm font-medium text-gray-900 mb-2">💡 Looking for advanced features?</p>
+                <p className="text-sm text-gray-600 mb-3">
+                  Get full access to the Concern2Care App to design differentiated supports, Tier 2 interventions, and track your student strategies over time.
+                </p>
+                <p className="text-xs text-blue-600 font-medium">
+                  Let's capture what matters — and see what changes.
+                </p>
+              </CardContent>
+            </Card>
 
             {/* Submit Button */}
             <div className="flex justify-end">
