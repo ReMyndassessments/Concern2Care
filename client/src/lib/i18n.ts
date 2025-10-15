@@ -545,8 +545,8 @@ const resources = {
       'classroomSolutions.feature6': 'Simple. Practical. Teacher-centered.',
       'classroomSolutions.contactInfo': 'Contact Information',
       'classroomSolutions.contactText': 'For more information on Free Student Support for Schools, Individual, School, and District Teacher Registration, Contact us at info@remynd.online',
-      'classroomSolutions.quickAccess': 'Quick Access for Registered Teachers',
-      'classroomSolutions.scanQR': 'Scan the QR code or click the "Access Submission Form" button below.',
+      'classroomSolutions.quickAccess': 'Register for and Access Support',
+      'classroomSolutions.scanQR': 'Capture What Matters, See What Changes',
       'classroomSolutions.accessForm': 'Access Submission Form',
       'classroomSolutions.loading': 'Loading...',
       
@@ -1706,11 +1706,10 @@ const resources = {
       'classroomSolutions.feature6': '简单。实用。以教师为中心。',
       'classroomSolutions.contactInfo': '联系信息',
       'classroomSolutions.contactText': '有关免费学校学生支持、个人、学校和学区教师注册的更多信息，请在info@remynd.online联系我们',
-      'classroomSolutions.quickAccess': '注册教师快速访问',
-      'classroomSolutions.scanQR': '扫描二维码或点击下方“访问提交表单”按钮。',
+      'classroomSolutions.quickAccess': '注册并获取支持',
+      'classroomSolutions.scanQR': '记录重要事项，见证改变',
       'classroomSolutions.accessForm': '访问提交表单',
       'classroomSolutions.loading': '加载中...',
-      
       // Teacher Verification
       'teacherVerification.title': '教师验证',
       'teacherVerification.emailDescription': '输入您的电子邮箱以访问教室解决方案表单',

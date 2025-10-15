@@ -886,8 +886,8 @@ export default function Landing() {
           {/* QR Code for Teacher Submissions */}
           <div className="mt-12 text-center">
             <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">{t('classroomSolutions.quickAccess', 'Quick Access for Classroom Solutions Registered Teachers')}</h3>
-              <p className="text-gray-600 mb-6">{t('classroomSolutions.scanQR', 'Scan the QR code or click the "Access Submission Form" button below.')}</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">{t('classroomSolutions.quickAccess', 'Register for and Access Support')}</h3>
+              <p className="text-gray-600 mb-6">{t('classroomSolutions.scanQR', 'Capture What Matters, See What Changes')}</p>
               
               <div className="mb-6">
                 <div className="bg-gray-100 rounded-lg p-4 inline-block">
