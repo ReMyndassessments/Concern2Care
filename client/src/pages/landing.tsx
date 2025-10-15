@@ -801,137 +801,139 @@ export default function Landing() {
       </section>
 
       {/* Classroom Solutions Program */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-6">
-              <Users className="w-8 h-8 text-white" />
+      {isFeatureEnabled('classroom_solutions_enabled') && (
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-6">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                {t('classroomSolutions.title', 'Free Student Support for Schools')}
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                {t('classroomSolutions.subtitle', 'A Resource for Teachers and Student Support Teams')}
+              </p>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              {t('classroomSolutions.title', 'Classroom Solutions Program')}
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t('classroomSolutions.subtitle', 'Specialized intervention support for K-12 teachers worldwide, delivered through our expert review process')}
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('classroomSolutions.howItWorks', 'How It Works')}</h3>
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">1</div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step1Title', 'Submit Your Request')}</h4>
-                    <p className="text-gray-600">{t('classroomSolutions.step1Description', 'Teachers access our form via QR code to submit student concerns and intervention requests')}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('classroomSolutions.howItWorks', 'How It Works')}</h3>
+                <div className="space-y-6">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">1</div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step1Title', 'Submit Your Request')}</h4>
+                      <p className="text-gray-600">{t('classroomSolutions.step1Description', 'Teachers can sign up and access our form via QR code to submit student support requests')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">2</div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step2Title', 'AI-Generated Strategies')}</h4>
+                      <p className="text-gray-600">{t('classroomSolutions.step2Description', 'Receive research-based support strategies tailored to your students')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">3</div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step3Title', 'Track & Implement')}</h4>
+                      <p className="text-gray-600">{t('classroomSolutions.step3Description', 'Access responses anytime through our platform with your secure PIN')}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">2</div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step2Title', 'Expert Review')}</h4>
-                    <p className="text-gray-600">{t('classroomSolutions.step2Description', 'Our administrators review AI-generated strategies for quality and safety')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mr-4">3</div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{t('classroomSolutions.step3Title', 'Receive Interventions')}</h4>
-                    <p className="text-gray-600">{t('classroomSolutions.step3Description', 'Approved, evidence-based Tier 2 intervention strategies delivered directly to teachers')}</p>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-lg p-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{t('classroomSolutions.programFeatures', 'Program Features')}</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span>{t('classroomSolutions.feature1', 'Evidence-based Tier 2 intervention strategies')}</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span>{t('classroomSolutions.feature2', 'Expert review and quality assurance')}</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span>{t('classroomSolutions.feature3', 'Safety keyword monitoring and alerts')}</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span>{t('classroomSolutions.feature4', 'QR code access for easy teacher submission')}</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span>{t('classroomSolutions.feature5', 'Professional report generation and delivery')}</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span>{t('classroomSolutions.feature6', 'Global reach for K-12 educators')}</span>
+                  </li>
+                </ul>
+                
+                <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="text-center">
+                    <h4 className="font-semibold text-blue-900 mb-2">{t('classroomSolutions.contactInfo', 'Contact Information')}</h4>
+                    <p className="text-blue-800 text-sm">
+                      {t('classroomSolutions.contactText', 'For more information on the Classroom Solutions Program, Individual, School, and District Teacher Registration, Contact us at info@remynd.online')}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* QR Code for Teacher Submissions */}
+            <div className="mt-12 text-center">
+              <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{t('classroomSolutions.quickAccess', 'Register For Free and Access Support')}</h3>
+                <p className="text-gray-600 mb-6">{t('classroomSolutions.scanQR', 'Capture What Matters, See What Changes')}</p>
+                
+                <div className="mb-6">
+                  <div className="bg-gray-100 rounded-lg p-4 inline-block">
+                    {qrLoading ? (
+                      <div className="w-48 h-48 mx-auto flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                      </div>
+                    ) : qrCodeData?.qrCode ? (
+                      <img 
+                        src={qrCodeData.qrCode} 
+                        alt="Classroom Solutions QR Code" 
+                        className="w-48 h-48 mx-auto"
+                      />
+                    ) : (
+                      <div className="w-48 h-48 mx-auto flex items-center justify-center text-gray-500">
+                        QR Code unavailable
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <Link href="/classroom-submit">
+                  <Button 
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    data-testid="button-access-form"
+                    disabled={qrLoading}
+                  >
+                    {qrLoading ? t('classroomSolutions.loading', 'Loading...') : t('classroomSolutions.accessForm', 'Access Submission Form')}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Teacher Response Lookup Section */}
+          <div className="mt-12 max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">{t('classroomSolutions.programFeatures', 'Program Features')}</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>{t('classroomSolutions.feature1', 'Evidence-based Tier 2 intervention strategies')}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>{t('classroomSolutions.feature2', 'Expert review and quality assurance')}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>{t('classroomSolutions.feature3', 'Safety keyword monitoring and alerts')}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>{t('classroomSolutions.feature4', 'QR code access for easy teacher submission')}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>{t('classroomSolutions.feature5', 'Professional report generation and delivery')}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>{t('classroomSolutions.feature6', 'Global reach for K-12 educators')}</span>
-                </li>
-              </ul>
+              <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">{t('teacherLookup.title', 'View Your Classroom Solutions Responses')}</h3>
+              <p className="text-gray-600 mb-6 text-center">{t('teacherLookup.description', 'Enter your email; to check your submitted requests and view responses.')}</p>
               
-              <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="text-center">
-                  <h4 className="font-semibold text-blue-900 mb-2">{t('classroomSolutions.contactInfo', 'Contact Information')}</h4>
-                  <p className="text-blue-800 text-sm">
-                    {t('classroomSolutions.contactText', 'For more information on the Classroom Solutions Program, Individual, School, and District Teacher Registration, Contact us at info@remynd.online')}
-                  </p>
-                </div>
-              </div>
+              <TeacherLookup />
             </div>
           </div>
-
-          {/* QR Code for Teacher Submissions */}
-          <div className="mt-12 text-center">
-            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">{t('classroomSolutions.quickAccess', 'Register For Free and Access Support')}</h3>
-              <p className="text-gray-600 mb-6">{t('classroomSolutions.scanQR', 'Capture What Matters, See What Changes')}</p>
-              
-              <div className="mb-6">
-                <div className="bg-gray-100 rounded-lg p-4 inline-block">
-                  {qrLoading ? (
-                    <div className="w-48 h-48 mx-auto flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    </div>
-                  ) : qrCodeData?.qrCode ? (
-                    <img 
-                      src={qrCodeData.qrCode} 
-                      alt="Classroom Solutions QR Code" 
-                      className="w-48 h-48 mx-auto"
-                    />
-                  ) : (
-                    <div className="w-48 h-48 mx-auto flex items-center justify-center text-gray-500">
-                      QR Code unavailable
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <Link href="/classroom-submit">
-                <Button 
-                  className="w-full bg-blue-600 hover:bg-blue-700"
-                  data-testid="button-access-form"
-                  disabled={qrLoading}
-                >
-                  {qrLoading ? t('classroomSolutions.loading', 'Loading...') : t('classroomSolutions.accessForm', 'Access Submission Form')}
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Teacher Response Lookup Section */}
-        <div className="mt-12 max-w-2xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">{t('teacherLookup.title', 'View Your Classroom Solutions Responses')}</h3>
-            <p className="text-gray-600 mb-6 text-center">{t('teacherLookup.description', 'Enter your email; to check your submitted requests and view responses.')}</p>
-            
-            <TeacherLookup />
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-br from-purple-600 to-blue-600">
