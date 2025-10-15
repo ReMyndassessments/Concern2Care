@@ -84,8 +84,10 @@ export default function TeacherVerification({ onVerificationComplete }: TeacherV
       setTeacherEmail(data.email);
 
       if (response.isNew) {
-        // New teacher - needs PIN setup
-        setCurrentStep('pin_setup');
+        // New teacher - needs to register first
+        // Pre-fill email in registration form
+        registrationForm.setValue('email', data.email);
+        setCurrentStep('register');
       } else {
         // Existing teacher - must verify their PIN
         // Clear the PIN form to prevent autocomplete issues
