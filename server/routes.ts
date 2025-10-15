@@ -3525,7 +3525,7 @@ Submitted: ${new Date().toLocaleString()}
       // Use production URL for Classroom Solutions QR code
       const baseUrl = 'https://concern2care.com';
       
-      const submissionUrl = `${baseUrl}/classroom/submit`;
+      const submissionUrl = `${baseUrl}/classroom`;
       
       // Generate QR code as data URL
       const qrCodeDataURL = await QRCode.toDataURL(submissionUrl, {
@@ -4312,7 +4312,7 @@ Submitted: ${new Date().toLocaleString()}
       // Use production URL for Classroom Solutions QR code
       const baseUrl = 'https://concern2care.com';
       
-      const submissionUrl = `${baseUrl}/classroom/submit`;
+      const submissionUrl = `${baseUrl}/classroom`;
       
       // Generate QR code as data URL
       const qrCodeDataURL = await QRCode.toDataURL(submissionUrl, {
