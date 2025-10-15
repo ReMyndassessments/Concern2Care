@@ -520,10 +520,10 @@ export default function HelpGuide() {
         {/* Individual Teacher Registration - Feature Flag Conditional */}
         {isFeatureEnabled('individual_teacher_registration') && (
           <Section icon={User} title={t('help.individualTeacherRegistration', 'Individual Teacher Registration')}>
-            <p className="text-sm text-gray-600 mb-4">
+            <div className="text-sm text-gray-600 mb-4">
               <Badge variant="outline" className="mr-2 bg-orange-50 text-orange-700 border-orange-200">Individual Teachers</Badge>
               For individual teachers who want to use Concern2Care without school administration setup.
-            </p>
+            </div>
 
             <SubSection title={t('help.gettingStartedIndividual', 'Getting Started as Individual Teacher')}>
               <FeatureList features={[
