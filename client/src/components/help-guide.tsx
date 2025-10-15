@@ -580,59 +580,6 @@ export default function HelpGuide() {
           </Section>
         )}
 
-        {/* Admin Features */}
-        <Section icon={Shield} title={t('help.adminFeatures', 'School Administrator Features')}>
-          <p className="text-sm text-gray-600 mb-4">
-            <Badge variant="outline" className="mr-2">{t('help.schoolAdminOnly', 'School Admin Only')}</Badge>
-            {t('help.adminFeaturesDesc', 'These features are available to designated school administrators for managing their institution\'s Concern2Care usage.')}
-          </p>
-
-          <SubSection title={t('help.teacherAccountManagement', 'Teacher Account Management')}>
-            <FeatureList features={[
-              t('help.teacherMgmt1', "Add new teacher accounts for your school"),
-              t('help.teacherMgmt2', "Edit teacher contact information and profiles"),
-              t('help.teacherMgmt3', "Grant additional monthly requests when needed"),
-              t('help.teacherMgmt4', "Deactivate teacher accounts (e.g., staff changes)"),
-              t('help.teacherMgmt5', "View teacher usage statistics and activity")
-            ]} />
-          </SubSection>
-
-          <SubSection title={t('help.schoolWideEmail', 'School-Wide Email Configuration')}>
-            <FeatureList features={[
-              t('help.schoolEmail1', "Set up school district email settings for all teachers"),
-              t('help.schoolEmail2', "Configure institutional SMTP server details"), 
-              t('help.schoolEmail3', "Allow teachers to use school email for report sharing"),
-              t('help.schoolEmail4', "Test and validate school email configuration")
-            ]} />
-          </SubSection>
-
-          <SubSection title={t('help.schoolAnalytics', 'School Analytics and Reporting')}>
-            <FeatureList features={[
-              t('help.analytics1', "View school-wide usage dashboard and trends"),
-              t('help.analytics2', "Generate reports on intervention effectiveness"),
-              t('help.analytics3', "Monitor teacher engagement and adoption rates"),
-              t('help.analytics4', "Export school data for institutional analysis"),
-              t('help.analytics5', "Track most common concern types and patterns")
-            ]} />
-          </SubSection>
-
-          <SubSection title={t('help.userSupportTraining', 'User Support and Training')}>
-            <FeatureList features={[
-              t('help.support1', "Send password reset emails to teachers"),
-              t('help.support2', "Access teacher training resources and guides"),
-              t('help.support3', "Monitor help desk issues and common problems"),
-              t('help.support4', "Coordinate staff training sessions")
-            ]} />
-          </SubSection>
-
-          <Alert>
-            <Info className="h-4 w-4" />
-            <AlertDescription>
-{t('help.adminPrivacyNote', 'Note: School administrators cannot access individual teacher\'s concern details or reports for privacy protection, but can view aggregated usage statistics.')}
-            </AlertDescription>
-          </Alert>
-        </Section>
-
         {/* Language and International Support */}
         <Section icon={Languages} title={t('help.languageSupport', 'Language and International Support')}>
           <SubSection title={t('help.multiLanguage', 'Multi-Language Capabilities')}>
