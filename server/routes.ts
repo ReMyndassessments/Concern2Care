@@ -3522,8 +3522,10 @@ Submitted: ${new Date().toLocaleString()}
     try {
       const QRCode = await import('qrcode');
       
-      // Use production URL for Classroom Solutions QR code
-      const baseUrl = 'https://concern2care.com';
+      // Use the actual current domain (works in both dev and production)
+      const protocol = req.protocol || 'https';
+      const host = req.get('host');
+      const baseUrl = `${protocol}://${host}`;
       
       const submissionUrl = `${baseUrl}/classroom`;
       
@@ -4309,8 +4311,10 @@ Submitted: ${new Date().toLocaleString()}
     try {
       const QRCode = await import('qrcode');
       
-      // Use production URL for Classroom Solutions QR code
-      const baseUrl = 'https://concern2care.com';
+      // Use the actual current domain (works in both dev and production)
+      const protocol = req.protocol || 'https';
+      const host = req.get('host');
+      const baseUrl = `${protocol}://${host}`;
       
       const submissionUrl = `${baseUrl}/classroom`;
       
