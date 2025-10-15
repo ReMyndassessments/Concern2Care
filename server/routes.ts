@@ -3527,7 +3527,7 @@ Submitted: ${new Date().toLocaleString()}
       const host = req.get('host');
       const baseUrl = `${protocol}://${host}`;
       
-      const submissionUrl = `${baseUrl}/classroom`;
+      const submissionUrl = `${baseUrl}/classroom-submit`;
       
       // Generate QR code as data URL
       const qrCodeDataURL = await QRCode.toDataURL(submissionUrl, {
@@ -4316,7 +4316,7 @@ Submitted: ${new Date().toLocaleString()}
       const host = req.get('host');
       const baseUrl = `${protocol}://${host}`;
       
-      const submissionUrl = `${baseUrl}/classroom`;
+      const submissionUrl = `${baseUrl}/classroom-submit`;
       
       // Generate QR code as data URL
       const qrCodeDataURL = await QRCode.toDataURL(submissionUrl, {
