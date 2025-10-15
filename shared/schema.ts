@@ -265,7 +265,8 @@ export const classroomEnrolledTeachers = pgTable("classroom_enrolled_teachers", 
   securityQuestion: varchar("security_question", { length: 200 }), // Question chosen by teacher
   securityAnswer: varchar("security_answer", { length: 64 }), // Hashed answer
   
-  enrolledBy: varchar("enrolled_by").references(() => users.id).notNull(),
+  enrolledBy: varchar("enrolled_by").references(() => users.id), // Nullable for self-registration
+  enrollmentSource: varchar("enrollment_source").default("admin"), // "admin" | "self"
   enrolledAt: timestamp("enrolled_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

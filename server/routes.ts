@@ -3586,6 +3586,52 @@ Submitted: ${new Date().toLocaleString()}
     }
   });
 
+  // Public: Teacher self-registration (no authentication required)
+  app.post('/api/classroom/register', requireClassroomSolutions, async (req: any, res) => {
+    try {
+      const selfRegistrationSchema = z.object({
+        firstName: z.string().min(1, 'First name is required'),
+        lastName: z.string().min(1, 'Last name is required'),
+        email: z.string().email('Valid email is required'),
+        position: z.string().min(1, 'Position is required'),
+        school: z.string().optional(),
+      });
+
+      const validatedData = selfRegistrationSchema.parse(req.body);
+
+      // Check if teacher already exists
+      const existingTeacher = await storage.getClassroomEnrolledTeacherByEmail(validatedData.email);
+      if (existingTeacher) {
+        return res.status(409).json({ message: 'A teacher with this email is already registered' });
+      }
+
+      // Create teacher with self-registration source
+      const teacher = await storage.createClassroomEnrolledTeacher({
+        ...validatedData,
+        enrollmentSource: 'self',
+        requestsLimit: 3, // Default 3 requests for self-registered teachers
+      });
+
+      res.json({ 
+        success: true, 
+        teacher: {
+          id: teacher.id,
+          firstName: teacher.firstName,
+          lastName: teacher.lastName,
+          email: teacher.email,
+          requestsLimit: teacher.requestsLimit
+        },
+        message: 'Registration successful! You can now submit your first request.'
+      });
+    } catch (error: any) {
+      console.error('Error in self-registration:', error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ message: error.errors[0].message });
+      }
+      res.status(500).json({ message: 'Failed to register. Please try again.' });
+    }
+  });
+
   // Admin: Update enrolled teacher
   app.put('/api/admin/classroom/teachers/:id', requireAdmin, requireClassroomSolutions, async (req: any, res) => {
     try {
