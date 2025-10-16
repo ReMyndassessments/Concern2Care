@@ -1,0 +1,1000 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Preparation Document - Jay's Parent Meeting</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .agenda-section, .concerns-section, .notes-section, .includes-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .agenda-content, .notes-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+        white-space: pre-wrap;
+    }
+
+    .concerns-summary {
+        background: #eff6ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .total-concerns {
+        font-weight: 600;
+        color: #1e40af;
+        margin: 0;
+    }
+
+    .concern-card {
+        background: #fefefe;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .concern-header {
+        background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 1.5rem;
+        border-bottom: 1px solid #d1d5db;
+    }
+
+    .concern-student-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .concern-counter {
+        font-weight: 500;
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .concern-details {
+        padding: 1.5rem;
+    }
+
+    .concern-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .concern-meta-item {
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .concern-description, .actions-taken, .ai-interventions, .student-profile {
+        margin-bottom: 1.5rem;
+    }
+
+    .concern-description h5, .actions-taken h5, .ai-interventions h5, .student-profile h5 {
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .concern-description p {
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #10b981;
+        margin: 0;
+    }
+
+    .actions-taken ul, .student-profile ul {
+        list-style: none;
+        padding: 0;
+        background: #fef7f2;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+
+    .actions-taken li, .student-profile li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .actions-taken li::before {
+        content: "•";
+        color: #f59e0b;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .student-profile li::before {
+        content: "•";
+        color: #10b981;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .ai-interventions .interventions-content {
+        background: #fefefe;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-separator {
+        height: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 1.5rem 0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .insights-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+    }
+
+    .insight-icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .insights-intro {
+        margin-bottom: 1.5rem;
+    }
+
+    .ai-badge {
+        display: inline-block;
+        background: #3b82f6;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+    }
+
+    .insights-description {
+        color: #78350f;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .insights-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .insight-item {
+        display: flex;
+        gap: 1rem;
+        background: white;
+        padding: 1.25rem;
+        border-radius: 10px;
+        border-left: 4px solid #f59e0b;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+    }
+
+    .insight-item:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateX(4px);
+    }
+
+    .insight-number {
+        flex-shrink: 0;
+        width: 2rem;
+        height: 2rem;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .insight-text {
+        flex: 1;
+        color: #374151;
+        line-height: 1.7;
+        font-size: 0.95rem;
+    }
+
+    .includes-content {
+        background: #f0fdf4;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #10b981;
+    }
+
+    .include-item {
+        color: #047857;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
+        padding: 2rem 0;
+        border-top: 2px solid #e2e8f0;
+        margin-top: 3rem;
+    }
+
+    .footer-left, .footer-right {
+        color: #4b5563;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    .footer-right {
+        text-align: right;
+    }
+
+    .footer-right strong {
+        color: #1f2937;
+        font-weight: 700;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Meeting Preparation Document</h2>
+                <p class="report-date">Generated on October 16, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Meeting Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Meeting Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Title:</span>
+                    <span class="info-value">Jay's Parent Meeting</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Type:</span>
+                    <span class="info-value">Parent Conference</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value">2025-10-16</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Time:</span>
+                    <span class="info-value">15:23</span>
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- Meeting Agenda Section -->
+        <section class="agenda-section">
+            <h3 class="section-title">Meeting Agenda</h3>
+            <div class="agenda-content">
+                discuss with parents jay's issues and explore a plan to support him across settings
+            </div>
+        </section>
+        
+
+        <!-- Student Concerns Section -->
+        <section class="concerns-section">
+            <h3 class="section-title">Student Concerns to Discuss</h3>
+            <div class="concerns-summary">
+                <p class="total-concerns">Total concerns selected: 3</p>
+            </div>
+            <div class="concerns-list">
+                
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">jay R (Grade 7th)</h4>
+          <div class="concern-counter">1. Behavior, Academic</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/16/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>Jay needs support for his inability to maintain attention and focus</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Learning Disability</li><li>Other needs: Jay is severely disruptive in class</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">jay R (Grade 9th)</h4>
+          <div class="concern-counter">2. Attendance, Peer Relationships</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/10/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>Jay has begun to attack students and some male teachers.</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p>Of course. It's clear you're dealing with a highly complex and urgent situation with Jay. Your immediate actions—talking with him, contacting home, and alerting your section head—were exactly the right first steps. This is a situation that calls for a coordinated, multi-tiered approach, and your professional judgment in escalating it is crucial.</p><p>Building on your existing classroom management skills and your direct knowledge of Jay, here is a comprehensive framework of evidence-based strategies to consider, structured to complement the work you've already begun.</p><p>***</p><p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Detailed Analysis:</strong> Given your professional expertise, you've likely observed that Jay's behaviors are not isolated. The combination of ADHD (impulsivity, emotional dysregulation), beginner EAL status (frustration from communication barriers, potential social isolation), and academic struggle creates a perfect storm. The physical aggression is a severe manifestation of these underlying challenges, likely stemming from an inability to articulate needs, feelings of inadequacy, and a fight response to perceived threats or overwhelming frustration.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Connection to Data:</strong> The incident data (attacking peers/teachers) is the primary assessment here. It directly targets our intervention goals: immediate de-escalation, building emotional regulation skills, and creating academic and communicative access.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Risk Factors:</strong> Undiagnosed or unaddressed trauma, language barrier leading to misinterpretation of social cues, potential bullying or peer rejection, low academic self-concept.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Protective Factors:</strong> A school team (you) that is proactively engaged, parental contact already established, a formal ADHD diagnosis that provides a framework for understanding.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Primary Approach:</strong> A combined framework of <strong>Trauma-Informed Practices</strong> (acknowledging that aggression often stems from a state of dysregulation and fear) and <strong>Positive Behavioral Interventions and Supports (PBIS)</strong> at the Tier 2/Tier 3 level.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Theoretical Foundation:</strong> <strong>Behavioral</strong> (modifying antecedents and teaching replacement behaviors) and <strong>Social-Emotional Learning (SEL)</strong> (developing self-awareness and self-management skills).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Expected Outcomes:</strong> In the short term, a significant reduction in aggressive incidents. In the medium term, increased use of appropriate communication strategies and successful engagement with modified academic tasks. Success will be measured by data tracking of behaviors and task completion.</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p>The immediate goal is safety and de-escalation.</p><p><h4 class="bold-heading">Strategy 1: Safety & Connection Plan</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> Trauma-Informed Care; PBIS.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> A pre-arranged "safe space" pass; a visual "feelings chart" with emojis and basic words (angry, sad, frustrated, calm, tired); a simple "break card" Jay can non-verbally hand to you.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Before Class (2 mins):</strong> Prively show Jay the "break card" and the "safe space" (e.g., a quiet corner of the library, counselor's office). Use simple language and a calm tone: "Jay, if you feel upset, give me this card. You can go to [safe space] for 5 minutes to calm down. No talking, just calm."<br>    2.  <strong>During Class (Ongoing):</strong> Use non-verbal cues (a thumbs-up, a gentle tap on his desk) to check in. Acknowledge any effort, however small.<br>    3.  <strong>After an Incident (10 mins):</strong> Once completely calm, use the feelings chart to help him identify his emotion. The goal is not a lecture but connection: "I saw you were [point to 'angry']. What do you need?"<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Tally each use (or attempted use) of the break card and each aggressive incident on a simple weekly sheet.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> One successful, non-escorted use of the break card; a 50% reduction in aggressive incidents in Week 2 compared to Week 1.</li></ul></p><p><h4 class="bold-heading">Strategy 2: Academic & Language Primer</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> Universal Design for Learning (UDL); EAL Scaffolding.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> Vocabulary list for the upcoming lesson; a graphic organizer; a translated version of key instructions if possible (using Google Translate).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Preview (5 mins before homeroom/bell):</strong> Meet Jay briefly. Preview the day's main task using the graphic organizer and pre-teach 2-3 key vocabulary words with visuals.<br>    2.  <strong>During Task:</strong> Provide the graphic organizer and word bank as a default support.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Track task initiation and completion (%, even if modified).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> Jay attempts the assigned task with supports for 5 consecutive minutes.</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Emotional Regulation & Communication</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Intervention Program:</strong> Direct instruction in SEL skills using a curriculum like "Zones of Regulation" adapted for EAL.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Frequency:</strong> 15-minute small-group session 3x/week, ideally with a counselor or learning support teacher.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Weekly data on the frequency of using a taught strategy (e.g., "When I feel in the yellow zone, I can take a deep breath").</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adaptation Protocol:</strong> If no progress after 2 weeks, increase session frequency or move to 1:1 instruction.</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Skill Transfer:</strong> Teach Jay to recognize his "early warning signs" of anger in other classes. Coach other teachers on how to honor his break card.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Independence Building:</strong> Fade the pre-teaching support to a weekly preview instead of daily. transition from a break card to a verbal request.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Family Engagement:</strong> Shift parent communication from reporting incidents to sharing skills. Provide the family with the feelings chart visuals and simple phrases to use at home.</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Daily Data:</strong> Tally of break card use vs. aggressive outbursts (1-min end-of-day log).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Weekly Assessment:</strong> Review the data tally and academic task completion % each Friday.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Monthly Review:</strong> Formal meeting with the support team (you, section head, counselor, EAL specialist) to review all data and adjust the plan.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Decision Points:</strong> If 3 aggressive incidents occur in one week, the plan is not working and must be escalated/modified immediately.</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Team Members:</strong> <strong>This is critical.</strong> You cannot do this alone. The team must include you, the section head, school counselor, EAL specialist, and parents.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Meeting Schedule:</strong> Brief (15 min) weekly check-in with the section head; full team meeting every 4 weeks.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation:</strong> A shared log (e.g., a simple Google Doc) where all team members can note observations and data.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Parent Communication:</strong> Weekly positive email or message (e.g., "This week, Jay used his break strategy once") in addition to any incident reports. Frame them as partners.</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Warning Signs:</strong> Increased agitation, refusal of supports, any threat of harm.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Immediate Response:</strong> School-specific crisis protocol. Activate the support team. Do not engage physically unless trained and absolutely necessary for safety.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Referral Criteria:</strong> <strong>Now.</strong> Given the severity, a referral for a functional behavioral assessment (FBA) and possible psychological evaluation is urgent. This is beyond typical classroom management.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Emergency Contacts:</strong> School counselor on call, section head, school safety officer.</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Professional Development:</strong> "Trauma-Informed Practices in the Classroom" (EdWeb has free webinars); "Managing Challenging Behaviors for Students with ADHD."</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Educational Materials:</strong> "The Zones of Regulation" curriculum; Colorín Colorado website (excellent for EAL strategies).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Technology Tools:</strong> Google Translate app; speech-to-text software to reduce writing burden.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Community Resources:</strong> Explore local mental health services that offer counseling for adolescents; ADHD coaching services.</li></ul></p><p>This is an incredibly challenging situation, and your proactive approach is the first and most important step. Please lean on your team—this level of need requires a systemic response. You are his homeroom teacher, the key anchor and coordinator, but not the sole interventionist.</p><p><h3 class="intervention-title">🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED</h3></p><p><h4 class="sub-heading">Share this case with Student Support immediately:</h4><br><ul class="intervention-list"><li class="main-bullet">Forward this concern and intervention plan to your school's student support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Schedule urgent consultation with counselor, social worker, or special education coordinator  </li></ul><br><ul class="intervention-list"><li class="main-bullet">Document all interventions and student responses for the support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Consider immediate safety protocols if student welfare is at risk</li></ul><br><ul class="intervention-list"><li class="main-bullet">Escalate to administration if no improvement within 48-72 hours</li></ul></p><p><h4 class="bold-heading">Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.</h4></p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: ADHD</li><li>EAL Learner (Beginner English proficiency)</li><li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">jay R (Grade 7th)</h4>
+          <div class="concern-counter">3. Behavior</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/10/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>Jay has had his third fight this week where he injured another student and attacked a teacher.</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p># Assessment Summary</p><p>Based on the urgent level concerns related to Behavior for jay R. (Grade 7th), the following Tier 2 interventions are recommended to address the observed challenges in All Classrooms.</p><p>## Immediate Interventions (1-2 weeks)</p><p><h4 class="bold-heading">1. Structured Check-In System</h4><br><ul class="intervention-list"><li class="main-bullet">Implementation: Daily 2-minute check-ins at the beginning of class</li></ul><br><ul class="intervention-list"><li class="main-bullet">Expected outcomes: Improved communication and early identification of issues</li></ul><br><ul class="intervention-list"><li class="main-bullet">Timeline: Start immediately, continue for 2 weeks minimum</li></ul><br><ul class="intervention-list"><li class="main-bullet">Materials needed: Simple check-in form or digital tool</li></ul></p><p><h4 class="bold-heading">2. Clear Expectations and Visual Supports</h4><br><ul class="intervention-list"><li class="main-bullet">Implementation: Create visual schedule and behavior expectations chart</li></ul><br><ul class="intervention-list"><li class="main-bullet">Expected outcomes: Increased understanding of classroom routines</li></ul><br><ul class="intervention-list"><li class="main-bullet">Timeline: Implement within 3 days</li></ul><br><ul class="intervention-list"><li class="main-bullet">Materials needed: Poster board, markers, laminator</li></ul></p><p>## Short-term Strategies (2-6 weeks)</p><p><h4 class="bold-heading">3. Targeted Skill Building</h4><br><ul class="intervention-list"><li class="main-bullet">Implementation: 15-minute focused sessions 3x per week</li></ul><br><ul class="intervention-list"><li class="main-bullet">Expected outcomes: Improvement in specific skill areas</li></ul><br><ul class="intervention-list"><li class="main-bullet">Timeline: 4-6 week intervention cycle</li></ul><br><ul class="intervention-list"><li class="main-bullet">Materials needed: Skill-specific worksheets and manipulatives</li></ul></p><p><h4 class="bold-heading">4. Peer Support System</h4><br><ul class="intervention-list"><li class="main-bullet">Implementation: Pair student with trained peer mentor</li></ul><br><ul class="intervention-list"><li class="main-bullet">Expected outcomes: Improved social skills and academic support</li></ul><br><ul class="intervention-list"><li class="main-bullet">Timeline: 4 weeks with weekly check-ins</li></ul><br><ul class="intervention-list"><li class="main-bullet">Materials needed: Peer mentor training materials</li></ul></p><p>## Long-term Support (6+ weeks)</p><p><h4 class="bold-heading">5. Comprehensive Behavior Plan</h4><br><ul class="intervention-list"><li class="main-bullet">Implementation: Develop individualized behavior intervention plan</li></ul><br><ul class="intervention-list"><li class="main-bullet">Expected outcomes: Sustained positive behavior changes</li></ul><br><ul class="intervention-list"><li class="main-bullet">Timeline: Ongoing with monthly reviews</li></ul><br><ul class="intervention-list"><li class="main-bullet">Materials needed: Data collection sheets, reward system</li></ul></p><p><h4 class="bold-heading">6. Family Collaboration</h4><br><ul class="intervention-list"><li class="main-bullet">Implementation: Regular communication with family about strategies</li></ul><br><ul class="intervention-list"><li class="main-bullet">Expected outcomes: Consistent support across environments</li></ul><br><ul class="intervention-list"><li class="main-bullet">Timeline: Ongoing partnership</li></ul><br><ul class="intervention-list"><li class="main-bullet">Materials needed: Communication log, home-school collaboration forms</li></ul></p><p>## Progress Monitoring</p><p><ul class="intervention-list"><li class="main-bullet">Weekly data collection on target behaviors/skills</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bi-weekly review of intervention effectiveness</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monthly team meetings to assess progress</li></ul><br><ul class="intervention-list"><li class="main-bullet">Use of standardized assessment tools as appropriate</li></ul></p><p>## When to Escalate</p><p>Consider referring to the student support team if:<br><ul class="intervention-list"><li class="main-bullet">No improvement after 4-6 weeks of consistent intervention</li></ul><br><ul class="intervention-list"><li class="main-bullet">Behaviors escalate in frequency or intensity</li></ul><br><ul class="intervention-list"><li class="main-bullet">Student expresses safety concerns</li></ul><br><ul class="intervention-list"><li class="main-bullet">Additional assessment needs are identified</li></ul><br><ul class="intervention-list"><li class="main-bullet">Family requests formal evaluation</li></ul></p><p>## Additional Research-Based Resources</p><p><h4 class="sub-heading">Professional Development:</h4> Consider attending training on specific intervention strategies<br><h4 class="sub-heading">Assessment Tools:</h4> Use validated instruments to monitor progress (CBM, behavior tracking)<br><h4 class="sub-heading">Collaboration:</h4> Partner with special education team and school psychologist for ongoing support</p><p><h3 class="intervention-title">🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED</h3></p><p><h4 class="sub-heading">Share this case with Student Support immediately:</h4><br><ul class="intervention-list"><li class="main-bullet">Forward this concern and intervention plan to your school's student support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Schedule urgent consultation with counselor, social worker, or special education coordinator  </li></ul><br><ul class="intervention-list"><li class="main-bullet">Document all interventions and student responses for the support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Consider immediate safety protocols if student welfare is at risk</li></ul><br><ul class="intervention-list"><li class="main-bullet">Escalate to administration if no improvement within 48-72 hours</li></ul></p><p><h4 class="bold-heading">Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.</h4></p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Autism Spectrum</li><li>EAL Learner (Beginner English proficiency)</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+            </div>
+        </section>
+
+        
+        <!-- AI-Generated Collaboration Insights Section -->
+        <section class="insights-section">
+            <h3 class="section-title">
+                <span class="insight-icon">👪</span>
+                Parent Partnership Talking Points
+            </h3>
+            <div class="insights-intro">
+                <p class="ai-badge">🤖 AI-Generated Insights</p>
+                <p class="insights-description">
+                    Based on the concerns selected, here are suggested talking points and partnership strategies for your parent meeting:
+                </p>
+            </div>
+            <div class="insights-list">
+                
+                    <div class="insight-item">
+                        <div class="insight-number">1</div>
+                        <div class="insight-text">Frame as partnership: 'I'm noticing [behavior] at school. Have you observed anything similar at home?' This opens dialogue without blame</div>
+                    </div>
+                
+                    <div class="insight-item">
+                        <div class="insight-number">2</div>
+                        <div class="insight-text">Share specific successful strategies from class that parents can adapt at home (visual schedules, transition warnings, positive reinforcement)</div>
+                    </div>
+                
+                    <div class="insight-item">
+                        <div class="insight-number">3</div>
+                        <div class="insight-text">Discover student interests through parents: What does the student love talking about at home? How can we incorporate these interests into learning?</div>
+                    </div>
+                
+                    <div class="insight-item">
+                        <div class="insight-number">4</div>
+                        <div class="insight-text">Partner on language development: Ask about home language use. Suggest ways to build vocabulary in both languages through everyday conversations</div>
+                    </div>
+                
+                    <div class="insight-item">
+                        <div class="insight-number">5</div>
+                        <div class="insight-text">Understand attendance barriers together: Explore if there are health, transportation, or family concerns affecting school attendance</div>
+                    </div>
+                
+            </div>
+        </section>
+        
+
+        
+        <!-- Additional Notes Section -->
+        <section class="notes-section">
+            <h3 class="section-title">Additional Notes</h3>
+            <div class="notes-content">
+                Involve the school counselor for additional intervention support
+            </div>
+        </section>
+        
+
+        
+        <!-- Document Includes Section -->
+        <section class="includes-section">
+            <h3 class="section-title">Document Includes</h3>
+            <div class="includes-content">
+                <div class="include-item">• AI-generated intervention recommendations</div>
+                
+            </div>
+        </section>
+        
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p>Generated: October 16, 2025 at 05:25 AM</p>
+                    <p>Prepared by: Demo-Teacher ROBERTS</p>
+                </div>
+                <div class="footer-right">
+                    <p><strong>Concern2Care</strong></p>
+                    <p>AI-Powered Educational Support Platform</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .insights-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+        background: #fef3c7 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .insight-item {
+        padding: 1rem !important;
+        margin-bottom: 0.8rem !important;
+        page-break-inside: avoid !important;
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .insight-item:hover {
+        transform: none !important;
+    }
+
+    .insight-number {
+        width: 1.8rem !important;
+        height: 1.8rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .insight-text {
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+    }
+
+    .ai-badge {
+        font-size: 0.8rem !important;
+        padding: 0.2rem 0.6rem !important;
+    }
+
+    .insights-description {
+        font-size: 0.95rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>

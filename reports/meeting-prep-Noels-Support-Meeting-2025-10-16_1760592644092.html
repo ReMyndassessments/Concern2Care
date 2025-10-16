@@ -1,0 +1,1397 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Preparation Document - Noel's Support Meeting</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #2563eb;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .info-section, .agenda-section, .concerns-section, .notes-section, .includes-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .agenda-content, .notes-content {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        line-height: 1.7;
+        white-space: pre-wrap;
+    }
+
+    .concerns-summary {
+        background: #eff6ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #3b82f6;
+    }
+
+    .total-concerns {
+        font-weight: 600;
+        color: #1e40af;
+        margin: 0;
+    }
+
+    .concern-card {
+        background: #fefefe;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .concern-header {
+        background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 1.5rem;
+        border-bottom: 1px solid #d1d5db;
+    }
+
+    .concern-student-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .concern-counter {
+        font-weight: 500;
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .concern-details {
+        padding: 1.5rem;
+    }
+
+    .concern-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .concern-meta-item {
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .concern-description, .actions-taken, .ai-interventions, .student-profile {
+        margin-bottom: 1.5rem;
+    }
+
+    .concern-description h5, .actions-taken h5, .ai-interventions h5, .student-profile h5 {
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .concern-description p {
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #10b981;
+        margin: 0;
+    }
+
+    .actions-taken ul, .student-profile ul {
+        list-style: none;
+        padding: 0;
+        background: #fef7f2;
+        border-radius: 6px;
+        padding: 1rem;
+    }
+
+    .actions-taken li, .student-profile li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #374151;
+    }
+
+    .actions-taken li::before {
+        content: "•";
+        color: #f59e0b;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .student-profile li::before {
+        content: "•";
+        color: #10b981;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .ai-interventions .interventions-content {
+        background: #fefefe;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .intervention-separator {
+        height: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 1.5rem 0;
+    }
+
+    .intervention-title {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .insights-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+    }
+
+    .insight-icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .insights-intro {
+        margin-bottom: 1.5rem;
+    }
+
+    .ai-badge {
+        display: inline-block;
+        background: #3b82f6;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+    }
+
+    .insights-description {
+        color: #78350f;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .insights-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .insight-item {
+        display: flex;
+        gap: 1rem;
+        background: white;
+        padding: 1.25rem;
+        border-radius: 10px;
+        border-left: 4px solid #f59e0b;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+    }
+
+    .insight-item:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateX(4px);
+    }
+
+    .insight-number {
+        flex-shrink: 0;
+        width: 2rem;
+        height: 2rem;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .insight-text {
+        flex: 1;
+        color: #374151;
+        line-height: 1.7;
+        font-size: 0.95rem;
+    }
+
+    .includes-content {
+        background: #f0fdf4;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #10b981;
+    }
+
+    .include-item {
+        color: #047857;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
+        padding: 2rem 0;
+        border-top: 2px solid #e2e8f0;
+        margin-top: 3rem;
+    }
+
+    .footer-left, .footer-right {
+        color: #4b5563;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    .footer-right {
+        text-align: right;
+    }
+
+    .footer-right strong {
+        color: #1f2937;
+        font-weight: 700;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Meeting Preparation Document</h2>
+                <p class="report-date">Generated on October 16, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        <!-- Meeting Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Meeting Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Title:</span>
+                    <span class="info-value">Noel's Support Meeting</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Type:</span>
+                    <span class="info-value">SST</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value">2025-10-16</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Time:</span>
+                    <span class="info-value">15:23</span>
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- Meeting Agenda Section -->
+        <section class="agenda-section">
+            <h3 class="section-title">Meeting Agenda</h3>
+            <div class="agenda-content">
+                Discuss with Noel's teachers the various issues of concern and explore a plan to support him across classroom and subject settings
+            </div>
+        </section>
+        
+
+        <!-- Student Concerns Section -->
+        <section class="concerns-section">
+            <h3 class="section-title">Student Concerns to Discuss</h3>
+            <div class="concerns-summary">
+                <p class="total-concerns">Total concerns selected: 13</p>
+            </div>
+            <div class="concerns-list">
+                
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 5th)</h4>
+          <div class="concern-counter">1. Academic</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Classroom</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/24/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>noel needs math help</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p>Of course. As a fellow educator, I recognize you are already expertly observing and assessing Noel's needs. The following analysis and strategies are offered to build upon your professional insights, providing a structured, evidence-based framework you can adapt to your classroom context.</p><p><h3 class="intervention-title">Student Learning Profile Summary</h3></p><p>Based on the limited profile provided, a strategic approach for a 5th-grade math student like Noel would focus on creating a highly accessible, engaging, and supportive learning environment. Without specific data, we will design a proactive plan rooted in UDL principles to uncover and support Noel's unique strengths and challenges. The goal is to reduce barriers to learning before they become obstacles, allowing you to gather more precise data on what works best for him.</p><p>---</p><p><h2 class="major-heading">1. Content Modifications</h2></p><p><h3 class="intervention-title">Adjusting Complexity</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Concrete Example: Task Analysis & Work Samples:</strong> Before introducing a new standard (e.g., 5.NBT.5 - Multiplying Multi-digit Numbers), provide a completed example of a similar problem. Use a highlighter to color-code the steps: yellow for setting up the problem, green for the multiplication of the ones place, blue for the tens place, etc. This visual scaffold makes a complex process manageable (Hudson & Miller, 2006).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Concrete Example: Strategic Number Choice:</strong> When assigning practice problems, pre-select numbers that minimize computational frustration and allow focus on the core concept. For example, when introducing long division, use problems with single-digit divisors that result in no remainders before progressing to more complex numbers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Concrete Example: Vocabulary Cards:</strong> Create a personal math word wall for Noel. On one side of an index card, write the term (e.g., "quotient"); on the back, write a student-friendly definition and a visual example. He can build this set throughout the year (Marzano, 2004).</li></ul></p><p><h3 class="intervention-title">Multiple Representations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Visual:</strong> Use "Cubes, Pictures, Numbers" to solve word problems. Noel must show his work in three ways: 1) Using base-ten blocks (cubes), 2) Drawing a diagram or bar model (pictures), and 3) Writing the number sentence (numbers). This strengthens the connection between concrete, representational, and abstract (CRA) understanding (Witzel, Riccomini, & Schneider, 2008).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Auditory:</strong> Use "Math Chants" or songs for memorizing key facts, like the steps for long division ("Divide, Multiply, Subtract, Bring Down"). Record your instructions for complex tasks on a QR code that Noel can scan with a tablet to listen to as many times as needed.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Kinesthetic:</strong> For geometry, use straws and pipe cleaners to build 2D shapes and 3D figures. For fractions, use fraction circles or a folded piece of paper to physically manipulate parts of a whole.</li></ul></p><p><h3 class="intervention-title">Interest-Based Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Choice Menus:</strong> Create a "Math Menu" for unit review. Noel can choose 3 activities from a list of 6 to demonstrate understanding (e.g., "Create a comic strip explaining a math concept," "Design a board game that uses these skills," "Write and solve 5 word problems about [a topic of interest, e.g., video games, sports]" (Tomlinson, 2014).</li></ul></p><p>---</p><p><h2 class="major-heading">2. Process Modifications</h2></p><p><h3 class="intervention-title">Instructional Delivery</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Chunking & Pacing:</strong> Use a visual timer (e.g., Time Timer) to break independent work into manageable 10-15 minute chunks. After each chunk, provide a brief "brain break" or a chance for Noel to check in with you or a peer.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Collaborative Balance:</strong> Implement "Think-Pair-Share" for problem-solving. This gives Noel individual think time (processing) before discussing with one partner (low-risk practice) and then sharing with the whole group.</li></ul></p><p><h3 class="intervention-title">Scaffolding Techniques</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Step-by-Step Checklists:</strong> For multi-step problems (like long division or multi-step word problems), provide a laminated checklist. Noel can use a dry-erase marker to check off each step as he completes it, promoting independence and metacognition.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Think-Alouds:</strong> Explicitly model your problem-solving thought process. "When I see this word problem, the first thing I do is look for the question. I see it asks for the total cost. That tells me I probably need to add or multiply..."</li></ul></p><p><h3 class="intervention-title">Technology Integration</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Assistive Technology:</strong> Introduce text-to-speech tools (like the built-in Immersive Reader in Microsoft products or on a tablet) for reading word problems. This removes decoding barriers and allows focus on the math.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Digital Tools:</strong> Use interactive virtual manipulatives, such as those on the National Library of Virtual Manipulatives or Math Learning Center apps, for hands-on practice without physical clutter.</li></ul></p><p>---</p><p><h2 class="major-heading">3. Product Alternatives</h2></p><p><h3 class="intervention-title">Assessment Options</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Multiple Means of Action & Expression:</strong> For an end-of-unit assessment on fractions, offer a choice:</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Traditional:* Complete a 10-problem worksheet.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Oral/Visual:* Explain the process of adding fractions with unlike denominators using a whiteboard to illustrate.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Project-Based:* Design a "Fraction Pizza" menu, showing different pizza slices as fractions and creating word problems based on customer orders.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Modified Rubrics:</strong> Use a single-point rubric that clearly defines the "Proficient" column for the learning objective, with space for comments on "Areas for Growth" and "Areas of Strength." This reduces cognitive load and provides targeted feedback.</li></ul></p><p>---</p><p><h2 class="major-heading">4. Learning Environment Optimization</h2></p><p><h3 class="intervention-title">Physical Space</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Seating:</strong> Offer flexible seating options (e.g., a standing desk option, a quiet corner with a carrel) and strategically seat Noel near positive peer models and away from high-traffic/distracting areas.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Sensory & Organization:</strong> Provide a "toolkit" for his desk: a stress ball for fidgeting, highlighters for key information, and a folder with a clear "To Do"/"Done" pocket system.</li></ul></p><p><h3 class="intervention-title">Social Environment</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Grouping Strategies:</strong> Use purposeful pairing for activities. For example, pair Noel with a student who has strong verbal skills for a "Think-Pair-Share," and with a student who is methodical for a hands-on activity.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Communication Supports:</strong> Teach and post sentence stems for math talk: "I agree with... because...," "Another strategy could be...," "Can you explain how you got that answer?"</li></ul></p><p>---</p><p><h2 class="major-heading">5. Implementation Timeline</h2></p><p><h3 class="intervention-title">Week 1-2: Immediate Strategies</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Introduce the visual timer for chunking work. Create and begin using the step-by-step checklists for current math topics. Set up the personal math word wall.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Anecdotal notes on Noel's engagement and frustration levels during timed chunks.</li></ul></p><p><h3 class="intervention-title">Weeks 3-6: Short-term Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Introduce the "Math Menu" for a review activity. Begin incorporating the "Cubes, Pictures, Numbers" word problem strategy. Train Noel on using a text-to-speech tool.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Compare performance and choice on the Math Menu with previous quiz scores. Note independence in using the CRA process.</li></ul></p><p><h3 class="intervention-title">Ongoing: Long-term Support</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Weave these strategies into the fabric of daily math instruction. Refine choices and scaffolds based on data. Focus on building self-advocacy by encouraging Noel to choose the tools and strategies that help him most.</li></ul></p><p>---</p><p><h2 class="major-heading">6. Progress Monitoring & Data Collection</h2></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Metrics:</strong> Track percentage of work completion per chunk, accuracy on first-attempt problems with scaffolds, frequency of on-task behavior during independent work, and quality of contributions during partner talk.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Tools:</strong> Use a simple frequency count chart for work completion, a skills-based checklist for problem-solving steps, and a weekly reflection journal (1-2 sentences) for Noel to share what helped him learn each week.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adjustment:</strong> If data shows no improvement in engagement or accuracy after 2-3 weeks of consistent implementation, the strategy should be modified or replaced.</li></ul></p><p>---</p><p><h2 class="major-heading">7. Collaboration & Communication</h2></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Parent/Family:</strong> Share the positive strategies you're using (e.g., "We're using checklists to help break down big problems") in a newsletter or email. Suggest ways they can reinforce these at home, like using chunking for homework.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Support Staff:</strong> Briefly touch base with the school's intervention specialist or instructional coach to share your plan and ask for observational feedback or additional resource ideas.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation:</strong> Keep a simple log of strategies tried, dates implemented, and brief notes on observed effects. This is invaluable for parent conferences, RTI/MTSS meetings, and planning for future teachers.</li></ul></p><p><h4 class="sub-heading">Citations:</h4><br><ul class="intervention-list"><li class="main-bullet">  Hudson, P., & Miller, S. P. (2006). *Designing and implementing mathematics instruction for students with diverse learning needs*. Pearson.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Marzano, R. J. (2004). *Building background knowledge for academic achievement*. ASCD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Tomlinson, C. A. (2014). *The differentiated classroom: Responding to the needs of all learners* (2nd ed.). ASCD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Witzel, B. S., Riccomini, P. J., & Schneider, E. (2008). Implementing CRA with secondary students with learning disabilities in mathematics. *Intervention in School and Clinic, 43*(5), 270-276.</li></ul></p>
+              </div>
+            </div>
+          
+
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 6th)</h4>
+          <div class="concern-counter">2. Academic, Attendance, Behavior</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/16/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>Noel needs help</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p>Of course. It's always a privilege to collaborate with a dedicated professional like yourself. Working with a student like Noel, who presents with a complex profile of academic, attendance, and behavioral concerns alongside an ADHD diagnosis, requires a nuanced and multi-faceted approach. You've already taken the crucial first steps by building that foundational relationship with him and his family.</p><p>What follows is a structured framework built on established educational research, designed to complement the professional expertise you already bring to your counseling role. Think of it as a collaborative brainstorming document; you'll know best which elements will resonate with Noel's unique personality and which might need tailoring.</p><p>***</p><p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Detailed Analysis:</strong> Building on your initial insights, Noel's profile suggests a student where core ADHD challenges (executive function deficits, impulse control, variable attention) are likely the primary drivers behind the secondary academic and behavioral concerns. The attendance issue is a significant red flag, potentially indicating academic frustration, social challenges, or anxiety about not meeting expectations, which you've likely observed in similar cases.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Connection to Data:</strong> The "moderate" severity level and the need for further intervention after initial parent contact indicate that while not in crisis, Noel's needs are not being fully met by universal Tier 1 supports alone. This points directly to the need for targeted Tier 2 strategies.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Risk Factors:</strong> Escalating academic gaps, increased school avoidance (worsening attendance), negative self-concept as a "student who needs help," and potential peer isolation due to behavioral impulses.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Protective Factors:</strong> Strong home-school communication you've established, his diagnosis which provides a framework for understanding, and your proactive involvement as a supportive adult in the building.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Primary Approach:</strong> A combined framework of <strong>Positive Behavioral Interventions and Supports (PBIS)</strong> and executive function coaching within a <strong>Multi-Tiered System of Supports (MTSS)</strong> model. This is grounded in behavioral theory (to shape external actions) and cognitive theory (to build internal skills).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Theoretical Foundation:</strong> We're targeting both the *behavioral* (impulsivity, classroom disruptions) and *cognitive* (planning, organization, working memory) aspects of ADHD, as identified by researchers like Barkley (2015) and Dawson & Guare (2018). The academic piece will be supported through these lenses.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Expected Outcomes:</strong> A measurable reduction in behavioral referrals, an increase in assignment completion and on-task behavior, improved attendance, and, most importantly, Noel's own report of feeling more capable and successful in school.</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p>The goal here is to create immediate, predictable structures and to collect baseline data.</p><p><h4 class="bold-heading">Strategy 1: Non-Verbal Check-In & Check-Out (CICO) System</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> Hawken et al., (2007); Crone, Horner, & Hawken (2004). A cornerstone of Tier 2 PBIS, highly effective for students needing increased positive adult attention and clear behavioral expectations.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> A simple, single-page daily report card (DRC); a designated spot in each classroom (e.g., a folder on the wall by the door).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Morning (8:05 AM, 2 mins):</strong> You meet Noel at his first-period class. Greet him positively. Briefly review the day's schedule (using his planner). Give him his DRC. The goal is connection, not correction.<br>    2.  <strong>Each Period (Transition Time, 30 secs):</strong> Noel brings his DRC to the teacher. The teacher gives a quick rating (e.g., 2=Met Expectation, 1=Needs Reminder, 0=Did Not Meet) on 2-3 target behaviors (e.g., "Started work promptly," "Respected others").<br>    3.  <strong>End of Day (2:55 PM, 5 mins):</strong> Noel checks out with you. You quickly total the points, provide specific praise for successes, and problem-solve *one* small thing for tomorrow. This data is your daily fuel.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> The DRC itself is the primary data tool. Track daily point totals and trends in specific periods/teachers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> 80% or higher of possible daily points for 3 consecutive days; Noel initiating the check-in/out process.</li></ul></p><p><h4 class="bold-heading">Strategy 2: "Focus Folder" for Academic Task Management</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> Executive Function theory (Dawson & Guare, 2018); Universal Design for Learning (UDL) Guideline 6: Provide options for executive functions.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> A bright, distinctive two-pocket folder; a stack of "Now & Next" cards; a timer (visual timers are excellent).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Preparation (Teacher):</strong> Work with his teachers to break down assignments onto the "Now & Next" cards. "Now: Problems 1-5. Next: Problems 6-10."<br>    2.  <strong>In-Class (Student):</strong> The folder is on Noel's desk. He works from the "Now" task. When done, he moves the card and starts the "Next." The visual chunking reduces overwhelm.<br>    3.  <strong>Your Role:</strong> Coach him on using the system and check the folder during your CICO meetings to reinforce its use.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Teacher anecdotal notes on task initiation and completion; number of assignments turned in.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> Increase in completed classwork; reduction in student-reported feelings of being "lost" or "overwhelmed."</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Direct Instruction in Organization & Planning</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Intervention Program:</strong> Elements of the "SMARTS" executive function curriculum (Research Institute for Learning and Development).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Frequency:</strong> Two 20-minute sessions per week with you, focusing on one skill at a time (e.g., organizing the binder, using the planner effectively, breaking down a long-term project).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Weekly binder/planner checks using a simple rubric; student self-assessment on a Likert scale ("How easy was it to find your homework tonight?").</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adaptation Protocol:</strong> If after 2 weeks no progress is seen on the rubric, simplify the skill further or provide more hands-on modeling.</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Skill Transfer:</strong> Begin fading the CICO system from daily to 3x/week, then to 1x/week, while teaching Noel to self-monitor using the same DRC criteria.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Independence Building:</strong> Shift your role from director to coach. Ask, "What's your plan for getting this done?" instead of telling him the steps.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Family Engagement:</strong> Provide parents with a copy of the "Now & Next" strategy for homework. A simple daily email or planner note from school to home (and vice versa) can maintain consistency.</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Daily Data:</strong> CICO point sheet.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Weekly Assessment:</strong> Assignment completion rate (%); attendance record; 2-minute weekly reading fluency probe (a quick academic indicator).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Monthly Review:</strong> Review all data trends. Is the slope of improvement positive? Is Noel meeting his success criteria? Conduct a brief student interview to gauge his perception.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Decision Points:</strong> If after 6 weeks there is *no* improvement, intensify strategies (e.g., add a daily behavior contract, involve SPED for evaluation consideration). If goals are met, begin fading supports.</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Team Members:</strong> You (lead), Classroom Teachers, Parents, Administrator (for support).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Meeting Schedule:</strong> Brief (10 min) teacher check-in every 2 weeks; formal parent update every 4 weeks.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation:</strong> The CICO sheet and your session notes are key. Use a simple log to track interventions and responses.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Parent Communication:</strong> Schedule a recurring 15-minute phone call every month. Send positive notes home via email or the planner when he has a great day.</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Warning Signs:</strong> A sudden drop in attendance, elopement from class, verbal or physical aggression, complete refusal to engage in work.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Immediate Response:</strong> Follow school-wide crisis protocols. Focus on de-escalation and safety.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Referral Criteria:</strong> If intensive Tier 2 supports show no progress after 8 weeks, initiate a referral to the Child Study Team for a comprehensive evaluation to rule out other learning disabilities or needs for Tier 3/SPED support.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Emergency Contacts:</strong> School psychologist, administrator, district behavior specialist.</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Professional Development:</strong> "Smart but Scattered" by Dawson & Guare is the bible on this. The CHADD website (chadd.org) is an invaluable resource for educators.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Educational Materials:</strong> "The Work-Smart Academic Planner" for students with executive function challenges.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Technology Tools:</strong> Apps like <strong>Google Keep</strong> for digital checklists, <strong>BrainPOP</strong> for engaging content reviews, <strong>Khan Academy</strong> for self-paced skill practice.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Community Resources:</strong> Local CHADD chapters often offer parent and teacher support groups.</li></ul></p><p>This is a lot to consider, and your experience will be the best guide in implementing what feels right for Noel. I'm here to support you in any way I can—whether that's helping to create materials, co-facilitating a meeting, or just being a thought partner. Please let me know how it unfolds.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: ADHD</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 9th)</h4>
+          <div class="concern-counter">3. Behavior, Academic</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/16/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>Noel is unable to self-regulate and focus on school work. he is unable to remain seated </p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p>Of course. It's always a privilege to collaborate with a fellow educator on supporting a student. Noel's profile presents a classic challenge we often see, and I know you're already bringing your significant counseling expertise to bear. Building on the foundational work you've already done with parent contact and individual conversations, here is a comprehensive analysis and set of strategies we can consider together.</p><p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Detailed Analysis:</strong> Given your professional expertise, you've likely identified that Noel's primary barrier is not a lack of willingness but a neurodevelopmental one rooted in his ADHD diagnosis. The inability to self-regulate, focus beyond 2-3 minutes, and remain seated are core symptoms. This creates a cascade effect: missed instructional time leads to academic gaps, which increases frustration and can manifest as off-task or disruptive behavior.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Connection to Data:</strong> Your initial interventions are key data points. The fact that talking with him and contacting home (Tier 1 strategies) haven't yielded sufficient change indicates a need for more targeted, Tier 2 supports. This aligns perfectly with the Response to Intervention (RTI) framework.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Risk & Protective Factors:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Risk:</strong> Academic failure, negative school identity, peer rejection due to behavior, low self-esteem.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Protective:</strong> A diagnosed ADHD means we have a clear understanding of the *why*, not just the *what*. This is a huge advantage. Parent contact has already been initiated, indicating a potential home-school partnership. Your involvement as a counselor is itself a major protective factor.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Primary Approach:</strong> A dual-pronged approach combining <strong>Behavioral Intervention</strong> (using PBIS strategies to shape on-task behavior) and <strong>Academic Intervention</strong> (using Universal Design for Learning to increase access to instruction).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Theoretical Foundation:</strong> This is grounded in <strong>CAST's UDL framework</strong> (providing multiple means of engagement, representation, and action/expression) and <strong>PBIS</strong> (positively reinforcing desired behaviors). Research by DuPaul & Stoner (2014) and the <strong>MTA Cooperative Group</strong> strongly supports the combination of environmental accommodations and behavioral strategies for students with ADHD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Expected Outcomes:</strong> Increase in sustained, on-task behavior during independent work; reduction in unauthorized movement; improved completion of classwork. Success indicators will be a measurable increase in these observable behaviors.</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p>This plan is designed to be implemented in collaboration with Noel's classroom teachers, with you providing the coaching and support.</p><p><h4 class="bold-heading">Strategy 1: Structured Movement Breaks & Non-Verbal Cue System</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> PBIS; research on incorporating movement to improve focus in students with ADHD (e.g., Rapport et al., 2008).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> A "Break Pass" (a laminated card with his name on it); a pre-arranged signal (e.g., a colored sticky note on his desk from the teacher); a timer; a designated "break zone" in the classroom (e.g., a quiet corner to stand and stretch, a short walk to the water fountain and back).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Day 1-2 (You & Teacher):</strong> Meet with Noel. Say: *"Noel, we want to help you succeed. Your brain learns better when it gets a quick move. We're going to try a system. When you feel restless, you can show your teacher this Break Pass. She might also give you this signal [demonstrate] to let you know it's a good time for a 2-minute movement break. This isn't a punishment; it's a tool."*<br>    2.  <strong>Day 3-14 (Teacher implements, you monitor):</strong> Teacher integrates this. *Before* a long period of seated work, the teacher proactively says, "Noel, your break time is in 10 minutes. Let's see how much you can get done before then." The timer is set for 2 minutes. This is predictable and non-disruptive.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Teacher tracks frequency of break use and a simple +/- for whether he returns to task successfully.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> Noel uses the break appropriately 80% of the time without escalating behavior; he returns to task and engages for at least a 5-minute period post-break.</li></ul></p><p><h4 class="bold-heading">Strategy 2: Chunking & Visual Work Organizer</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Research Base:</strong> Executive Function skill scaffolding (Dawson & Guare, 2018); UDL Checkpoint 6.1 (Guide appropriate goal-setting).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials Needed:</strong> A pocket folder; sticky notes; a "Work Map" graphic organizer that breaks assignments into 3-4 clear steps.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Implementation Steps:</strong></li></ul><br>    1.  <strong>Preparation (You & Teacher):</strong> The teacher pre-chunks any worksheet or assignment into smaller parts (e.g., "Part A: Questions 1-3," "Part B: Chart").<br>    2.  <strong>Implementation (Teacher):</strong> When assigning work, the teacher gives Noel his "Work Map" and a sticky note for each chunk. As he finishes each chunk, he moves the sticky note to the "Done" side. This provides constant visual feedback and a sense of accomplishment.<br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Percentage of chunked assignments completed per class period.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria:</strong> Increase from baseline in the percentage of assigned work chunks completed within the class period.</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Self-Monitoring of On-Task Behavior</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Intervention Program:</strong> Simple Self-Monitoring Checklist.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Frequency:</strong> 3 times per week, during one challenging academic period.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Create a simple sheet with 5-minute intervals. Use a vibrating timer app on a school iPad or phone. When it vibrates, Noel asks himself, "Was I on task?" and marks yes/no. The teacher also marks at the same time. They compare marks at the end of the period—the goal is for his accuracy to match the teacher's.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adaptation Protocol:</strong> If after 2 weeks his accuracy is below 70%, increase the frequency of the vibration (e.g., every 3 minutes). If accuracy is high, increase the interval time (e.g., every 7 minutes).</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet">  <strong>Skill Transfer Plans:</strong> Begin fading the self-monitoring checklist to once per week, then bi-weekly, encouraging him to internalize the question ("Am I on task?") without the sheet.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Independence Building:</strong> Transition from the teacher-initiated break signal to Noel independently recognizing his need and using the Break Pass appropriately.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Family Engagement:</strong> Share the successful strategies with parents. Suggest they implement a similar "chunking" and "movement break" system for homework. A simple timer and a checklist can be powerful tools at home too.</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Daily Data:</strong> Teacher anecdotal note on Break Pass usage and work completion.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Weekly Assessment:</strong> Review of the self-monitoring accuracy sheets and work completion percentages.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Monthly Review:</strong> Compare behavioral referral data (office discipline referrals) from previous months to the current month. Is there a decrease?</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Decision Points:</strong> If after 4 weeks there is less than a 20% improvement in work completion and/or no reduction in disruptive behaviors, we may need to escalate to a formal Tier 3 problem-solving team or evaluate the need for a 504 Plan to formalize these accommodations.</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Team Members:</strong> You (Counselor), Noel's core teachers, parents, and potentially the school psychologist for further assessment if needed.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Meeting Schedule:</strong> A brief 10-minute check-in with the teaching team every other week (perhaps during a planning period) for the first month.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation Requirements:</strong> All data sheets (break log, self-monitoring, work completion) should be collected in a folder you hold.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Parent Communication:</strong> A bi-weekly email or call from you or the primary teacher to report progress, share successes, and problem-solve challenges.</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Warning Signs:</strong> Increase in elopement (leaving class), refusal to use strategies, verbal aggression.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Immediate Response:</strong> Pre-arranged safe space for Noel to go (e.g., your office) to de-escalate with a preferred calming activity.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Referral Criteria:</strong> If strategies are consistently ineffective after 6 weeks of faithful implementation, refer to the Child Study Team for a possible 504 Plan or special education evaluation.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Emergency Contacts:</strong> Yourself as first point of contact, then school administrator.</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Professional Development:</strong> The book *Smart but Scattered* by Dawson and Guare is fantastic for understanding executive function. The CHADD website (chadd.org) is an invaluable resource for everything ADHD.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Educational Materials:</strong> "Work Maps" and visual schedules are readily available on Teachers Pay Teachers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Technology Tools:</strong> Free timer apps; text-to-speech software (like Microsoft Immersive Reader) for reading assignments; speech-to-text for written responses.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Community Resources:</strong> Provide parents with information on local CHADD chapters or clinicians who specialize in ADHD coaching for adolescents.</li></ul></p><p>This is a lot to consider, and you may already be doing some of this intuitively. Please take what resonates and adapt it to your professional judgment and knowledge of Noel. I'm here to support you and the classroom team in any way I can. Let's touch base next week to see how the initial rollout is going.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: ADHD</li><li>Other needs: Cannot concentrate or focus on the lesson for more that 2-3 minutes.</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 8th)</h4>
+          <div class="concern-counter">4. Behavior, Social/Emotional, Peer Relationships</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/2/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>Hoel has had increasing issues being disruptive in class.  he has has several fights during unstructured time this week.</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Concerns</strong>: Disruptive classroom behavior and physical aggression during unstructured time indicate significant social-emotional regulation challenges. Fighting incidents suggest limited conflict resolution skills and possible sensory/communication overload in less structured environments.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Learning Profile Impact</strong>: Autism Spectrum diagnosis indicates potential challenges with social cues, routine changes, and sensory processing. Beginner EAL proficiency creates additional communication barriers that may exacerbate frustration and acting-out behaviors. Academic struggles likely contribute to avoidance behaviors and diminished self-efficacy.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Contributing Factors</strong>: Communication barriers between EAL needs and social expectations; possible sensory overload in unstructured settings; limited appropriate social interaction models; potential mismatch between academic demands and current skill level.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Risk Factors</strong>: Escalating physical aggression; limited English proficiency complicating intervention; possible peer rejection leading to further isolation; academic gaps widening without support.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Protective Factors</strong>: Parent contact established; school counselor involvement; structured school environment potential for routine implementation.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Approach</strong>: Combined Positive Behavior Interventions and Supports (PBIS) with Social Thinking Methodology (Winner, 2005) and Visual Support System (Hodgdon, 2011)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Theoretical Foundation</strong>: Applied Behavior Analysis principles combined with Universal Design for Learning framework to address multiple access points</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: National Professional Development Center on ASD evidence-based practices; Council for Exceptional Children standards for EAL learners with disabilities</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Expected Outcomes</strong>: 50% reduction in disruptive behaviors within 4 weeks; increased use of appropriate communication strategies; successful navigation of unstructured times without physical aggression</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Indicators</strong>: Decreased behavioral incident reports; increased appropriate peer interactions; improved academic engagement metrics</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p><h4 class="bold-heading">Strategy 1: Visual Social Scripting System</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: National Autism Center's National Standards Project (2015)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Laminated visual cue cards (4"x6"); portable communication board; timer; visual schedule strips; feeling thermometer chart</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. 8:00 AM: Preview daily schedule using visual timeline with concrete symbols<br>  2. Pre-transition: Provide 5-minute warning using visual timer and transition card<br>  3. Unstructured times: Implement "Break Card" system with designated calm space<br>  4. Conflict situations: Present "Solution Choice" cards with visual options<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Frequency tracking of aggressive incidents; antecedent-behavior-consequence charts; visual script usage logs</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 3+ consecutive days without physical aggression; independent use of break system 2+ times daily</li></ul></p><p><h4 class="bold-heading">Strategy 2: Structured Peer Support System</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: Peer-Mediated Instruction and Intervention (PMII) framework</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Peer training materials; visual interaction guides; reinforcement system</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Identify 2-3 supportive peers for structured interactions<br>  2. Provide 15-minute daily supervised social practice with scripted activities<br>  3. Implement "Peer Buddy" system for unstructured transitions<br>  4. Use visual conversation starters during structured interactions<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Social interaction duration tracking; peer report logs; behavioral incident correlation data</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: Increased positive peer interactions from 0 to 3+ daily; reduced aggression during supported times</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Emotional Regulation and Conflict Resolution</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Intervention Program</strong>: Zones of Regulation Curriculum (Leah Kuypers, 2011) modified for EAL learner</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Frequency</strong>: 20-minute daily direct instruction; 5-minute check-ins before each transition</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Progress Monitoring</strong>: Weekly self-regulation assessments; behavioral frequency data; teacher rating scales</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adaptation Protocol</strong>: Modify language complexity after 2 weeks if no progress; increase visual supports if regulation strategies not generalized</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Skill Transfer Plans</strong>: Gradual fading of adult prompts across settings; peer-mediated support expansion to multiple environments</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Independence Building</strong>: Systematic reduction of visual prompt hierarchy; self-monitoring checklist implementation</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Family Engagement</strong>: Weekly home communication log; visual strategy sharing; parent training sessions on consistency implementation</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Daily Data</strong>: Behavior incident tracking; visual support usage logs; academic engagement time sampling</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Assessment</strong>: Social Skills Improvement System (SSIS) ratings; curriculum-based measurement probes</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Monthly Review</strong>: Functional Behavior Assessment updates; language proficiency progress monitoring; social validity measures</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Decision Points</strong>: Review data bi-weekly; modify interventions if no progress after 4 data points; escalate to Tier 3 if aggression continues or increases</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Team Members</strong>: Special education teacher, EAL specialist, school counselor, classroom teachers, speech-language pathologist</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Meeting Schedule</strong>: Weekly 30-minute problem-solving team meetings; daily 5-minute check-ins with primary support staff</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Documentation Requirements</strong>: Daily behavior logs; intervention fidelity checklists; communication home records</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent Communication</strong>: Weekly progress reports via preferred method; monthly in-person or virtual meetings; daily home-school notebook</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Warning Signs</strong>: Increased agitation indicators (pacing, vocalizations); refusal of preferred strategies; escalation in aggression intensity</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Immediate Response</strong>: Pre-planned de-escalation protocol; safe space access; crisis team notification if needed</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Referral Criteria</strong>: Continued physical aggression after 4 weeks of intervention; injury to self or others; significant academic regression</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Emergency Contacts</strong>: School psychologist; behavior specialist; administrator designee</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Professional Development</strong>: Autism Focused Intervention Resources and Modules (AFIRM); PBIS Tier 2 training; cultural responsiveness training for EAL populations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Educational Materials</strong>: "The Zones of Regulation" curriculum; "Social Thinking" materials; visual support creation resources</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Technology Tools</strong>: Boardmaker Online for visual supports; Google Translate for home communication; emotion regulation apps (e.g., Breath2Relax)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Community Resources</strong>: Autism support organizations; multicultural family services; behavioral health providers with autism expertise</li></ul></p><p><h3 class="intervention-title">🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED</h3></p><p><h4 class="sub-heading">Share this case with Student Support immediately:</h4><br><ul class="intervention-list"><li class="main-bullet">Forward this concern and intervention plan to your school's student support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Schedule urgent consultation with counselor, social worker, or special education coordinator  </li></ul><br><ul class="intervention-list"><li class="main-bullet">Document all interventions and student responses for the support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Consider immediate safety protocols if student welfare is at risk</li></ul><br><ul class="intervention-list"><li class="main-bullet">Escalate to administration if no improvement within 48-72 hours</li></ul></p><p><h4 class="bold-heading">Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.</h4></p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: Autism Spectrum</li><li>EAL Learner (Beginner English proficiency)</li><li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 6th)</h4>
+          <div class="concern-counter">5. Behavior, Academic, Peer Relationships, Social/Emotional</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> All Classrooms</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 9/1/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>Noel is completely detached from class activities.  He is in his own world and wonders around the school at times needing a search party to find him.  This is a clear danger to himself.</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Concerns</strong>: Noel demonstrates severe elopement behavior (wandering from supervised areas), academic disengagement, and social isolation. These behaviors present immediate safety risks and indicate significant unmet needs in executive functioning, language access, and emotional regulation.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Learning Profile Impact</strong>: ADHD symptoms (impulsivity, attention deficits) combined with beginner EAL status create dual barriers to engagement. Limited English proficiency restricts comprehension of instructions and social interactions, while ADHD-related executive dysfunction impairs task initiation and sustained focus.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Contributing Factors</strong>: Potential misalignment between instructional delivery and neurological/linguistic needs; possible underlying anxiety or trauma responses; lack of appropriate behavioral and linguistic scaffolding.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Risk Factors</strong>: Elopement creates physical safety dangers; academic failure cycle may develop; social rejection could exacerbate emotional challenges.</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Protective Factors</strong>: School awareness of needs; parent communication established; diagnostic clarity provides intervention direction.</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Primary Approach</strong>: Multi-tiered system integrating Positive Behavioral Interventions and Supports (PBIS), Sheltered Instruction Observation Protocol (SIOP) strategies, and executive function training (Meltzer, 2018)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Theoretical Foundation</strong>: Behavioral (antecedent modifications), cognitive (executive function scaffolding), and sociocultural (language acquisition support) frameworks</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Expected Outcomes</strong>: 80% reduction in elopement incidents within 4 weeks; 50% increase in academic engagement measured by time on task; development of at least one positive peer connection within 8 weeks</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Indicators</strong>: Direct observation data; work completion rates; social interaction logs; safety incident reports</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p><h4 class="bold-heading">Strategy 1: Safety and Connection Protocol</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: PBIS (Sugai & Horner, 2020); Trauma-Informed Practices (Substance Abuse and Mental Health Services Administration, 2014)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Visual schedule with icons; designated "safe seat" with boundaries; translation app/device; walkie-talkies for staff communication; individualized work bin</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Designate staff member as primary point of contact (8:00 AM daily check-in)<br>  2. Implement visual schedule with timer system for transitions (5-minute warnings)<br>  3. Create "safe seat" in classroom with clear physical boundaries and sensory tools<br>  4. Establish elopement response protocol: immediate staff notification, designated searcher, predetermined search zones<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Elopement frequency log; engagement duration tracking; staff intervention documentation</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: Zero unsupervised departures; 75% reduction in search incidents; increased proximity to staff</li></ul></p><p><h4 class="bold-heading">Strategy 2: Language and Executive Function Scaffolding</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base</strong>: SIOP Model (Echevarría et al., 2017); UDL Guidelines (CAST, 2018)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed</strong>: Bilingual dictionary; picture cues for instructions; noise-reducing headphones; task breakdown templates; translated key phrases</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps</strong>:</li></ul><br>  1. Provide all instructions in visual, verbal, and demonstrated formats simultaneously<br>  2. Implement chunked work sessions (10-minute segments with movement breaks)<br>  3. Use native language support for complex concepts through translation technology<br>  4. Establish non-verbal signal system for basic needs and requests<br><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection</strong>: Work completion rates; prompt level needed; comprehension checks</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: 50% increase in task initiation; reduced latency in response to directions</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="bold-heading">Primary Focus Area: Executive Function and Language Development</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Intervention Program</strong>: "Unstuck and On Target" executive function curriculum (Cannon et al., 2018) combined with systematic English language development</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Frequency</strong>: Daily 25-minute small group sessions; twice weekly individual coaching</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Progress Monitoring</strong>: Weekly executive function checklist; language sample analysis; behavior frequency charts</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adaptation Protocol</strong>: Modify after 3 data points show no progress; increase visual supports if language acquisition plateaus; adjust sensory tools based on observation data</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="bold-heading">Maintenance and Generalization Strategies</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Skill Transfer Plans</strong>: Peer-mediated instruction in general education settings; cross-environment consistency plans with specials teachers</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Independence Building</strong>: Graduated responsibility system with earned privileges; self-monitoring checklists with visual cues</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Family Engagement</strong>: Weekly home notes in native language; parent training on structure and routines; home-school behavior chart alignment</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Daily Data</strong>: Antecedent-Behavior-Consequence logs; engagement duration tracking; work completion percentages</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Assessment</strong>: Curriculum-Based Measurement probes; executive function rating scales; language acquisition benchmarks</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Monthly Review</strong>: IEP goal progress; safety incident analysis; social network mapping</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Decision Points</strong>: Review data biweekly; modify interventions if no progress after 3 consecutive data points; convene IEP team if elopement continues despite interventions</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Team Members</strong>: Special education teacher, EAL specialist, school psychologist, administrator, related service providers</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Meeting Schedule</strong>: Weekly problem-solving team meetings; daily brief check-ins with primary staff</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Documentation Requirements</strong>: Shared digital log for all incidents and interventions; consistent data collection forms</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Parent Communication</strong>: Biweekly updates in native language; monthly progress reports; immediate contact for safety concerns</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Warning Signs</strong>: Increased agitation; verbal refusal; attempts to leave supervised area</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Immediate Response</strong>: Pre-taught calming routine; designated support staff deployment; environmental modification</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Referral Criteria</strong>: Persistent elopement despite Tier 2 interventions; evidence of emotional disturbance; lack of academic progress with intensive supports</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Emergency Contacts</strong>: School psychologist on-call; administrator designated for behavioral crises; community mental health crisis line</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Professional Development</strong>: CHADD's ADHD educator training; SIOP model implementation workshop; trauma-informed practices certification</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Educational Materials</strong>: "Unstuck and On Target" curriculum; Colorín Colorado EAL resources; PBIS implementation guides</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Technology Tools</strong>: Google Translate for Education; ClassDojo for home communication; timers and visual schedule apps</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Community Resources</strong>: ADHD parent support groups; multilingual mental health services; community recreation programs for social skill development</li></ul></p><p><h4 class="bold-heading">Implementation Timeline</h4>: Begin safety protocols immediately; initiate intensive interventions within 3 school days; conduct formal review at 4, 8, and 16 weeks. All staff working with Noel must receive training on implementation consistency by end of week 2.</p><p><h3 class="intervention-title">🚨 URGENT CASE - IMMEDIATE ACTION REQUIRED</h3></p><p><h4 class="sub-heading">Share this case with Student Support immediately:</h4><br><ul class="intervention-list"><li class="main-bullet">Forward this concern and intervention plan to your school's student support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Schedule urgent consultation with counselor, social worker, or special education coordinator  </li></ul><br><ul class="intervention-list"><li class="main-bullet">Document all interventions and student responses for the support team</li></ul><br><ul class="intervention-list"><li class="main-bullet">Consider immediate safety protocols if student welfare is at risk</li></ul><br><ul class="intervention-list"><li class="main-bullet">Escalate to administration if no improvement within 48-72 hours</li></ul></p><p><h4 class="bold-heading">Contact your school's student support department today to ensure this student receives comprehensive, coordinated care.</h4></p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Diagnosed with: ADHD</li><li>EAL Learner (Beginner English proficiency)</li><li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 5th)</h4>
+          <div class="concern-counter">6. Academic</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Classroom</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/30/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>I need this to be generated in Chinese for the parents</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Talked with student</li><li>Contacted parent</li>
+              </ul>
+            </div>
+          
+
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>EAL Learner (Beginner English proficiency)</li><li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 5)</h4>
+          <div class="concern-counter">7. Academic</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Classroom</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/29/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>undefined</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Extra help</li>
+              </ul>
+            </div>
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p><h3 class="intervention-title">1. Comprehensive Student Analysis</h3></p><p><h4 class="sub-heading">Learning Profile Analysis:</h4><br><ul class="intervention-list"><li class="main-bullet">Noel demonstrates moderate academic struggles in mathematics despite previous "extra help" interventions</li></ul><br><ul class="intervention-list"><li class="main-bullet">Undefined description suggests potential gaps in foundational math skills, executive functioning challenges, or possible unidentified learning disabilities</li></ul><br><ul class="intervention-list"><li class="main-bullet">Grade 5 represents critical transition period where math concepts become increasingly abstract (multi-step problems, fractions, early algebraic thinking)</li></ul></p><p><h4 class="sub-heading">Risk Factors:</h4><br><ul class="intervention-list"><li class="main-bullet">Potential math anxiety developing due to persistent struggles</li></ul><br><ul class="intervention-list"><li class="main-bullet">Risk of falling further behind peers without targeted intervention</li></ul><br><ul class="intervention-list"><li class="main-bullet">Possible underlying processing issues (working memory, visual-spatial reasoning, or language processing)</li></ul></p><p><h4 class="sub-heading">Protective Factors:</h4><br><ul class="intervention-list"><li class="main-bullet">School has identified need early in academic year</li></ul><br><ul class="intervention-list"><li class="main-bullet">Teacher seeking specialized intervention support</li></ul><br><ul class="intervention-list"><li class="main-bullet">Student appears to be in general education setting with access to Tier 2 supports</li></ul></p><p><h3 class="intervention-title">2. Evidence-Based Intervention Framework</h3></p><p><h4 class="sub-heading">Primary Approach:</h4> Multi-Tiered System of Supports (MTSS) with explicit instruction framework (Gersten et al., 2009) combined with Concrete-Representational-Abstract (CRA) instructional sequence (Witzel et al., 2008)</p><p><h4 class="sub-heading">Theoretical Foundation:</h4> Cognitive strategy instruction combined with behavioral momentum principles</p><p><h4 class="sub-heading">Expected Outcomes:</h4><br><ul class="intervention-list"><li class="main-bullet">80% accuracy on grade-level progress monitoring probes within 8 weeks</li></ul><br><ul class="intervention-list"><li class="main-bullet">Increased academic engagement during math instruction</li></ul><br><ul class="intervention-list"><li class="main-bullet">Development of self-monitoring strategies for mathematical problem-solving</li></ul></p><p><h3 class="intervention-title">3. Immediate Action Plan (Days 1-14)</h3></p><p><h4 class="bold-heading">Strategy 1: Explicit Instruction with Think-Aloud Protocol</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base:</strong> Explicit Systematic Instruction (Archer & Hughes, 2011)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed:</strong> </li></ul><br><ul class="intervention-list"><li class="sub-bullet">Whiteboard and markers</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Step-by-step strategy cards</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Math graphic organizers</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Timer</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Progress monitoring sheets</li></ul></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps:</strong></li></ul><br>  1. <strong>Day 1-3:</strong> Diagnostic assessment (15 minutes) using curriculum-based measurement to identify specific skill gaps<br>  2. <strong>Day 4-14:</strong> Daily 20-minute small group sessions using "I do, we do, you do" sequence:<br>     - Minute 0-5: Review prerequisite skills with rapid practice (5 problems)<br>     - Minute 5-12: Model new concept with think-aloud (teacher demonstrates problem-solving while verbalizing thought process)<br>     - Minute 12-17: Guided practice with immediate corrective feedback<br>     - Minute 17-20: Independent practice with self-check system</p><p><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection:</strong> Daily work samples with error analysis, weekly curriculum-based measurement probes</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria:</strong> 70% accuracy on guided practice, increased independence in problem-solving steps</li></ul></p><p><h4 class="bold-heading">Strategy 2: Concrete-Representational-Abstract Sequencing</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Research Base:</strong> CRA Instructional Sequence (Witzel, 2005)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Materials Needed:</strong></li></ul><br><ul class="intervention-list"><li class="sub-bullet">Manipulatives (base-ten blocks, fraction tiles)</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Graphic organizers</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Laminated work mats</li></ul><br><ul class="intervention-list"><li class="sub-bullet">Dry-erase markers</li></ul></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Implementation Steps:</strong></li></ul><br>  1. <strong>Concrete Phase (Days 1-5):</strong> Use manipulatives to demonstrate mathematical concepts<br>  2. <strong>Representational Phase (Days 6-10):</strong> Transition to drawings and graphic representations<br>  3. <strong>Abstract Phase (Days 11-14):</strong> Move to numerical symbols and algorithms</p><p><ul class="intervention-list"><li class="main-bullet"><strong>Data Collection:</strong> Video samples of problem-solving process, fidelity checks of implementation</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria:</strong> Successful transition between phases with maintained accuracy</li></ul></p><p><h3 class="intervention-title">4. Short-Term Intensive Support (Weeks 3-8)</h3></p><p><h4 class="sub-heading">Primary Focus Area:</h4> Multi-step problem-solving and mathematical reasoning</p><p><h4 class="sub-heading">Intervention Program:</h4> Pirate Math Equation Quest (Fuchs et al., 2020) - evidence-based word problem intervention</p><p><h4 class="sub-heading">Frequency:</h4> 4 sessions weekly, 25 minutes each, in groups of 3-4 students</p><p><h4 class="sub-heading">Progress Monitoring:</h4> Weekly curriculum-based measurement probes, bi-weekly strategy use inventories</p><p><h4 class="sub-heading">Adaptation Protocol:</h4> If student shows <50% progress after 2 weeks, intensify by:<br><ul class="intervention-list"><li class="main-bullet">Increasing session frequency to daily</li></ul><br><ul class="intervention-list"><li class="main-bullet">Adding additional visual supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Incorporating technology-based practice (e.g., DreamBox Learning)</li></ul></p><p><h3 class="intervention-title">5. Long-Term Skill Development (Weeks 9-16)</h3></p><p><h4 class="sub-heading">Maintenance and Generalization Strategies:</h4><br><ul class="intervention-list"><li class="main-bullet"><strong>Skill Transfer:</strong> Gradually fade supports during general education math instruction</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Independence Building:</strong> Implement self-monitoring checklists for problem-solving steps</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Family Engagement:</strong> Weekly math practice packets with instructional videos for parents</li></ul></p><p><h4 class="sub-heading">Home-School Collaboration:</h4><br><ul class="intervention-list"><li class="main-bullet">Bi-weekly progress reports sent home</li></ul><br><ul class="intervention-list"><li class="main-bullet">Parent training session on supporting math learning</li></ul><br><ul class="intervention-list"><li class="main-bullet">Math game recommendations for family practice</li></ul></p><p><h3 class="intervention-title">6. Comprehensive Progress Monitoring System</h3></p><p><h4 class="sub-heading">Daily Data:</h4> <br><ul class="intervention-list"><li class="main-bullet">5-minute fluency probes</li></ul><br><ul class="intervention-list"><li class="main-bullet">Strategy implementation checklists</li></ul><br><ul class="intervention-list"><li class="main-bullet">Engagement tracking using interval recording</li></ul></p><p><h4 class="sub-heading">Weekly Assessment:</h4><br><ul class="intervention-list"><li class="main-bullet">Curriculum-Based Measurement (CBM) math probes</li></ul><br><ul class="intervention-list"><li class="main-bullet">Strategy application rubrics</li></ul><br><ul class="intervention-list"><li class="main-bullet">Work sample analysis with error patterns</li></ul></p><p><h4 class="sub-heading">Monthly Review:</h4><br><ul class="intervention-list"><li class="main-bullet">Standardized progress monitoring assessments</li></ul><br><ul class="intervention-list"><li class="main-bullet">Instructional decision-making meetings with data review</li></ul><br><ul class="intervention-list"><li class="main-bullet">Fidelity checks of intervention implementation</li></ul></p><p><h4 class="sub-heading">Decision Points:</h4><br><ul class="intervention-list"><li class="main-bullet">Continue: Meeting 80% of progress goals</li></ul><br><ul class="intervention-list"><li class="main-bullet">Modify: Meeting 50-79% of goals after 4 weeks</li></ul><br><ul class="intervention-list"><li class="main-bullet">Escalate: <50% progress after 6 weeks or regression</li></ul></p><p><h3 class="intervention-title">7. Collaboration and Communication Plan</h3></p><p><h4 class="sub-heading">Team Members:</h4> Math teacher, intervention specialist, campus RTI coordinator, parents</p><p><h4 class="sub-heading">Meeting Schedule:</h4><br><ul class="intervention-list"><li class="main-bullet">Weekly: Teacher-interventionist check-in (15 minutes)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Bi-weekly: Data review team meeting (30 minutes)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monthly: Parent update conference</li></ul></p><p><h4 class="sub-heading">Documentation Requirements:</h4><br><ul class="intervention-list"><li class="main-bullet">Digital portfolio of work samples</li></ul><br><ul class="intervention-list"><li class="main-bullet">Progress monitoring graphs</li></ul><br><ul class="intervention-list"><li class="main-bullet">Intervention fidelity logs</li></ul><br><ul class="intervention-list"><li class="main-bullet">Communication logs with parents</li></ul></p><p><h3 class="intervention-title">8. Escalation and Support Protocols</h3></p><p><h4 class="sub-heading">Warning Signs:</h4><br><ul class="intervention-list"><li class="main-bullet">Consistent <50% accuracy despite intervention</li></ul><br><ul class="intervention-list"><li class="main-bullet">Increased avoidance behaviors</li></ul><br><ul class="intervention-list"><li class="main-bullet">Emotional distress during math</li></ul></p><p><h4 class="sub-heading">Immediate Response:</h4><br><ul class="intervention-list"><li class="main-bullet">Implement calming strategies</li></ul><br><ul class="intervention-list"><li class="main-bullet">Adjust task difficulty to ensure success</li></ul><br><ul class="intervention-list"><li class="main-bullet">Contact school counselor if emotional concerns persist</li></ul></p><p><h4 class="sub-heading">Referral Criteria:</h4><br><ul class="intervention-list"><li class="main-bullet">No progress after 8 weeks of intensive intervention</li></ul><br><ul class="intervention-list"><li class="main-bullet">Suspected learning disability or other underlying condition</li></ul><br><ul class="intervention-list"><li class="main-bullet">Request comprehensive evaluation if concerns persist</li></ul></p><p><h3 class="intervention-title">9. Resource Recommendations</h3></p><p><h4 class="sub-heading">Professional Development:</h4><br><ul class="intervention-list"><li class="main-bullet">National Center on Intensive Intervention modules</li></ul><br><ul class="intervention-list"><li class="main-bullet">Explicit Instruction Workshop (Anita Archer)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Math Intervention training through University of Oregon</li></ul></p><p><h4 class="sub-heading">Educational Materials:</h4><br><ul class="intervention-list"><li class="main-bullet">"Designing Effective Mathematics Instruction" by Stein et al.</li></ul><br><ul class="intervention-list"><li class="main-bullet">"Assessing Math Concepts" by Kathy Richardson</li></ul><br><ul class="intervention-list"><li class="main-bullet">Intervention Central website for progress monitoring tools</li></ul></p><p><h4 class="sub-heading">Technology Tools:</h4><br><ul class="intervention-list"><li class="main-bullet">DreamBox Learning for adaptive practice</li></ul><br><ul class="intervention-list"><li class="main-bullet">IXL Math for skill-specific practice</li></ul><br><ul class="intervention-list"><li class="main-bullet">Google Jamboard for collaborative problem-solving</li></ul></p><p><h4 class="sub-heading">Community Resources:</h4><br><ul class="intervention-list"><li class="main-bullet">Local university math clinic services</li></ul><br><ul class="intervention-list"><li class="main-bullet">After-school math support programs</li></ul><br><ul class="intervention-list"><li class="main-bullet">Parent math nights through regional education service centers</li></ul></p><p><h4 class="sub-heading">Implementation Timeline:</h4><br><ul class="intervention-list"><li class="main-bullet">Week 1-2: Diagnostic assessment and baseline data collection</li></ul><br><ul class="intervention-list"><li class="main-bullet">Week 3-8: Intensive intervention implementation</li></ul><br><ul class="intervention-list"><li class="main-bullet">Week 9-16: Fading supports and generalization training</li></ul><br><ul class="intervention-list"><li class="main-bullet">Ongoing: Progress monitoring and data-based decision making</li></ul></p><p>This comprehensive intervention plan is based on current research in mathematics intervention and special education best practices. Regular data collection and analysis will ensure the intervention remains responsive to Noel's specific needs.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 9th)</h4>
+          <div class="concern-counter">8. Not specified</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Grade 10 13 students</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/29/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>No description provided</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p>Of course. As an educational intervention specialist, I will create a differentiated lesson plan for Noel R. based on the provided information and the structure of the original document. Since the uploaded PDF appears to be corrupted or unreadable as text, I will base my differentiation on the core principles of Universal Design for Learning (UDL) and evidence-based interventions for a 9th-grade student struggling academically in a general education setting.</p><p><h4 class="sub-heading">Disclaimer:</h4> Without the specific content of the original lesson, this plan provides a structured framework and adaptable strategies that can be applied to most high school core content areas (e.g., English, History, Science). The teacher should insert the specific topic and standard from their original plan.</p><p>---</p><p><h3 class="intervention-title">Differentiated Lesson Plan for Noel R.</h3></p><p><h4 class="sub-heading">Student:</h4> Noel R.<br><h4 class="sub-heading">Grade:</h4> 9th<br><h4 class="sub-heading">Context:</h4> General Education Classroom (Grade 10, 13 students)<br><h4 class="sub-heading">Original Lesson Topic:</h4> [Teacher to Insert Topic, e.g., "The Causes of World War I"]<br><h4 class="sub-heading">Standard:</h4> [Teacher to Insert Relevant Standard]</p><p>#### 1. <strong>Differentiated Learning Objectives</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Original Objective (Example):</strong> "Students will analyze the complex causes of World War I and evaluate their relative significance in a written essay."</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Differentiated Objective for Noel:</strong> "Noel will identify and define the 4 MAIN causes of World War I (Militarism, Alliances, Imperialism, Nationalism) using a graphic organizer and will explain one cause-and-effect relationship in a short, structured paragraph or recorded audio response."</li></ul></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Rationale:</strong> The objective is broken down from analysis to identification and basic explanation. It provides a clear, measurable, and attainable goal focused on foundational knowledge (Marzano, 2001), reducing cognitive load.</li></ul></p><p>#### 2. <strong>Adapted Content Delivery</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Chunked Information:</strong> Content will be broken into 10-15 minute segments using a "I Do, We Do, You Do" model.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>I Do (5 min):</strong> Teacher introduces *one* cause (e.g., Militarism) with a clear definition and 1-2 highly visual examples (images, a short video clip).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>We Do (5 min):</strong> Teacher and class fill in the first section of Noel's graphic organizer together.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>You Do (5 min):</strong> Noel works with a supportive partner to write a summary sentence for that cause.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Visual Supports & Graphic Organizers:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Material:</strong> A pre-printed "MAIN Causes" graphic organizer with icons.</li></ul><br>        *   <strong>Militarism:</strong> Icon of a soldier/tank.<br>        *   <strong>Alliances:</strong> Icon of a handshake.<br>        *   <strong>Imperialism:</strong> Icon of a globe.<br>        *   <strong>Nationalism:</strong> Icon of a flag.<br><ul class="intervention-list"><li class="nested-bullet">  Each box will have sentence starters: "___________ is when a country..." and "This helped cause WWI because..."</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Simplified Language:</strong> Key vocabulary will be pre-taught using a Frayer Model template. Definitions will be concise and student-friendly.</li></ul></p><p>#### 3. <strong>Differentiated Activities</strong></p><p><h4 class="bold-heading">Activity: "Unpacking the Causes"</h4></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Step 1: Vocabulary Preview (10 min):</strong> Noel will work with the teacher or a peer partner to complete Frayer Models for 2-3 key terms *before* the whole-group lesson begins.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Step 2: Guided Note-Taking:</strong> During the lesson, Noel will use the graphic organizer described above instead of traditional linear notes.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Step 3: Processing Activity - "Choose Your Output":</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Option A (Written):</strong> Use the completed graphic organizer to write a paragraph using a provided scaffold: "World War I started for many reasons. One major cause was [Cause]. This means that [Definition]. This led to war because [Effect]."</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Option B (Verbal/Recorded):</strong> Use a tablet or computer (e.g., Chromebook with Voice Recorder or Flip) to verbally explain one cause and its effect to the teacher or partner.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Option C (Visual):</strong> Create a simple comic strip showing the cause and its effect.</li></ul></p><p>#### 4. <strong>Modified Assessment Methods</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Formative Assessment (During Lesson):</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Thumbs Up/Thumbs Down checks for understanding after each "chunk" of instruction.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Teacher will circulate and check for accuracy on the graphic organizer during the "We Do" phase.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Summative Assessment (End of Activity):</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Success Criteria Rubric for Noel:</strong></li></ul><br>        *   <strong>4 - Exceeds:</strong> Graphic organizer is fully completed accurately. Paragraph/response clearly explains the cause-and-effect relationship using key vocabulary.<br>        *   <strong>3 - Meets:</strong> Graphic organizer is mostly completed accurately. Paragraph/response identifies a cause and its effect.<br>        *   <strong>2 - Approaching:</strong> Graphic organizer is partially completed with teacher support. Response attempts to identify a cause or effect.<br>        *   <strong>1 - Beginning:</strong> Requires significant 1-on-1 support to complete the organizer.</p><p>#### 5. <strong>Specific Accommodations</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Environment:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Preferential seating near the teacher and away from distractions.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Access to a designated "quiet corner" or carrel for independent work if overwhelmed.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Technology & Tools:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Access to text-to-speech software (e.g., Read&Write for Google) for any reading passages.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Option to use speech-to-text (e.g., Google Voice Typing) for written responses.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Noise-canceling headphones available.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Time:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Extended time to complete the in-class activity.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Breaks scheduled as needed (e.g., "Noel, after you finish this cause, you can take a 2-minute walk to get a drink.").</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  All handouts will be printed on colored paper for easier tracking.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Instructions will be highlighted or broken into numbered steps.</li></ul></p><p>#### 6. <strong>Implementation Notes for the Teacher</strong></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Preparation:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Print and preview the graphic organizer and Frayer Model with Noel *before* the lesson.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Ensure technology tools are working and Noel knows how to access them.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Pre-select a supportive peer partner for Noel.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>During Lesson:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Opening:</strong> State the clear, differentiated objective for *everyone*: "Today, our goal is to understand the MAIN causes of WWI. By the end, you'll be able to identify them and explain how at least one led to the war."</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Circulation:</strong> Make a point to check in with Noel at each transition between "I Do," "We Do," and "You Do." Use prompting questions: "Noel, which part of the definition should we write first?"</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Positive Reinforcement:</strong> Use specific praise for effort and task completion. "Excellent job finding that definition," or "I see you really focused on that paragraph for three straight minutes, great stamina."</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Timing:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  The differentiated activities are designed to be completed within the general lesson timeframe. The extended time accommodation means Noel may work on the final paragraph/response while others move on to an extension activity or the next task.</li></ul></p><p><h4 class="sub-heading">Research Basis:</h4> This plan draws on evidence-based practices including:<br><ul class="intervention-list"><li class="main-bullet">  <strong>Universal Design for Learning (UDL):</strong> Providing multiple means of Engagement, Representation, and Action & Expression (CAST, 2018).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Scaffolding:</strong> Breaking tasks into manageable chunks with support gradually removed (Vygotsky, 1978).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Graphic Organizers:</strong> Improving comprehension and retention of information for struggling learners (Dexter & Hughes, 2011).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Formative Assessment:</strong> Providing ongoing feedback to guide instruction (Black & Wiliam, 1998).</li></ul></p><p>This plan provides Noel with the structured support needed to access grade-level content and demonstrate understanding in a way that aligns with his current academic level, building confidence and foundational skills.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 9th)</h4>
+          <div class="concern-counter">9. Not specified</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Grade 10 13 students</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/29/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>No description provided</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p>Of course. As an educational intervention specialist, I will create a differentiated lesson plan for Noel R. However, I must note a critical limitation: the "original lesson plan" you provided is a corrupted or unreadable PDF data stream, not actual lesson content. I cannot see the subject, topic, standards, or activities of the original lesson.</p><p>To provide you with a meaningful and practical differentiated plan, I will proceed by:<br>1.  <strong>Acknowledging the missing information</strong> and making an educated assumption based on the provided context (9th/10th grade, 13 students).<br>2.  <strong>Creating a sample, high-quality, standards-aligned original lesson plan</strong> on a common 9th/10th grade topic: <strong>Rhetorical Analysis in English Language Arts</strong>.<br>3.  <strong>Differentiating that sample lesson extensively</strong> for a student with potential needs, as no specific learning profile was provided. I will assume Noel has executive function challenges and struggles with reading comprehension and written expression, which are common areas requiring differentiation.</p><p>This approach will provide you with a complete, research-backed, and ready-to-use template that demonstrates best practices in differentiation.</p><p>---</p><p><h3 class="intervention-title">Differentiated Lesson Plan for: Noel R.</h3><br><h4 class="sub-heading">Grade:</h4> 9th (in a Grade 10 class of 13 students)<br><h4 class="sub-heading">Subject:</h4> English Language Arts<br><h4 class="sub-heading">Original Topic:</h4> Rhetorical Analysis of Dr. Martin Luther King Jr.'s "I Have a Dream" Speech<br><h4 class="sub-heading">Time Allotment:</h4> 60 minutes</p><p><h4 class="sub-heading">Assumed Student Profile (Based on Common Needs):</h4> Noel benefits from structured support, graphic organizers, chunked tasks, and alternative methods for demonstrating understanding. He may struggle with decoding complex text, organizing thoughts for writing, and maintaining focus during extended whole-group instruction.</p><p>---</p><p><h3 class="intervention-title">1. Differentiated Learning Objectives</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Original Objective:</strong> Students will be able to (SWBAT) analyze how King uses rhetorical devices (ethos, pathos, logos) to advance his purpose in "I Have a Dream" by writing a structured paragraph with text evidence.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Differentiated Objective for Noel:</strong> SWBAT identify examples of ethos, pathos, and logos in a shortened excerpt of "I Have a Dream" and sort them into a graphic organizer, explaining their effect in 1-2 sentences with sentence stems.</li></ul></p><p><h4 class="sub-heading">Why this works (Research Base):</h4> This aligns with <strong>Universal Design for Learning (UDL)</strong> Principle 2 (Provide multiple means of action and expression) by reducing the language load and providing a structured output method (Tomlinson & Moon, 2013). The objective is specific, measurable, and achievable.</p><p><h3 class="intervention-title">2. Adapted Content Delivery</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Modified Explanation:</strong> Pre-teach the concepts of ethos, pathos, and logos using a highly visual anchor chart with icons:</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Ethos (Credibility):</strong> Picture of a doctor's coat or a trophy.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Pathos (Emotion):</strong> Picture of a heart or a crying emoji.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Logos (Logic):</strong> Picture of a brain or a bar graph.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Chunked Information:</strong> Instead of the full speech, provide Noel with a curated, high-impact excerpt (e.g., from "I have a dream..." to "Free at last!..."). This excerpt is rich in rhetorical devices and more manageable.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Visual & Audio Support:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Provide a printed copy of the excerpt with wide margins for annotating.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Include a link to a video of the speech with <strong>closed captions</strong> enabled. This allows him to listen, read, and see the speaker's emotion simultaneously (Meyer, Rose, & Gordon, 2014).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Vocabulary:</strong> Pre-teach and define key terms (rhetoric, ethos, pathos, logos, analysis) using a simple Frayer Model graphic organizer.</li></ul></p><p><h3 class="intervention-title">3. Differentiated Activities</h3></p><p><h4 class="sub-heading">Original Activity:</h4> Read the full speech, annotate independently, discuss in a group, and draft an analytical paragraph.</p><p><h4 class="bold-heading">Differentiated Activity for Noel: "Rhetorical Devices Sort"</h4></p><p><h4 class="sub-heading">Materials Needed:</h4><br><ul class="intervention-list"><li class="main-bullet">  Shortened excerpt of "I Have a Dream"</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Rhetorical Appeals Graphic Organizer (T-chart or 3-column chart for Ethos, Pathos, Logos)</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Set of pre-written, laminated strips containing phrases from the speech.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Dry-erase marker and sentence stem card.</li></ul></p><p><h4 class="sub-heading">Step-by-Step Implementation:</h4><br>1.  <strong>Preview (5 min):</strong> Review the anchor chart with Noel. Ask, "Which one is about credibility? Which one is about feelings?"<br>2.  <strong>Chunked Reading & Listening (10 min):</strong> Noel will follow along on his excerpt while watching the video segment of the speech. He will circle words or phrases that stand out to him.<br>3.  <strong>Guided Sort (15 min):</strong> Provide Noel with 5-7 pre-written quote strips (e.g., "Five score years ago...", "We cannot be satisfied...", "I have a dream..."). He will work with a supportive peer or the teacher to place each strip in the correct column on his graphic organizer.<br>4.  <strong>Scaffolded Writing (10 min):</strong> Using a sentence stem card, Noel will choose one example and write about its effect.<br><ul class="intervention-list"><li class="nested-bullet">  <strong>Sentence Stems:</strong></li></ul><br>        *   "When King says _____, it is an example of ______ because ______."<br>        *   "This use of ______ makes the audience feel ______."<br>5.  <strong>Choice Option:</strong> Instead of writing, Noel could verbally explain his choice to the teacher or use a voice-to-text tool to dictate his sentence.</p><p><h3 class="intervention-title">4. Modified Assessment Methods</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Formative Assessment:</strong> The completed graphic organizer and sentence serve as the primary assessment. The teacher will check for understanding during the sorting activity.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Success Criteria (Simplified Rubric):</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  👍 <strong>Meeting:</strong> Correctly sorted 4+ quotes and wrote a sentence that accurately explains the effect of one device.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  👌 <strong>Approaching:</strong> Correctly sorted 3 quotes and attempted a sentence with the stem.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  ✋ <strong>Developing:</strong> Struggled to sort quotes accurately; needs more direct instruction.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Exit Ticket Alternative:</strong> Instead of a written exit ticket, Noel can tell the teacher one thing he learned about how speeches can persuade people.</li></ul></p><p><h3 class="intervention-title">5. Specific Accommodations</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Environment:</strong> Preferential seating near the teacher and away from distractions. Option to use a study carrel for independent work time.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Technology:</strong> Access to speech-to-text software (like Google Voice Typing) or text-to-speech software to read the excerpt aloud. Headphones for the video.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Time:</strong> Extended time for the reading and writing portions of the task. The chunked activity naturally builds in breaks.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Materials:</strong> Modified text (shortened excerpt), graphic organizer, manipulatives (quote strips), sentence stems.</li></ul></p><p><h3 class="intervention-title">6. Implementation Notes for the Teacher</h3></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Preparation:</strong> Before the lesson:</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Print and laminate the quote strips and sentence stem card.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Prepare the shortened excerpt document.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Bookmark the video link and test the technology.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Identify a supportive peer partner for Noel.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Timing:</strong> The differentiated activity is designed to run parallel to the main class activity. While other students begin independent writing, Noel will be working on the sorting and sentence activity.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Instruction:</strong> Check in with Noel immediately after the whole-group instruction to ensure he understands the task. Use the anchor chart to refer to the concepts visually. Praise effort and correct identification during the sort.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Collect and review Noel's graphic organizer and sentence as a work sample. Note his accuracy in sorting and the sophistication of his explanation to inform future instruction.</li></ul></p><p>This plan ensures Noel is engaging with the same core content and standards as his peers through a pathway that is accessible and designed for his success, embodying the principles of differentiated instruction and UDL.</p><p><h4 class="sub-heading">Source References:</h4><br><ul class="intervention-list"><li class="main-bullet">  Meyer, A., Rose, D.H., & Gordon, D. (2014). *Universal Design for Learning: Theory and Practice*. CAST.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  Tomlinson, C. A., & Moon, T. R. (2013). *Assessment and Student Success in a Differentiated Classroom*. ASCD.</li></ul></p>
+              </div>
+            </div>
+          
+
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 5)</h4>
+          <div class="concern-counter">10. Academic</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Room</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/29/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>undefined</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Help</li>
+              </ul>
+            </div>
+          
+
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 5)</h4>
+          <div class="concern-counter">11. Academic</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Room</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/29/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>undefined</p>
+          </div>
+
+          
+            <div class="actions-taken">
+              <h5>Actions Already Taken:</h5>
+              <ul>
+                <li>Help</li>
+              </ul>
+            </div>
+          
+
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 10th)</h4>
+          <div class="concern-counter">12. Not specified</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Grade 9 13 students</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/29/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>No description provided</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p># Differentiation Strategies for NOEL R</p><p><h2 class="major-heading">Student Learning Profile Summary</h2><br>Based on the provided learning profile information, NOEL demonstrates unique learning strengths and needs that require targeted differentiation strategies. This student would benefit from multi-modal instruction, structured support systems, and flexible learning options to maximize academic success and engagement.</p><p><h2 class="major-heading">1. Content Modifications</h2></p><p><h3 class="intervention-title">Adjusting Complexity</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Scaffolded Content Delivery</strong>: Break lessons into 10-15 minute chunks with visual organizers</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Multi-Level Materials</strong>: Provide same content at 3 different reading levels (below, at, above grade level)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Concept Mapping</strong>: Use graphic organizers to show relationships between ideas</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Vocabulary Pre-Teaching</strong>: Introduce key terms with visual aids and real-world examples</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Concrete-Abstract Bridge</strong>: Start with hands-on examples before moving to abstract concepts</li></ul></p><p><h3 class="intervention-title">Multiple Representations</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Visual Supports</strong>: Create infographics, charts, and color-coded materials for key concepts</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Auditory Options</strong>: Provide recorded instructions, audiobooks, and verbal processing time</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Kinesthetic Activities</strong>: Use manipulatives, role-playing, and movement-based learning</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital Integration</strong>: Utilize interactive apps, virtual simulations, and multimedia presentations</li></ul></p><p><h3 class="intervention-title">Interest-Based Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Student Interest Surveys</strong>: Connect curriculum to personal interests and hobbies</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Cultural Connections</strong>: Incorporate culturally relevant examples and contexts</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Choice Menus</strong>: Offer 3-4 topic options for research projects and presentations</li></ul></p><p><h2 class="major-heading">2. Process Modifications</h2></p><p><h3 class="intervention-title">Instructional Delivery</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Think-Aloud Modeling</strong>: Demonstrate problem-solving processes step-by-step</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Chunked Instruction</strong>: Present information in small, manageable segments</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Wait Time</strong>: Provide 5-7 seconds for processing before expecting responses</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Multiple Exposures</strong>: Review key concepts through different activities and formats</li></ul></p><p><h3 class="intervention-title">Scaffolding Techniques</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Step-by-Step Guides</strong>: Create visual process charts for complex tasks</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Peer Buddy System</strong>: Pair with supportive classmate for collaboration and support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Teacher Check-Ins</strong>: Schedule brief 2-minute progress checks every 15 minutes</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: Provide clear rubrics and examples of quality work</li></ul></p><p><h3 class="intervention-title">Technology Integration</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Text-to-Speech</strong>: Use assistive technology for reading support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Speech-to-Text</strong>: Allow voice recording for written responses</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Organization Apps</strong>: Utilize digital planners and reminder systems</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Interactive Whiteboards</strong>: Engage with touch-screen technology for kinesthetic learning</li></ul></p><p><h2 class="major-heading">3. Product Alternatives</h2></p><p><h3 class="intervention-title">Assessment Options</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Portfolio Collections</strong>: Gather work samples showing progress over time</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Oral Presentations</strong>: Allow verbal demonstration of knowledge</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital Projects</strong>: Create multimedia presentations, videos, or interactive displays</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Performance Tasks</strong>: Use real-world applications and hands-on demonstrations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Choice Boards</strong>: Offer 6-9 options for demonstrating learning</li></ul></p><p><h3 class="intervention-title">Expression Methods</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Written Options</strong>: Traditional essays, graphic organizers, annotated drawings</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Verbal Options</strong>: Recorded explanations, debates, storytelling</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Visual Options</strong>: Posters, infographics, comic strips, photo journals</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital Options</strong>: Websites, presentations, video projects, interactive timelines</li></ul></p><p><h2 class="major-heading">4. Learning Environment Optimization</h2></p><p><h3 class="intervention-title">Physical Space</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Flexible Seating</strong>: Standing desk, stability ball, floor cushions, traditional desk options</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Quiet Zones</strong>: Designated low-stimulation areas with noise-reducing headphones</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Organization Systems</strong>: Color-coded folders, labeled storage, visual schedules</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Lighting Options</strong>: Natural light when possible, reduce fluorescent glare</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Movement Breaks</strong>: Scheduled 2-minute movement opportunities every 20 minutes</li></ul></p><p><h3 class="intervention-title">Social Environment</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Strategic Grouping</strong>: Rotate between individual, pair, and small group configurations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Peer Support Networks</strong>: Establish study buddies and collaboration partnerships</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Clear Communication</strong>: Visual and verbal instructions, posted classroom expectations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Positive Reinforcement</strong>: Frequent specific praise and recognition systems</li></ul></p><p><h2 class="major-heading">5. Implementation Timeline</h2></p><p><h3 class="intervention-title">Week 1-2: Immediate Strategies</h3><br><ul class="intervention-list"><li class="main-bullet">Set up physical environment modifications (seating, organization systems)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Introduce visual supports and communication methods</li></ul><br><ul class="intervention-list"><li class="main-bullet">Begin data collection on current performance levels</li></ul><br><ul class="intervention-list"><li class="main-bullet">Establish peer buddy partnerships and support systems</li></ul></p><p><h3 class="intervention-title">Weeks 3-6: Short-term Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">Implement scaffolded instruction techniques and chunked content delivery</li></ul><br><ul class="intervention-list"><li class="main-bullet">Introduce technology tools and assistive supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Develop and practice new assessment formats</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monitor progress and adjust strategies based on student response</li></ul></p><p><h3 class="intervention-title">Ongoing: Long-term Support</h3><br><ul class="intervention-list"><li class="main-bullet">Maintain consistent environmental modifications and support systems</li></ul><br><ul class="intervention-list"><li class="main-bullet">Regularly update and refine differentiation strategies based on student growth</li></ul><br><ul class="intervention-list"><li class="main-bullet">Prepare transition materials for next grade level or new teachers</li></ul><br><ul class="intervention-list"><li class="main-bullet">Continue family communication and collaboration</li></ul></p><p><h2 class="major-heading">6. Progress Monitoring & Data Collection</h2></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Academic Data</strong>: Track completion rates, accuracy scores, and engagement levels</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Behavioral Observations</strong>: Document on-task behavior, social interactions, and self-regulation</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Student Self-Assessment</strong>: Weekly check-ins on learning preferences and challenges</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Work Sample Analysis</strong>: Review quality and growth in student products monthly</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adjustment Protocol</strong>: Modify strategies if no progress seen after 2-3 weeks of consistent implementation</li></ul></p><p><h2 class="major-heading">7. Collaboration & Communication</h2></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Family Partnership</strong>: Share strategies for home reinforcement, communicate progress weekly</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Support Staff Coordination</strong>: Collaborate with special education team, counselors, and specialists</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Documentation</strong>: Maintain detailed records of interventions tried and student responses</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Professional Development</strong>: Seek additional training in differentiation strategies as needed</li></ul></p><p><h4 class="bold-heading">Note</h4>: These are research-based strategies that should be implemented consistently and monitored for effectiveness. Regular communication with all stakeholders ensures the best possible outcomes for NOEL.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+      <div class="concern-card">
+        <div class="concern-header">
+          <h4 class="concern-student-name">NOEL R (Grade 6th)</h4>
+          <div class="concern-counter">13. Not specified</div>
+        </div>
+        <div class="concern-details">
+          <div class="concern-meta">
+            <span class="concern-meta-item"><strong>Severity:</strong> Not specified</span>
+            <span class="concern-meta-item"><strong>Location:</strong> Classroom</span>
+            <span class="concern-meta-item"><strong>Date:</strong> 8/29/2025</span>
+          </div>
+          
+          <div class="concern-description">
+            <h5>Teacher's Submitted Response:</h5>
+            <p>No description provided</p>
+          </div>
+
+          
+
+          
+            <div class="ai-interventions">
+              <h5>AI-Generated Interventions</h5>
+              <div class="interventions-content">
+                <p># Differentiation Strategies for NOEL R</p><p><h2 class="major-heading">Student Learning Profile Summary</h2><br>Based on the provided learning profile information, NOEL demonstrates unique learning strengths and needs that require targeted differentiation strategies. This student would benefit from multi-modal instruction, structured support systems, and flexible learning options to maximize academic success and engagement.</p><p><h2 class="major-heading">1. Content Modifications</h2></p><p><h3 class="intervention-title">Adjusting Complexity</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Scaffolded Content Delivery</strong>: Break lessons into 10-15 minute chunks with visual organizers</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Multi-Level Materials</strong>: Provide same content at 3 different reading levels (below, at, above grade level)</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Concept Mapping</strong>: Use graphic organizers to show relationships between ideas</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Vocabulary Pre-Teaching</strong>: Introduce key terms with visual aids and real-world examples</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Concrete-Abstract Bridge</strong>: Start with hands-on examples before moving to abstract concepts</li></ul></p><p><h3 class="intervention-title">Multiple Representations</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Visual Supports</strong>: Create infographics, charts, and color-coded materials for key concepts</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Auditory Options</strong>: Provide recorded instructions, audiobooks, and verbal processing time</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Kinesthetic Activities</strong>: Use manipulatives, role-playing, and movement-based learning</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital Integration</strong>: Utilize interactive apps, virtual simulations, and multimedia presentations</li></ul></p><p><h3 class="intervention-title">Interest-Based Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Student Interest Surveys</strong>: Connect curriculum to personal interests and hobbies</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Cultural Connections</strong>: Incorporate culturally relevant examples and contexts</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Choice Menus</strong>: Offer 3-4 topic options for research projects and presentations</li></ul></p><p><h2 class="major-heading">2. Process Modifications</h2></p><p><h3 class="intervention-title">Instructional Delivery</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Think-Aloud Modeling</strong>: Demonstrate problem-solving processes step-by-step</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Chunked Instruction</strong>: Present information in small, manageable segments</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Wait Time</strong>: Provide 5-7 seconds for processing before expecting responses</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Multiple Exposures</strong>: Review key concepts through different activities and formats</li></ul></p><p><h3 class="intervention-title">Scaffolding Techniques</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Step-by-Step Guides</strong>: Create visual process charts for complex tasks</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Peer Buddy System</strong>: Pair with supportive classmate for collaboration and support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Teacher Check-Ins</strong>: Schedule brief 2-minute progress checks every 15 minutes</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Success Criteria</strong>: Provide clear rubrics and examples of quality work</li></ul></p><p><h3 class="intervention-title">Technology Integration</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Text-to-Speech</strong>: Use assistive technology for reading support</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Speech-to-Text</strong>: Allow voice recording for written responses</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Organization Apps</strong>: Utilize digital planners and reminder systems</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Interactive Whiteboards</strong>: Engage with touch-screen technology for kinesthetic learning</li></ul></p><p><h2 class="major-heading">3. Product Alternatives</h2></p><p><h3 class="intervention-title">Assessment Options</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Portfolio Collections</strong>: Gather work samples showing progress over time</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Oral Presentations</strong>: Allow verbal demonstration of knowledge</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital Projects</strong>: Create multimedia presentations, videos, or interactive displays</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Performance Tasks</strong>: Use real-world applications and hands-on demonstrations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Choice Boards</strong>: Offer 6-9 options for demonstrating learning</li></ul></p><p><h3 class="intervention-title">Expression Methods</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Written Options</strong>: Traditional essays, graphic organizers, annotated drawings</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Verbal Options</strong>: Recorded explanations, debates, storytelling</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Visual Options</strong>: Posters, infographics, comic strips, photo journals</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Digital Options</strong>: Websites, presentations, video projects, interactive timelines</li></ul></p><p><h2 class="major-heading">4. Learning Environment Optimization</h2></p><p><h3 class="intervention-title">Physical Space</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Flexible Seating</strong>: Standing desk, stability ball, floor cushions, traditional desk options</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Quiet Zones</strong>: Designated low-stimulation areas with noise-reducing headphones</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Organization Systems</strong>: Color-coded folders, labeled storage, visual schedules</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Lighting Options</strong>: Natural light when possible, reduce fluorescent glare</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Movement Breaks</strong>: Scheduled 2-minute movement opportunities every 20 minutes</li></ul></p><p><h3 class="intervention-title">Social Environment</h3><br><ul class="intervention-list"><li class="main-bullet"><strong>Strategic Grouping</strong>: Rotate between individual, pair, and small group configurations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Peer Support Networks</strong>: Establish study buddies and collaboration partnerships</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Clear Communication</strong>: Visual and verbal instructions, posted classroom expectations</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Positive Reinforcement</strong>: Frequent specific praise and recognition systems</li></ul></p><p><h2 class="major-heading">5. Implementation Timeline</h2></p><p><h3 class="intervention-title">Week 1-2: Immediate Strategies</h3><br><ul class="intervention-list"><li class="main-bullet">Set up physical environment modifications (seating, organization systems)</li></ul><br><ul class="intervention-list"><li class="main-bullet">Introduce visual supports and communication methods</li></ul><br><ul class="intervention-list"><li class="main-bullet">Begin data collection on current performance levels</li></ul><br><ul class="intervention-list"><li class="main-bullet">Establish peer buddy partnerships and support systems</li></ul></p><p><h3 class="intervention-title">Weeks 3-6: Short-term Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">Implement scaffolded instruction techniques and chunked content delivery</li></ul><br><ul class="intervention-list"><li class="main-bullet">Introduce technology tools and assistive supports</li></ul><br><ul class="intervention-list"><li class="main-bullet">Develop and practice new assessment formats</li></ul><br><ul class="intervention-list"><li class="main-bullet">Monitor progress and adjust strategies based on student response</li></ul></p><p><h3 class="intervention-title">Ongoing: Long-term Support</h3><br><ul class="intervention-list"><li class="main-bullet">Maintain consistent environmental modifications and support systems</li></ul><br><ul class="intervention-list"><li class="main-bullet">Regularly update and refine differentiation strategies based on student growth</li></ul><br><ul class="intervention-list"><li class="main-bullet">Prepare transition materials for next grade level or new teachers</li></ul><br><ul class="intervention-list"><li class="main-bullet">Continue family communication and collaboration</li></ul></p><p><h2 class="major-heading">6. Progress Monitoring & Data Collection</h2></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Weekly Academic Data</strong>: Track completion rates, accuracy scores, and engagement levels</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Behavioral Observations</strong>: Document on-task behavior, social interactions, and self-regulation</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Student Self-Assessment</strong>: Weekly check-ins on learning preferences and challenges</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Work Sample Analysis</strong>: Review quality and growth in student products monthly</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Adjustment Protocol</strong>: Modify strategies if no progress seen after 2-3 weeks of consistent implementation</li></ul></p><p><h2 class="major-heading">7. Collaboration & Communication</h2></p><p><ul class="intervention-list"><li class="main-bullet"><strong>Family Partnership</strong>: Share strategies for home reinforcement, communicate progress weekly</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Support Staff Coordination</strong>: Collaborate with special education team, counselors, and specialists</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Documentation</strong>: Maintain detailed records of interventions tried and student responses</li></ul><br><ul class="intervention-list"><li class="main-bullet"><strong>Professional Development</strong>: Seek additional training in differentiation strategies as needed</li></ul></p><p><h4 class="bold-heading">Note</h4>: These are research-based strategies that should be implemented consistently and monitored for effectiveness. Regular communication with all stakeholders ensures the best possible outcomes for NOEL.</p>
+              </div>
+            </div>
+          
+
+          
+            <div class="student-profile">
+              <h5>Student Learning Profile</h5>
+              <ul>
+                <li>Currently struggling academically</li>
+              </ul>
+            </div>
+          
+        </div>
+      </div>
+    
+            </div>
+        </section>
+
+        
+        <!-- AI-Generated Collaboration Insights Section -->
+        <section class="insights-section">
+            <h3 class="section-title">
+                <span class="insight-icon">🤝</span>
+                Cross-Teacher Collaboration Insights
+            </h3>
+            <div class="insights-intro">
+                <p class="ai-badge">🤖 AI-Generated Insights</p>
+                <p class="insights-description">
+                    Based on the concerns selected, here are collaboration opportunities to gain deeper insights and coordinate support:
+                </p>
+            </div>
+            <div class="insights-list">
+                
+                    <div class="insight-item">
+                        <div class="insight-number">1</div>
+                        <div class="insight-text">Consider comparing notes with math teacher(s) - the concern descriptions suggest subject-specific patterns that may reveal student strengths or struggles in different contexts</div>
+                    </div>
+                
+                    <div class="insight-item">
+                        <div class="insight-number">2</div>
+                        <div class="insight-text">Academic frustration may be driving behavioral concerns - discuss with grade-level team whether similar patterns appear in other subjects</div>
+                    </div>
+                
+                    <div class="insight-item">
+                        <div class="insight-number">3</div>
+                        <div class="insight-text">Consult with counselor or social worker - social-emotional concerns often benefit from coordinated support across all settings</div>
+                    </div>
+                
+                    <div class="insight-item">
+                        <div class="insight-number">4</div>
+                        <div class="insight-text">Schedule IEP team check-in - ensure accommodations are consistently implemented across all classes and determine if modifications are needed</div>
+                    </div>
+                
+                    <div class="insight-item">
+                        <div class="insight-number">5</div>
+                        <div class="insight-text">Collaborate with ESL/ELL specialist - language development patterns may vary significantly across content areas and social contexts</div>
+                    </div>
+                
+            </div>
+        </section>
+        
+
+        
+        <!-- Additional Notes Section -->
+        <section class="notes-section">
+            <h3 class="section-title">Additional Notes</h3>
+            <div class="notes-content">
+                Involve the school counselor for additional intervention support
+            </div>
+        </section>
+        
+
+        
+        <!-- Document Includes Section -->
+        <section class="includes-section">
+            <h3 class="section-title">Document Includes</h3>
+            <div class="includes-content">
+                <div class="include-item">• AI-generated intervention recommendations</div>
+                
+            </div>
+        </section>
+        
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <p>Generated: October 16, 2025 at 05:30 AM</p>
+                    <p>Prepared by: Demo-Teacher ROBERTS</p>
+                </div>
+                <div class="footer-right">
+                    <p><strong>Concern2Care</strong></p>
+                    <p>AI-Powered Educational Support Platform</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .insights-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+        background: #fef3c7 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .insight-item {
+        padding: 1rem !important;
+        margin-bottom: 0.8rem !important;
+        page-break-inside: avoid !important;
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .insight-item:hover {
+        transform: none !important;
+    }
+
+    .insight-number {
+        width: 1.8rem !important;
+        height: 1.8rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .insight-text {
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+    }
+
+    .ai-badge {
+        font-size: 0.8rem !important;
+        padding: 0.2rem 0.6rem !important;
+    }
+
+    .insights-description {
+        font-size: 0.95rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>
