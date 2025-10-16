@@ -20,6 +20,193 @@ interface MeetingData {
   includeProgressNotes?: boolean;
 }
 
+interface CollaborationInsight {
+  type: 'teacher_collaboration' | 'parent_partnership';
+  icon: string;
+  title: string;
+  suggestions: string[];
+}
+
+// Pattern detection: Analyze concerns for collaboration opportunities
+function detectCollaborationPatterns(concerns: any[], meetingType: string): CollaborationInsight | null {
+  if (!concerns || concerns.length === 0) {
+    return null;
+  }
+
+  const isParentMeeting = meetingType.toLowerCase().includes('parent');
+  
+  if (isParentMeeting) {
+    return generateParentPartnershipInsights(concerns);
+  } else {
+    return generateTeacherCollaborationInsights(concerns);
+  }
+}
+
+// Generate insights for parent meetings
+function generateParentPartnershipInsights(concerns: any[]): CollaborationInsight {
+  const suggestions: string[] = [];
+  
+  // Analyze concern types and patterns
+  const concernTypes = concerns.flatMap(c => c.concernTypes || []);
+  const hasAcademic = concernTypes.some((t: string) => t.toLowerCase().includes('academic'));
+  const hasBehavioral = concernTypes.some((t: string) => t.toLowerCase().includes('behavior'));
+  const hasSocialEmotional = concernTypes.some((t: string) => 
+    t.toLowerCase().includes('social') || t.toLowerCase().includes('emotional')
+  );
+  const hasAttendance = concernTypes.some((t: string) => t.toLowerCase().includes('attendance'));
+  
+  // Check for special needs indicators
+  const hasIEP = concerns.some(c => c.hasIep);
+  const isELL = concerns.some(c => c.isEalLearner);
+  const isGifted = concerns.some(c => c.isGifted);
+  
+  // Analyze descriptions for key patterns
+  const descriptions = concerns.map(c => c.description?.toLowerCase() || '').join(' ');
+  const mentionsHomework = /homework|assignment|home/i.test(descriptions);
+  const mentionsRoutine = /routine|schedule|consistency/i.test(descriptions);
+  const mentionsMotivation = /motivat|interest|engag/i.test(descriptions);
+  
+  // Generate parent partnership suggestions
+  if (hasAcademic && mentionsHomework) {
+    suggestions.push("Ask parents about homework patterns at home: Does the student struggle with the same subjects? How long does homework typically take?");
+    suggestions.push("Suggest establishing a consistent homework routine at home that mirrors classroom structure (quiet space, set time, breaks every 20 minutes)");
+  }
+  
+  if (hasBehavioral) {
+    suggestions.push("Frame as partnership: 'I'm noticing [behavior] at school. Have you observed anything similar at home?' This opens dialogue without blame");
+    suggestions.push("Share specific successful strategies from class that parents can adapt at home (visual schedules, transition warnings, positive reinforcement)");
+  }
+  
+  if (hasSocialEmotional) {
+    suggestions.push("Explore social dynamics: Ask if parents notice similar patterns with siblings, peers at home, or during extracurricular activities");
+    suggestions.push("Suggest family activities that build social-emotional skills: family meetings, emotion check-ins, collaborative problem-solving");
+  }
+  
+  if (mentionsMotivation || hasAcademic) {
+    suggestions.push("Discover student interests through parents: What does the student love talking about at home? How can we incorporate these interests into learning?");
+  }
+  
+  if (hasIEP) {
+    suggestions.push("Discuss IEP accommodations at home: Which supports work well at school that parents could try during homework or daily routines?");
+  }
+  
+  if (isELL) {
+    suggestions.push("Partner on language development: Ask about home language use. Suggest ways to build vocabulary in both languages through everyday conversations");
+  }
+  
+  if (hasAttendance) {
+    suggestions.push("Understand attendance barriers together: Explore if there are health, transportation, or family concerns affecting school attendance");
+  }
+  
+  // Default suggestions if no specific patterns detected
+  if (suggestions.length === 0) {
+    suggestions.push("Start with strengths: Share what the student does well before discussing concerns. This builds trust and partnership");
+    suggestions.push("Ask open-ended questions: 'What have you noticed at home?' 'What strategies work for you?' 'What concerns do you have?'");
+    suggestions.push("Create an action plan together: Identify 2-3 specific strategies to try both at school and home, with a follow-up date to check progress");
+  }
+  
+  return {
+    type: 'parent_partnership',
+    icon: '👪',
+    title: 'Parent Partnership Talking Points',
+    suggestions: suggestions.slice(0, 5) // Limit to 5 most relevant suggestions
+  };
+}
+
+// Generate insights for teacher collaboration meetings
+function generateTeacherCollaborationInsights(concerns: any[]): CollaborationInsight | null {
+  const suggestions: string[] = [];
+  
+  // Analyze concern descriptions for subject mentions
+  const descriptions = concerns.map(c => c.description?.toLowerCase() || '').join(' ');
+  
+  // Subject-specific patterns
+  const subjects = {
+    math: /math|calculation|number|algebra|geometry/i.test(descriptions),
+    reading: /reading|literacy|comprehension|text|book/i.test(descriptions),
+    writing: /writing|essay|composition|journal/i.test(descriptions),
+    science: /science|experiment|hypothesis/i.test(descriptions),
+    social: /social studies|history|geography/i.test(descriptions),
+  };
+  
+  const mentionedSubjects = Object.entries(subjects)
+    .filter(([_, mentioned]) => mentioned)
+    .map(([subject]) => subject);
+  
+  // Location patterns
+  const locations = concerns.map(c => c.location?.toLowerCase() || '');
+  const classroomOnly = locations.every(loc => loc.includes('classroom'));
+  const specialtyAreas = locations.some(loc => 
+    loc.includes('gym') || loc.includes('cafeteria') || loc.includes('music') || 
+    loc.includes('art') || loc.includes('library') || loc.includes('recess')
+  );
+  
+  // Concern type analysis
+  const concernTypes = concerns.flatMap(c => c.concernTypes || []);
+  const hasAcademic = concernTypes.some((t: string) => t.toLowerCase().includes('academic'));
+  const hasBehavioral = concernTypes.some((t: string) => t.toLowerCase().includes('behavior'));
+  const hasSocialEmotional = concernTypes.some((t: string) => 
+    t.toLowerCase().includes('social') || t.toLowerCase().includes('emotional')
+  );
+  
+  // Student profile patterns
+  const hasIEP = concerns.some(c => c.hasIep);
+  const isELL = concerns.some(c => c.isEalLearner);
+  const hasDisability = concerns.some(c => c.hasDisability);
+  
+  // Generate collaboration suggestions
+  if (mentionedSubjects.length > 0) {
+    const subjectList = mentionedSubjects.join(', ');
+    suggestions.push(`Consider comparing notes with ${subjectList} teacher(s) - the concern descriptions suggest subject-specific patterns that may reveal student strengths or struggles in different contexts`);
+  }
+  
+  if (specialtyAreas) {
+    suggestions.push("Connect with specialty teachers (PE, Music, Art) and support staff - behavior often differs in less structured environments, revealing important patterns about student needs");
+  }
+  
+  if (hasAcademic && hasBehavioral) {
+    suggestions.push("Academic frustration may be driving behavioral concerns - discuss with grade-level team whether similar patterns appear in other subjects");
+  }
+  
+  if (hasSocialEmotional && !specialtyAreas) {
+    suggestions.push("Consult with counselor or social worker - social-emotional concerns often benefit from coordinated support across all settings");
+  }
+  
+  if (hasIEP || hasDisability) {
+    suggestions.push("Schedule IEP team check-in - ensure accommodations are consistently implemented across all classes and determine if modifications are needed");
+  }
+  
+  if (isELL) {
+    suggestions.push("Collaborate with ESL/ELL specialist - language development patterns may vary significantly across content areas and social contexts");
+  }
+  
+  if (concerns.length > 1) {
+    const students = Array.from(new Set(concerns.map(c => `${c.studentFirstName} ${c.studentLastInitial}`)));
+    if (students.length === 1) {
+      suggestions.push(`Multiple concerns for ${students[0]} - recommend full team meeting to develop comprehensive support plan and ensure consistent approach`);
+    }
+  }
+  
+  // Check for inconsistent severity/patterns
+  const severities = concerns.map(c => c.severity);
+  const hasMixedSeverity = new Set(severities).size > 1;
+  if (hasMixedSeverity) {
+    suggestions.push("Severity levels vary across concerns - compare observations with other teachers to identify triggers and contexts where student performs differently");
+  }
+  
+  // Return null if no patterns detected
+  if (suggestions.length === 0) {
+    return null;
+  }
+  
+  return {
+    type: 'teacher_collaboration',
+    icon: '🤝',
+    title: 'Cross-Teacher Collaboration Insights',
+    suggestions: suggestions.slice(0, 5) // Limit to 5 most relevant suggestions
+  };
+}
+
 export async function generateMeetingHTMLReport(
   meetingData: MeetingData,
   outputPath: string,
@@ -105,6 +292,9 @@ export async function generateMeetingHTMLReport(
     `;
   }).join('') || '';
 
+  // Detect collaboration patterns and generate insights
+  const collaborationInsight = detectCollaborationPatterns(meetingData.selectedConcerns || [], meetingData.type);
+
   const htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
@@ -172,6 +362,32 @@ export async function generateMeetingHTMLReport(
                 ${formattedConcerns}
             </div>
         </section>
+
+        ${collaborationInsight ? `
+        <!-- AI-Generated Collaboration Insights Section -->
+        <section class="insights-section">
+            <h3 class="section-title">
+                <span class="insight-icon">${collaborationInsight.icon}</span>
+                ${collaborationInsight.title}
+            </h3>
+            <div class="insights-intro">
+                <p class="ai-badge">🤖 AI-Generated Insights</p>
+                <p class="insights-description">
+                    ${collaborationInsight.type === 'parent_partnership' 
+                      ? 'Based on the concerns selected, here are suggested talking points and partnership strategies for your parent meeting:'
+                      : 'Based on the concerns selected, here are collaboration opportunities to gain deeper insights and coordinate support:'}
+                </p>
+            </div>
+            <div class="insights-list">
+                ${collaborationInsight.suggestions.map((suggestion, index) => `
+                    <div class="insight-item">
+                        <div class="insight-number">${index + 1}</div>
+                        <div class="insight-text">${suggestion}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </section>
+        ` : ''}
 
         ${meetingData.notes ? `
         <!-- Additional Notes Section -->
@@ -720,6 +936,84 @@ function getMeetingReportCSS(theme: string): string {
         color: #9ca3af;
         position: absolute;
         left: 0;
+    }
+
+    .insights-section {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+    }
+
+    .insight-icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .insights-intro {
+        margin-bottom: 1.5rem;
+    }
+
+    .ai-badge {
+        display: inline-block;
+        background: #3b82f6;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+    }
+
+    .insights-description {
+        color: #78350f;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .insights-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .insight-item {
+        display: flex;
+        gap: 1rem;
+        background: white;
+        padding: 1.25rem;
+        border-radius: 10px;
+        border-left: 4px solid #f59e0b;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+    }
+
+    .insight-item:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateX(4px);
+    }
+
+    .insight-number {
+        flex-shrink: 0;
+        width: 2rem;
+        height: 2rem;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .insight-text {
+        flex: 1;
+        color: #374151;
+        line-height: 1.7;
+        font-size: 0.95rem;
     }
 
     .includes-content {
@@ -1295,6 +1589,49 @@ function getPrintCSS(): string {
         margin: 1rem 0 !important;
         page-break-before: avoid !important;
         break-inside: avoid !important;
+    }
+
+    .insights-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+        background: #fef3c7 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .insight-item {
+        padding: 1rem !important;
+        margin-bottom: 0.8rem !important;
+        page-break-inside: avoid !important;
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .insight-item:hover {
+        transform: none !important;
+    }
+
+    .insight-number {
+        width: 1.8rem !important;
+        height: 1.8rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .insight-text {
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+    }
+
+    .ai-badge {
+        font-size: 0.8rem !important;
+        padding: 0.2rem 0.6rem !important;
+    }
+
+    .insights-description {
+        font-size: 0.95rem !important;
+        margin-bottom: 0.8rem !important;
     }
 
     .report-footer {

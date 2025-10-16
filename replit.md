@@ -7,6 +7,7 @@ Concern2Care is a full-stack web application designed to help K-12 teachers docu
 The system allows teachers to:
 - Document student concerns across various categories (academic, behavioral, social-emotional, attendance)
 - Receive AI-generated intervention strategies from DeepSeek API
+- Generate meeting prep reports with intelligent collaboration insights
 - Generate PDF reports of concerns and interventions
 - Share reports via email with school staff
 - Ask follow-up questions about interventions
@@ -52,6 +53,12 @@ Preferred communication style: Simple, everyday language.
 - **Response Processing**: JSON-formatted responses for consistent data structure  
 - **Follow-up Support**: Contextual AI responses to teacher questions about interventions
 - **Fallback System**: Mock data when no API key is configured
+- **Smart Pattern Detection**: AI-powered analysis of student concerns for meeting prep reports
+  - Automatically detects cross-subject patterns, location-specific behaviors, and severity variations
+  - Generates context-appropriate collaboration insights based on meeting type:
+    - **Parent Meetings**: Home-school partnership talking points and support strategies
+    - **Teacher Meetings**: Cross-teacher collaboration suggestions and specialist referrals
+  - Silent background processing - insights appear only when relevant patterns are detected
 
 ### File Generation & Sharing
 - **PDF Generation**: PDFKit for creating formatted concern reports
