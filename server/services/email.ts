@@ -145,25 +145,11 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
           <div class="content">
             <p>A new student concern report has been shared with you.</p>
             ${options.message ? `<p><strong>Additional Message:</strong></p><p>${options.message}</p>` : ''}
-            ${options.reportLink ? `<p><a href="${options.reportLink}" class="button">View Report</a></p>` : ''}
+            ${options.attachmentPath ? `<p><strong>Please see the attached report for the full intervention details.</strong></p>` : ''}
+            ${!options.attachmentPath && options.reportLink ? `<p>To view the full report, <a href="${options.reportLink}" style="color: #2563eb;">click here</a>.</p>` : ''}
             <p>This report contains confidential student information and should be handled according to FERPA guidelines.</p>
           </div>
           <div class="footer">
-            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
-            <h3 style="color: #1e40af; margin-bottom: 12px;">🔓 Take Your Practice Further with the Full Concern2Care App</h3>
-            <p style="margin-bottom: 12px;">You're currently using Free Student Support for Schools — designed to give every teacher access to high-quality, research-based support up to 3 times per month.</p>
-            <p style="margin-bottom: 12px;"><strong>Upgrade anytime to unlock the complete Guided Student Support Experience:</strong></p>
-            <ul style="margin-left: 20px; margin-bottom: 12px;">
-              <li>✨ More Requests & Continuous Guided Practice</li>
-              <li>🧩 Differentiation & Tier 2 Intervention Planning</li>
-              <li>🗂️ Classroom & Case Management Tools</li>
-              <li>📊 Professional Dashboard</li>
-              <li>💬 Ongoing Guided Practice Integration</li>
-              <li>🚀 Continuous Feature Development</li>
-            </ul>
-            <p style="margin-bottom: 12px;"><strong>💚 Ready to unlock the full experience?</strong><br>Visit Concern2Care.com or log into your main C2C account to upgrade today.</p>
-            <p style="margin-bottom: 12px;"><em>Let's capture what matters — and see what changes.</em></p>
-            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
             <p>This message was sent by Concern2Care. Do not reply to this email.</p>
           </div>
         </body>
