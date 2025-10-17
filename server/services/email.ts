@@ -63,7 +63,13 @@ export async function getEmailTransporter(userId?: string) {
   return { transporter, fromAddress, fromName };
 }
 
-export async function sendReportEmail(options: EmailOptions & { userId?: string }): Promise<boolean> {
+export interface EmailResult {
+  success: boolean;
+  needsSetup?: boolean;
+  message?: string;
+}
+
+export async function sendReportEmail(options: EmailOptions & { userId?: string }): Promise<EmailResult> {
   try {
     let transporter;
     let fromAddress = process.env.SMTP_FROM || process.env.SMTP_USER;
@@ -96,13 +102,15 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
       console.log(`⚠️ No userId provided to sendReportEmail`);
     }
 
-    // Fallback to environment variables or dev mode
+    // Check if email configuration is available
     if (!transporter) {
       if (!process.env.SMTP_HOST) {
-        console.log("Email would be sent to:", options.recipients.map(r => r.email).join(', '));
-        console.log("Subject:", options.subject);
-        console.log("Message:", options.message);
-        return true; // Return success for development
+        console.log("⚠️ No email configuration found - user needs to set up email in Settings");
+        return {
+          success: false,
+          needsSetup: true,
+          message: "Please set up your email configuration in Settings to share reports"
+        };
       }
 
       transporter = nodemailer.createTransport({
@@ -193,7 +201,7 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
     };
 
     await transporter.sendMail(mailOptions);
-    return true;
+    return { success: true };
   } catch (error) {
     console.error('❌ Email sending failed:');
     console.error('   Error type:', error instanceof Error ? error.constructor.name : typeof error);
@@ -203,7 +211,10 @@ export async function sendReportEmail(options: EmailOptions & { userId?: string 
       console.error('   Attachment path:', options.attachmentPath);
       console.error('   Attachment exists:', fs.existsSync(options.attachmentPath));
     }
-    return false;
+    return { 
+      success: false, 
+      message: error instanceof Error ? error.message : 'Failed to send email' 
+    };
   }
 }
 

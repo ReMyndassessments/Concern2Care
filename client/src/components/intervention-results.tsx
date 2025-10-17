@@ -639,12 +639,12 @@ export default function InterventionResults({
                             Implementation Steps
                           </h4>
                           <ul className="space-y-3">
-                            {intervention.steps.map((step: string, stepIndex: number) => (
+                            {intervention.steps.map((step, stepIndex: number) => (
                               <li key={stepIndex} className="flex items-start space-x-3 md:space-x-4">
                                 <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                                   {stepIndex + 1}
                                 </div>
-                                <span className="text-sm md:text-base text-gray-800 leading-relaxed break-words">{String(step)}</span>
+                                <span className="text-sm md:text-base text-gray-800 leading-relaxed break-words">{typeof step === 'string' ? step : String(step)}</span>
                               </li>
                             ))}
                           </ul>
