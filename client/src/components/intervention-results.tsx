@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Lightbulb, Send, FileText, Share, ChevronRight, CheckCircle, Info, BookmarkPlus, Bookmark, Save, X, Plus, Mail, Copy, Download, Upload } from "lucide-react";
 import { Concern, Intervention, FollowUpQuestion } from "@shared/schema";
+import { EmailSetupGuide } from "@/components/email-setup-guide";
 // Email sharing temporarily removed
 
 interface InterventionResultsProps {
@@ -241,6 +242,7 @@ export default function InterventionResults({
 }: InterventionResultsProps) {
   const [followUpQuestion, setFollowUpQuestion] = useState("");
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showEmailSetupGuide, setShowEmailSetupGuide] = useState(false);
   const [emailRecipients, setEmailRecipients] = useState([{ name: "", email: "" }]);
   const [emailMessage, setEmailMessage] = useState("");
   const [savedInterventions, setSavedInterventions] = useState<Set<string>>(() => {
@@ -368,7 +370,7 @@ export default function InterventionResults({
       setEmailRecipients([{ name: "", email: "" }]);
       setEmailMessage("");
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       if (isUnauthorizedError(error)) {
         toast({
           title: "Unauthorized",
@@ -378,6 +380,16 @@ export default function InterventionResults({
         setTimeout(() => {
           window.location.href = "/api/login";
         }, 500);
+        return;
+      }
+      
+      // Check if error indicates email setup is needed
+      const errorMessage = error?.message || '';
+      const needsSetup = errorMessage.includes('needsSetup') || errorMessage.includes('email configuration');
+      
+      if (needsSetup) {
+        setShowEmailModal(false);
+        setShowEmailSetupGuide(true);
         return;
       }
       
@@ -987,6 +999,12 @@ export default function InterventionResults({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Email Setup Guide Dialog */}
+      <EmailSetupGuide
+        open={showEmailSetupGuide}
+        onOpenChange={setShowEmailSetupGuide}
+      />
     </>
   );
 }

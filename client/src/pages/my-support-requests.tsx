@@ -40,6 +40,7 @@ import { Concern } from "@shared/schema";
 import { Link } from "wouter";
 import InterventionsDisplay from "@/components/InterventionsDisplay";
 import { useTranslation } from "react-i18next";
+import { EmailSetupGuide } from "@/components/email-setup-guide";
 
 export default function MySupportRequests() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -53,6 +54,7 @@ export default function MySupportRequests() {
   
   // Email sharing state
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showEmailSetupGuide, setShowEmailSetupGuide] = useState(false);
   const [shareTargetConcern, setShareTargetConcern] = useState<Concern | null>(null);
   const [emailRecipients, setEmailRecipients] = useState([{ name: "", email: "" }]);
   const [emailMessage, setEmailMessage] = useState("");
@@ -99,7 +101,7 @@ export default function MySupportRequests() {
       setEmailRecipients([{ name: "", email: "" }]);
       setEmailMessage("");
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       if (isUnauthorizedError(error)) {
         toast({
           title: "Unauthorized",
@@ -109,6 +111,16 @@ export default function MySupportRequests() {
         setTimeout(() => {
           window.location.href = "/api/login";
         }, 500);
+        return;
+      }
+      
+      // Check if error indicates email setup is needed
+      const errorMessage = error?.message || '';
+      const needsSetup = errorMessage.includes('needsSetup') || errorMessage.includes('email configuration');
+      
+      if (needsSetup) {
+        setShowEmailModal(false);
+        setShowEmailSetupGuide(true);
         return;
       }
       
@@ -717,6 +729,12 @@ export default function MySupportRequests() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Email Setup Guide Dialog */}
+      <EmailSetupGuide
+        open={showEmailSetupGuide}
+        onOpenChange={setShowEmailSetupGuide}
+      />
       </div>
     </div>
   );
