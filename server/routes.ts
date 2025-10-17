@@ -1165,7 +1165,7 @@ Submitted: ${new Date().toLocaleString()}
       const DEMO_EMAILS = [
         'teacherdemo@concern2care.com',
         'demo@concern2care.com',
-        // Add your demo account email here
+        'ne_roberts@yahoo.com',
       ];
       const isDemoAccount = DEMO_EMAILS.includes(email);
       
