@@ -1,0 +1,617 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differentiation Report - Josie J</title>
+    <style>
+        
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.7;
+        color: #1a1a1a;
+        background: #ffffff;
+        font-size: 12pt;
+    }
+
+    .report-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        min-height: 297mm;
+        padding: 0;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .report-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #2563eb 50%, transparent 100%);
+    }
+
+    .app-title {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin-bottom: 0.5rem;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
+    }
+
+    .student-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        letter-spacing: 0.3px;
+    }
+
+    .report-date {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .section-title {
+        color: #1e3a8a;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 3px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 2.5rem 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-grid, .concern-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-item, .concern-item {
+        background: #ffffff;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .info-label, .concern-label {
+        font-weight: 700;
+        color: #374151;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .info-value, .concern-value {
+        color: #111827;
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .description-section {
+        margin-top: 2rem;
+    }
+
+    .description-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .description-content {
+        background: #fafafa;
+        padding: 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        text-align: justify;
+        margin-bottom: 2rem;
+    }
+
+    .interventions-content {
+        background: #ffffff;
+        padding: 2.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .intervention-title {
+        color: #1e3a8a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        padding: 0.75rem 0;
+        border-bottom: 2px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .major-heading {
+        color: #1e40af;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 1.25rem 0 0.75rem 0;
+    }
+
+    .sub-heading {
+        color: #7c3aed;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem 0 0.5rem 0;
+    }
+
+    .bold-heading {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .intervention-list {
+        margin: 0.75rem 0 1rem 1.5rem;
+        padding-left: 0;
+    }
+
+    .main-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+        color: #374151;
+    }
+
+    .main-bullet::before {
+        content: "•";
+        color: #3b82f6;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    .sub-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 1rem;
+        padding-left: 1.5rem;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .sub-bullet::before {
+        content: "◦";
+        color: #6b7280;
+        position: absolute;
+        left: 0;
+    }
+
+    .nested-bullet {
+        list-style: none;
+        position: relative;
+        margin: 0.25rem 0 0.25rem 2rem;
+        padding-left: 1.5rem;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+
+    .nested-bullet::before {
+        content: "▪";
+        color: #9ca3af;
+        position: absolute;
+        left: 0;
+    }
+
+    .section-break {
+        height: 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        margin: 2rem 0;
+    }
+
+    .print-controls {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        text-align: right;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .print-button {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        background: #3b82f6 !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 8px !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        outline: none !important;
+    }
+
+    .print-button:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .print-fallback-instructions {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #0369a1;
+        line-height: 1.5;
+    }
+
+    .print-fallback-instructions p {
+        margin: 0.3rem 0;
+    }
+
+    .print-fallback-instructions kbd {
+        background: #1e293b;
+        color: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .report-footer {
+        background: #f8fafc;
+        padding: 2rem;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .footer-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.5;
+    }
+  
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header class="report-header">
+            <div class="header-content">
+                <h1 class="app-title">Concern2Care</h1>
+                <h2 class="report-title">Differentiation Report</h2>
+                <h3 class="student-name">Student: Josie J.</h3>
+                <p class="report-date">Generated on October 17, 2025</p>
+            </div>
+            <div class="letterhead-space"></div>
+        </header>
+
+
+        
+        <!-- Student Information Section -->
+        <section class="info-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">Josie J.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Teacher:</span>
+                    <span class="info-value">Karent Yu</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">School:</span>
+                    <span class="info-value">Not specified</span>
+                </div>
+            </div>
+        </section>
+        
+
+        <!-- Concern Details Section -->
+        <section class="concern-section">
+            <h3 class="section-title">Concern Details</h3>
+            <div class="concern-grid">
+                <div class="concern-item">
+                    <span class="concern-label">Type:</span>
+                    <span class="concern-value">Academic</span>
+                </div>
+                <div class="concern-item">
+                    <span class="concern-label">Date Documented:</span>
+                    <span class="concern-value">10/17/2025</span>
+                </div>
+            </div>
+            
+            <div class="description-section">
+                <h4 class="description-title">Teacher's Submitted Response:</h4>
+                <div class="description-content">
+                    Josie avoids homework and classroom tasks.
+                </div>
+            </div>
+        </section>
+
+        <!-- AI-Generated Interventions Section -->
+        <section class="interventions-section">
+            <h3 class="section-title">AI-Generated Intervention Strategies</h3>
+            <div class="interventions-content">
+                <p>Of course. It's clear you are deeply committed to meeting Josie's needs, and your experience in the classroom provides the essential foundation for implementing these evidence-based strategies. What follows is a collaborative framework, building on your professional insights, to provide Josie with targeted, rigorous, and accessible learning opportunities.</p><p>***</p><p><h2 class="major-heading">Student Learning Profile Summary</h2></p><p>Based on the provided profile, Josie is a 5th-grade EAL learner with intermediate English proficiency who is currently struggling academically. Her primary challenge is accessing grade-level content due to linguistic barriers, not cognitive ability. Her strengths likely include a growing bilingual vocabulary and the cognitive flexibility that comes with navigating two languages (Bialystok, 2011). Optimal learning conditions will be a low-anxiety environment rich with visual supports, structured peer interactions, and explicit vocabulary instruction that builds on her existing knowledge.</p><p>---</p><p><h2 class="major-heading">1. Content Modifications</h2></p><p><h3 class="intervention-title">Adjusting Complexity</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Sentence Frame & Word Bank Integration:</strong> For any written or discussion prompt, provide Josie with a bank of 5-8 key vocabulary words and sentence starters.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* Instead of "Explain the causes of the American Revolution," provide: "The American Revolution started because ______ and ______." With a word bank: *taxes, representation, freedom, Parliament.*</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Research:* Supported by the SIOP Model (Echevarria, Vogt, & Short, 2017) for making content comprehensible for EAL learners.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Text Chunking with Guided Questions:</strong> Break down grade-level texts into 2-3 paragraph sections. Precede each section with 1-2 guiding questions to focus her reading.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* Before reading a science passage on ecosystems, ask: "What are the two main roles (producer/consumer) described in this section? What is one example of each?"</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Tiered Vocabulary Instruction:</strong> Pre-teach 3-5 Tier 2 (academic) and Tier 3 (content-specific) words before a lesson using the "See, Say, Write, Use" method.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* For a math unit on geometry: *See* a picture of parallel lines, *Say* the word, *Write* it, *Use* it in a sentence: "The train tracks run *parallel* to the road."</li></ul></p><p><h3 class="intervention-title">Multiple Representations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Visual Supports:</strong> Consistently use non-linguistic representations.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Materials:* Anchor charts with visuals, graphic organizers (e.g., Frayer Model for vocabulary, T-Charts for comparing concepts), and labeled diagrams.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* When teaching the water cycle, provide a diagram where "Evaporation," "Condensation," and "Precipitation" are paired with simple icons.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Auditory Options:</strong> Use text-to-speech tools for digital texts. Record your instructions for complex tasks using a tool like Vocaroo or Mote, allowing Josie to listen back as needed.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Kinesthetic Activities:</strong> Use manipulatives to make abstract concepts concrete.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Example:* In math, use fraction tiles or algebra tiles. In social studies, have students physically arrange printed events on a timeline on the floor.</li></ul></p><p><h3 class="intervention-title">Interest-Based Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Culturally Responsive Text Selection:</strong> Intentionally select books, articles, or story problems that feature characters or contexts from diverse backgrounds, including Josie's own if known and appropriate.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Learning Menus:</strong> For unit projects, provide a "menu" of 3-4 options for demonstrating understanding, ensuring each option is rigorous but varies in mode of expression (e.g., create a comic strip, record a podcast-style interview, build a diorama with labeled parts).</li></ul></p><p>---</p><p><h2 class="major-heading">2. Process Modifications</h2></p><p><h3 class="intervention-title">Instructional Delivery</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Strategy: "I Do, We Do, You Do" with Enhanced "We Do":</strong> After teacher modeling ("I Do"), extend the guided practice ("We Do") for Josie by using think-pair-share with a supportive partner, ensuring she has processing time and a low-risk rehearsal before sharing with the whole class.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Pacing & Chunking:</strong> Use timers and verbal cues to signal transitions between parts of a task. For a 30-minute independent work period, break it into: "10 minutes for questions 1-3," "10 minutes for the graphic organizer," etc.</li></ul></p><p><h3 class="intervention-title">Scaffolding Techniques</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Step-by-Step Process Cards:</strong> For multi-step tasks like long division or a science lab, provide Josie with a numbered checklist or a flow chart with simple icons for each step.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Think-Aloud Strategies:</strong> Model your own cognitive process explicitly. "When I see this word problem, the first thing I do is circle the numbers. Then I look for key words like 'total' or 'difference' to decide if I add or subtract..."</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Strategic Peer Partnering:</strong> Pair Josie with a patient, proficient English speaker for specific, time-limited tasks. Provide the pair with a clear roles (e.g., Partner A explains the first step, Partner B explains the second).</li></ul></p><p><h3 class="intervention-title">Technology Integration</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Assistive Technology:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Google Read & Write:</strong> This toolbar provides text-to-speech, picture dictionaries, and word prediction, reducing the cognitive load of decoding and spelling.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Microsoft Immersive Reader:</strong> Built into many platforms, it can read text aloud, break it into syllables, and highlight parts of speech.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Digital Tools:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Use <strong>Padlet</strong> or <strong>Jamboard</strong> for collaborative brainstorming where Josie can contribute with images, icons, or short phrases.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Use <strong>Flipgrid</strong> for verbal responses to reading comprehension questions, allowing her to practice oral language without the pressure of live performance.</li></ul></p><p>---</p><p><h2 class="major-heading">3. Product Alternatives</h2></p><p><h3 class="intervention-title">Assessment Options</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Multiple Means of Action & Expression (UDL Guideline 5):</strong> For a end-of-unit assessment on ecosystems, offer choices:</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Written:* Traditional essay (with provided outline).</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Oral:* Record a 2-minute "documentary narration" about an ecosystem.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Visual:* Create a detailed, labeled food web poster.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  *Digital:* Build a simple slideshow with images and captions.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Modified Rubrics:</strong> Use the same core content criteria for all students but adjust the language proficiency expectations. For Josie, the rubric might emphasize content understanding and key vocabulary use over grammatical perfection.</li></ul></p><p><h3 class="intervention-title">Expression Methods</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Comic Strip Summaries:</strong> After reading a chapter, Josie can create a 4-panel comic strip to show the main events, using speech bubbles and captions. This limits the linguistic demand while assessing comprehension.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Model Creation:</strong> In math, instead of (or before) writing a word problem, she can use base-ten blocks or fraction circles to model the problem and its solution.</li></ul></p><p>---</p><p><h2 class="major-heading">4. Learning Environment Optimization</h2></p><p><h3 class="intervention-title">Physical Space</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Seating:</strong> Seat Josie close to the board and instruction area, and within a small cluster of supportive peers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Visual Supports:</strong> Maintain a consistent "Word Wall" with content vocabulary and images. Ensure daily schedules and classroom procedure charts are clearly visible.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Organization:</strong> Provide a color-coded folder system (e.g., red for math, blue for ELA) and a checklist for morning routines.</li></ul></p><p><h3 class="intervention-title">Social Environment</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Structured Cooperative Learning:</strong> Use defined structures like "Numbered Heads Together" or "Round Robin" to ensure equitable participation and reduce the dominance of native English speakers.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Communication Supports:</strong> Provide a small desk chart with sentence starters for common classroom interactions: "Can you please repeat that?" "I need help with..." "My idea is..."</li></ul></p><p>---</p><p><h2 class="major-heading">5. Implementation Timeline</h2></p><p><h3 class="intervention-title">Week 1-2: Immediate Strategies</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Implement Sentence Frames & Word Banks in all subjects. Introduce and train Josie on using Google Read & Write. Set up strategic peer partnerships. Begin a vocabulary journal with her.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Data Collection:</strong> Anecdotal notes on her engagement during "We Do" activities. Track her use of provided scaffolds.</li></ul></p><p><h3 class="intervention-title">Weeks 3-6: Short-term Adaptations</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Introduce Learning Menus for the next unit project. Begin using step-by-step process cards for complex tasks. Schedule 5-minute weekly check-ins with Josie to review her vocabulary journal and set a goal for the week.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Progress Monitoring:</strong> Compare scores on similar assignments with and without scaffolds. Monitor the complexity of sentences in her writing.</li></ul></p><p><h3 class="intervention-title">Ongoing: Long-term Support</h3><br><ul class="intervention-list"><li class="main-bullet">  <strong>Actions:</strong> Wean off the most intensive scaffolds as her proficiency grows (e.g., move from sentence frames to paragraph frames). Document which strategies are most effective for her to share with her 6th-grade teacher.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Goal:</strong> Foster increasing independence while maintaining the UDL principles that benefit all learners.</li></ul></p><p>---</p><p><h2 class="major-heading">6. Progress Monitoring & Data Collection</h2></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Metrics:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Academic Vocabulary:</strong> Track the number of Tier 2 and 3 words used correctly in speaking and writing.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Task Completion:</strong> Percentage of assignments completed independently versus with direct support.</li></ul><br><ul class="intervention-list"><li class="nested-bullet">  <strong>Comprehension:</strong> Scores on end-of-week quick checks (could be a single question exit ticket, a thumbs up/down, or a 3-2-1 summary).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Tools:</strong> A simple tracking spreadsheet, a portfolio of her work (including pre-scaffold and post-scaffold examples), and weekly check-in notes.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Adjustment Point:</strong> If after 3-4 weeks of consistent implementation there is no growth in engagement or task completion, the strategy may need to be modified or intensified.</li></ul></p><p>---</p><p><h2 class="major-heading">7. Collaboration & Communication</h2></p><p><ul class="intervention-list"><li class="main-bullet">  <strong>Parent/Family Engagement:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Use a communication log (a simple notebook or digital doc) to share one positive observation and one key vocabulary word to practice at home each week. Encourage the family to continue using their home language to discuss concepts, as strong first-language skills support second-language acquisition (Cummins, 1979).</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Coordination with Support Staff:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  If your school has an EAL specialist, schedule a brief, monthly meeting to align vocabulary, share data, and co-plan one upcoming lesson.</li></ul><br><ul class="intervention-list"><li class="main-bullet">  <strong>Documentation:</strong></li></ul><br><ul class="intervention-list"><li class="nested-bullet">  Keep a brief log of the differentiated strategies used and their observed impact. This is invaluable for parent conferences, intervention meetings (like MTSS/RtI), and crafting future IEPs or learning plans if needed.</li></ul></p><p>You are already creating the inclusive environment Josie needs. These strategies are simply tools to add to your professional repertoire, allowing you to refine your practice and ensure Josie not only accesses the curriculum but thrives within it.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="report-footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    This report was generated by Concern2Care. All intervention strategies are evidence-based 
+                    and appropriate for Tier 2 implementation.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Print styles -->
+    <style media="print">
+        
+    body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+    }
+
+    .report-container {
+        box-shadow: none !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-header {
+        background: #2563eb !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 2rem 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .report-header::after {
+        display: none !important;
+    }
+
+    .app-title {
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .report-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .student-name {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-date {
+        font-size: 0.9rem !important;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+        margin: 1.5rem 0 1rem 0 !important;
+        padding: 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .info-section, .concern-section, .interventions-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .info-grid, .concern-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .info-item, .concern-item {
+        padding: 1rem !important;
+        margin-bottom: 0.5rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .description-content {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .interventions-content {
+        padding: 1.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    .intervention-title {
+        font-size: 1.1rem !important;
+        margin: 1rem 0 0.8rem 0 !important;
+        padding: 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .major-heading {
+        font-size: 1rem !important;
+        margin: 0.8rem 0 0.5rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .sub-heading {
+        font-size: 0.95rem !important;
+        margin: 0.6rem 0 0.4rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .bold-heading {
+        font-size: 0.9rem !important;
+        margin: 0.5rem 0 0.3rem 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    .intervention-list {
+        margin: 0.5rem 0 0.8rem 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .main-bullet, .sub-bullet, .nested-bullet {
+        margin: 0.3rem 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    .section-break {
+        height: 1rem !important;
+        margin: 1rem 0 !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .insights-section {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid !important;
+        background: #fef3c7 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .insight-item {
+        padding: 1rem !important;
+        margin-bottom: 0.8rem !important;
+        page-break-inside: avoid !important;
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .insight-item:hover {
+        transform: none !important;
+    }
+
+    .insight-number {
+        width: 1.8rem !important;
+        height: 1.8rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .insight-text {
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+    }
+
+    .ai-badge {
+        font-size: 0.8rem !important;
+        padding: 0.2rem 0.6rem !important;
+    }
+
+    .insights-description {
+        font-size: 0.95rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .report-footer {
+        padding: 1rem !important;
+        margin-top: 1rem !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-controls,
+    .no-print,
+    .print-fallback-instructions {
+        display: none !important;
+    }
+
+    @page {
+        margin: 2cm 1.5cm;
+        size: A4;
+    }
+
+    /* Prevent orphaned content */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid !important;
+    }
+
+    p, li {
+        page-break-inside: avoid !important;
+    }
+
+    /* Keep related content together */
+    .info-item, .concern-item {
+        page-break-inside: avoid !important;
+    }
+  
+    </style>
+</body>
+</html>
