@@ -1173,7 +1173,7 @@ Submitted: ${new Date().toLocaleString()}
       console.log(`📧 File exists: ${report.pdfPath ? fs.existsSync(report.pdfPath) : 'no path'}`);
       console.log(`📧 Demo account: ${isDemoAccount}`);
       
-      const emailSuccess = await sendReportEmail({
+      const emailResult = await sendReportEmail({
         recipients,
         subject: `Student Concern Report - ${concern.studentFirstName} ${concern.studentLastInitial}.`,
         message,
@@ -1183,10 +1183,16 @@ Submitted: ${new Date().toLocaleString()}
         showUpgradeMessage: isDemoAccount // Show upgrade message for demo accounts
       });
 
-      if (emailSuccess) {
+      if (emailResult.success) {
         res.json({ message: "Report shared successfully" });
+      } else if (emailResult.needsSetup) {
+        // User needs to set up email configuration
+        res.status(400).json({ 
+          needsSetup: true,
+          message: emailResult.message || "Please set up your email configuration in Settings"
+        });
       } else {
-        res.status(500).json({ message: "Failed to send email" });
+        res.status(500).json({ message: emailResult.message || "Failed to send email" });
       }
     } catch (error) {
       console.error("Error sharing report:", error);
