@@ -1154,8 +1154,24 @@ Submitted: ${new Date().toLocaleString()}
       const baseUrl = req.protocol + '://' + req.get('host');
       const reportLink = generateSecureReportLink(concernId, baseUrl);
       
+      // Check if this is a demo account (show upgrade message)
+      // Whitelist approach: only specific emails marked as demo accounts
+      // Add your demo account email to this list
+      const user = await storage.getUser(userId);
+      const email = user?.email?.toLowerCase() || '';
+      
+      // Hardcoded whitelist of demo account emails
+      // TODO: Replace with database field `isDemoAccount` for long-term solution
+      const DEMO_EMAILS = [
+        'teacherdemo@concern2care.com',
+        'demo@concern2care.com',
+        // Add your demo account email here
+      ];
+      const isDemoAccount = DEMO_EMAILS.includes(email);
+      
       console.log(`📧 Attempting to send email with attachment: ${report.pdfPath}`);
       console.log(`📧 File exists: ${report.pdfPath ? fs.existsSync(report.pdfPath) : 'no path'}`);
+      console.log(`📧 Demo account: ${isDemoAccount}`);
       
       const emailSuccess = await sendReportEmail({
         recipients,
@@ -1163,7 +1179,8 @@ Submitted: ${new Date().toLocaleString()}
         message,
         attachmentPath: report.pdfPath || undefined,
         reportLink,
-        userId: userId  // Pass userId to use personal email configuration
+        userId: userId,  // Pass userId to use personal email configuration
+        showUpgradeMessage: isDemoAccount // Show upgrade message for demo accounts
       });
 
       if (emailSuccess) {

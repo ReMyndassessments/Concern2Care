@@ -158,7 +158,8 @@ export class AutoSendProcessor {
         }],
         subject: `Classroom Solutions: ${submission.taskType === 'differentiation' ? 'Differentiation Strategies' : 'Tier 2 Intervention'} - ${submission.severityLevel} Priority`,
         message: `Dear ${submission.teacher.firstName},\n\nYour AI-generated classroom solution is ready:\n\n${finalMessage}\n\nThank you for using Concern2Care.`,
-        userId: submission.teacher.id || submission.teacherId // Use proper user ID for email config lookup
+        userId: submission.teacher.id || submission.teacherId, // Use proper user ID for email config lookup
+        showUpgradeMessage: true // Always show upgrade message for Free Student Support emails
       });
 
       if (emailSuccess) {
