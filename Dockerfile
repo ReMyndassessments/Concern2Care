@@ -1,7 +1,7 @@
 FROM node:20-alpine
 WORKDIR /app
 COPY . .
-RUN cd server && npm install
-RUN cd server && npm run build
+RUN npm install
+RUN npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
 EXPOSE 5000
-CMD ["node", "server/dist/index.js"]
+CMD ["node", "dist/index.js"]
