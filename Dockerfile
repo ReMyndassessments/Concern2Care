@@ -1,7 +1,7 @@
 FROM node:20-alpine
 WORKDIR /app
 COPY . .
-RUN npm install
-RUN npm run build
+RUN cd server && npm install
+RUN cd server && npm run build
 EXPOSE 5000
-CMD ["node", "dist/index.js"]
+CMD ["node", "server/dist/index.js"]
