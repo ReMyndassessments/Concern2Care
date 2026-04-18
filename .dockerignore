@@ -9,8 +9,6 @@ coverage
 .replit.original
 reports
 attached_assets
-client/src
-server
 vite.config.ts
 tsconfig.json
 .config
