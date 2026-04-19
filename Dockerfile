@@ -4,6 +4,7 @@ COPY . .
 RUN npm install
 RUN npx esbuild server/index.ts \
   --platform=node \
+  --packages=external \
   --bundle \
   --format=esm \
   --outdir=dist \
