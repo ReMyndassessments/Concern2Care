@@ -4,13 +4,11 @@ COPY . .
 RUN npm install
 RUN npx esbuild server/index.ts \
   --platform=node \
-  --packages=external \
   --bundle \
   --format=esm \
   --outdir=dist \
   --external:vite \
-  --external:../vite.config \
-  --external:./vite.config
+  --external:fsevents
 RUN ls -la dist/
 EXPOSE 5000
 CMD ["node", "dist/index.js"]
