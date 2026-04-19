@@ -8,7 +8,9 @@ RUN npx esbuild server/index.ts \
   --format=esm \
   --outdir=dist \
   --external:vite \
-  --external:fsevents
+  --external:fsevents \
+  --alias:@shared=./shared \
+  --alias:@=./client/src
 RUN ls -la dist/
 EXPOSE 5000
 CMD ["node", "dist/index.js"]
